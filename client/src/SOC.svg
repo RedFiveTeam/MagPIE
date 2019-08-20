@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="903" height="517.443" viewBox="0 0 903 517.443">
+  <defs>
+    <style>
+      .cls-1, .cls-3, .cls-6 {
+        fill: #3d94de;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #8b8b8b;
+        stroke-width: 4px;
+      }
+
+      .cls-2 {
+        fill: #c8cdd1;
+      }
+
+      .cls-4 {
+        fill: #fff;
+      }
+
+      .cls-5 {
+        fill: #5ca3e0;
+      }
+
+      .cls-6 {
+        font-size: 180px;
+        font-family: 5yearsoldfont;
+      }
+    </style>
+  </defs>
+  <g id="Group_109" data-name="Group 109" transform="translate(-76 1211.443)">
+    <path id="Path_214" data-name="Path 214" class="cls-1" d="M-193.393-368.375s23.991,2.971,65.415,2.971,81.927-2.971,81.927-2.971,8.065,2.6,8.023,15.835-8.023,16.3-8.023,16.3-38.327,3.167-79.751,3.167-67.591-3.167-67.591-3.167-7.3-4.906-7.475-16.3S-193.393-368.375-193.393-368.375Z" transform="translate(701 -841)"/>
+    <path id="Path_215" data-name="Path 215" class="cls-2" d="M-45.5-335.847s3.732,45.222,6.159,119.415c1.689,51.638,7.759,102.263,5.365,126.347C-35.608-78.4-45.5-77.4-45.5-77.4S-88.1-64.626-186.523-64.14-352.255-77.4-352.255-77.4s-34.763-9.731-35.153-50.428,37.558-52.442,37.558-52.442,37.75-7.123,71.347-7.482,78.572-9.1,78.572-9.1,14.078-30.059,13.408-68.3a525.531,525.531,0,0,0-6.209-70.694s35.484,3.391,72.291,3.391S-45.5-335.847-45.5-335.847Z" transform="translate(701 -841)"/>
+    <ellipse id="Ellipse_253" data-name="Ellipse 253" class="cls-3" cx="18" cy="19" rx="18" ry="19" transform="translate(526 -1145)"/>
+    <ellipse id="Ellipse_255" data-name="Ellipse 255" class="cls-3" cx="18" cy="19" rx="18" ry="19" transform="translate(582 -1145)"/>
+    <ellipse id="Ellipse_254" data-name="Ellipse 254" class="cls-4" cx="9" cy="9.5" rx="9" ry="9.5" transform="translate(537 -1133)"/>
+    <ellipse id="Ellipse_256" data-name="Ellipse 256" class="cls-4" cx="9" cy="9.5" rx="9" ry="9.5" transform="translate(587 -1140)"/>
+    <path id="Path_216" data-name="Path 216" class="cls-3" d="M-179.956-227.818s25.624,10.005,52.226,10.005,54.184-10.005,54.184-10.005,10.09,7.5-17.04,33.623-37.145,18.653-37.145,18.653-10.243,6.636-37.557-18.653S-179.956-227.818-179.956-227.818Z" transform="translate(701 -832)"/>
+    <path id="Path_217" data-name="Path 217" class="cls-5" d="M-1048.265-963.2s-5.682,6.048-8.2,11.949a16.991,16.991,0,0,0-.71,11.212s3.687,7.486,8.345,7.486,8.311-7.486,8.311-7.486a19.966,19.966,0,0,0-.621-11.212C-1043.281-957.151-1048.265-963.2-1048.265-963.2Z" transform="translate(1665 -60.959)"/>
+    <text id="HappySock" class="cls-6" transform="translate(76 -738)"><tspan x="0" y="0">HappySock</tspan></text>
+  </g>
+</svg>
