@@ -17,11 +17,11 @@
     "url-join": "^4.0.1"
   },
   "scripts": {
-    "build": "react-scripts-ts build && rm -rf ../src/main/resources/static && cp -r build ../src/main/resources/static",
-    "start": "yarn lint --fix && react-scripts-ts start",
-    "start-ci": "yarn lint --fix && react-scripts-ts start",
+    "build": "react-scripts build",
+    "start": "yarn lint --fix && react-scripts start",
+    "start-ci": "yarn lint --fix && react-scripts start",
     "lint": "eslint -c .eslintrc.js 'src/**/*.{ts,tsx}'",
-    "test": "react-scripts-ts test --env=jsdom"
+    "test": "react-scripts test --env=jsdom"
   },
   "eslintConfig": {
     "extends": "react-app"

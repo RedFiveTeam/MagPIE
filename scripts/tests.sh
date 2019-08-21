@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function main {
     setup
 
@@ -24,20 +26,22 @@ function main {
 function acceptanceTests {
     showBanner "Acceptance Tests"
 
+    echo ${PIE_DB_URL}
+
     SPECIFIC_TESTS=""
 
     if [[ "${2}" == "./tests/"*".test.ts" ]]; then
         SPECIFIC_TESTS=${2}
     fi
 
-    pushd ${BASE_DIR}/scripts/seed_db
-        ./seed_db.sh
-    popd
+#    pushd ${BASE_DIR}/scripts/seed_db
+#        ./seed_db.sh
+#    popd
 
-    java -DCLASSIFIED=UNCLASSIFIED -DUNICORN_URL=https://codweb1.leidoshost.com/UNICORN.NET -DPERSONNEL_ID=2a7081f8-7cc9-45f3-a29e-f94a0003b3fe -DCLASSIFICATION_ID=a8b17b94-f23a-41a1-822f-96c7ce642006 -jar ${BASE_DIR}/target/fritz-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
-    echo $! > ${BASE_DIR}/tmp/fritz.pid
+    java -DCLASSIFIED=UNCLASSIFIED -jar ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
+    echo $! > ${BASE_DIR}/tmp/pie.pid
 
-    testConnection ${REACT_APP_HOST} $(cat ${BASE_DIR}/tmp/fritz.pid)
+    testConnection ${REACT_APP_HOST} $(cat ${BASE_DIR}/tmp/pie.pid)
 
     pushd ${BASE_DIR}/acceptance
         yarn install
@@ -57,11 +61,8 @@ function acceptanceTests {
 
 function unitTests {
     showBanner "Unit Tests"
-
     pushd ${BASE_DIR}
-        result=$(mvn -DCLASSIFIED=UNCLASSIFIED -DUNICORN_URL=https://codweb1.leidoshost.com/UNICORN.NET -DPERSONNEL_ID=2a7081f8-7cc9-45f3-a29e-f94a0003b3fe -DCLASSIFICATION_ID=a8b17b94-f23a-41a1-822f-96c7ce642006  test | grep -E "\[INFO\]|\[ERROR\]|Expected")
-        echo "${result}"
-        if [[ $(echo ${result} | grep "\[ERROR\]" | wc -l) -gt 0 ]]; then
+        if [[ $(mvn -DCLASSIFIED=UNCLASSIFIED test | grep "\[ERROR\]" | wc -l) -gt 0 ]]; then
             exit 1
         fi
     popd
@@ -73,14 +74,14 @@ function unitTests {
 
 function cleanup {
     showBanner "Cleanup"
-    if [[ -f ${BASE_DIR}/tmp/fritz.pid ]]; then
-        cat ${BASE_DIR}/tmp/fritz.pid | xargs kill -9
-        rm ${BASE_DIR}/tmp/fritz.pid
+    if [[ -f ${BASE_DIR}/tmp/pie.pid ]]; then
+        cat ${BASE_DIR}/tmp/pie.pid | xargs kill -9
+        rm ${BASE_DIR}/tmp/pie.pid
     fi
 
-    pushd ${BASE_DIR}/scripts/seed_db
-        ./seed_db.sh
-    popd
+#    pushd ${BASE_DIR}/scripts/seed_db
+#        ./seed_db.sh
+#    popd
 }
 trap cleanup EXIT
 
@@ -121,6 +122,7 @@ function testConnection {
 
         if [[ "$COUNTER" -gt 40 ]]
         then
+            cat ${BASE_DIR}/tmp/acceptance.log
             echo "Could not connect to ${1} (PID: ${2}) after 40 seconds. Exiting..."
             exit 1
         fi
