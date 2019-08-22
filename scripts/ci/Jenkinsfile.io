@@ -39,8 +39,8 @@ node ('legacy') {
            // update env var JOB_NAME to replace all non word chars to underscores
            def jobname = JOB_NAME.replaceAll(/[^a-zA-Z0-9\_]/, "_")
            def jobshortname = JOB_NAME.replaceAll(/^.*\//, "")
-           withCredentials([[$class: 'StringBinding', credentialsId: 'd5ddf49e-60e6-4816-b668-406eddd250af', variable: 'SONAR_LOGIN']]) {
-               sh "JOB_NAME=${jobname} && JOB_SHORT_NAME=${jobshortname} && set && ${scannerHome}/bin/sonar-scanner -Dsonar.host.url=${sonarHost} -Dsonar.login=${SONAR_LOGIN} -Dsonar.projectName=pie -Dsonar.projectKey=narwhal:pie"
+           withCredentials([[$class: 'StringBinding', credentialsId: '0987OIUY9876YTFC7654YTFC6754TRDX', variable: 'SONAR_LOGIN']]) {
+               sh "JOB_NAME=${jobname} && JOB_SHORT_NAME=${jobshortname} && set && ${scannerHome}/bin/sonar-scanner -Dsonar.host.url=${sonarHost} -Dsonar.login=${SONAR_LOGIN} -Dsonar.projectName=pie -Dsonar.projectKey=Narwhal:Pie"
            }
        }
     }
@@ -52,7 +52,7 @@ node ('legacy') {
     }
 
     stage ('ThreadFix') {
-       withCredentials([string(credentialsId: '77HD-74JH-9832-UH87-IJNS-8764-N3M4', variable: 'THREADFIX_VARIABLE')]) {
+       withCredentials([string(credentialsId: '7654JHGF9876HGFD6543LKJH5432GFDS', variable: 'THREADFIX_VARIABLE')]) {
        sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${BUILD_NUMBER}.fpr\
            https://threadfix.devops.geointservices.io/rest/applications/241/upload?apiKey=${THREADFIX_VARIABLE}"
        }

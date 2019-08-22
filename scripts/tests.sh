@@ -4,22 +4,17 @@ set -e
 
 function main {
     setup
-
-#    case "${1}" in
-##        acc|acceptance)
-##            jarBuild
-##            acceptanceTests ${@}
-##        ;;
-#        unit)
-#            yarnBuild
-#            unitTests
-#        ;;
-#        *)
-#            jarBuild
-#            unitTests
-#            acceptanceTests
-#        ;;
-#    esac
+    case "${1}" in
+        acc|acceptance)
+            jarBuild
+        ;;
+        unit)
+            yarnBuild
+        ;;
+        *)
+            jarBuild
+        ;;
+    esac
 }
 
 # Tests
