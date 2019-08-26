@@ -1,9 +1,10 @@
 ---
 applications:
-- name: pie-acceptance
-  buildpacks:
-    - https://github.com/cloudfoundry/java-buildpack.git
-  memory: 1GB
-  stack: cflinuxfs3
-  instances: 1
-  path: target/pie-0.0.1-SNAPSHOT.jar
+  - name: pie-acceptance
+    buildpack: https://github.com/cloudfoundry/java-buildpack.git
+    memory: 1GB
+    instances: 1
+    path: target/pie-0.0.1-SNAPSHOT.jar
+    services:
+      - pie-acceptance-db
+
