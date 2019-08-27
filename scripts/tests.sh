@@ -1,45 +1,58 @@
 #!/bin/bash
 
 function main {
-    setup
-    jarBuild
-    unitTests
-#    acceptanceTests
+     setup
+
+    case "${1}" in
+        acc|acceptance)
+            jarBuild
+            acceptanceTests ${@}
+        ;;
+        unit)
+            yarnBuild
+            unitTests
+        ;;
+        *)
+            jarBuild
+            unitTests
+            acceptanceTests
+        ;;
+    esac
 }
 
 # Tests
-#function acceptanceTests {
-#    showBanner "Acceptance Tests"
-#
-#    SPECIFIC_TESTS=""
-#
-#    if [[ "${2}" == "./tests/"*".test.ts" ]]; then
-#        SPECIFIC_TESTS=${2}
-#    fi
-#
-#    pushd ${BASE_DIR}/scripts/seed_db
-#        ./seed_db.sh
-#    popd
-#
-#    java -jar ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
-#    echo $! > ${BASE_DIR}/tmp/pie.pid
-#
-#    testConnection ${REACT_APP_HOST} $(cat ${BASE_DIR}/tmp/pie.pid)
-#
-#    pushd ${BASE_DIR}/acceptance
-#        yarn install
-#        if [[ "${PIE_CI}" && "$(lsb_release -crid | grep -i 'Ubuntu')" ]]; then
-#            xvfb-run yarn codeceptjs run -o "{ \"helpers\": {\"Nightmare\": {\"url\": \"${REACT_APP_HOST}\"}}}" ${SPECIFIC_TESTS}
-#        else
-#            yarn codeceptjs run -o "{ \"helpers\": {\"Nightmare\": {\"url\": \"${REACT_APP_HOST}\"}}}" ${SPECIFIC_TESTS}
-#        fi
-#
-#        if [[ "${?}" == "1" ]]; then
-#            echo "Acceptance Tests Failed... Exiting"
-#            exit 1
-#        fi
-#    popd
-#}
+function acceptanceTests {
+    showBanner "Acceptance Tests"
+
+    SPECIFIC_TESTS=""
+
+    if [[ "${2}" == "./tests/"*".test.ts" ]]; then
+        SPECIFIC_TESTS=${2}
+    fi
+
+    pushd ${BASE_DIR}/scripts/seed_db
+        ./seed_db.sh
+    popd
+
+    java -jar ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
+    echo $! > ${BASE_DIR}/tmp/pie.pid
+
+    testConnection ${REACT_APP_HOST} $(cat ${BASE_DIR}/tmp/pie.pid)
+
+    pushd ${BASE_DIR}/acceptance
+        yarn install
+        if [[ "${PIE_CI}" && "$(lsb_release -crid | grep -i 'Ubuntu')" ]]; then
+            xvfb-run yarn codeceptjs run -o "{ \"helpers\": {\"Nightmare\": {\"url\": \"${REACT_APP_HOST}\"}}}" ${SPECIFIC_TESTS}
+        else
+            yarn codeceptjs run -o "{ \"helpers\": {\"Nightmare\": {\"url\": \"${REACT_APP_HOST}\"}}}" ${SPECIFIC_TESTS}
+        fi
+
+        if [[ "${?}" == "1" ]]; then
+            echo "Acceptance Tests Failed... Exiting"
+            exit 1
+        fi
+    popd
+}
 
 function unitTests {
     showBanner "Unit Tests"

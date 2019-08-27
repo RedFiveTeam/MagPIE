@@ -9,7 +9,7 @@ properties(
     ]
 )
 // change node back to node ('') for recent version, legacy for old
-node ('') {
+node ('legacy') {
     stage ('Checkout') {
         if(env.BRANCH_NAME == 'acceptance') {
             git url: 'git@gitlab.devops.geointservices.io:dgs1sdt/pie.git', branch: 'acceptance', credentialsId: '0059b60b-fe05-4857-acda-41ada14d0c52', poll: true
@@ -20,11 +20,11 @@ node ('') {
 
     stage ('Test & Build') {
                     sh """
-                    docker pull dgs1sdt/pie
+                    docker pull dgs1sdt/blackpearl
 
                     docker stop Pie || true && docker rm Pie || true
 
-                    docker run --name Pie -v `pwd`:/app -itd dgs1sdt/pie:cfs3linux
+                    docker run --name Pie -v `pwd`:/app -itd dgs1sdt/blackpearl
 
                     docker exec Pie /bin/bash -c "/app/scripts/tests.sh"
                     """
