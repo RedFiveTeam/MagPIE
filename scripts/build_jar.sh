@@ -12,8 +12,10 @@ pushd ${BASE_DIR}
     mvn package -DskipTests
 popd
 
-
-
+#pushd ${BASE_DIR}
+#    rm ${BASE_DIR}/artifacts/pie.jar || true
+#    cp ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar ${BASE_DIR}/artifacts/pie.jar
+#popd
 
 
 #
