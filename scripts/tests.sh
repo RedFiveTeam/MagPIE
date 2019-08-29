@@ -2,22 +2,22 @@
 
 function main {
      setup
-
-    case "${1}" in
-        acc|acceptance)
-            jarBuild
-            acceptanceTests ${@}
-        ;;
-        unit)
-            yarnBuild
-            unitTests
-        ;;
-        *)
-            jarBuild
-            unitTests
-            acceptanceTests
-        ;;
-    esac
+     jarBuild
+#    case "${1}" in
+#        acc|acceptance)
+#            jarBuild
+#            acceptanceTests ${@}
+#        ;;
+#        unit)
+#            yarnBuild
+#            unitTests
+#        ;;
+#        *)
+#            jarBuild
+#            unitTests
+#            acceptanceTests
+#        ;;
+#    esac
 }
 
 # Tests
@@ -85,7 +85,7 @@ trap cleanup EXIT
 
 function jarBuild {
     showBanner "Build JAR"
-    ${BASE_DIR}/scripts/build_jar.sh
+    ${BASE_DIR}/scripts/build_jar.sh --no-replace
 }
 
 function setup {

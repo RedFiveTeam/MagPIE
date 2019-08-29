@@ -20,11 +20,11 @@ node ('legacy') {
 
     stage ('Test & Build') {
                     sh """
-                    docker pull dgs1sdt/blackpearl
+                    docker pull dgs1sdt/blackpearl:cfs3linux
 
                     docker stop Pie || true && docker rm Pie || true
 
-                    docker run --name Pie -v `pwd`:/app -itd dgs1sdt/blackpearl
+                    docker run --name Pie -v `pwd`:/app -itd dgs1sdt/blackpearl:cfs3linux
 
                     docker exec Pie /bin/bash -c "/app/scripts/tests.sh"
                     """
@@ -35,7 +35,7 @@ node ('legacy') {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '8e717287-708e-440f-8fa8-17497eac5efb', passwordVariable: 'PCFPass', usernameVariable: 'PCFUser']]) {
                 withEnv(["CF_HOME=${pwd()}"]) {
                     sh "cf login -a api.system.dev.east.paas.geointservices.io -u $PCFUser -p $PCFPass -o DGS1SDT -s 'Pie'"
-                    sh "cf push -f ./manifest-acceptance.yml"
+                    sh "cf push -f ./manifest.yml"
                 }
             }
         }

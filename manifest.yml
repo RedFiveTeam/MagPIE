@@ -7,9 +7,9 @@ applications:
   stack: cflinuxfs3
   instances: 1
   path: target/pie-0.0.1-SNAPSHOT.jar
-  environment:
-    - PIE_DB_URL=jdbc:mysql://localhost:3306/piedev?useSSL=false
-    - PIE_DB_USERNAME=pie
+#  environment:
+#    - PIE_DB_URL=jdbc:mysql://localhost:3306/piedev?useSSL=false
+#    - PIE_DB_USERNAME=pie
   services:
-    - pie-db
+    - pie-acceptance-db
 
