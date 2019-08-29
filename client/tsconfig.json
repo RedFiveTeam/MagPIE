@@ -9,6 +9,7 @@
     ],
     "allowJs": true,
     "rootDir": "src",
+    "module": "commonjs",
     "sourceMap": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

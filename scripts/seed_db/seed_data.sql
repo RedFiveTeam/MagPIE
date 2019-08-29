@@ -1,2 +1,2 @@
-INSERT INTO metric (id, uid, action, time)
-VALUES (1, "34HG73", "click", "1551711501");
+INSERT INTO metric (id, action, context)
+VALUES (1, "display message", "Hello World");
