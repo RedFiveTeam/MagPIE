@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function main {
      setup
 
@@ -85,7 +87,7 @@ trap cleanup EXIT
 
 function jarBuild {
     showBanner "Build JAR"
-    ${BASE_DIR}/scripts/build_jar.sh --no-replace
+    ${BASE_DIR}/scripts/build_jar.sh
 }
 
 function setup {
@@ -131,4 +133,4 @@ function testConnection {
     done
 }
 
-main
+main ${@}
