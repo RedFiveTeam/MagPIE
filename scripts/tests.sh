@@ -2,22 +2,22 @@
 
 function main {
      setup
-     jarBuild
-#    case "${1}" in
-#        acc|acceptance)
-#            jarBuild
-#            acceptanceTests ${@}
-#        ;;
-#        unit)
-#            yarnBuild
-#            unitTests
-#        ;;
-#        *)
-#            jarBuild
-#            unitTests
-#            acceptanceTests
-#        ;;
-#    esac
+
+    case "${1}" in
+        acc|acceptance)
+            jarBuild
+            acceptanceTests ${@}
+        ;;
+        unit)
+            yarnBuild
+            unitTests
+        ;;
+        *)
+            jarBuild
+            unitTests
+            acceptanceTests
+        ;;
+    esac
 }
 
 # Tests
@@ -77,9 +77,9 @@ function cleanup {
         rm ${BASE_DIR}/tmp/pie.pid
     fi
 
-    pushd ${BASE_DIR}/scripts/seed_db
-        ./seed_db.sh
-    popd
+#    pushd ${BASE_DIR}/scripts/seed_db
+#        ./seed_db.sh
+#    popd
 }
 trap cleanup EXIT
 
