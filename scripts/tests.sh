@@ -4,24 +4,22 @@ set -e
 
 function main {
      setup
-     jarBuild
-     unitTests
-     acceptanceTests
-#    case "${1}" in
-#        acc|acceptance)
-#            jarBuild
-#            acceptanceTests ${@}
-#        ;;
-#        unit)
-#            yarnBuild
-#            unitTests
-#        ;;
-#        *)
-#            jarBuild
-#            unitTests
-#            acceptanceTests
-#        ;;
-#    esac
+
+    case "${1}" in
+        acc|acceptance)
+            jarBuild
+            acceptanceTests ${@}
+        ;;
+        unit)
+            yarnBuild
+            unitTests
+        ;;
+        *)
+            jarBuild
+            unitTests
+            acceptanceTests
+        ;;
+    esac
 }
 
 # Tests
@@ -33,12 +31,12 @@ function acceptanceTests {
     if [[ "${2}" == "./tests/"*".test.ts" ]]; then
         SPECIFIC_TESTS=${2}
     fi
-#    pushd ${BASE_DIR}/scripts
-#        ./setup_env.sh
-#    popd
-#    pushd ${BASE_DIR}/scripts
-#        ./setup_db.sh
-#    popd
+    pushd ${BASE_DIR}/scripts
+        ./setup_env.sh
+    popd
+    pushd ${BASE_DIR}/scripts
+        ./setup_db.sh
+    popd
     pushd ${BASE_DIR}/scripts/seed_db
         ./seed_db.sh
     popd
@@ -86,9 +84,9 @@ function cleanup {
         rm ${BASE_DIR}/tmp/pie.pid
     fi
 
-#    pushd ${BASE_DIR}/scripts/seed_db
-#        ./seed_db.sh
-#    popd
+    pushd ${BASE_DIR}/scripts/seed_db
+        ./seed_db.sh
+    popd
 }
 trap cleanup EXIT
 
