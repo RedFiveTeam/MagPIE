@@ -2,7 +2,7 @@
 
 Feature('Home Page');
 
-Scenario('should load a page', (I) => {
-  I.amOnPage('/');
-  I.see('This is the Walking Skeleton for the Fritz application by Lab-1.');
+Scenario ('should see a home page', (I) => {
+    I.amOnPage('/');
+    I.waitForText('A DGS-1 Pie webapp under construction', 10);
 });

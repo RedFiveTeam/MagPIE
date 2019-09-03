@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function main {
      setup
      jarBuild
@@ -138,4 +140,4 @@ function testConnection {
     done
 }
 
-main
+main ${@}
