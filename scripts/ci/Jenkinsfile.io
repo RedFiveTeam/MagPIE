@@ -15,16 +15,18 @@ node ('legacy') {
             git url: 'git@gitlab.devops.geointservices.io:dgs1sdt/pie.git', branch: 'acceptance', credentialsId: '0059b60b-fe05-4857-acda-41ada14d0c52', poll: true
         } else if (env.BRANCH_NAME == 'master') {
             git url: 'git@gitlab.devops.geointservices.io:dgs1sdt/pie.git', branch: 'master', credentialsId: '0059b60b-fe05-4857-acda-41ada14d0c52', poll: true
+        } else if (env.BRANCH_NAME == 'testFlyway') {
+            git url: 'git@gitlab.devops.geointservices.io:dgs1sdt/pie.git', branch: 'testFlyway', credentialsId: '0059b60b-fe05-4857-acda-41ada14d0c52', poll: true
         }
     }
 
 stage ('Test & Build') {
                     sh """
-                    docker pull dgs1sdt/blackpearl:cfs3linux
+                    docker pull dgs1sdt/pie:javaShell
 
                     docker stop Pie || true && docker rm Pie || true
 
-                    docker run --name Pie -v `pwd`:/app -itd dgs1sdt/blackpearl:cfs3linux
+                    docker run --name Pie -v `pwd`:/app -itd dgs1sdt/pie:javaShell
 
                     docker exec Pie /bin/bash -c "/app/scripts/tests.sh"
                     """
@@ -51,9 +53,9 @@ stage ('Test & Build') {
                 }
 
                 stage ('ThreadFix') {
-                   withCredentials([string(credentialsId: '7654JHGF9876HGFD6543LKJH5432GFDS', variable: 'THREADFIX_VARIABLE')]) {
+                   withCredentials([string(credentialsId: '4988-6586-4323-9822-5333', variable: 'THREADFIX_VARIABLE')]) {
                    sh "/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${BUILD_NUMBER}.fpr\
-                       https://threadfix.devops.geointservices.io/rest/applications/241/upload?apiKey=${THREADFIX_VARIABLE}"
+                       https://threadfix.devops.geointservices.io/rest/applications/248/upload?apiKey=${THREADFIX_VARIABLE}"
                    }
                 }
 

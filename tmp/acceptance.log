@@ -18,37 +18,37 @@
              ////////////////////////////////*
                  ////////////////////////*
 
-2019-09-03 09:40:39.737  INFO 54157 --- [           main] dgs1sdt.project.pie.PieApplication       : Starting PieApplication v0.0.1-SNAPSHOT on Lucas.local with PID 54157 (/Users/engineer/workspace/pie/target/pie-0.0.1-SNAPSHOT.jar started by engineer in /Users/engineer/workspace/pie)
-2019-09-03 09:40:39.739  INFO 54157 --- [           main] dgs1sdt.project.pie.PieApplication       : No active profile set, falling back to default profiles: default
-2019-09-03 09:40:40.259  INFO 54157 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
-2019-09-03 09:40:40.275  INFO 54157 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9ms. Found 0 repository interfaces.
-2019-09-03 09:40:40.549  INFO 54157 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$baeab3a0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-09-03 09:40:40.843  INFO 54157 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9090 (http)
-2019-09-03 09:40:40.869  INFO 54157 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2019-09-03 09:40:40.869  INFO 54157 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.14]
-2019-09-03 09:40:40.878  INFO 54157 --- [           main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/Users/engineer/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.]
-2019-09-03 09:40:40.950  INFO 54157 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2019-09-03 09:40:40.951  INFO 54157 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1172 ms
-2019-09-03 09:40:41.121  INFO 54157 --- [           main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 5.2.4 by Boxfuse
-2019-09-03 09:40:41.129  INFO 54157 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2019-09-03 09:40:41.258  INFO 54157 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2019-09-03 09:40:41.260  INFO 54157 --- [           main] o.f.c.internal.database.DatabaseFactory  : Database: jdbc:mysql://localhost:3306/piedev (MySQL 5.7)
-2019-09-03 09:40:41.329  INFO 54157 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.013s)
-2019-09-03 09:40:41.336  INFO 54157 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema `piedev`: 20190829142044
-2019-09-03 09:40:41.336  INFO 54157 --- [           main] o.f.core.internal.command.DbMigrate      : Schema `piedev` is up to date. No migration necessary.
-2019-09-03 09:40:41.422  INFO 54157 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+2019-09-13 08:44:45.439  INFO 43495 --- [           main] dgs1sdt.project.pie.PieApplication       : Starting PieApplication v0.0.1-SNAPSHOT on Lucas.local with PID 43495 (/Users/engineer/workspace/pie/target/pie-0.0.1-SNAPSHOT.jar started by engineer in /Users/engineer/workspace/pie)
+2019-09-13 08:44:45.446  INFO 43495 --- [           main] dgs1sdt.project.pie.PieApplication       : No active profile set, falling back to default profiles: default
+2019-09-13 08:44:45.949  INFO 43495 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-09-13 08:44:45.965  INFO 43495 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10ms. Found 0 repository interfaces.
+2019-09-13 08:44:46.234  INFO 43495 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$9fc250d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-09-13 08:44:46.525  INFO 43495 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9090 (http)
+2019-09-13 08:44:46.552  INFO 43495 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-09-13 08:44:46.553  INFO 43495 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.14]
+2019-09-13 08:44:46.563  INFO 43495 --- [           main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/Users/engineer/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.]
+2019-09-13 08:44:46.634  INFO 43495 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-09-13 08:44:46.634  INFO 43495 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1158 ms
+2019-09-13 08:44:46.802  INFO 43495 --- [           main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 5.2.4 by Boxfuse
+2019-09-13 08:44:46.809  INFO 43495 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2019-09-13 08:44:46.935  INFO 43495 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2019-09-13 08:44:46.937  INFO 43495 --- [           main] o.f.c.internal.database.DatabaseFactory  : Database: jdbc:mysql://localhost:3306/piedev (MySQL 5.7)
+2019-09-13 08:44:47.010  INFO 43495 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.014s)
+2019-09-13 08:44:47.017  INFO 43495 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema `piedev`: 20190829142044
+2019-09-13 08:44:47.017  INFO 43495 --- [           main] o.f.core.internal.command.DbMigrate      : Schema `piedev` is up to date. No migration necessary.
+2019-09-13 08:44:47.103  INFO 43495 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
 	name: default
 	...]
-2019-09-03 09:40:41.466  INFO 54157 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.7.Final}
-2019-09-03 09:40:41.467  INFO 54157 --- [           main] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
-2019-09-03 09:40:41.566  INFO 54157 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2019-09-03 09:40:41.724  INFO 54157 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
-2019-09-03 09:40:41.870  INFO 54157 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2019-09-03 09:40:42.046  INFO 54157 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2019-09-03 09:40:42.084  WARN 54157 --- [           main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2019-09-03 09:40:42.139  INFO 54157 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
-2019-09-03 09:40:42.249  INFO 54157 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9090 (http) with context path ''
-2019-09-03 09:40:42.252  INFO 54157 --- [           main] dgs1sdt.project.pie.PieApplication       : Started PieApplication in 2.872 seconds (JVM running for 3.213)
-2019-09-03 09:40:43.157  INFO 54157 --- [nio-9090-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2019-09-03 09:40:43.157  INFO 54157 --- [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2019-09-03 09:40:43.163  INFO 54157 --- [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
+2019-09-13 08:44:47.151  INFO 43495 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.7.Final}
+2019-09-13 08:44:47.152  INFO 43495 --- [           main] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2019-09-13 08:44:47.253  INFO 43495 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-09-13 08:44:47.417  INFO 43495 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2019-09-13 08:44:47.562  INFO 43495 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-09-13 08:44:47.714  INFO 43495 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-09-13 08:44:47.755  WARN 43495 --- [           main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-09-13 08:44:47.809  INFO 43495 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2019-09-13 08:44:47.916  INFO 43495 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9090 (http) with context path ''
+2019-09-13 08:44:47.918  INFO 43495 --- [           main] dgs1sdt.project.pie.PieApplication       : Started PieApplication in 2.854 seconds (JVM running for 3.202)
+2019-09-13 08:44:48.836  INFO 43495 --- [nio-9090-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-09-13 08:44:48.836  INFO 43495 --- [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2019-09-13 08:44:48.841  INFO 43495 --- [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms

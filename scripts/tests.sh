@@ -3,7 +3,7 @@
 set -e
 
 function main {
-     setup
+    setup
 
     case "${1}" in
         acc|acceptance)
@@ -31,12 +31,7 @@ function acceptanceTests {
     if [[ "${2}" == "./tests/"*".test.ts" ]]; then
         SPECIFIC_TESTS=${2}
     fi
-    pushd ${BASE_DIR}/scripts
-        ./setup_env.sh
-    popd
-    pushd ${BASE_DIR}/scripts
-        ./setup_db.sh
-    popd
+
     pushd ${BASE_DIR}/scripts/seed_db
         ./seed_db.sh
     popd
@@ -65,9 +60,7 @@ function unitTests {
     showBanner "Unit Tests"
 
     pushd ${BASE_DIR}
-        result=$(mvn test | grep -E "\[INFO\]|\[ERROR\]|Expected")
-        echo "${result}"
-        if [[ $(echo ${result} | grep "\[ERROR\]" | wc -l) -gt 0 ]]; then
+        if [[ $(mvn test | grep -E "\[INFO\]|\[ERROR\]|Expected" | grep "\[ERROR\]" | wc -l) -gt 0 ]]; then
             exit 1
         fi
     popd
