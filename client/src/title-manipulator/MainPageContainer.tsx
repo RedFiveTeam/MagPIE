@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { updateTitle } from './actions';
+import { updateTitle } from '../redux/actions';
 import { connect } from 'react-redux';
 import TitleInput from './TitleInput';
 
@@ -11,7 +11,12 @@ interface Props {
 
 class MainPageContainer extends React.Component<Props> {
   render() {
-    return <TitleInput title={this.props.title} updateTitle={this.props.updateTitle}/>
+    return (
+      <TitleInput
+        title={this.props.title}
+        updateTitle={this.props.updateTitle}
+      />
+    )
   }
 }
 

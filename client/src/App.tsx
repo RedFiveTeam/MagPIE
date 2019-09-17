@@ -1,5 +1,5 @@
 import React from 'react';
-import MainPageContainer from '../MainPageContainer';
+import MainPageContainer from './title-manipulator/MainPageContainer';
 
 const App: React.FC = () => {
   return (
