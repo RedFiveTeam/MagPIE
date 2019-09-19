@@ -2,13 +2,14 @@ package dgs1sdt.project.pie;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+@EnableAsync
 public class PieApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(PieApplication.class, args);
   }
-
 }
 

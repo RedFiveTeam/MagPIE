@@ -1,15 +1,13 @@
+import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import reducer from './redux/reducers/reducer';
-import { createStore } from 'redux';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
-
-const store = createStore(reducer);
+import { store } from './redux/store';
 
 ReactDOM.render(
   <Provider store={store}>

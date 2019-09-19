@@ -1,35 +1,44 @@
 import * as React from 'react';
-import { updateTitle } from '../redux/actions';
 import { connect } from 'react-redux';
-import TitleInput from './TitleInput';
+import DisplayFact from '../fact/DisplayFact';
 import classNames from 'classnames';
+import { fetchActions } from '../redux/actions';
 
 interface Props {
-  title: string;
-  updateTitle: (e: any) => void;
+  fact: string;
+  getFact: () => void;
+  pending: boolean;
   className?: string;
 }
 
 
 class MainPageContainer extends React.Component<Props> {
+  componentDidMount(): void {
+    this.props.getFact();
+  }
+
   render() {
     return (
       <div className={classNames('main-page-container', this.props.className)}>
-      <TitleInput
-        title={this.props.title}
-        updateTitle={this.props.updateTitle}
-      />
+        {
+          this.props.pending ?
+            <div>LOADING...back off!</div> :
+            <DisplayFact
+              fact={this.props.fact}
+            />
+        }
       </div>
     )
   }
 }
 
 const mapStateToProps = (state: any) => ({
-  title: state.title
+  fact: state.fact,
+  pending: state.pending
 });
 
 const mapDispatchToProps = {
-  updateTitle: updateTitle
+  getFact: fetchActions
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainPageContainer);

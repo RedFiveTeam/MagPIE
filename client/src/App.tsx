@@ -1,5 +1,5 @@
 import React from 'react';
-import MainPageContainer from './title-manipulator/MainPageContainer';
+import MainPageContainer from './page/MainPageContainer';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
@@ -11,7 +11,6 @@ const App: React.FC<Props> = props => {
   const {className} = props;
   return (
     <div className={classNames('app', className)}>
-      A DGS-1 Pie webapp under construction
       <MainPageContainer/>
     </div>
   );

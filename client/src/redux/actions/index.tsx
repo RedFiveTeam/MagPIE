@@ -1,6 +1,11 @@
 import { ActionTypes } from './ActionTypes';
 
-export const updateTitle = (event: any) => ({
-  type: ActionTypes.UPDATE_TITLE,
-  event
+export * from './FactActions';
+
+export const pendingFetch = () => ({
+  type: ActionTypes.FETCH_PENDING,
 });
+
+
+
+
