@@ -8,7 +8,7 @@ interface Props {
   className?: string;
 }
 
-const DisplayFact: React.FC<Props> = props => {
+export const DisplayFact: React.FC<Props> = props => {
   return (
     <div className={classNames('fact-box', props.className)}>
       <Fact className={'fact'}>Fact: {props.fact}</Fact>

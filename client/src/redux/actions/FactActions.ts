@@ -9,7 +9,7 @@ export const getFact = (data: string) => ({
 export const fetchActions = () => {
   return (dispatch: any) => {
     dispatch(pendingFetch());
-    fetch('http://localhost:8080/fact')
+    fetch('/api/fact')
       .then(res => res.text()
       )
       .then(data => {

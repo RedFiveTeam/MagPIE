@@ -12,12 +12,11 @@ import java.util.Random;
 @RestController
 @RequestMapping(FactController.URI)
 public class FactController {
-  static final String URI = "/fact";
+  static final String URI = "/api/fact";
 
 
   @Autowired
   private FactRepository factRepository;
-  @CrossOrigin(origins = "http://localhost:3000")
   @GetMapping
   public String fact() {
     List<Fact> facts = factRepository.findAll();

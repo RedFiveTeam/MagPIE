@@ -4,5 +4,5 @@ Feature('Home Page');
 
 Scenario ('should see a home page', (I) => {
     I.amOnPage('/');
-    I.waitForText('A DGS-1 Pie webapp under construction', 10);
+    I.waitForText('Fact: You sure make me happy^_^', 10);
 });
