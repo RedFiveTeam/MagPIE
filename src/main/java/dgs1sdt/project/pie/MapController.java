@@ -9,10 +9,14 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping(MapController.URI)
 public class MapController {
   static final String URI = "/api/map";
+
   @GetMapping
   public String map() {
-    final String uri = "https://ec2-96-127-73-112.us-gov-west-1.compute.amazonaws" +
-      ".com/wami-soa-server/wami/CS?SERVICE=CS&VERSION=1.0.1&REQUEST=GetCapabilities";
+    final String uri = "https://ec2-96-127-73-112.us-gov-west-1.compute.amazonaws.com/wami-soa-server/wami/" +
+      "CS?SERVICE=CS" +
+      "&VERSION=1.0.1" +
+      "&REQUEST=GetCapabilities";
+
     RestTemplate restTemplate = new RestTemplate();
     return restTemplate.getForObject(uri, String.class);
   }
