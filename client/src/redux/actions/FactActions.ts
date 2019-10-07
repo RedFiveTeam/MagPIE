@@ -6,7 +6,7 @@ export const getFact = (data: string) => ({
   data
 });
 
-export const fetchActions = () => {
+export const fetchFact = () => {
   return (dispatch: any) => {
     dispatch(pendingFetch());
     fetch('/api/fact')

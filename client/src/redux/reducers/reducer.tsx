@@ -19,6 +19,12 @@ const reducer = (state = initState, action: any) => {
         pending: false,
         fact: action.data
       };
+    case ActionTypes.FETCH_MAP_SUCCESS:
+      return {
+        ...state,
+        pending: false,
+        map: action.data
+      };
     default:
       return state;
   }

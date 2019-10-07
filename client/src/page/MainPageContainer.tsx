@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import DisplayFact from '../fact/DisplayFact';
 import classNames from 'classnames';
-import { fetchActions } from '../redux/actions';
+import { fetchFact } from '../redux/actions';
 
 interface Props {
   fact: string;
@@ -38,7 +38,7 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = {
-  getFact: fetchActions
+  getFact: fetchFact
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainPageContainer);

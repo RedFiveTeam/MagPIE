@@ -7,5 +7,21 @@ export const pendingFetch = () => ({
 });
 
 
+export const getMap = (data: any) => ({
+  type: ActionTypes.FETCH_MAP_SUCCESS,
+  data
+});
+
+export const fetchHiperStare = () => {
+  return (dispatch: any) => {
+    dispatch(pendingFetch());
+    fetch('/api/map')
+      .then(res => res.text()
+      )
+      .then(data => {
+        return dispatch(getMap(data));
+      })
+  }
+};
 
 
