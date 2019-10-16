@@ -31,7 +31,7 @@ export const getMap = (data: any) => ({
 export const fetchHiperStare = () => {
   return (dispatch: any) => {
     dispatch(pendingFetch());
-    fetch('/api/map', {mode: 'no-cors'})
+    fetch('/api/map')
       .then(res => res.text()
       )
       .then(data => {
