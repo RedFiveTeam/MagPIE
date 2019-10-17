@@ -13,7 +13,7 @@ public class RFIController {
   @GetMapping
   public String rfi() {
     final String uri = "https://www.gets.agi.nga.smil.mil/" +
-      "action.REST/rfiService/2.2.4/queryRFIs?taskedOrgid=DGS-1";
+      "action/REST/rfiService/2.2.4/queryRFIs?taskedOrgid=DGS-1";
     RestTemplate restTemplate = new RestTemplate();
     return restTemplate.getForObject(uri, String.class);
   }
