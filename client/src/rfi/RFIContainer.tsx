@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchGETSRfi } from '../redux/actions';
+import { fetchGETSRfi, updateApi } from '../redux/actions';
 
 interface Props {
-  loadGETSRfi: () => void;
+  loadGETSRfi: (e: any) => void;
+  updateApi: (e: any) => void;
   rfi: any;
+  api: string;
   className?: string;
 }
 
@@ -12,23 +14,37 @@ class RFIContainer extends React.Component<Props> {
   render() {
     return (
       <div>
-        <button onClick={()=>this.handleClick()}>Hijack Rfi</button>
+        <input
+          className={"apiInput"}
+          id={"apiText"}
+          type={"text"}
+          value={this.props.api}
+          onChange={event=>this.handleChange(event.target.value)}
+        />
+        <button onClick={()=>this.handleClick()}>Get Api</button>
         <div>{this.props.rfi}</div>
       </div>
     )
   }
 
-  private handleClick() {
-    this.props.loadGETSRfi();
+  handleChange(e: any) {
+    console.log(this.props.api);
+    this.props.updateApi(e);
+  }
+
+  handleClick() {
+    this.props.loadGETSRfi(this.props.api);
   }
 }
 
 const mapStateToProps = (state: any) => ({
-  rfi : state.rfi
+  rfi : state.rfi,
+  api: state.api
 });
 
 const mapDispatchToProps = {
-  loadGETSRfi: fetchGETSRfi
+  loadGETSRfi: fetchGETSRfi,
+  updateApi: updateApi
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RFIContainer);

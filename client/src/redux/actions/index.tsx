@@ -6,16 +6,27 @@ export const pendingFetch = () => ({
   type: ActionTypes.FETCH_PENDING,
 });
 
+export const updateApiString = (data: any) => ({
+  type: ActionTypes.UPDATE_API,
+    data
+});
+
+export const updateApi = (e: any) => {
+  return (dispatch: any) => {
+    dispatch(updateApiString(e));
+  }
+};
+
 
 export const getRfi = (data: any) => ({
   type: ActionTypes.FETCH_RFI_SUCCESS,
   data
 });
 
-export const fetchGETSRfi = () => {
+export const fetchGETSRfi = (api: string) => {
   return (dispatch: any) => {
     dispatch(pendingFetch());
-    fetch('/api/rfi')
+    fetch('/api/rfi/' + btoa(api))
       .then(res => res.text()
       )
       .then(data => {

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 import MainPageContainer from './page/MainPageContainer';
 import RFIContainer from './rfi/RFIContainer';
-import MapContainer from './map/MapContainer';
+// import MapContainer from './map/MapContainer';
 
 interface Props {
   className?: string;
@@ -15,7 +15,7 @@ const App: React.FC<Props> = props => {
     <div className={classNames('app', className)}>
       <MainPageContainer/>
       <RFIContainer/>
-      <MapContainer/>
+      {/*<MapContainer/>*/}
     </div>
   );
 };

@@ -3,7 +3,8 @@ import { ActionTypes } from '../actions/ActionTypes';
 const initState = {
   pending: false,
   fact: "",
-  error: null
+  error: null,
+  api: ""
 };
 
 const reducer = (state = initState, action: any) => {
@@ -30,6 +31,11 @@ const reducer = (state = initState, action: any) => {
         ...state,
         pending: false,
         map: action.data
+      };
+    case ActionTypes.UPDATE_API:
+      return {
+        ...state,
+        api: action.data
       };
     default:
       return state;

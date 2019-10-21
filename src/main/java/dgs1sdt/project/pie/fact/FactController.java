@@ -12,8 +12,6 @@ import java.util.Random;
 @RequestMapping(FactController.URI)
 public class FactController {
   static final String URI = "/api/fact";
-
-
   @Autowired
   private FactRepository factRepository;
   @GetMapping
