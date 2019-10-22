@@ -13,7 +13,7 @@ import java.util.Base64;
 public class RFIController {
   static final String URI = "/api/rfi";
 
-  @GetMapping(produces = "application/json", path = "/{urlString}")
+  @GetMapping(produces = "application/xml", path = "/{urlString}")
   public String rfi(@PathVariable String urlString) throws UnsupportedEncodingException {
 //    System.out.println("new Api String: " + urlString);
 
