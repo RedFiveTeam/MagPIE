@@ -6,6 +6,10 @@ export const pendingFetch = () => ({
   type: ActionTypes.FETCH_PENDING,
 });
 
+export const pendingRfi = () => ({
+  type: ActionTypes.FETCH_RFI_PENDING,
+});
+
 export const updateApiString = (data: any) => ({
   type: ActionTypes.UPDATE_API,
     data
@@ -23,10 +27,10 @@ export const getRfi = (data: any) => ({
   data
 });
 
-export const fetchGETSRfi = (api: string) => {
+export const fetchGETSRfi = () => {
   return (dispatch: any) => {
     dispatch(pendingFetch());
-    fetch('/api/rfi/' + btoa(api))
+    fetch('/api/gets/rfis')
       .then(res => res.text()
       )
       .then(data => {
@@ -39,16 +43,6 @@ export const getMap = (data: any) => ({
   data
 });
 
-export const fetchHiperStare = () => {
-  return (dispatch: any) => {
-    dispatch(pendingFetch());
-    fetch('/api/map')
-      .then(res => res.text()
-      )
-      .then(data => {
-        return dispatch(getMap(data));
-      })
-  }
-};
+
 
 

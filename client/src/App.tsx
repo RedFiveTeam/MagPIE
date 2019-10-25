@@ -15,7 +15,6 @@ const App: React.FC<Props> = props => {
     <div className={classNames('app', className)}>
       <MainPageContainer/>
       <RFIContainer/>
-      {/*<MapContainer/>*/}
     </div>
   );
 };
