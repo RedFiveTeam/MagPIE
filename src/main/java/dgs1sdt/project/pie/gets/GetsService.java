@@ -34,7 +34,7 @@ public class GetsService {
                 rfiList.add(rfi);
             }
         }
-      System.out.println("returning gets data from GetsClient:" + rfiList);
+
         return rfiList;
     }
 }

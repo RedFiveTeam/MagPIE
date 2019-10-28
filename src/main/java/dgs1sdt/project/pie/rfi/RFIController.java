@@ -14,11 +14,6 @@ public class RFIController {
 
   public static final String URI = "/api/gets";
 
-
-  @Value("${GETS_URL}")
-  private String getsBaseURL;
-
-
   @Autowired
   RfiRepository rfiRepository;
 
