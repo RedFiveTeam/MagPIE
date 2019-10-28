@@ -1,6 +1,6 @@
 package dgs1sdt.project.pie.gets;
 
-import dgs1sdt.project.pie.rfi.RfiModel;
+import dgs1sdt.project.pie.rfi.Rfi;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,14 +12,14 @@ import java.util.List;
 
 @Service
 public class GetsService {
-    public List<RfiModel> getRfis(Document document) throws Exception {
-        List<RfiModel> rfiList = new ArrayList<>();
+    public List<Rfi> getRfis(Document document) throws Exception {
+        List<Rfi> rfiList = new ArrayList<>();
         NodeList htmlRfis = document.getElementsByTagName("rfiMetaData");
         for (int i = 0; i < htmlRfis.getLength(); i++) {
             Node element = htmlRfis.item(i);
             if (element.getNodeType() == Node.ELEMENT_NODE) {
                 Element ele = (Element) element;
-                RfiModel rfi = new RfiModel(
+                Rfi rfi = new Rfi(
                         ele.getElementsByTagName("rfi_id").item(0).getTextContent(),
                         ele.getElementsByTagName("priority").item(0).getTextContent(),
                         ele.getElementsByTagName("gets_status").item(0).getTextContent(),

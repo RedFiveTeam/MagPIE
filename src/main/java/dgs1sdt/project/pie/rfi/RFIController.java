@@ -1,11 +1,7 @@
 package dgs1sdt.project.pie.rfi;
 
-import dgs1sdt.project.pie.Interfaces.GetsClient;
-import dgs1sdt.project.pie.gets.GetsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 
 @RestController
@@ -18,10 +14,10 @@ public class RFIController {
   RfiRepository rfiRepository;
 
   @GetMapping(produces = "application/json", path = "/rfis")
-
-    public List<RfiModel> rfis() throws Exception {
+  Iterable<Rfi> getAll() {
     return rfiRepository.findAll();
   }
+
 
 
 

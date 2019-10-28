@@ -2,7 +2,7 @@ package dgs1sdt.project.pie.Controllers;
 
 import dgs1sdt.project.pie.BaseIntegrationTest;
 import dgs1sdt.project.pie.rfi.RFIController;
-import dgs1sdt.project.pie.rfi.RfiModel;
+import dgs1sdt.project.pie.rfi.Rfi;
 import dgs1sdt.project.pie.rfi.RfiRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
     @Test
     public void rfiTest() {
 
-        rfiRepository.save(new RfiModel(
+        rfiRepository.save(new Rfi(
                 "rfi_id1",
                 "priority1",
                 "gets_status1",

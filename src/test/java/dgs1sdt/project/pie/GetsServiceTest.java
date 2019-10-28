@@ -3,7 +3,7 @@ package dgs1sdt.project.pie;
 import dgs1sdt.project.pie.Interfaces.GetsClient;
 import dgs1sdt.project.pie.gets.GetsService;
 import dgs1sdt.project.pie.gets.StubGetsClient;
-import dgs1sdt.project.pie.rfi.RfiModel;
+import dgs1sdt.project.pie.rfi.Rfi;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public class GetsServiceTest {
 
         assertEquals(
                 Arrays.asList(
-                        new RfiModel(
+                        new Rfi(
                                 "rfi_id1",
                                 "priority1",
                                 "gets_status1",
@@ -31,7 +31,7 @@ public class GetsServiceTest {
                                 "exploited_coi1",
                                 "tracks1"
                         ),
-                        new RfiModel(
+                        new Rfi(
                                 "rfi_id2",
                                 "priority2",
                                 "gets_status2",
@@ -43,7 +43,7 @@ public class GetsServiceTest {
                                 "exploited_coi2",
                                 "tracks2"
                         ),
-                        new RfiModel(
+                        new Rfi(
                                 "rfi_id3",
                                 "priority3",
                                 "gets_status3",

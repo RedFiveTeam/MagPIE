@@ -1,7 +1,7 @@
 package dgs1sdt.project.pie.gets;
 
 import dgs1sdt.project.pie.Interfaces.GetsClient;
-import dgs1sdt.project.pie.rfi.RfiModel;
+import dgs1sdt.project.pie.rfi.Rfi;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.ActiveProfiles;
 import org.w3c.dom.Document;
@@ -23,7 +23,7 @@ public class WebGetsClient implements GetsClient {
 
     @Override
     public Document getRfis() throws Exception {
-        List<RfiModel> rfiList = new ArrayList<>();
+        List<Rfi> rfiList = new ArrayList<>();
         String uri = getsBaseURL;
         return this.makeRequest(uri);
     }
