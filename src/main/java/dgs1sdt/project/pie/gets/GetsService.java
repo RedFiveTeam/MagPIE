@@ -20,16 +20,16 @@ public class GetsService {
             if (element.getNodeType() == Node.ELEMENT_NODE) {
                 Element ele = (Element) element;
                 Rfi rfi = new Rfi(
-                        ele.getElementsByTagName("rfi_id").item(0).getTextContent(),
-                        ele.getElementsByTagName("priority").item(0).getTextContent(),
-                        ele.getElementsByTagName("gets_status").item(0).getTextContent(),
-                        ele.getElementsByTagName("info").item(0).getTextContent(),
-                        ele.getElementsByTagName("customer").item(0).getTextContent(),
-                        ele.getElementsByTagName("start").item(0).getTextContent(),
-                        ele.getElementsByTagName("end").item(0).getTextContent(),
-                        ele.getElementsByTagName("rfi_status").item(0).getTextContent(),
-                        ele.getElementsByTagName("exploited_coi").item(0).getTextContent(),
-                        ele.getElementsByTagName("tracks").item(0).getTextContent()
+                        ele.getElementsByTagName("getsrfi:RequestForInformation.id").item(0).getTextContent(),
+                        ele.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent(),
+                        ele.getElementsByTagName("gets:ltiov").item(0).getTextContent(),
+                        ele.getElementsByTagName("gets:unit").item(0).getTextContent(),
+                        ele.getElementsByTagName("getsrfi:closeDate").item(0).getTextContent(),
+                        ele.getElementsByTagName("submissionNumber").item(0).getTextContent(),
+                        ele.getElementsByTagName("getsrfi:receiveDate").item(0).getTextContent(),
+                        ele.getElementsByTagName("status").item(0).getTextContent(),
+                        ele.getElementsByTagName("getsrfi:requestText").item(0).getTextContent(),
+                        ele.getElementsByTagName("getsrfi:Targets").item(0).getTextContent()
                 );
                 rfiList.add(rfi);
             }

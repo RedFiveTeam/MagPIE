@@ -2,6 +2,8 @@ package dgs1sdt.project.pie.gets;
 
 import dgs1sdt.project.pie.Interfaces.GetsClient;
 import dgs1sdt.project.pie.rfi.Rfi;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.ActiveProfiles;
 import org.w3c.dom.Document;
@@ -15,10 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@ActiveProfiles("prod")
+@Primary
 public class WebGetsClient implements GetsClient {
 
-    private String getsBaseURL = "${GETS_URL}";
+    @Value("${GETS_URL}")
+    String getsBaseURL = System.getenv("GETS_URL");
 
 
     @Override

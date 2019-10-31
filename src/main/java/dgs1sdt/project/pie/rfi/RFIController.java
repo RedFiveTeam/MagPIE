@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(RFIController.URI)
 public class RFIController {
 
-  public static final String URI = "/api/gets";
+  public static final String URI = "/api";
 
   @Autowired
   RfiRepository rfiRepository;
