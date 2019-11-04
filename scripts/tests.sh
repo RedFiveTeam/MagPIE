@@ -36,7 +36,7 @@ function acceptanceTests {
         ./seed_db.sh
     popd
 
-    java -DPROFILE=test -DGETS_URL=google.com -jar ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
+    java -jar ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
     echo $! > ${BASE_DIR}/tmp/pie.pid
 
     testConnection ${REACT_APP_HOST} $(cat ${BASE_DIR}/tmp/pie.pid)

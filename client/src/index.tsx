@@ -2,19 +2,26 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
+import reducer from './redux/reducers/reducer';
+import thunk from 'redux-thunk';
+import App from './App';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
-import { store } from './redux/store';
+
+const store = createStore(
+  reducer,
+  applyMiddleware(thunk)
+);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <ThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
+    <Provider store={store}>
       <App/>
-    </ThemeProvider>
-  </Provider>
+    </Provider>
+  </ThemeProvider>
   , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

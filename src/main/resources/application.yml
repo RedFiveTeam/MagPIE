@@ -20,5 +20,4 @@ spring:
 
 server.compression.enabled: false
 
-profile: {$PROFILE}
 GetsBaseURL: {$GETS_URL}

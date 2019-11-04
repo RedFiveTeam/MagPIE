@@ -1,22 +1,30 @@
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import MainPageContainer from './page/MainPageContainer';
-import RFIContainer from './rfi/RFIContainer';
-// import MapContainer from './map/MapContainer';
+import RMDashboardContainer from './rm-dashboard/RMDashboardContainer';
+import MetricsContainer from './metrics/MetricsContainer';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 interface Props {
   className?: string;
 }
 
-const App: React.FC<Props> = props => {
-  const {className} = props;
-  return (
-    <div className={classNames('app', className)}>
-      <MainPageContainer/>
-      <RFIContainer/>
-    </div>
-  );
+class App extends React.Component<Props> {
+  render() {
+    return (
+      <Router>
+        <div className={classNames('app', this.props.className)}>
+          <Route exact path={'/'} component={RMDashboardContainer}/>
+          <Route exact path={'/metrics'} component={MetricsContainer}/>
+        </div>
+      </Router>
+    )
+  }
 };
 
-export default styled(App)``;
+export default styled(App)`
+  height: 100vh;
+  background-color: ${(props) => props.theme.color.backgroundBase};
+`;
+
+

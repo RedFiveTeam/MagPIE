@@ -1,40 +1,32 @@
 import reducer from './reducer';
 import { ActionTypes } from '../actions/ActionTypes';
+import RFIModel from '../../rm-dashboard/RFIModel';
 
 describe('reducer reducer', () => {
-  it('should return initial state', () => {
-    expect(
-      reducer(undefined, {}).fact
-    ).toBe('');
-  });
-
-  it('should handle FETCH_PENDING', () => {
-    let mockAction = {
-      type: ActionTypes.FETCH_PENDING,
-      pending: true
-    };
-    expect(
-      reducer(undefined, mockAction).pending
-    ).toBe(true);
-  });
-
   it('should handle FETCH_SUCCESS', () => {
-    let mockAction = {
-      type: ActionTypes.FETCH_FACT_SUCCESS,
-      data: 'You are awesome!'
-    };
-    expect(
-      reducer(undefined, mockAction).fact
-    ).toEqual('You are awesome!');
-  });
+    let rfiList: RFIModel[] = [
+      new RFIModel('1', '1'),
+      new RFIModel('2', '2')
+    ];
 
-/*  it('should handle FETCH_ERROR', () => {
     let mockAction = {
-      type: ActionTypes.FETCH_FACT_ERROR,
-      error: 'Could not retrieve a fact!'
+      type: ActionTypes.FETCH_RFI_SUCCESS,
+      body: [
+        {
+          rfiId: '1',
+          getsUrl: '1'
+        },
+        {
+          rfiId: '2',
+          getsUrl: '2'
+        }
+      ]
     };
+
     expect(
-      reducer(undefined, mockAction).error
-    ).toEqual('Could not retrieve a fact!');
-  });*/
+      reducer([], mockAction)
+    ).toEqual({
+      rfis: rfiList
+    });
+  });
 });
