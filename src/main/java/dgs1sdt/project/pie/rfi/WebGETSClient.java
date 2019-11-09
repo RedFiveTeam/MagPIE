@@ -1,8 +1,4 @@
 package dgs1sdt.project.pie.rfi;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.test.context.ActiveProfiles;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,13 +12,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-@ActiveProfiles("!test")
 public class WebGETSClient implements GETSClient {
 
-  @Value("${GETS_URL}")
-  String getsBaseURL = System.getenv("GETS_URL");
+  private String getsBaseURL;
 
+  public WebGETSClient(String getsUri){
+    this.getsBaseURL = getsUri;
+  }
 
   @Override
   public List<RFI> getRFIs() throws Exception {

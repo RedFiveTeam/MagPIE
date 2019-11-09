@@ -20,4 +20,4 @@ spring:
 
 server.compression.enabled: false
 
-GetsBaseURL: {$GETS_URL}
+
