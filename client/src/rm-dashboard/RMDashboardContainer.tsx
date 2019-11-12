@@ -37,7 +37,7 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = {
   fetchRFIs: fetchRFIs,
-  postSiteVisit: postSiteVisit
+  postSiteVisit: postSiteVisit,
 };
 
 export default styled(connect(mapStateToProps, mapDispatchToProps)(RMDashboardContainer))`

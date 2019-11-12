@@ -2,13 +2,18 @@ import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import IconOpenNewPage from '../../styles/IconOpenNewPage';
+import { connect } from 'react-redux';
+import GETSClickRequestModel from '../../metrics/Model/GETSClickRequestModel';
+import { postGETSClick } from '../../users/UserActions';
 
 interface Props {
   url: string;
+  postGETSClick: (getsClickRequestModel: GETSClickRequestModel) => void;
   className?: string;
 }
 
 export const RFIRowButtonSection: React.FC<Props> = props => {
+
   function buttonText() {
     return (
       <span className={classNames('cell', 'cell--view-in-gets')}>
@@ -17,11 +22,17 @@ export const RFIRowButtonSection: React.FC<Props> = props => {
     );
   }
 
+  function handleClick() {
+    postGETSClick(new GETSClickRequestModel(props.url));
+    window.open(props.url, '_blank');
+  }
+
+
   function viewInGETSButton() {
     return (
       <div
         className={classNames('cells', 'cells-right')}
-        onClick={() => window.open(props.url, '_blank')}
+        onClick={() => handleClick()}
       >
         {buttonText()}
         <IconOpenNewPage/>
@@ -37,7 +48,17 @@ export const RFIRowButtonSection: React.FC<Props> = props => {
   )
 };
 
-export const StyledRFIRowButtonSection = styled(RFIRowButtonSection)`
+const mapStateToProps = (state: any) => ({
+
+});
+
+const mapDispatchToProps = {
+  postGETSClick: postGETSClick,
+};
+
+
+
+export const StyledRFIRowButtonSection = styled(connect(mapStateToProps, mapDispatchToProps)(RFIRowButtonSection))`
   width: 164px;
   font-weight: bold;
   

@@ -1,16 +1,32 @@
 import { ActionTypes } from '../redux/actions/ActionTypes';
 
-const fetchMetricsSuccess = (body: any) => {
+const fetchSiteVisitsSuccess = (body: any) => {
   return {
-    type: ActionTypes.FETCH_METRICS_SUCCESS,
+    type: ActionTypes.FETCH_SITE_VISITS_SUCCESS,
     body
   }
 };
 
-export const fetchMetrics = () => {
-  return (dispatch: any) => {
-    return fetch('/api/site-visit')
-      .then(response => response.text())
-      .then(body => dispatch(fetchMetricsSuccess(body)));
+const fetchGETSClicksSuccess = (body: any) => {
+  return {
+    type: ActionTypes.FETCH_GETS_CLICKS_SUCCESS,
+    body
   }
 };
+
+export const fetchSiteVisitMetrics = () => {
+  return (dispatch: any) => {
+    return fetch('/api/metrics/site-visits')
+      .then(response => response.text())
+      .then(body => dispatch(fetchSiteVisitsSuccess(body)));
+  }
+};
+
+export const fetchGETSClicksMetrics = () => {
+  return (dispatch: any) => {
+    return fetch('/api/metrics/gets-clicks')
+      .then(response => response.text())
+      .then(body => dispatch(fetchGETSClicksSuccess(body)));
+  }
+};
+
