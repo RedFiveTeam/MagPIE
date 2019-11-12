@@ -4,5 +4,6 @@ Feature('Home Page');
 
 Scenario ('should see a home page', (I) => {
     I.amOnPage('/');
-    I.waitForText('Fact:', 10);
+    I.waitForText('RFI', 10);
+    I.waitForText('19-111', 10);
 });
