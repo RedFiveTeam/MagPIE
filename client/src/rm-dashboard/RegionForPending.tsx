@@ -12,7 +12,7 @@ interface Props {
 
 function displayMessageOrDataForPendingRegion(rfis: RFIModel[]) {
   const rfisComplete = () => {
-    return rfis && rfis.length === 0
+    return rfis && rfis.filter(function (rfis) {return rfis.status === "NEW"; }).length === 0
   };
 
   if (rfisComplete()) {
@@ -34,10 +34,11 @@ function displayCompletedRFIsMessage() {
   );
 }
 
+
 function displayRFIsAsRows(rfis: RFIModel[]) {
   return (
-    rfis.map((rfi: RFIModel, index: any) => {
-      return (<StyledRFIRowPending rfi={rfi} index={index} key={`${index}`}/>);
+    rfis.filter(function (rfis) {return rfis.status === "NEW"; }).map((rfi: RFIModel, index: any) => {
+      return (<StyledRFIRowPending rfi={rfi} index={index} key={`${index}`}/>) ;
     })
   )
 }
@@ -52,7 +53,7 @@ function determineTransparency(rfis: RFIModel[]) {
 export const RegionForPending: React.FC<Props> = props => {
   return (
     <div className={classNames('region', 'region--pending', props.className)}>
-      <StyledRFIRegionDivider className={determineTransparency(props.rfis)}/>
+      <StyledRFIRegionDivider className={determineTransparency(props.rfis)} regionTitle={"PENDING"} />
       {displayMessageOrDataForPendingRegion(props.rfis)}
     </div>
   )

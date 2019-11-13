@@ -14,10 +14,14 @@ interface Props {
   className?: string;
 }
 
+
+
 export class RMDashboardContainer extends React.Component<Props> {
   componentDidMount(): void {
     this.props.postSiteVisit();
     this.props.fetchRFIs();
+
+
   }
 
   render() {

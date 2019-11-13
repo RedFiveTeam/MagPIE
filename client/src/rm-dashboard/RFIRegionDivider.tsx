@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 
 interface Props {
+  regionTitle: string
   className?: string;
 }
 
@@ -10,7 +11,7 @@ export const RFIRegionDivider: React.FC<Props> = props => {
   return (
     <div className={classNames('region-divider', 'pending', props.className)}>
       <span className={classNames('separator-line', 'left')}/>
-      <span className={classNames('separator-title')}>PENDING</span>
+      <span className={classNames('separator-title')}>{props.regionTitle}</span>
       <span className={classNames('separator-line', 'right')}/>
     </div>
   )

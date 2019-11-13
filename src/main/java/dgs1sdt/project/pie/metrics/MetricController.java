@@ -42,7 +42,9 @@ public class MetricController {
   GetsClick create (@Valid @RequestBody GETSClickJSON getsClickJSON) {
     GetsClick getsClick = new GetsClick(
       new Date(),
+      getsClickJSON.getStatus(),
       getsClickJSON.getUrl()
+
     );
     System.out.print(getsClick);
     return this.getsClicksRepository.save(getsClick);

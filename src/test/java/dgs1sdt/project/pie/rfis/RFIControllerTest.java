@@ -16,9 +16,14 @@ public class RFIControllerTest extends BaseIntegrationTest {
       .get(RFIController.URI)
       .then()
       .statusCode(200)
-      .body("[0].rfiId", equalTo("2019-00111"))
+      .body("[0].rfiId", equalTo("DGS-1-SDT-2020-00321"))
       .body("[0].getsUrl", equalTo("http://www.google.com"))
-      .body("[1].rfiId", equalTo("2020-00222"))
-      .body("[1].getsUrl", equalTo("http://www.yahoo.com"));
+      .body("[0].lastUpdate", equalTo(1572963681))
+      .body("[0].status", equalTo("NEW"))
+      .body("[8].rfiId", equalTo("DGS-1-SDT-2020-00329"))
+      .body("[8].getsUrl", equalTo("http://www.msn.com"))
+      .body("[8].lastUpdate", equalTo(1521210089))
+      .body("[8].status", equalTo("CLOSED"));
   }
+
 }

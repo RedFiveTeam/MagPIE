@@ -7,6 +7,7 @@ import GETSClickRequestModel from '../../metrics/Model/GETSClickRequestModel';
 import { postGETSClick } from '../../users/UserActions';
 
 interface Props {
+  status: string;
   url: string;
   postGETSClick: (getsClickRequestModel: GETSClickRequestModel) => void;
   className?: string;
@@ -23,7 +24,7 @@ export const RFIRowButtonSection: React.FC<Props> = props => {
   }
 
   function handleClick() {
-    postGETSClick(new GETSClickRequestModel(props.url));
+    postGETSClick(new GETSClickRequestModel(props.status, props.url));
     window.open(props.url, '_blank');
   }
 

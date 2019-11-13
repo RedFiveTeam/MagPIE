@@ -1,7 +1,6 @@
 package dgs1sdt.project.pie.metrics.getsclick;
 
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,16 @@ import java.util.Date;
 @Data
 public class GETSClickJSON {
   private Date datetime;
+  private String status;
   private String url;
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
   public Date getDatetime() {
     return datetime;
@@ -21,8 +29,9 @@ public class GETSClickJSON {
     this.datetime = datetime;
   }
 
-  public GETSClickJSON(String url, Date datetime) {
+  public GETSClickJSON(Date datetime, String status, String url) {
     this.datetime = datetime;
+    this.status = status;
     this.url = url;
   }
 

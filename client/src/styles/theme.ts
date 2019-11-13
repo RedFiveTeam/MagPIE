@@ -7,8 +7,9 @@ const theme = {
     fontPrimary: crayonBox.eggWhite,
     fontAction: crayonBox.tarBlack,
     backgroundInformation: crayonBox.steelGray,
-    backgroundInactive: crayonBox.tarBlack,
-    backgroundAction: crayonBox.safetyOrange
+    backgroundInactive: crayonBox.blueGrayLight,
+    backgroundAction: crayonBox.safetyOrange,
+    backgroundAssigned: crayonBox.notEggWhite
   },
 
   font: {

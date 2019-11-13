@@ -49,8 +49,8 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Test
   public void getReturnsGETSClickCount() {
-    getsClicksRepository.save(new GetsClick(new Date(), "www.google.com"));
-    getsClicksRepository.save(new GetsClick(new Date(),"www.google.com"));
+    getsClicksRepository.save(new GetsClick(new Date(), "OPEN", "www.google.com"));
+    getsClicksRepository.save(new GetsClick(new Date(), "OPEN", "www.google.com"));
     given()
       .port(port)
       .when()
@@ -63,7 +63,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Test
   public void postCreatesNewGETSClick() throws Exception {
 
-    GETSClickJSON getsClickJSON = new GETSClickJSON( "www.google.com", new Date());
+    GETSClickJSON getsClickJSON = new GETSClickJSON(new Date(), "OPEN", "www.google.com");
 
 
     long getsClickCount = getsClicksRepository.count();

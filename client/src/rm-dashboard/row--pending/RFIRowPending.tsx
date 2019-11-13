@@ -18,7 +18,7 @@ export const RFIRowPending: React.FC<Props> = props => {
       id={`${props.index}`}
     >
       <StyledRFIRowInformationSection id={props.rfi.id}/>
-      <StyledRFIRowButtonSection url={props.rfi.urlToGETS}/>
+      <StyledRFIRowButtonSection url={props.rfi.urlToGETS} status={props.rfi.status}/>
     </div>
   )
 };
@@ -29,6 +29,7 @@ export const StyledRFIRowPending = styled(RFIRowPending)`
   height: 64px;  
   color: ${(props) => props.theme.color.fontPrimary}; 
   margin-bottom: 16px;
+  z-index: 0;
  
   .cells {
     background: ${(props) => props.theme.color.backgroundInformation};

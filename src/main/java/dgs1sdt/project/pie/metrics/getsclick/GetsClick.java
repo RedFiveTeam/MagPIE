@@ -19,10 +19,12 @@ public class GetsClick {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
   private Date datetime;
+  private String status;
   private String url;
 
-  public GetsClick(Date datetime, String url) {
+  public GetsClick(Date datetime, String status, String url) {
     this.datetime = datetime;
+    this.status = status;
     this.url = url;
   }
 }

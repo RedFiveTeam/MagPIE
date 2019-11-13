@@ -1,10 +1,14 @@
 export default class RFIModel {
   private readonly _id: string;
   private readonly _urlToGETS: string;
+  private readonly _status: string;
+  private readonly _lastUpdate: number;
 
-  constructor(id: string, getsUrl: string) {
+  constructor(id: string, getsUrl: string, status: string, lastUpdate: number) {
     this._id = id;
     this._urlToGETS = getsUrl;
+    this._status = status;
+    this._lastUpdate = lastUpdate;
   }
 
   get id(): string {
@@ -13,5 +17,13 @@ export default class RFIModel {
 
   get urlToGETS(): string {
     return this._urlToGETS;
+  }
+
+  get status(): string {
+    return this._status;
+  }
+
+  get lastUpdate(): number {
+    return this._lastUpdate;
   }
 }
