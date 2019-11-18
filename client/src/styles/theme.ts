@@ -15,6 +15,7 @@ const theme = {
   font: {
     familyRow: 'Roboto',
     weightRow: 400,
+    weightBold: 700,
     sizeRow: '16px',
     familyHeader: 'Roboto',
     weightHeader: 400,
@@ -22,6 +23,12 @@ const theme = {
     familyRegion: 'Roboto',
     weightRegion: 100,
     sizeRegion: '18px'
+  },
+
+  table: {
+    rowHeight: '64px',
+    tableWidth: '456px',
+    shadowWidth: '424px'
   }
 };
 

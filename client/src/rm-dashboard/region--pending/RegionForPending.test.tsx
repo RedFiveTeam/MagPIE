@@ -1,16 +1,16 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RegionForPending } from './RegionForPending';
-import RFIModel from './RFIModel';
+import RFIModel from '../RFIModel';
 import React from 'react';
-import { StyledRFIRegionDivider } from './RFIRegionDivider';
+import { StyledRFIRegionDivider } from '../rfi-table/RFIRegionDivider';
 import { StyledRFIRowPending } from './row--pending/RFIRowPending';
 
 describe('RegionForPending', () => {
   let subject: ShallowWrapper;
 
   let rfis = [
-    new RFIModel('2019-321', 'google.com', 'NEW', 424123),
-    new RFIModel('2019-322', 'yahoo.com', 'NEW', 435435543)
+    new RFIModel('2019-321', 'google.com', 'NEW', 424123, "1 FW"),
+    new RFIModel('2019-322', 'yahoo.com', 'NEW', 435435543, "1 FW")
   ];
 
   beforeEach(() => {

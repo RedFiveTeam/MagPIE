@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper } from 'enzyme';
-import RFIModel from './RFIModel';
+import RFIModel from '../RFIModel';
 import React from 'react';
-import { StyledRFIRegionDivider } from './RFIRegionDivider';
+import { StyledRFIRegionDivider } from '../rfi-table/RFIRegionDivider';
 import { RegionForOpen } from './RegionForOpen';
 import { StyledRFIRowOpen } from './row--open/RFIRowOpen';
 
@@ -9,8 +9,8 @@ describe('RegionForOpen', () => {
   let subject: ShallowWrapper;
 
   let rfis = [
-    new RFIModel('2019-321', 'google.com', 'OPEN', 534345),
-    new RFIModel('2019-322', 'yahoo.com', 'OPEN', 4553454)
+    new RFIModel('2019-321', 'google.com', 'OPEN', 534345, "1 FW"),
+    new RFIModel('2019-322', 'yahoo.com', 'OPEN', 4553454, "1 FW")
   ];
 
   beforeEach(() => {

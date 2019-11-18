@@ -56,8 +56,21 @@ public class WebGETSClient implements GETSClient {
     return rfiList;
   }
 
-  private void extractElements(List<RFI> rfiList, NodeList htmlRFIs) throws Exception {
-    StubGETSClient.extractElements(rfiList, htmlRFIs);
+  static void extractElements(List<RFI> rfiList, NodeList htmlRFIs) throws Exception {
+    for (int i = 0; i < htmlRFIs.getLength(); i++) {
+      Node node = htmlRFIs.item(i);
+      Element element = (Element) node;
+
+      rfiList.add(
+        new RFI(
+          node.getAttributes().getNamedItem("id").getNodeValue(),
+          element.getElementsByTagName("gets:url").item(0).getTextContent(),
+          element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent(),
+          Utils.DateToUnixTime(element.getElementsByTagName("gets:lastUpdate").item(0).getTextContent()),
+          element.getElementsByTagName("gets:unit").item(0).getTextContent()
+        )
+      );
+    }
   }
 
 

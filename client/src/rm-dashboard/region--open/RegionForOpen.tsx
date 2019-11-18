@@ -1,18 +1,18 @@
-import RFIModel from './RFIModel';
-import classNames from 'classnames';
-import { StyledRFIRowClosed } from './row--closed/RFIRowClosed';
 import React from 'react';
-import { StyledRFIRegionDivider } from './RFIRegionDivider';
+import RFIModel from '../RFIModel';
+import classNames from 'classnames';
 import styled from 'styled-components';
+import { StyledRFIRegionDivider } from '../rfi-table/RFIRegionDivider';
+import { StyledRFIRowOpen } from './row--open/RFIRowOpen';
 
 interface Props {
   rfis: RFIModel[];
   className?: string;
 }
 
-function displayMessageOrDataForClosedRegion(rfis: RFIModel[]) {
+function displayMessageOrDataForOpenRegion(rfis: RFIModel[]) {
   const rfisComplete = () => {
-    return rfis && rfis.filter(function (rfis) {return rfis.status === "CLOSED"; }).length === 0
+    return rfis && rfis.filter(function (rfis) {return rfis.status === "OPEN"; }).length === 0
   };
 
   if (rfisComplete()) {
@@ -29,15 +29,15 @@ function displayCompletedRFIsMessage() {
     <div
       className={classNames('confirmation-message')}
     >
-      No Closed found
+      No Open found
     </div>
   );
 }
 
 function displayRFIsAsRows(rfis: RFIModel[]) {
   return (
-    rfis.filter(function (rfis) {return rfis.status === "CLOSED"; }).map((rfi: RFIModel, index: any) => {
-      return (<StyledRFIRowClosed rfi={rfi} index={index} key={`${index}`}/>);
+    rfis.filter(function (rfis) {return rfis.status === "OPEN"; }).map((rfi: RFIModel, index: any) => {
+      return (<StyledRFIRowOpen rfi={rfi} index={index} key={`${index}`}/>);
     })
   )
 }
@@ -49,18 +49,17 @@ function determineTransparency(rfis: RFIModel[]) {
   return '';
 }
 
-
-export const RegionForClosed: React.FC<Props> = props => {
+export const RegionForOpen: React.FC<Props> = props => {
   return (
-    <div className={classNames('region', 'region--closed', props.className)}>
-      <StyledRFIRegionDivider className={determineTransparency(props.rfis)} regionTitle={"CLOSED"} />
-      {displayMessageOrDataForClosedRegion(props.rfis)}
+    <div className={classNames('region', 'region--open', props.className)}>
+      <StyledRFIRegionDivider className={determineTransparency(props.rfis)} regionTitle={"OPEN"}/>
+      {displayMessageOrDataForOpenRegion(props.rfis)}
     </div>
   )
 };
 
-export const StyledRegionForClosed = styled(RegionForClosed)`
- .confirmation-message {
+export const StyledRegionForOpen = styled(RegionForOpen)`
+  .confirmation-message {
     color: ${(props) => props.theme.color.fontPrimary};
     font-family: ${(props) => props.theme.font.familyRegion};
     font-weight: ${(props) => props.theme.font.weightRegion};

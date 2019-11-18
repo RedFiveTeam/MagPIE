@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 interface Props {
   id: string;
+  unit: string;
   className?: string;
 }
 
@@ -21,6 +22,9 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
           <span className={classNames('cell', 'cell--id')}>
             {formatID(props.id)}
           </span>
+          <span className={classNames('cell', 'cell--unit')}>
+            {props.unit}
+          </span>
       </div>
       <div className={classNames('border', 'border-left')}/>
     </div>
@@ -28,18 +32,26 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
 };
 
 export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
-  width: 104px;
   margin-right: 4px;
-  font-weight: bold;
   
   .cells-left {
+    width: 256px;
     display: flex;
     flex-direction: row;
     border-top-left-radius: 8px;
     padding: 2px 16px 2px 16px;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    font-size: ${(props) => props.theme.font.sizeRow};
   }
-    
+  
+  .cell--id {
+    margin-left: 20px;
+  }
+  
+  .cell--unit {
+    margin-left: 16px;
+  }  
+  
   .border-left {
     border-bottom-left-radius: 8px;
   } 

@@ -1,16 +1,16 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RFIRowPending } from './RFIRowPending';
-import RFIModel from '../RFIModel';
+import RFIModel from '../../RFIModel';
 import React from 'react';
-import { StyledRFIRowInformationSection } from './RFIRowInformationSection';
-import { StyledRFIRowButtonSection } from './RFIRowButtonSection';
+import { StyledRFIRowInformationSection } from '../../row--section/RFIRowInformationSection';
+import { StyledRFIRowButtonSection } from '../../row--section/RFIRowButtonSection';
 
 describe('RFIRowPending', () => {
   let rfi: RFIModel;
   let subject: ShallowWrapper;
 
   beforeEach(() => {
-    rfi = new RFIModel('2019-321', 'google.com', 'pending');
+    rfi = new RFIModel('2019-321', 'google.com', 'pending', 23452456, '633 ABW');
 
     subject = shallow(
       <RFIRowPending rfi={rfi} index={0}/>

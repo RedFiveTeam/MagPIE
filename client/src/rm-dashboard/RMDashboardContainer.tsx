@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchRFIs } from './RFIActions';
-import { StyledRFITable } from './RFITable';
+import { StyledRFITable } from './rfi-table/RFITable';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import RFIModel from './RFIModel';

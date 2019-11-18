@@ -1,8 +1,8 @@
 import React from 'react';
-import RFIModel from './RFIModel';
+import RFIModel from '../RFIModel';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import { StyledRFIRegionDivider } from './RFIRegionDivider';
+import { StyledRFIRegionDivider } from '../rfi-table/RFIRegionDivider';
 import { StyledRFIRowPending } from './row--pending/RFIRowPending';
 
 interface Props {

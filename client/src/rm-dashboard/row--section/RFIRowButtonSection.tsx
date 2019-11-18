@@ -61,7 +61,7 @@ const mapDispatchToProps = {
 
 export const StyledRFIRowButtonSection = styled(connect(mapStateToProps, mapDispatchToProps)(RFIRowButtonSection))`
   width: 164px;
-  font-weight: bold;
+  font-weight: ${(props) => props.theme.font.weightBold};
   
   .cells-right {
     padding: 16px;

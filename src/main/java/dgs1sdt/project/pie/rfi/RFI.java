@@ -23,12 +23,14 @@ public class RFI {
   private String rfiId;
   private String status;
   private int lastUpdate;
+  private String unit;
 
-  public RFI(String rfiId, String getsUrl, String status, int lastUpdate) {
+  public RFI(String rfiId, String getsUrl, String status, int lastUpdate, String unit) {
     this.getsUrl = getsUrl;
     this.rfiId = rfiId;
     this.status = status;
     this.lastUpdate = lastUpdate;
+    this.unit = unit;
   }
 
 }
