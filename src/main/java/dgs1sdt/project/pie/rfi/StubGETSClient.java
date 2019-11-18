@@ -24,9 +24,30 @@ public class StubGETSClient implements GETSClient {
 
     Document document = this.makeRequest(xmlPendingOpen);
     NodeList htmlRFIs = document.getElementsByTagName("getsrfi:RFISummary");
-    System.out.println("====================INSIDE the WebGetsClient");
-    System.out.println("+++++++++++++++++++++++++rfis" + htmlRFIs);
 
+
+    extractElements(rfiList, htmlRFIs);
+
+    document = this.makeRequest(xmlClosed);
+    htmlRFIs = document.getElementsByTagName("getsrfi:RFISummary");
+
+    List<RFI> closedRfiList = new ArrayList<>();
+
+    extractElements(closedRfiList, htmlRFIs);
+
+    Collections.sort(closedRfiList, new SortByRecentFirst());
+
+      for (int i = 0; i < 3 && i < closedRfiList.size(); i++)
+        rfiList.add(closedRfiList.get(i));
+
+    Collections.sort(rfiList, new SortByIDGreatestToLeast());
+
+    System.out.println(rfiList);
+
+    return rfiList;
+  }
+
+  static void extractElements(List<RFI> rfiList, NodeList htmlRFIs) throws Exception {
     for (int i = 0; i < htmlRFIs.getLength(); i++) {
       Node node = htmlRFIs.item(i);
       Element element = (Element) node;
@@ -40,36 +61,6 @@ public class StubGETSClient implements GETSClient {
         )
       );
     }
-
-    document = this.makeRequest(xmlClosed);
-    htmlRFIs = document.getElementsByTagName("getsrfi:RFISummary");
-
-    List<RFI> closedRfiList = new ArrayList<>();
-
-    for (int i = 0; i < htmlRFIs.getLength(); i++) {
-      Node node = htmlRFIs.item(i);
-      Element element = (Element) node;
-
-      closedRfiList.add(
-        new RFI(
-          node.getAttributes().getNamedItem("id").getNodeValue(),
-          element.getElementsByTagName("gets:url").item(0).getTextContent(),
-          element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent(),
-          Utils.DateToUnixTime(element.getElementsByTagName("gets:lastUpdate").item(0).getTextContent())
-        )
-      );
-    }
-
-    Collections.sort(closedRfiList, new SortByRecentFirst());
-
-      for (int i = 0; i < 3 && i < closedRfiList.size(); i++)
-        rfiList.add(closedRfiList.get(i));
-
-    Collections.sort(rfiList, new SortByIDGreatestToLeast());
-
-    System.out.println(rfiList);
-
-    return rfiList;
   }
 
 
