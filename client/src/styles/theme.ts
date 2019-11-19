@@ -27,8 +27,9 @@ const theme = {
 
   table: {
     rowHeight: '64px',
-    tableWidth: '456px',
-    shadowWidth: '424px'
+    tableWidth: '567px',
+    shadowWidth: '536px',
+    leftWidth: '368px'
   }
 };
 

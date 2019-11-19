@@ -61,21 +61,34 @@ public class WebGETSClient implements GETSClient {
       Node node = htmlRFIs.item(i);
       Element element = (Element) node;
 
-      int date;
+      int lastUpdate;
 
       try {
-        date = Utils.DateToUnixTime(element.getElementsByTagName("gets:lastUpdate").item(0).getTextContent());
+        lastUpdate = Utils.DateToUnixTime(element.getElementsByTagName("gets:lastUpdate").item(0).getTextContent());
       } catch (Exception e) {
-        date = Utils.DateToUnixTime(element.getElementsByTagName("getsrfi:receiveDate").item(0).getTextContent());
+        lastUpdate = Utils.DateToUnixTime(element.getElementsByTagName("getsrfi:receiveDate").item(0).getTextContent());
       }
+
+      int ltiov;
+
+      try {
+        ltiov = Utils.DateToUnixTime(element.getElementsByTagName("gets:ltiov").item(0).getTextContent());
+      } catch (Exception e) {
+        ltiov = 0;
+      }
+
+      String rawUrl = element.getElementsByTagName("gets:url").item(0).getTextContent();
+
+      String url = rawUrl.replace(".smil.mil", ".smil.mil/internal");
 
       rfiList.add(
         new RFI(
           node.getAttributes().getNamedItem("id").getNodeValue(),
-          element.getElementsByTagName("gets:url").item(0).getTextContent(),
+          url,
           element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent(),
-          date,
-          element.getElementsByTagName("gets:unit").item(0).getTextContent()
+          lastUpdate,
+          element.getElementsByTagName("gets:unit").item(0).getTextContent(),
+          ltiov
         )
       );
     }

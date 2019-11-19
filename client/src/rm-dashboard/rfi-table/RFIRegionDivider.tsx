@@ -19,7 +19,7 @@ export const RFIRegionDivider: React.FC<Props> = props => {
 
 export const StyledRFIRegionDivider = styled(RFIRegionDivider)`
   height: 32px;
-  width: 424px;
+  width: 536px;
   font-family: ${(props) => props.theme.font.familyRegion};
   font-weight: ${(props) => props.theme.font.weightRegion};
   font-size: ${(props) => props.theme.font.sizeRegion};
@@ -31,7 +31,7 @@ export const StyledRFIRegionDivider = styled(RFIRegionDivider)`
   margin-bottom: 4px;
   
   .separator-line {
-    width: 160px;
+    width: 214px;
     height: 2px;
     border-radius: 4px;
     background: ${(props) => props.theme.color.fontPrimary};

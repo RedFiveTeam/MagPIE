@@ -9,7 +9,8 @@ export class RFIDeserializer {
           item.getsUrl,
           item.status,
           item.lastUpdate,
-          item.unit
+          item.unit,
+          item.ltiov
         );
       });
     }

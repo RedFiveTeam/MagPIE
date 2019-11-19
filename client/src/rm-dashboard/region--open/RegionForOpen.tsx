@@ -36,7 +36,14 @@ function displayCompletedRFIsMessage() {
 
 function displayRFIsAsRows(rfis: RFIModel[]) {
   return (
-    rfis.filter(function (rfis) {return rfis.status === "OPEN"; }).map((rfi: RFIModel, index: any) => {
+    rfis.filter(function (rfis) {return rfis.status === "OPEN"; })
+      .sort(function(a, b) {
+        if (a.ltiov == 0)
+          return 1;
+        if (b.ltiov == 0)
+          return -1;
+        return a.ltiov < b.ltiov ? -1 : 1})
+      .map((rfi: RFIModel, index: any) => {
       return (<StyledRFIRowOpen rfi={rfi} index={index} key={`${index}`}/>);
     })
   )

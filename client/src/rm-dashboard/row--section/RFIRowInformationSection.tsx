@@ -1,10 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
+import moment from 'moment';
 
 interface Props {
   id: string;
   unit: string;
+  ltiov: number;
   className?: string;
 }
 
@@ -23,7 +25,10 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
             {formatID(props.id)}
           </span>
           <span className={classNames('cell', 'cell--unit')}>
-            {props.unit}
+            <div>{props.unit}</div>
+          </span>
+          <span className={classNames('cell', 'cell--ltiov')}>
+            {props.ltiov != 0 ? moment.unix(props.ltiov).format("D MMM YY") : '-'}
           </span>
       </div>
       <div className={classNames('border', 'border-left')}/>
@@ -35,7 +40,7 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   margin-right: 4px;
   
   .cells-left {
-    width: 256px;
+    width: ${(props) => props.theme.table.leftWidth};
     display: flex;
     flex-direction: row;
     border-top-left-radius: 8px;
@@ -46,11 +51,24 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   
   .cell--id {
     margin-left: 20px;
+    width: 72px;
   }
   
   .cell--unit {
-    margin-left: 16px;
+    white-space: nowrap;
+    width: 136px;
   }  
+  
+  .cell--unit div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .cell--ltiov {
+    margin-left: 32px;
+    width: 80px;
+    justify-content: center;
+  }
   
   .border-left {
     border-bottom-left-radius: 8px;

@@ -14,10 +14,10 @@ interface Props {
 export const RFIRowClosed: React.FC<Props> = props => {
   return (
     <div
-      className={classNames('row', 'row--rfi', 'row--pending', props.className)}
+      className={classNames('row', 'row--rfi', 'row--closed', props.className)}
       id={`${props.index}`}
     >
-      <StyledRFIRowInformationSection id={props.rfi.id}  unit={props.rfi.unit}/>
+      <StyledRFIRowInformationSection id={props.rfi.id}  unit={props.rfi.unit} ltiov={props.rfi.ltiov}/>
       <StyledRFIRowButtonSection status={props.rfi.status} url={props.rfi.urlToGETS}/>
     </div>
   )

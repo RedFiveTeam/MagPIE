@@ -60,6 +60,7 @@ public class StubGETSClient implements GETSClient {
     return db.parse(xmlIn);
   }
 
+  //language=XML
   private String xmlPendingOpen = "<GETS_RFI_Query_Results xmlns=\"GETS\">\n" +
     " <RFISummaryList>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00321\">\n" +
@@ -68,13 +69,14 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-05T14:21:21Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:ltiov>2020-11-05T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00322\">\n" +
     "     <gets:url>http://www.yahoo.com</gets:url>\n" +
     "     <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <getsrfi:receiveDate>2019-11-11T14:21:22Z</getsrfi:receiveDate>\n" +
-    "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:unit>633 ABW KUYGEUYGIUYGWOUY FJWUYTDAUIYGDUYFID UYBSOIUHOIUD</gets:unit>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00323\">\n" +
     "     <gets:url>http://www.aol.com</gets:url>\n" +
@@ -90,6 +92,7 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-10T14:21:24Z</gets:lastUpdate>\n" +
     "     <gets:unit>HQ ACC</gets:unit>\n" +
+    "     <gets:ltiov>2020-05-05T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00325\">\n" +
     "     <gets:url>http://www.ask.com</gets:url>\n" +
@@ -97,6 +100,7 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-12T14:21:25Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:ltiov>2020-11-10T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "      <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00326\">\n" +
     "     <gets:url>http://www.google.com</gets:url>\n" +
@@ -104,6 +108,7 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
+    "     <gets:ltiov>2022-11-09T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00331\">\n" +
     "     <gets:url>http://www.google.com</gets:url>\n" +
@@ -118,6 +123,7 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-11T14:21:22Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
+    "     <gets:ltiov>2020-02-04T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00333\">\n" +
     "     <gets:url>http://www.aol.com</gets:url>\n" +
@@ -139,6 +145,7 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-12T14:21:25Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:ltiov>2019-11-30T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "      <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00336\">\n" +
     "     <gets:url>http://www.google.com</gets:url>\n" +
@@ -150,6 +157,7 @@ public class StubGETSClient implements GETSClient {
     " </RFISummaryList>\n" +
     "</GETS_RFI_Query_Results>\n";
 
+  //language=xml
   private String xmlClosed = "<GETS_RFI_Query_Results xmlns=\"GETS\">\n" +
     " <RFISummaryList>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00327\">\n" +
@@ -165,6 +173,7 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-10-30T14:21:28Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
+    "     <gets:ltiov>2019-11-05T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00329\">\n" +
     "     <gets:url>http://www.msn.com</gets:url>\n" +
