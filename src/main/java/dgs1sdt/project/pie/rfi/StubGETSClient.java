@@ -47,7 +47,7 @@ public class StubGETSClient implements GETSClient {
     return rfiList;
   }
 
-  static void extractElements(List<RFI> rfiList, NodeList htmlRFIs) throws Exception {
+  private void extractElements(List<RFI> rfiList, NodeList htmlRFIs) throws Exception {
     WebGETSClient.extractElements(rfiList, htmlRFIs);
   }
 
@@ -73,7 +73,7 @@ public class StubGETSClient implements GETSClient {
     "     <gets:url>http://www.yahoo.com</gets:url>\n" +
     "     <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
-    "     <gets:lastUpdate>2019-11-11T14:21:22Z</gets:lastUpdate>\n" +
+    "     <getsrfi:receiveDate>2019-11-11T14:21:22Z</getsrfi:receiveDate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00323\">\n" +
@@ -81,7 +81,7 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-12T14:21:23Z</gets:lastUpdate>\n" +
-    "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <getsrfi:receiveDate>2019-09-11T14:21:22Z</getsrfi:receiveDate>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00324\">\n" +
     "     <gets:url>http://www.msn.com</gets:url>\n" +

@@ -61,13 +61,20 @@ public class WebGETSClient implements GETSClient {
       Node node = htmlRFIs.item(i);
       Element element = (Element) node;
 
+      int date;
+
+      try {
+        date = Utils.DateToUnixTime(element.getElementsByTagName("gets:lastUpdate").item(0).getTextContent());
+      } catch (Exception e) {
+        date = Utils.DateToUnixTime(element.getElementsByTagName("getsrfi:receiveDate").item(0).getTextContent());
+      }
+
       rfiList.add(
         new RFI(
           node.getAttributes().getNamedItem("id").getNodeValue(),
           element.getElementsByTagName("gets:url").item(0).getTextContent(),
           element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent(),
-          Utils.DateToUnixTime(element.getElementsByTagName("gets:lastUpdate").item(0).getTextContent()),
-          element.getElementsByTagName("gets:unit").item(0).getTextContent()
+          date
         )
       );
     }
