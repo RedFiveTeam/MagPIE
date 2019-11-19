@@ -74,7 +74,8 @@ public class WebGETSClient implements GETSClient {
           node.getAttributes().getNamedItem("id").getNodeValue(),
           element.getElementsByTagName("gets:url").item(0).getTextContent(),
           element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent(),
-          date
+          date,
+          element.getElementsByTagName("gets:unit").item(0).getTextContent()
         )
       );
     }
