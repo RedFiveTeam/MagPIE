@@ -38,9 +38,9 @@ function displayRFIsAsRows(rfis: RFIModel[]) {
   return (
     rfis.filter(function (rfis) {return rfis.status === "OPEN"; })
       .sort(function(a, b) {
-        if (a.ltiov == 0)
+        if (a.ltiov === 0)
           return 1;
-        if (b.ltiov == 0)
+        if (b.ltiov === 0)
           return -1;
         return a.ltiov < b.ltiov ? -1 : 1})
       .map((rfi: RFIModel, index: any) => {

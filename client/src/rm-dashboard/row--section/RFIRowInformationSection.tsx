@@ -28,7 +28,7 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
             <div>{props.unit}</div>
           </span>
           <span className={classNames('cell', 'cell--ltiov')}>
-            {props.ltiov != 0 ? moment.unix(props.ltiov).format("D MMM YY") : '-'}
+            {props.ltiov !== 0 ? moment.unix(props.ltiov).format("D MMM YY") : '-'}
           </span>
       </div>
       <div className={classNames('border', 'border-left')}/>
