@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchRFIs } from './RFIActions';
+import { fetchRFIs, newSort } from './RFIActions';
 import { StyledRFITable } from './rfi-table/RFITable';
 import styled from 'styled-components';
 import classNames from 'classnames';
@@ -9,12 +9,13 @@ import { postSiteVisit } from '../users/UserActions';
 
 interface Props {
   rfis: RFIModel[];
+  sortKey: string;
+  orderAscending: boolean;
   fetchRFIs: () => void;
   postSiteVisit: () => void;
+  newSort: (newKey: string) => void;
   className?: string;
 }
-
-
 
 export class RMDashboardContainer extends React.Component<Props> {
   componentDidMount(): void {
@@ -27,6 +28,9 @@ export class RMDashboardContainer extends React.Component<Props> {
       <div className={classNames('rm-dashboard', this.props.className)}>
         <StyledRFITable
           rfis={this.props.rfis}
+          callback={this.props.newSort}
+          sortKey={this.props.sortKey}
+          orderAscending={this.props.orderAscending}
         />
       </div>
     )
@@ -34,12 +38,15 @@ export class RMDashboardContainer extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any) => ({
-  rfis: state.rfis
+  rfis: state.rfis,
+  sortKey: state.sortKey,
+  orderAscending: state.orderAscending
 });
 
 const mapDispatchToProps = {
   fetchRFIs: fetchRFIs,
   postSiteVisit: postSiteVisit,
+  newSort: newSort,
 };
 
 export default styled(connect(mapStateToProps, mapDispatchToProps)(RMDashboardContainer))`

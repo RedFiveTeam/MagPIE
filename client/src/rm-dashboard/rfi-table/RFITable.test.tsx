@@ -1,4 +1,4 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { ShallowWrapper, shallow } from 'enzyme';
 import * as React from 'react';
 import { RFITable } from './RFITable';
 import { StyledRegionForPending } from '../region--pending/RegionForPending';
@@ -6,14 +6,16 @@ import { StyledRFITableHeader } from './RFITableHeader';
 import { StyledRegionForClosed } from '../region--closed/RegionForClosed';
 import { StyledRegionForOpen } from '../region--open/RegionForOpen';
 
-
-describe('DisplayFact', () => {
+describe('DisplayTable', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
     subject = shallow(
       <RFITable
         rfis={[]}
+        orderAscending={true}
+        sortKey={"ltiov"}
+        callback={() => {}}
       />
     );
   });

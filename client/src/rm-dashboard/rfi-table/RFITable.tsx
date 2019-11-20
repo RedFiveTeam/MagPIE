@@ -9,6 +9,9 @@ import { StyledRegionForClosed } from '../region--closed/RegionForClosed';
 
 interface Props {
   rfis: RFIModel[];
+  sortKey: string;
+  orderAscending: boolean;
+  callback: (newKey: string) => void;
   className?: string;
 }
 
@@ -20,35 +23,35 @@ export const RFITable: React.FC<Props> = props => {
     } else {
       document.getElementById('tsb')!.classList.remove('topShadow');
     }
-
     if (scrollPos === scrollMax || document.getElementById('reg')!.style.overflow === 'visible') {
       document.getElementById('bsb')!.classList.remove('bottomShadow');
     } else {
       document.getElementById('bsb')!.classList.add('bottomShadow');
     }
-
   }
 
   return (
     <div className={classNames('rfi-table', props.className)}>
-      <StyledRFITableHeader/>
-      <div className={'shadowbox'} id={'tsb'} />
-      <div className={classNames('shadowbox', 'bottomShadow')} id={'bsb'} />
-
+      <StyledRFITableHeader
+        sortKey={props.sortKey}
+        orderAscending={props.orderAscending}
+        callback={props.callback}/>
+      <div className={'shadowbox'} id={'tsb'}/>
+      <div className={classNames('shadowbox', 'bottomShadow')} id={'bsb'}/>
       <div className={'regions'} id={'reg'} onScroll={() => {
         const a = document.getElementById('reg')!;
-
         return renderShadowbox(a.scrollTop, a.scrollHeight - a.offsetHeight);
       }}>
-
-
-
-      <StyledRegionForPending rfis={props.rfis}/>
-      <StyledRegionForOpen rfis={props.rfis}/>
-      <StyledRegionForClosed rfis={props.rfis}/>
+        <StyledRegionForPending
+          rfis={props.rfis}
+        />
+        <StyledRegionForOpen
+          rfis={props.rfis}
+        />
+        <StyledRegionForClosed
+          rfis={props.rfis}
+        />
       </div>
-
-
     </div>
   );
 };
@@ -75,17 +78,12 @@ width:${(props) => props.theme.table.tableWidth};
   }
     
   .topShadow {
-  
     box-shadow: inset 0 20px 12px -12px black;
   }  
   
   .bottomShadow {
-    
     box-shadow: inset 0 -20px 12px -12px black;
   }  
-  
-
-  
   
 `;
 

@@ -9,8 +9,8 @@ describe('RegionForPending', () => {
   let subject: ShallowWrapper;
 
   let rfis = [
-    new RFIModel('2019-321', 'google.com', 'NEW', 424123, "1 FW"),
-    new RFIModel('2019-322', 'yahoo.com', 'NEW', 435435543, "1 FW")
+    new RFIModel('2019-321', 'google.com', 'NEW', 424123, "1 FW", 9824398, "CAN"),
+    new RFIModel('2019-322', 'yahoo.com', 'NEW', 435435543, "1 FW", 9824300, "USA")
   ];
 
   beforeEach(() => {

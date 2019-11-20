@@ -1,7 +1,7 @@
 export default class RFIModel {
 
   private readonly _id: string;
-  private readonly _urlToGETS: string;
+  private readonly _getsUrl: string;
   private readonly _status: string;
   private readonly _lastUpdate: number;
   private readonly _unit: string;
@@ -11,7 +11,7 @@ export default class RFIModel {
   constructor(id: string, getsUrl: string, status: string, lastUpdate: number, unit: string, ltiov: number,
               country: string) {
     this._id = id;
-    this._urlToGETS = getsUrl;
+    this._getsUrl = getsUrl;
     this._status = status;
     this._lastUpdate = lastUpdate;
     this._unit = unit;
@@ -27,8 +27,8 @@ export default class RFIModel {
     return this._id;
   }
 
-  get urlToGETS(): string {
-    return this._urlToGETS;
+  get getsUrl(): string {
+    return this._getsUrl;
   }
 
   get status(): string {

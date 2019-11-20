@@ -50,9 +50,6 @@ public class WebGETSClient implements GETSClient {
     for (int i = 0; i < 3 && i < closedRfiList.size(); i++)
       rfiList.add(closedRfiList.get(i));
 
-    Collections.sort(rfiList, new SortByIDGreatestToLeast());
-
-
     return rfiList;
   }
 
@@ -94,7 +91,6 @@ public class WebGETSClient implements GETSClient {
       );
     }
   }
-
 
   private Document makeRequest(String uri) throws Exception {
     URL url = new URL(uri);

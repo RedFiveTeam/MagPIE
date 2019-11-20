@@ -4,6 +4,8 @@ import dgs1sdt.project.pie.BaseIntegrationTest;
 import dgs1sdt.project.pie.metrics.getsclick.GETSClickJSON;
 import dgs1sdt.project.pie.metrics.getsclick.GETSClicksRepository;
 import dgs1sdt.project.pie.metrics.getsclick.GetsClick;
+import dgs1sdt.project.pie.metrics.sortclick.SortClickJSON;
+import dgs1sdt.project.pie.metrics.sortclick.SortClicksRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +21,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Autowired
   private SiteVisitRepository siteVisitRepository;
+
+  @Autowired
+  private SortClicksRepository sortClicksRepository;
 
   @Test
   public void postCreatesNewSiteVisit() {
@@ -65,7 +70,6 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
     GETSClickJSON getsClickJSON = new GETSClickJSON(new Date(), "OPEN", "www.google.com");
 
-
     long getsClickCount = getsClicksRepository.count();
 
     final String json = objectMapper.writeValueAsString(getsClickJSON);
@@ -81,5 +85,23 @@ public class MetricControllerTest extends BaseIntegrationTest {
     assertEquals(getsClickCount + 1, getsClicksRepository.count());
   }
 
+  @Test
+  public void postCreatesNewSortClick() throws Exception {
 
+    SortClickJSON sortClickJSON = new SortClickJSON(new Date(), "ltiov", true);
+
+    long sortClickCount = sortClicksRepository.count();
+
+    final String json = objectMapper.writeValueAsString(sortClickJSON);
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(MetricController.URI + "/sort-click")
+      .then()
+      .statusCode(200);
+
+    assertEquals(sortClickCount + 1, sortClicksRepository.count());
+  }
 }

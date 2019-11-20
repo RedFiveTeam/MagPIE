@@ -23,13 +23,13 @@ public class RFIControllerTest extends BaseIntegrationTest {
       .body("[0].unit", equalTo("633d ABW"))
       .body("[0].ltiov", equalTo(1604586081))
       .body("[0].country", equalTo("USA"))
-      .body("[8].rfiId", equalTo("DGS-1-SDT-2020-00329"))
-      .body("[8].getsUrl", equalTo("http://www.msn.com"))
-      .body("[8].lastUpdate", equalTo(1521210089))
-      .body("[8].status", equalTo("CLOSED"))
-      .body("[8].unit", equalTo("1 FW"))
-      .body("[8].ltiov", equalTo(0))
-      .body("[8].country", equalTo("MEX"));
+      .body("[14].rfiId", equalTo("DGS-1-SDT-2020-00329"))
+      .body("[14].getsUrl", equalTo("http://www.msn.com"))
+      .body("[14].lastUpdate", equalTo(1521210089))
+      .body("[14].status", equalTo("CLOSED"))
+      .body("[14].unit", equalTo("1 FW"))
+      .body("[14].ltiov", equalTo(0))
+      .body("[14].country", equalTo("MEX"));
   }
 
 }

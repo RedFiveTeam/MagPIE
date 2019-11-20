@@ -6,13 +6,13 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
-import reducer from './redux/reducers/reducer';
 import thunk from 'redux-thunk';
 import App from './App';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
+import reducer from './redux/reducers/reducer';
 
-const store = createStore(
+export const store = createStore(
   reducer,
   applyMiddleware(thunk)
 );

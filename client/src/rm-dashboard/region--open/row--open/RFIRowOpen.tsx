@@ -18,7 +18,7 @@ export const RFIRowOpen: React.FC<Props> = props => {
       id={`${props.index}`}
     >
       <StyledRFIRowInformationSection rfi={props.rfi}/>
-      <StyledRFIRowButtonSection status={props.rfi.status} url={props.rfi.urlToGETS}/>
+      <StyledRFIRowButtonSection status={props.rfi.status} url={props.rfi.getsUrl}/>
     </div>
   )
 };

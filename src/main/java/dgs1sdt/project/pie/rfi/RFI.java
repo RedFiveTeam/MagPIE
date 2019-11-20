@@ -45,13 +45,4 @@ class SortByRecentFirst implements Comparator<RFI> {
   }
 }
 
-class SortByIDGreatestToLeast implements Comparator<RFI> {
-  public int compare(RFI a, RFI b) {
-    int aInt = Integer.parseInt(a.getRfiId().substring(a.getRfiId().length()-11).replace("-", ""));
-    int bInt = Integer.parseInt(b.getRfiId().substring(b.getRfiId().length()-11).replace("-", ""));
-
-    return aInt - bInt;
-  }
-}
-
 
