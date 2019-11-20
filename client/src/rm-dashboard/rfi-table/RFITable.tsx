@@ -66,7 +66,7 @@ width:${(props) => props.theme.table.tableWidth};
   }
  
   .shadowbox {
-    width:${(props) => props.theme.table.shadowWidth};
+    width:${(props) => props.theme.table.rowWidth};
     height: calc(100vh -  168px);
     position: fixed;
     pointer-events: none;

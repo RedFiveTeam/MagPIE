@@ -10,7 +10,8 @@ export class RFIDeserializer {
           item.status,
           item.lastUpdate,
           item.unit,
-          item.ltiov
+          item.ltiov,
+          item.country
         );
       });
     }

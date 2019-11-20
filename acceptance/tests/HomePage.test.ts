@@ -7,4 +7,6 @@ Scenario ('should see a home page', (I) => {
     I.waitForText('RFI', 10);
     I.waitForText('20-321', 10);
     I.waitForText('633d', 10);
+    I.waitForText('USA', 10);
+    I.waitForText('4 FEB 20', 10);
 });

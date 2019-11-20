@@ -88,7 +88,8 @@ public class WebGETSClient implements GETSClient {
           element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent(),
           lastUpdate,
           element.getElementsByTagName("gets:unit").item(0).getTextContent(),
-          ltiov
+          ltiov,
+          element.getElementsByTagName("gets:iso1366trigraph").item(0).getTextContent()
         )
       );
     }
@@ -96,7 +97,6 @@ public class WebGETSClient implements GETSClient {
 
 
   private Document makeRequest(String uri) throws Exception {
-    System.out.println(uri);
     URL url = new URL(uri);
     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
     connection.setRequestMethod("GET");

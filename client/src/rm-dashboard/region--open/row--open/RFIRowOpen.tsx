@@ -17,7 +17,7 @@ export const RFIRowOpen: React.FC<Props> = props => {
       className={classNames('row', 'row--rfi', 'row--open', props.className)}
       id={`${props.index}`}
     >
-      <StyledRFIRowInformationSection id={props.rfi.id}  unit={props.rfi.unit}  ltiov={props.rfi.ltiov}/>
+      <StyledRFIRowInformationSection rfi={props.rfi}/>
       <StyledRFIRowButtonSection status={props.rfi.status} url={props.rfi.urlToGETS}/>
     </div>
   )

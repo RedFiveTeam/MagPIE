@@ -10,6 +10,7 @@ export const RFITableHeader: React.FC<Props> = props => {
   return (
     <div className={classNames('header', props.className)}>
       <span className={'header--id'}>RFI</span>
+      <span className={'header--country'}>CC</span>
       <span className={'header--customer'}>Customer</span>
       <span className={'header--ltiov'}>LTIOV</span>
     </div>
@@ -24,22 +25,21 @@ export const StyledRFITableHeader = styled(RFITableHeader)`
   margin-top: 64px;
   height: 48px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
+  width: ${(props) => props.theme.table.leftWidth};
+  text-align: center; 
   
   .header--id {
     width: 72px;
-    margin-left: 16px;
-    text-align: right; 
+  }
+  .header--country {
+    width: 40px;
   }
   .header--customer {
     width: 136px;
-    margin-left: 16px;
-    text-align: left; 
   }
   .header--ltiov {
-    width: 96px;
-    margin-left: 16px;
-    text-align: right; 
+    width: 80px;
   }
 `;

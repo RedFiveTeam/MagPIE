@@ -17,7 +17,7 @@ export const RFIRowPending: React.FC<Props> = props => {
       className={classNames('row', 'row--rfi', 'row--pending', props.className)}
       id={`${props.index}`}
     >
-      <StyledRFIRowInformationSection id={props.rfi.id} unit={props.rfi.unit}  ltiov={props.rfi.ltiov}/>
+      <StyledRFIRowInformationSection rfi={props.rfi}/>
       <StyledRFIRowButtonSection url={props.rfi.urlToGETS} status={props.rfi.status}/>
     </div>
   )

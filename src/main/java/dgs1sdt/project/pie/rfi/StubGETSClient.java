@@ -42,8 +42,6 @@ public class StubGETSClient implements GETSClient {
 
     Collections.sort(rfiList, new SortByIDGreatestToLeast());
 
-    System.out.println(rfiList);
-
     return rfiList;
   }
 
@@ -70,6 +68,9 @@ public class StubGETSClient implements GETSClient {
     "     <gets:lastUpdate>2019-11-05T14:21:21Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
     "     <gets:ltiov>2020-11-05T14:21:21Z</gets:ltiov>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>USA</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00322\">\n" +
     "     <gets:url>http://www.yahoo.com</gets:url>\n" +
@@ -77,6 +78,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <getsrfi:receiveDate>2019-11-11T14:21:22Z</getsrfi:receiveDate>\n" +
     "     <gets:unit>633 ABW KUYGEUYGIUYGWOUY FJWUYTDAUIYGDUYFID UYBSOIUHOIUD</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>CAN</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00323\">\n" +
     "     <gets:url>http://www.aol.com</gets:url>\n" +
@@ -85,6 +89,9 @@ public class StubGETSClient implements GETSClient {
     "     <gets:lastUpdate>2019-11-12T14:21:23Z</gets:lastUpdate>\n" +
     "     <getsrfi:receiveDate>2019-09-11T14:21:22Z</getsrfi:receiveDate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>USA</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00324\">\n" +
     "     <gets:url>http://www.msn.com</gets:url>\n" +
@@ -93,6 +100,9 @@ public class StubGETSClient implements GETSClient {
     "     <gets:lastUpdate>2019-11-10T14:21:24Z</gets:lastUpdate>\n" +
     "     <gets:unit>HQ ACC</gets:unit>\n" +
     "     <gets:ltiov>2020-05-05T14:21:21Z</gets:ltiov>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>MEX</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00325\">\n" +
     "     <gets:url>http://www.ask.com</gets:url>\n" +
@@ -101,6 +111,9 @@ public class StubGETSClient implements GETSClient {
     "     <gets:lastUpdate>2019-11-12T14:21:25Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
     "     <gets:ltiov>2020-11-10T14:21:21Z</gets:ltiov>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>USA</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "      <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00326\">\n" +
     "     <gets:url>http://www.google.com</gets:url>\n" +
@@ -109,6 +122,9 @@ public class StubGETSClient implements GETSClient {
     "     <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
     "     <gets:ltiov>2022-11-09T14:21:21Z</gets:ltiov>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>CAN</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00331\">\n" +
     "     <gets:url>http://www.google.com</gets:url>\n" +
@@ -116,6 +132,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-05T14:21:21Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>USA</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00332\">\n" +
     "     <gets:url>http://www.yahoo.com</gets:url>\n" +
@@ -124,6 +143,9 @@ public class StubGETSClient implements GETSClient {
     "     <gets:lastUpdate>2019-11-11T14:21:22Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
     "     <gets:ltiov>2020-02-04T14:21:21Z</gets:ltiov>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>MEX</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00333\">\n" +
     "     <gets:url>http://www.aol.com</gets:url>\n" +
@@ -131,6 +153,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-12T14:21:23Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>CAN</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00334\">\n" +
     "     <gets:url>http://www.msn.com</gets:url>\n" +
@@ -138,6 +163,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-10T14:21:24Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>USA</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00335\">\n" +
     "     <gets:url>http://www.ask.com</gets:url>\n" +
@@ -145,6 +173,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-11-12T14:21:25Z</gets:lastUpdate>\n" +
     "     <gets:unit>633d ABW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>MEX</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "     <gets:ltiov>2019-11-30T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "      <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00336\">\n" +
@@ -153,6 +184,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>CAN</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     " </RFISummaryList>\n" +
     "</GETS_RFI_Query_Results>\n";
@@ -166,6 +200,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-10-16T01:21:27Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>USA</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00328\">\n" +
     "     <gets:url>http://www.aol.com</gets:url>\n" +
@@ -173,6 +210,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2019-10-30T14:21:28Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>USA</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "     <gets:ltiov>2019-11-05T14:21:21Z</gets:ltiov>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00329\">\n" +
@@ -181,6 +221,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2018-03-16T14:21:29Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>MEX</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00330\">\n" +
     "     <gets:url>http://www.ask.com</gets:url>\n" +
@@ -188,6 +231,9 @@ public class StubGETSClient implements GETSClient {
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
     "     <gets:lastUpdate>2017-10-01T14:21:30Z</gets:lastUpdate>\n" +
     "     <gets:unit>1 FW</gets:unit>\n" +
+    "     <gets:CountryCodeList>\n" +
+    "       <gets:iso1366trigraph>CAN</gets:iso1366trigraph>\n" +
+    "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
     " </RFISummaryList>\n" +
     "</GETS_RFI_Query_Results>\n";

@@ -25,14 +25,16 @@ public class RFI {
   private int lastUpdate;
   private String unit;
   private int ltiov;
+  private String country;
 
-  public RFI(String rfiId, String getsUrl, String status, int lastUpdate, String unit, int ltiov) {
+  public RFI(String rfiId, String getsUrl, String status, int lastUpdate, String unit, int ltiov, String country) {
     this.getsUrl = getsUrl;
     this.rfiId = rfiId;
     this.status = status;
     this.lastUpdate = lastUpdate;
     this.unit = unit;
     this.ltiov = ltiov;
+    this.country = country;
   }
 
 }

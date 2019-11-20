@@ -46,7 +46,6 @@ public class MetricController {
       getsClickJSON.getUrl()
 
     );
-    System.out.print(getsClick);
     return this.getsClicksRepository.save(getsClick);
   }
 

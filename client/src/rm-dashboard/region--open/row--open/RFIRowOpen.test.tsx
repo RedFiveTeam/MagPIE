@@ -10,7 +10,7 @@ describe('RFIRowOpen', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
-    rfi = new RFIModel('2019-321', 'google.com', 'open', 1234567, '633 ABW');
+    rfi = new RFIModel('2019-321', 'google.com', 'open', 1234567, '633 ABW', 67854902, 'USA');
 
     subject = shallow(
       <RFIRowOpen rfi={rfi} index={0}/>

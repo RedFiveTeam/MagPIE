@@ -10,7 +10,7 @@ describe('RFIRowPending', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
-    rfi = new RFIModel('2019-321', 'google.com', 'pending', 23452456, '633 ABW');
+    rfi = new RFIModel('2019-321', 'google.com', 'pending', 23452456, '633 ABW', 57483920, 'USA');
 
     subject = shallow(
       <RFIRowPending rfi={rfi} index={0}/>
