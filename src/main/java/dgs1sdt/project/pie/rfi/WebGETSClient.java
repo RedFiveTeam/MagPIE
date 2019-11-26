@@ -28,7 +28,6 @@ public class WebGETSClient implements GETSClient {
     Document document = this.makeRequest(uri + "&status=NEW,OPEN");
     NodeList htmlRFIs = document.getElementsByTagName("getsrfi:RFISummary");
 
-
     extractElements(rfiList, htmlRFIs);
 
     String minDate;
@@ -58,38 +57,54 @@ public class WebGETSClient implements GETSClient {
       Node node = htmlRFIs.item(i);
       Element element = (Element) node;
 
-      int lastUpdate;
-
-      try {
-        lastUpdate = Utils.DateToUnixTime(element.getElementsByTagName("gets:lastUpdate").item(0).getTextContent());
-      } catch (Exception e) {
-        lastUpdate = Utils.DateToUnixTime(element.getElementsByTagName("getsrfi:receiveDate").item(0).getTextContent());
-      }
-
-      int ltiov;
-
-      try {
-        ltiov = Utils.DateToUnixTime(element.getElementsByTagName("gets:ltiov").item(0).getTextContent());
-      } catch (Exception e) {
-        ltiov = 0;
-      }
-
-      String rawUrl = element.getElementsByTagName("gets:url").item(0).getTextContent();
-
-      String url = rawUrl.replace(".smil.mil", ".smil.mil/internal");
-
       rfiList.add(
         new RFI(
-          node.getAttributes().getNamedItem("id").getNodeValue(),
-          url,
-          element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent(),
-          lastUpdate,
-          element.getElementsByTagName("gets:unit").item(0).getTextContent(),
-          ltiov,
-          element.getElementsByTagName("gets:iso1366trigraph").item(0).getTextContent()
+          getRFIID(node),
+          getUrl(element),
+          getTextFromElement(element, "getsrfi:responseStatus"),
+          getLastUpdate(element),
+          getTextFromElement(element, "gets:unit"),
+          getLtiov(element),
+          getTextFromElement(element, "gets:iso1366trigraph")
         )
       );
     }
+  }
+
+  private static String getTextFromElement(Element element, String s) {
+    return element.getElementsByTagName(s).item(0).getTextContent();
+  }
+
+  private static String getRFIID(Node node) {
+    String id = node.getAttributes().getNamedItem("id").getNodeValue();
+
+    return id.substring(id.lastIndexOf("-") - 2);
+  }
+
+  private static String getUrl(Element element) {
+    String rawUrl = getTextFromElement(element, "gets:url");
+
+    return rawUrl.replace(".smil.mil", ".smil.mil/internal");
+  }
+
+  private static int getLtiov(Element element) {
+    int ltiov;
+    try {
+      ltiov = Utils.DateToUnixTime(getTextFromElement(element, "gets:ltiov"));
+    } catch (Exception e) {
+      ltiov = 0;
+    }
+    return ltiov;
+  }
+
+  private static int getLastUpdate(Element element) throws Exception {
+    int lastUpdate;
+    try {
+      lastUpdate = Utils.DateToUnixTime(getTextFromElement(element, "gets:lastUpdate"));
+    } catch (Exception e) {
+      lastUpdate = Utils.DateToUnixTime(getTextFromElement(element, "getsrfi:receiveDate"));
+    }
+    return lastUpdate;
   }
 
   private Document makeRequest(String uri) throws Exception {

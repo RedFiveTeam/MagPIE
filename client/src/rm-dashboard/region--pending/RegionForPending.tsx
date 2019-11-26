@@ -66,7 +66,7 @@ export const StyledRegionForPending = styled(RegionForPending)`
     font-family: ${(props) => props.theme.font.familyRegion};
     font-weight: ${(props) => props.theme.font.weightRegion};
     font-size: ${(props) => props.theme.font.sizeRegion};
-    width: 272px;
+    width: ${(props) => props.theme.table.rowWidth};
     margin-top: 16px;
     text-align: center;
     opacity: 50%;
