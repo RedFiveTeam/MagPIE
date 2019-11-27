@@ -70,7 +70,7 @@ public class StubGETSClient implements GETSClient {
     "       <gets:iso1366trigraph>USA</gets:iso1366trigraph>\n" +
     "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
-    "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00322\">\n" +
+    "   <getsrfi:RFISummary id=\"DGS-1-ABC-2020-00322\">\n" +
     "     <gets:url>http://www.yahoo.com</gets:url>\n" +
     "     <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
@@ -145,7 +145,7 @@ public class StubGETSClient implements GETSClient {
     "       <gets:iso1366trigraph>MEX</gets:iso1366trigraph>\n" +
     "     </gets:CountryCodeList>\n" +
     "   </getsrfi:RFISummary>\n" +
-    "   <getsrfi:RFISummary id=\"DGS-1-SDT-2020-00333\">\n" +
+    "   <getsrfi:RFISummary id=\"633-ABW-2020-00333\">\n" +
     "     <gets:url>http://www.aol.com</gets:url>\n" +
     "     <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "     <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +

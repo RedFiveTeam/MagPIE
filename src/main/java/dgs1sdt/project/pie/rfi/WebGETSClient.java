@@ -30,12 +30,7 @@ public class WebGETSClient implements GETSClient {
 
     extractElements(rfiList, htmlRFIs);
 
-    String minDate;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyMMdd");
-    Date date = new Date();
-    date.setTime(date.getTime() - 5256000000L);
-
-    minDate = dateFormat.format(date);
+    String minDate = getDateTwoMonthsAgo();
 
     document = this.makeRequest(uri + "&status=CLOSED&mincloseDate=" + minDate);
     htmlRFIs = document.getElementsByTagName("getsrfi:RFISummary");
@@ -50,6 +45,16 @@ public class WebGETSClient implements GETSClient {
       rfiList.add(closedRfiList.get(i));
 
     return rfiList;
+  }
+
+  private String getDateTwoMonthsAgo() {
+    String minDate;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    Date date = new Date();
+    date.setTime(date.getTime() - 5256000000L);
+
+    minDate = dateFormat.format(date);
+    return minDate;
   }
 
   static void extractElements(List<RFI> rfiList, NodeList htmlRFIs) throws Exception {

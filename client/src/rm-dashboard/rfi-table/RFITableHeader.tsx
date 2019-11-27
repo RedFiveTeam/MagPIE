@@ -64,6 +64,7 @@ export const StyledRFITableHeader = styled(RFITableHeader)`
   width: ${(props) => props.theme.table.leftWidth};
   text-align: center; 
   padding-left: 10px;
+  flex-basis: auto;
   
   button {
     background-color: transparent;
@@ -72,16 +73,5 @@ export const StyledRFITableHeader = styled(RFITableHeader)`
     cursor: pointer;
   }
   
-  .header--id {
-    width: 72px;
-  }
-  .header--country {
-    width: 56px;
-  }
-  .header--customer {
-    width: 136px;
-  }
-  .header--ltiov {
-    width: 88px;
-  }
+
 `;
