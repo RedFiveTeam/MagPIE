@@ -25,7 +25,6 @@ public class StubGETSClient implements GETSClient {
     Document document = this.makeRequest(xmlPendingOpen);
     NodeList htmlRFIs = document.getElementsByTagName("getsrfi:RFISummary");
 
-
     extractElements(rfiList, htmlRFIs);
 
     document = this.makeRequest(xmlClosed);

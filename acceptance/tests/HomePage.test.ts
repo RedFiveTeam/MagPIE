@@ -15,18 +15,18 @@ Scenario ('should be able to sort by clickin\' BUTTons', (I) => {
   I.amOnPage('/');
   I.waitForText('20-321', 10);
 
-  I.see('4 FEB 20', locate('.region--pending').find('.row').at(1));
-  I.click('.sort--ltiov');
-  I.see('-', locate('.region--pending').find('.row').at(1));
+  I.see('4 FEB 20', locate('.region--pending').find('.rfi-row').at(1));
+  I.click('.header-cell--ltiov');
+  I.see('-', locate('.region--pending').find('.rfi-row').at(1));
 
-  I.click('.sort--country');
-  I.see('CAN', locate('.region--pending').find('.row').at(1));
-  I.click('.sort--country');
-  I.see('USA', locate('.region--pending').find('.row').at(1));
+  I.click('.header-cell--country');
+  I.see('CAN', locate('.region--pending').find('.rfi-row').at(1));
+  I.click('.header-cell--country');
+  I.see('USA', locate('.region--pending').find('.rfi-row').at(1));
 
-  I.click('.sort--unit');
-  I.see('1 FW', locate('.region--pending').find('.row').at(1));
-  I.click('.sort--unit');
-  I.see('HQ ACC', locate('.region--pending').find('.row').at(1));
+  I.click('.header-cell--customer');
+  I.see('1 FW', locate('.region--pending').find('.rfi-row').at(1));
+  I.click('.header-cell--customer');
+  I.see('HQ ACC', locate('.region--pending').find('.rfi-row').at(1));
 
 });

@@ -1,57 +1,59 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import IconSort from '../../resources/Vector';
+import { StyledHeaderCell } from './HeaderCell';
+import { connect } from 'react-redux';
+import { sortByCountry, sortByCustomer, sortById, sortByLtiov } from '../RFIActions';
 
 interface Props {
+  sortById: () => void;
+  sortByCountry: () => void;
+  sortByCustomer: () => void;
+  sortByLtiov: () => void;
   className?: string;
-  sortKey: string;
-  orderAscending: boolean;
-  callback: (newKey: string) => void;
 }
 
 export const RFITableHeader: React.FC<Props> = props => {
-
-  function handleClick(key: string) {
-    props.callback(key);
-  }
-
   return (
     <div className={classNames('header', props.className)}>
-      <span className={'header--id'}>RFI
-      <button
-        className={'sort--id'}
-        onClick={() => handleClick('id')}>
-        <IconSort/>
-      </button>
-      </span>
-      <span className={'header--country'}>CC
-      <button
-        className={'sort--country'}
-        onClick={() => handleClick('country')}>
-        <IconSort/>
-      </button>
-        </span>
-      <span className={'header--customer'}>Customer
-        <button
-          className={'sort--unit'}
-          onClick={() => handleClick('unit')}>
-          <IconSort/>
-        </button>
-      </span>
-      <span className={'header--ltiov'}>LTIOV
-        <button
-          className={'sort--ltiov'}
-          onClick={() => handleClick('ltiov')}>
-          <IconSort/>
-        </button>
-      </span>
+      <StyledHeaderCell
+        text={'RFI'}
+        sort={props.sortById}
+        className={'header-cell--id'}
+      />
+      <StyledHeaderCell
+        text={'CC'}
+        sort={props.sortByCountry}
+        className={'header-cell--country'}
+      />
+      <StyledHeaderCell
+        text={'Customer'}
+        sort={props.sortByCustomer}
+        className={'header-cell--customer'}
+      />
+      <StyledHeaderCell
+        text={'LTIOV'}
+        sort={props.sortByLtiov}
+        className={'header-cell--ltiov'}
+      />
+      <div className={'spacer--button'}/>
     </div>
   );
 };
 
 
-export const StyledRFITableHeader = styled(RFITableHeader)`
+const mapStateToProps = (state: any) => ({
+});
+
+const mapDispatchToProps = {
+  sortById: sortById,
+  sortByCountry: sortByCountry,
+  sortByCustomer: sortByCustomer,
+  sortByLtiov: sortByLtiov
+};
+
+export const StyledRFITableHeader = styled(
+  connect(mapStateToProps, mapDispatchToProps)(RFITableHeader))`
   font-family: ${(props) => props.theme.font.familyHeader};
   color: ${(props) => props.theme.color.fontPrimary};
   font-weight: ${(props) => props.theme.font.weightHeader};
@@ -59,19 +61,34 @@ export const StyledRFITableHeader = styled(RFITableHeader)`
   margin-top: 64px;
   height: 48px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: ${(props) => props.theme.table.leftWidth};
-  text-align: center; 
-  padding-left: 10px;
+  text-align: left; 
   flex-basis: auto;
+  width: max-content;
   
-  button {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    cursor: pointer;
+  .header-cell {
+    margin: 0px 16px;
   }
   
-
+  .header-cell--id {
+    justify-content: flex-end;
+    width: 72px;
+  }
+  
+  .header-cell--country {
+    width: 40px;
+  }
+  
+  .header-cell--customer{
+    width: 136px;
+  }
+  
+  .header-cell--ltiov {
+    width: 80px;
+  }
+  
+  .spacer--button {
+    width: 168px;
+  }
 `;

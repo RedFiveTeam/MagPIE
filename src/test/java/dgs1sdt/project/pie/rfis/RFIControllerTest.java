@@ -20,16 +20,15 @@ public class RFIControllerTest extends BaseIntegrationTest {
       .body("[0].getsUrl", equalTo("http://www.google.com"))
       .body("[0].lastUpdate", equalTo(1572963681))
       .body("[0].status", equalTo("NEW"))
-      .body("[0].unit", equalTo("633d ABW"))
+      .body("[0].customer", equalTo("633d ABW"))
       .body("[0].ltiov", equalTo(1604586081))
       .body("[0].country", equalTo("USA"))
       .body("[14].rfiId", equalTo("20-00329"))
       .body("[14].getsUrl", equalTo("http://www.msn.com"))
       .body("[14].lastUpdate", equalTo(1521210089))
       .body("[14].status", equalTo("CLOSED"))
-      .body("[14].unit", equalTo("1 FW"))
+      .body("[14].customer", equalTo("1 FW"))
       .body("[14].ltiov", equalTo(0))
       .body("[14].country", equalTo("MEX"));
   }
-
 }

@@ -2,88 +2,94 @@ import * as React from 'react';
 import styled from 'styled-components';
 import RFIModel from '../RFIModel';
 import classNames from 'classnames';
-import { StyledRegionForPending } from '../region--pending/RegionForPending';
 import { StyledRFITableHeader } from './RFITableHeader';
-import { StyledRegionForOpen } from '../region--open/RegionForOpen';
-import { StyledRegionForClosed } from '../region--closed/RegionForClosed';
+import ScrollShadow from 'react-scroll-shadow';
+import theme from '../../styles/theme';
+import { StyledRegion } from './Region';
+import { ClosedRFIRow, OpenRFIRow, PendingRFIRow } from './RFIRow';
+import { connect } from 'react-redux';
 
 interface Props {
-  rfis: RFIModel[];
-  sortKey: string;
-  orderAscending: boolean;
-  callback: (newKey: string) => void;
+  pendingRfis: RFIModel[];
+  openRfis: RFIModel[];
+  closedRfis: RFIModel[];
   className?: string;
 }
 
+function pendingRFIs(rfis: RFIModel[]) {
+  return rfis.map((rfi: RFIModel, index: number) =>
+    <PendingRFIRow rfi={rfi} key={index}/>
+  );
+}
+
+function openRFIs(rfis: RFIModel[]) {
+  return rfis.map((rfi: RFIModel, index: number) =>
+    <OpenRFIRow rfi={rfi} key={index}/>
+  )
+}
+
+function closedRFIs(rfis: RFIModel[]) {
+  return rfis.map((rfi: RFIModel, index: number) =>
+    <ClosedRFIRow rfi={rfi} key={index}/>
+  );
+}
+
 export const RFITable: React.FC<Props> = props => {
-
-  function renderShadowbox(scrollPos: any, scrollMax: any) {
-    if (scrollPos > 0) {
-      document.getElementById('tsb')!.classList.add('topShadow');
-    } else {
-      document.getElementById('tsb')!.classList.remove('topShadow');
-    }
-    if (scrollPos === scrollMax || document.getElementById('reg')!.style.overflow === 'visible') {
-      document.getElementById('bsb')!.classList.remove('bottomShadow');
-    } else {
-      document.getElementById('bsb')!.classList.add('bottomShadow');
-    }
-  }
-
   return (
     <div className={classNames('rfi-table', props.className)}>
-      <StyledRFITableHeader
-        sortKey={props.sortKey}
-        orderAscending={props.orderAscending}
-        callback={props.callback}/>
-      <div className={'shadowbox'} id={'tsb'}/>
-      <div className={classNames('shadowbox', 'bottomShadow')} id={'bsb'}/>
-      <div className={'regions'} id={'reg'} onScroll={() => {
-        const a = document.getElementById('reg')!;
-        return renderShadowbox(a.scrollTop, a.scrollHeight - a.offsetHeight);
-      }}>
-        <StyledRegionForPending
-          rfis={props.rfis}
-        />
-        <StyledRegionForOpen
-          rfis={props.rfis}
-        />
-        <StyledRegionForClosed
-          rfis={props.rfis}
-        />
+      <StyledRFITableHeader/>
+      <div className={'rfi-table--body'}>
+        <ScrollShadow
+          bottomShadowColors={{
+            active: 'linear-gradient(to top, #000000 0%, #00000000 100%);',
+            inactive: theme.color.backgroundBase
+          }}
+          topShadowColors={{
+            active: 'linear-gradient(to bottom, #000000 0%, #00000000 100%);',
+            inactive: theme.color.backgroundBase
+          }}
+          shadowSize={10}
+        >
+          <StyledRegion
+            title={'pending'}
+            emptyMessage={'Congratulations! Your team opened all the new RFIs in GETS.'}
+          >
+            {pendingRFIs(props.pendingRfis)}
+          </StyledRegion>
+          <StyledRegion
+            title={'open'}
+            emptyMessage={'No Open found'}
+          >
+            {openRFIs(props.openRfis)}
+          </StyledRegion>
+          <StyledRegion
+            title={'closed'}
+            emptyMessage={''}
+          >
+            {closedRFIs(props.closedRfis)}
+          </StyledRegion>
+        </ScrollShadow>
       </div>
     </div>
   );
 };
 
-export const StyledRFITable = styled(RFITable)`
-width:${(props) => props.theme.table.tableWidth};
+const mapStateToProps = (state: any) => ({
+  pendingRfis: state.pendingRfis,
+  openRfis: state.openRfis,
+  closedRfis: state.closedRfis
+});
 
-  .regions {
-    overflow-y: auto;
-    scrollbar-color: #ECECEC #0A0908;
-    height: calc(100vh -  168px);
-    z-index: 1;
-    scroll-behavior: auto;
-    font-family: ${(props) => props.theme.font.familyRow};
-  }
- 
-  .shadowbox {
-    width:${(props) => props.theme.table.rowWidth};
-    height: calc(100vh -  168px);
-    position: fixed;
-    pointer-events: none;
-    -moz-transition: .2s;
-    -moz-transition-timing-function: ease-out;
-  }
-    
-  .topShadow {
-    box-shadow: inset 0 20px 12px -12px black;
-  }  
+const mapDispatchToProps = {};
+
+export const StyledRFITable = styled(
+  connect(mapStateToProps, mapDispatchToProps)(RFITable))`
+  display: flex;
+  flex-direction: column;
   
-  .bottomShadow {
-    box-shadow: inset 0 -20px 12px -12px black;
-  }  
-  
+  .rfi-table--body{
+    overflow-y: scroll; 
+    display: flex;
+    margin-bottom: 48px;
+  }
 `;
-
