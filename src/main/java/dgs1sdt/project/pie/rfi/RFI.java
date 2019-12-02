@@ -23,16 +23,16 @@ public class RFI {
   private String rfiId;
   private String status;
   private int lastUpdate;
-  private String unit;
+  private String customer;
   private int ltiov;
   private String country;
 
-  public RFI(String rfiId, String getsUrl, String status, int lastUpdate, String unit, int ltiov, String country) {
+  public RFI(String rfiId, String getsUrl, String status, int lastUpdate, String customer, int ltiov, String country) {
     this.getsUrl = getsUrl;
     this.rfiId = rfiId;
     this.status = status;
     this.lastUpdate = lastUpdate;
-    this.unit = unit;
+    this.customer = customer;
     this.ltiov = ltiov;
     this.country = country;
   }

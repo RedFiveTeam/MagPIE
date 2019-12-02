@@ -11,7 +11,7 @@ export const RFIRegionDivider: React.FC<Props> = props => {
   return (
     <div className={classNames('region-divider', 'pending', props.className)}>
       <span className={classNames('separator-line', 'left')}/>
-      <span className={classNames('separator-title')}>{props.regionTitle}</span>
+      <span className={classNames('separator-title')}>{props.regionTitle.toUpperCase()}</span>
       <span className={classNames('separator-line', 'right')}/>
     </div>
   )
@@ -19,7 +19,6 @@ export const RFIRegionDivider: React.FC<Props> = props => {
 
 export const StyledRFIRegionDivider = styled(RFIRegionDivider)`
   height: 32px;
-  width: ${(props) => props.theme.table.rowWidth};
   font-family: ${(props) => props.theme.font.familyRegion};
   font-weight: ${(props) => props.theme.font.weightRegion};
   font-size: ${(props) => props.theme.font.sizeRegion};

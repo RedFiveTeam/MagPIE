@@ -1,21 +1,18 @@
-import { ShallowWrapper, shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { RFITable } from './RFITable';
-import { StyledRegionForPending } from '../region--pending/RegionForPending';
 import { StyledRFITableHeader } from './RFITableHeader';
-import { StyledRegionForClosed } from '../region--closed/RegionForClosed';
-import { StyledRegionForOpen } from '../region--open/RegionForOpen';
+import { StyledRegion } from './Region';
 
-describe('DisplayTable', () => {
+describe('RFITable', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
     subject = shallow(
       <RFITable
-        rfis={[]}
-        orderAscending={true}
-        sortKey={"ltiov"}
-        callback={() => {}}
+        pendingRfis={[]}
+        openRfis={[]}
+        closedRfis={[]}
       />
     );
   });
@@ -25,8 +22,6 @@ describe('DisplayTable', () => {
   });
 
   it('should contain three regions for RFIs', () => {
-    expect(subject.find(StyledRegionForPending).exists()).toBeTruthy();
-    expect(subject.find(StyledRegionForClosed).exists()).toBeTruthy();
-    expect(subject.find(StyledRegionForOpen).exists()).toBeTruthy();
+    expect(subject.find(StyledRegion).length).toBe(3);
   });
 });

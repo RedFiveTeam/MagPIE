@@ -11,10 +11,13 @@ import App from './App';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import reducer from './redux/reducers/reducer';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 export const store = createStore(
   reducer,
-  applyMiddleware(thunk)
+  composeWithDevTools(
+    applyMiddleware(thunk),
+  )
 );
 
 ReactDOM.render(
