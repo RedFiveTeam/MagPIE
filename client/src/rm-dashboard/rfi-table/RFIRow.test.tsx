@@ -11,7 +11,7 @@ describe('RFIRow', () => {
 
   beforeEach(() => {
     subject = shallow(
-      <RFIRow rfi={new RFIModel('id', 'url', RFIStatus.PENDING, 'customer', moment(), 'country')}/>
+      <RFIRow rfi={new RFIModel('id', 'url', RFIStatus.PENDING, 'customer', moment(), 'country', 'hi')}/>
     )
   });
 

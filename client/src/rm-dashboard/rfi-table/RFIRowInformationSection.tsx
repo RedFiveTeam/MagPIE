@@ -31,6 +31,9 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
       <span className={classNames('cell', 'cell--ltiov')}>
             {props.rfi.ltiov !== undefined ? props.rfi.ltiov.utc().format("D MMM YY").toUpperCase() : '-'}
           </span>
+      <span className={classNames('cell', 'cell--requestText')}>
+          <div>{props.rfi.requestText}</div>
+      </span>
     </div>
   );
 };
@@ -41,13 +44,13 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   flex: 1;
   justify-content: space-around;
   border-top-left-radius: 8px;
-  padding: 2px 0px 2px 0px;
+  padding: 2px 0 2px 0;
   font-size: ${(props) => props.theme.font.sizeRow};
   text-align: left;
   align-items: center;
   
   .cell {
-    margin: 0px 16px;
+    margin: 0 16px;
   }
   
   .cell--id {
@@ -73,5 +76,12 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
     
   .cell--country {
     width: 40px;
+  }
+  
+  .cell--requestText div {
+   max-height: 2.3em;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   width: 928px;
   }
 `;

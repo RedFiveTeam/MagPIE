@@ -36,6 +36,7 @@ export const RFITableHeader: React.FC<Props> = props => {
         sort={props.sortByLtiov}
         className={'header-cell--ltiov'}
       />
+      <div className={'spacer--requestText'}/>
       <div className={'spacer--button'}/>
     </div>
   );
@@ -68,7 +69,7 @@ export const StyledRFITableHeader = styled(
   width: max-content;
   
   .header-cell {
-    margin: 0px 16px;
+    margin: 0 16px;
   }
   
   .header-cell--id {
@@ -90,5 +91,8 @@ export const StyledRFITableHeader = styled(
   
   .spacer--button {
     width: 168px;
+  }
+  .spacer--requestText {
+    width: 928px;
   }
 `;

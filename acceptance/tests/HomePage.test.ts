@@ -9,6 +9,7 @@ Scenario ('should see a home page', (I) => {
     I.waitForText('633d', 10);
     I.waitForText('USA', 10);
     I.waitForText('4 FEB 20', 10);
+    I.waitForText('hi', 10);
 });
 
 Scenario ('should be able to sort by clickin\' BUTTons', (I) => {

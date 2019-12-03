@@ -26,8 +26,6 @@ describe('RFIDeserializer', () => {
 
     let rfis = RFIDeserializer.deserialize(json);
     let actual = rfis[0];
-    console.log(actual.ltiov);
-    console.log(moment.utc('2019-12-01 00:00'));
     expect(actual.ltiov!.isSame(moment.utc('2019-12-01'), 'second')).toBeTruthy();
     expect(actual.id).toBe('id');
     expect(actual.getsUrl).toBe('getsUrl');

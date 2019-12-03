@@ -26,14 +26,14 @@ public class WebGETSClient implements GETSClient {
     String uri = getsBaseURL;
 
     Document document = this.makeRequest(uri + "&status=NEW,OPEN");
-    NodeList htmlRFIs = document.getElementsByTagName("getsrfi:RFISummary");
+    NodeList htmlRFIs = document.getElementsByTagName("getsrfi:RequestForInformation");
 
     extractElements(rfiList, htmlRFIs);
 
     String minDate = getDateTwoMonthsAgo();
 
     document = this.makeRequest(uri + "&status=CLOSED&mincloseDate=" + minDate);
-    htmlRFIs = document.getElementsByTagName("getsrfi:RFISummary");
+    htmlRFIs = document.getElementsByTagName("getsrfi:RequestForInformation");
 
     List<RFI> closedRfiList = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class WebGETSClient implements GETSClient {
     Date date = new Date();
     date.setTime(date.getTime() - 5256000000L);
 
-    minDate = dateFormat.format(date);
+    minDate = dateFormat.format(date) + "000000";
     return minDate;
   }
 
@@ -66,14 +66,30 @@ public class WebGETSClient implements GETSClient {
         new RFI(
           getRFIID(node),
           getUrl(element),
-          getTextFromElement(element, "getsrfi:responseStatus"),
+          getStatus(element),
           getLastUpdate(element),
           getTextFromElement(element, "gets:unit"),
           getLtiov(element),
-          getTextFromElement(element, "gets:iso1366trigraph")
+          getTextFromElement(element, "gets:iso1366trigraph"),
+          getTextFromElement(element, "getsrfi:requestText")
         )
       );
     }
+  }
+
+  private static String getStatus(Element element) {
+    NodeList responses = element.getElementsByTagName("getsrfi:Response");
+
+    for( int i = 0; i < responses.getLength(); i++) {
+      Node node = responses.item(i);
+      Element curr = (Element) node;
+      if (curr.getElementsByTagName("gets:producerOrganization").item(0).getTextContent().equals("DGS-1")) {
+        return curr.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent();
+      }
+    }
+
+    System.out.println("could not find status for DGS-1 RFI!<---------------------------");
+    return element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent();
   }
 
   private static String getTextFromElement(Element element, String s) {
