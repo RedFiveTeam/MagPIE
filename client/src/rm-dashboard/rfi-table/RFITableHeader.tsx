@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { StyledHeaderCell } from './HeaderCell';
 import { connect } from 'react-redux';
 import { sortByCountry, sortByCustomer, sortById, sortByLtiov } from '../RFIActions';
+import { StyledUnsortableHeaderCell } from './UnsortableHeaderCell';
 
 interface Props {
   sortById: () => void;
@@ -36,13 +37,18 @@ export const RFITableHeader: React.FC<Props> = props => {
         sort={props.sortByLtiov}
         className={'header-cell--ltiov'}
       />
-      <div className={'spacer--button'}/>
+      <StyledUnsortableHeaderCell
+        text={'Description'}
+        className={'header-cell--description'}
+      />
+
+      <div className={'spacer--gets-button'}/>
     </div>
   );
 };
 
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = {
@@ -68,7 +74,7 @@ export const StyledRFITableHeader = styled(
   width: max-content;
   
   .header-cell {
-    margin: 0px 16px;
+    margin: 0 16px;
   }
   
   .header-cell--id {
@@ -88,7 +94,8 @@ export const StyledRFITableHeader = styled(
     width: 80px;
   }
   
-  .spacer--button {
+  .spacer--gets-button {
     width: 168px;
   }
+
 `;

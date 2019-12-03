@@ -86,6 +86,7 @@ export const StyledRFITable = styled(
   connect(mapStateToProps, mapDispatchToProps)(RFITable))`
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
   
   .rfi-table--body{
     overflow-y: auto; 

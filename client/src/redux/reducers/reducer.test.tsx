@@ -23,11 +23,11 @@ describe('reducer', () => {
   let closedRfi1: RFIModel;
 
   beforeEach(() => {
-    pendingRfi1 = new RFIModel('19-003', '', RFIStatus.PENDING, 'HQ ACC', undefined, 'MEX');
-    pendingRfi2 = new RFIModel('19-004', '', RFIStatus.PENDING, '633 ABW', moment.utc('2019-12-02'), 'ALB');
-    openRfi1 = new RFIModel('19-001', '', RFIStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA');
-    openRfi2 = new RFIModel('19-002', '', RFIStatus.OPEN, '2 FW', moment.utc('2019-12-03'), 'JAP');
-    closedRfi1 = new RFIModel('19-005', '', RFIStatus.CLOSED, '733 ABW', moment.utc('2019-12-04'), 'CAN');
+    pendingRfi1 = new RFIModel('19-003', '', RFIStatus.PENDING, 'HQ ACC', undefined, 'MEX', 'hi');
+    pendingRfi2 = new RFIModel('19-004', '', RFIStatus.PENDING, '633 ABW', moment.utc('2019-12-02'), 'ALB', 'hi');
+    openRfi1 = new RFIModel('19-001', '', RFIStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi');
+    openRfi2 = new RFIModel('19-002', '', RFIStatus.OPEN, '2 FW', moment.utc('2019-12-03'), 'JAP', 'hi');
+    closedRfi1 = new RFIModel('19-005', '', RFIStatus.CLOSED, '733 ABW', moment.utc('2019-12-04'), 'CAN', 'hi');
 
     sortedById = [openRfi1, openRfi2, pendingRfi1, pendingRfi2, closedRfi1];
     reverseById = [closedRfi1, pendingRfi2, pendingRfi1, openRfi2, openRfi1];
@@ -39,9 +39,9 @@ describe('reducer', () => {
     reverseByLtiov =[pendingRfi1, closedRfi1, openRfi2, pendingRfi2, openRfi1];
 
     singleStatusRfiList = [
-      new RFIModel('19-001', '', RFIStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA'),
-      new RFIModel('19-004', '', RFIStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN'),
-      new RFIModel('19-003', '', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX')
+      new RFIModel('19-001', '', RFIStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi'),
+      new RFIModel('19-004', '', RFIStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi'),
+      new RFIModel('19-003', '', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi')
     ];
     multiStatusRfiList = [openRfi2, openRfi1, pendingRfi2, closedRfi1, pendingRfi1,];
   });
@@ -53,9 +53,9 @@ describe('reducer', () => {
     };
 
     let sortedRfis = [
-      new RFIModel('19-001', '', RFIStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA'),
-      new RFIModel('19-004', '', RFIStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN'),
-      new RFIModel('19-003', '', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX'),
+      new RFIModel('19-001', '', RFIStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi'),
+      new RFIModel('19-004', '', RFIStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi'),
+      new RFIModel('19-003', '', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi'),
     ];
     expect(
       reducer(undefined, mockAction)

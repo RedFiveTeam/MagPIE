@@ -26,8 +26,16 @@ public class RFI {
   private String customer;
   private int ltiov;
   private String country;
+  private String description;
 
-  public RFI(String rfiId, String getsUrl, String status, int lastUpdate, String customer, int ltiov, String country) {
+  public RFI(String rfiId,
+             String getsUrl,
+             String status,
+             int lastUpdate,
+             String customer,
+             int ltiov,
+             String country,
+             String description) {
     this.getsUrl = getsUrl;
     this.rfiId = rfiId;
     this.status = status;
@@ -35,6 +43,7 @@ public class RFI {
     this.customer = customer;
     this.ltiov = ltiov;
     this.country = country;
+    this.description = description;
   }
 
 }

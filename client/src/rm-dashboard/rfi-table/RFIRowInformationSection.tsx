@@ -31,6 +31,9 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
       <span className={classNames('cell', 'cell--ltiov')}>
             {props.rfi.ltiov !== undefined ? props.rfi.ltiov.utc().format("D MMM YY").toUpperCase() : '-'}
           </span>
+      <div className={classNames('cell', 'cell--description')}>
+          {props.rfi.description}
+      </div>
     </div>
   );
 };
@@ -39,26 +42,27 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   display: flex;
   flex-direction: row;
   flex: 1;
+  min-width: 715px;
   justify-content: space-around;
   border-top-left-radius: 8px;
-  padding: 2px 0px 2px 0px;
+  padding: 2px 0 2px 0;
   font-size: ${(props) => props.theme.font.sizeRow};
   text-align: left;
   align-items: center;
   
   .cell {
-    margin: 0px 16px;
+    margin: 0 16px;
   }
   
   .cell--id {
-    width: 72px;
+    flex: 0 0 72px;
     justify-content: center;
     text-align: right;
   }
   
   .cell--customer {
     white-space: nowrap;
-    width: 136px;
+    flex: 0 0 136px;
   }  
   
   .cell--customer div {
@@ -68,10 +72,20 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   }
   
   .cell--ltiov {
-    width: 80px;
+    flex: 0 0 80px;
   }
     
   .cell--country {
-    width: 40px;
+    flex: 0 0 40px;
+  }
+  
+  .cell--description {
+   display: flex;
+   flex: 1;
+   flex-direction: column;
+   max-height: 2.3em;
+   overflow: hidden;
+   max-width: 928px;
+   min-width: 224px;
   }
 `;

@@ -26,7 +26,8 @@ export class RFIDeserializer {
           matchEnum(item.status),
           item.customer,
           item.ltiov === 0 ? undefined : moment.unix(item.ltiov).utc(),
-          item.country
+          item.country,
+          item.description
         );
       });
     }
