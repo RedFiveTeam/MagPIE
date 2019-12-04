@@ -88,7 +88,7 @@ export const StyledRFITable = styled(
   flex-direction: column;
   
   .rfi-table--body{
-    overflow-y: scroll; 
+    overflow-y: auto; 
     display: flex;
     margin-bottom: 48px;
   }
