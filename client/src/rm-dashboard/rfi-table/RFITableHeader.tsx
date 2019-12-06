@@ -74,28 +74,29 @@ export const StyledRFITableHeader = styled(
   width: max-content;
   
   .header-cell {
-    margin: 0 16px;
+    padding-left: 16px;
   }
   
   .header-cell--id {
     justify-content: flex-end;
-    width: 72px;
+    width: 88px;
   }
   
   .header-cell--country {
-    width: 40px;
+    width: 56px;
   }
   
   .header-cell--customer{
-    width: 136px;
+    width: 152px;
   }
   
   .header-cell--ltiov {
-    width: 80px;
+    width: 96px;
+    margin-left: 9px;
   }
   
   .spacer--gets-button {
-    width: 168px;
+    width: 184px;
   }
 
 `;

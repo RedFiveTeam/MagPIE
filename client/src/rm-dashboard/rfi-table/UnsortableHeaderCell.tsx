@@ -22,6 +22,5 @@ export const UnsortableHeaderCell: React.FC<Props> = props => {
 export const StyledUnsortableHeaderCell = styled(UnsortableHeaderCell)`
   display: flex;
   flex-direction: row;
-  cursor: pointer;
-  margin-left: 8px;
+  margin-left: 5px;
 `;

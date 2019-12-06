@@ -1,5 +1,5 @@
 import * as React from 'react';
-import IconExternalLink from '../../resources/GETSButtonVector';
+import IconExternalLink from '../../resources/ExternalLinkVector';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
@@ -31,6 +31,6 @@ export const StyledHeaderCell = styled(HeaderCell)`
   cursor: pointer;
   
   .icon--sort {
-    margin-left: 8px;
+    margin-left: 5px;
   }
 `;

@@ -20,15 +20,6 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
 
   const [expanded, setExpanded] = React.useState(false);
 
-// function checkScroll() {
-//   let table = document.getElementById('this is the rfi table');
-//   let row = document.getElementById(props.rfi.id);
-//   let topPos = row!.offsetTop;
-//   console.log(topPos);
-//   table.set
-// }
-
-
   function handleClick() {
     setExpanded(!expanded);
     if(!expanded)
@@ -51,17 +42,15 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
       <span className={classNames('cell', 'cell--ltiov')}>
             {props.rfi.ltiov !== undefined ? props.rfi.ltiov.utc().format("D MMM YY").toUpperCase() : '-'}
           </span>
-
       <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}  id={props.rfi.id}>
           {props.rfi.description}
       </span>
       <div className={classNames(expanded ? 'see-less' : 'see-more',
-        props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {handleClick()}}>
+        props.rfi.description.length > 75 ? '' : 'hidden')} onClick={() => {handleClick()}}>
         <div>{expanded ? <IconShowLess/> : ''}</div>
         <div>{expanded ? 'See less' : 'See more'}</div>
         <div>{expanded ? <IconShowLess/> : <IconShowMore/>}</div>
       </div>
-
     </div>
   );
 };
@@ -71,7 +60,7 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   flex-direction: row;
   flex: 1 1;
   min-width: 855px;
-  max-width: 1335px;
+  max-width: 1336px;
   justify-content: space-around;
   border-top-left-radius: 8px;
   font-size: ${(props) => props.theme.font.sizeRow};
@@ -80,7 +69,7 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   flex-wrap: wrap;
   
   .cell {
-  padding-left: 16px;
+    padding-left: 16px;
 
     line-height: 56px;
   }
@@ -121,7 +110,7 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
      flex: 1 1;
      max-height: 3em;
      overflow: hidden;
-     max-width: 841px;
+     max-width: 928px;
      min-width: 224px;
      justify-content: space-between;
      line-height: 1.3em;
