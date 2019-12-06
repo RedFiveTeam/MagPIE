@@ -71,6 +71,7 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   flex-direction: row;
   flex: 1 1;
   min-width: 855px;
+  max-width: 1335px;
   justify-content: space-around;
   border-top-left-radius: 8px;
   font-size: ${(props) => props.theme.font.sizeRow};
@@ -139,7 +140,7 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   .see-more {
     display:flex;
     flex-direction: column;
-    flex: 0 0 85px;
+    flex: 0 0 87px;
     height:52px;
     align-self: start;
     padding-right: 7px;
