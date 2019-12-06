@@ -1,5 +1,5 @@
 import * as React from 'react';
-import IconSort from '../../resources/Vector';
+import IconExternalLink from '../../resources/GETSButtonVector';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
@@ -19,7 +19,7 @@ export const HeaderCell: React.FC<Props> = props => {
         {props.text}
       </span>
       <span className={classNames('icon--sort', 'sort--' + props.text)}>
-        <IconSort/>
+        <IconExternalLink/>
       </span>
     </div>
   )

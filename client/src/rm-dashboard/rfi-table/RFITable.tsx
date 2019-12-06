@@ -38,7 +38,7 @@ export const RFITable: React.FC<Props> = props => {
   return (
     <div className={classNames('rfi-table', props.className)}>
       <StyledRFITableHeader/>
-      <div className={'rfi-table--body'}>
+      <div className={'rfi-table--body'}   id={'this is the rfi table'}>
         <ScrollShadow
           bottomShadowColors={{
             active: 'linear-gradient(to top, #000000 0%, #00000000 100%);',
@@ -51,6 +51,7 @@ export const RFITable: React.FC<Props> = props => {
           shadowSize={10}
         >
           <StyledRegion
+
             title={'pending'}
             emptyMessage={'Congratulations! Your team opened all the new RFIs in GETS.'}
           >

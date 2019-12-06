@@ -2,6 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import RFIModel from '../RFIModel';
+import IconShowMore from '../../resources/ShowMoreVector';
+import IconShowLess from '../../resources/ShowLessVector';
 
 interface Props {
   rfi: RFIModel;
@@ -15,6 +17,24 @@ const formatID = (id: string): string => {
 };
 
 export const RFIRowInformationSection: React.FC<Props> = props => {
+
+  const [expanded, setExpanded] = React.useState(false);
+
+// function checkScroll() {
+//   let table = document.getElementById('this is the rfi table');
+//   let row = document.getElementById(props.rfi.id);
+//   let topPos = row!.offsetTop;
+//   console.log(topPos);
+//   table.set
+// }
+
+
+  function handleClick() {
+    setExpanded(!expanded);
+    if(!expanded)
+      document.getElementById(props.rfi.id)!.scrollIntoView({behavior: "smooth", block: "start", inline: "start"});
+  }
+
   return (
     <div
       className={classNames('row-section', 'section--information', props.className)}
@@ -31,9 +51,18 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
       <span className={classNames('cell', 'cell--ltiov')}>
             {props.rfi.ltiov !== undefined ? props.rfi.ltiov.utc().format("D MMM YY").toUpperCase() : '-'}
           </span>
-      <div className={classNames('cell', 'cell--description')}>
+      <div className={'description-container'}>
+      <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}  id={props.rfi.id}>
           {props.rfi.description}
+      </span>
       </div>
+      <div className={classNames(expanded ? 'see-less' : 'see-more',
+        props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {handleClick()}}>
+        <div>{expanded ? <IconShowLess/> : ''}</div>
+        <div>{expanded ? 'See less' : 'See more'}</div>
+        <div>{expanded ? <IconShowLess/> : <IconShowMore/>}</div>
+      </div>
+
     </div>
   );
 };
@@ -41,17 +70,19 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
 export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   display: flex;
   flex-direction: row;
-  flex: 1;
-  min-width: 715px;
+  flex: 1 1;
+  min-width: 855px;
   justify-content: space-around;
   border-top-left-radius: 8px;
-  padding: 2px 0 2px 0;
+
   font-size: ${(props) => props.theme.font.sizeRow};
   text-align: left;
-  align-items: center;
+  align-items: start;
+  flex-wrap: wrap;
   
   .cell {
     margin: 0 16px;
+    line-height: 56px;
   }
   
   .cell--id {
@@ -62,7 +93,7 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   
   .cell--customer {
     white-space: nowrap;
-    flex: 0 0 136px;
+    flex: 0 1 136px;
   }  
   
   .cell--customer div {
@@ -72,20 +103,83 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   }
   
   .cell--ltiov {
-    flex: 0 0 80px;
+    flex: 0 1 80px;
   }
     
   .cell--country {
-    flex: 0 0 40px;
+    flex: 0 1 40px;
   }
   
-  .cell--description {
-   display: flex;
-   flex: 1;
-   flex-direction: column;
-   max-height: 2.3em;
-   overflow: hidden;
-   max-width: 928px;
-   min-width: 224px;
+  .hidden {
+    opacity:0;
+    z-index: -100;
   }
+  
+  
+  .description-container {
+     display: flex;
+     flex: 1;
+     flex-direction: row;
+     overflow: hidden;
+     max-width: 928px;
+     min-width: 304px;
+     justify-content: space-between;
+     align-items: flex-start;
+
+  }  
+  
+  .cell--description {
+     padding-top: 7px;
+     display: flex;
+     flex: 1 1;
+     max-height: 3em;
+     overflow: hidden;
+     max-width: 928px;
+     min-width: 304px;
+     justify-content: space-between;
+     line-height: 1.3em;
+  }
+  
+  .cell--description-expanded {
+     padding-top: 7px;
+     display: flex;
+     flex: 1 1;
+     max-width: 928px;
+     min-width: 224px;
+     justify-content: space-between;
+     line-height: 1.3em;
+  }
+  
+  .see-more {
+    display:flex;
+    flex-direction: column;
+    flex: 0 0 80px;
+    height:52px;
+    align-self: start;
+    padding-right: 7px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+   
+  .see-less {
+    cursor: pointer;
+    display: flex;
+    flex-basis: 100%;
+    text-align: center;
+    line-height: 32px;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background: linear-gradient(180deg, rgba(32, 32, 32, 0) 0%, rgba(32, 32, 32, 0.5) 46.88%);
+  }
+  
+  .see-less:hover {
+    background: linear-gradient(180deg, rgba(70, 70, 70, 0.5) 0%, rgba(0, 0, 0, 0.5) 46.88%);
+  }
+  
+  .see-less div {
+    width: 65px;
+  }
+  
 `;

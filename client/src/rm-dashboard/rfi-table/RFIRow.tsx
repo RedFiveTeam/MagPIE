@@ -31,8 +31,8 @@ export const RFIRow: React.FC<Props> = props => {
 export const StyledRFIRow = styled(RFIRow)`
   display: flex;
   flex-direction: row;
-  flex: 1;
-  height: 64px;  
+  flex: 1 1;
+
   color: ${(props) => props.theme.color.fontPrimary}; 
   margin-bottom: 16px;
  
