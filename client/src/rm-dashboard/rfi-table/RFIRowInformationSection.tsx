@@ -51,11 +51,10 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
       <span className={classNames('cell', 'cell--ltiov')}>
             {props.rfi.ltiov !== undefined ? props.rfi.ltiov.utc().format("D MMM YY").toUpperCase() : '-'}
           </span>
-      <div className={'description-container'}>
+
       <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}  id={props.rfi.id}>
           {props.rfi.description}
       </span>
-      </div>
       <div className={classNames(expanded ? 'see-less' : 'see-more',
         props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {handleClick()}}>
         <div>{expanded ? <IconShowLess/> : ''}</div>
@@ -74,40 +73,40 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   min-width: 855px;
   justify-content: space-around;
   border-top-left-radius: 8px;
-
   font-size: ${(props) => props.theme.font.sizeRow};
   text-align: left;
   align-items: start;
   flex-wrap: wrap;
   
   .cell {
-    margin: 0 16px;
+  padding-left: 16px;
+
     line-height: 56px;
   }
   
   .cell--id {
-    flex: 0 0 72px;
+    flex: 0 0 88px;
     justify-content: center;
     text-align: right;
   }
   
   .cell--customer {
     white-space: nowrap;
-    flex: 0 1 136px;
+    flex: 0 1 152px;
   }  
   
   .cell--customer div {
-    width: 136px;
+    width: 152px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   
   .cell--ltiov {
-    flex: 0 1 80px;
+    flex: 0 1 96px;
   }
     
   .cell--country {
-    flex: 0 1 40px;
+    flex: 0 1 56px;
   }
   
   .hidden {
@@ -115,27 +114,14 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
     z-index: -100;
   }
   
-  
-  .description-container {
-     display: flex;
-     flex: 1;
-     flex-direction: row;
-     overflow: hidden;
-     max-width: 928px;
-     min-width: 304px;
-     justify-content: space-between;
-     align-items: flex-start;
-
-  }  
-  
   .cell--description {
      padding-top: 7px;
      display: flex;
      flex: 1 1;
      max-height: 3em;
      overflow: hidden;
-     max-width: 928px;
-     min-width: 304px;
+     max-width: 841px;
+     min-width: 224px;
      justify-content: space-between;
      line-height: 1.3em;
   }
@@ -153,10 +139,11 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   .see-more {
     display:flex;
     flex-direction: column;
-    flex: 0 0 80px;
+    flex: 0 0 85px;
     height:52px;
     align-self: start;
     padding-right: 7px;
+    padding-left: 5px;
     cursor: pointer;
     align-items: center;
     justify-content: center;

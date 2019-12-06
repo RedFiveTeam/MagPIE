@@ -3,7 +3,6 @@ import { RFIRowInformationSection } from './RFIRowInformationSection';
 import React from 'react';
 import RFIModel, { RFIStatus } from '../RFIModel';
 import moment from 'moment';
-import IconShowMore from '../../resources/ShowMoreVector';
 
 describe('RFIRowInformationSection', () => {
   let subject: ShallowWrapper;
