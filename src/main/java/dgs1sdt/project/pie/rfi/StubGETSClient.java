@@ -74,11 +74,11 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00321\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00321\" orgid=\"633 ABW\">\n" +
-    "          <gets:producerOrganization>633 ABW</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>633 ABW</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>CLOSED</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -108,7 +108,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-ABC-2020-00322\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -139,7 +139,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00323\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -159,18 +159,18 @@ public class StubGETSClient implements GETSClient {
     "        </getsrfi:requestText>\n" +
     "        <gets:url>http://www.msn.com</gets:url>\n" +
     "        <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
-    "        <gets:lastUpdate>2020-04-10T14:21:24Z</gets:lastUpdate>\n" +
+    "        <gets:lastUpdate>2019-05-10T14:21:24Z</gets:lastUpdate>\n" +
     "        <getsrfi:RequestingPOC>\n" +
     "          <gets:unit>HQ ACC</gets:unit>\n" +
     "        </getsrfi:RequestingPOC>\n" +
-    "        <gets:ltiov>2020-02-04T04:21:21Z</gets:ltiov>\n" +
+    "        <gets:ltiov>2020-05-05T04:21:21Z</gets:ltiov>\n" +
     "        <gets:CountryCodeList>\n" +
     "          <gets:iso1366trigraph>MEX</gets:iso1366trigraph>\n" +
     "        </gets:CountryCodeList>\n" +
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00324\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -195,7 +195,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00325\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>OPEN</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -253,7 +253,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00326\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>OPEN</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -283,7 +283,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00331\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -314,7 +314,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00332\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -344,7 +344,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"633-ABW-2020-00333\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -446,11 +446,11 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00334\" orgid=\"633 ABW\">\n" +
-    "          <gets:producerOrganization>633 ABW</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>633 ABW</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>OPEN</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00334\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>NEW</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -481,7 +481,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00335\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>OPEN</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -511,7 +511,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:Request>\n" +
     "      <getsrfi:ResponseList>\n" +
     "        <getsrfi:Response id=\"DGS-1-SDT-2020-00336\" orgid=\"DGS-1\">\n" +
-    "          <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "          <getsrfi:responseStatus>OPEN</getsrfi:responseStatus>\n" +
     "        </getsrfi:Response>\n" +
     "      </getsrfi:ResponseList>\n" +
@@ -547,7 +547,7 @@ public class StubGETSClient implements GETSClient {
     "    </getsrfi:Request>\n" +
     "    <getsrfi:ResponseList>\n" +
     "      <getsrfi:Response id=\"DGS-1-SDT-2020-00327\" orgid=\"DGS-1\">\n" +
-    "        <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "        <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "        <getsrfi:responseStatus>CLOSED</getsrfi:responseStatus>\n" +
     "      </getsrfi:Response>\n" +
     "    </getsrfi:ResponseList>\n" +
@@ -578,7 +578,7 @@ public class StubGETSClient implements GETSClient {
     "    </getsrfi:Request>\n" +
     "    <getsrfi:ResponseList>\n" +
     "      <getsrfi:Response id=\"DGS-1-SDT-2020-00328\" orgid=\"DGS-1\">\n" +
-    "        <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "        <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "        <getsrfi:responseStatus>CLOSED</getsrfi:responseStatus>\n" +
     "      </getsrfi:Response>\n" +
     "    </getsrfi:ResponseList>\n" +
@@ -602,11 +602,11 @@ public class StubGETSClient implements GETSClient {
     "    </getsrfi:Request>\n" +
     "    <getsrfi:ResponseList>\n" +
     "      <getsrfi:Response id=\"DGS-1-SDT-2020-00329\" orgid=\"633 ABW\">\n" +
-    "        <gets:producerOrganization>633 ABW</gets:producerOrganization>\n" +
+    "        <gets:producerOrganizationID>633 ABW</gets:producerOrganizationID>\n" +
     "        <getsrfi:responseStatus>OPEN</getsrfi:responseStatus>\n" +
     "      </getsrfi:Response>\n" +
     "      <getsrfi:Response id=\"DGS-1-SDT-2020-00329\" orgid=\"DGS-1\">\n" +
-    "        <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "        <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "        <getsrfi:responseStatus>CLOSED</getsrfi:responseStatus>\n" +
     "      </getsrfi:Response>\n" +
     "    </getsrfi:ResponseList>\n" +
@@ -636,7 +636,7 @@ public class StubGETSClient implements GETSClient {
     "    </getsrfi:Request>\n" +
     "    <getsrfi:ResponseList>\n" +
     "      <getsrfi:Response id=\"DGS-1-SDT-2020-00330\" orgid=\"DGS-1\">\n" +
-    "        <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "        <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "        <getsrfi:responseStatus>CLOSED</getsrfi:responseStatus>\n" +
     "      </getsrfi:Response>\n" +
     "    </getsrfi:ResponseList>\n" +
@@ -657,7 +657,7 @@ public class StubGETSClient implements GETSClient {
     "    </getsrfi:Request>\n" +
     "    <getsrfi:ResponseList>\n" +
     "      <getsrfi:Response id=\"DGS-1-SDT-2020-00330\" orgid=\"DGS-1\">\n" +
-    "        <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "        <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>\n" +
     "        <getsrfi:responseStatus>CLOSED</getsrfi:responseStatus>\n" +
     "      </getsrfi:Response>\n" +
     "    </getsrfi:ResponseList>\n" +
