@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { StyledHeaderCell } from './HeaderCell';
 import { connect } from 'react-redux';
 import { sortByCountry, sortByCustomer, sortById, sortByLtiov } from '../RFIActions';
+import { StyledUnsortableHeaderCell } from './UnsortableHeaderCell';
 
 interface Props {
   sortById: () => void;
@@ -38,12 +39,18 @@ export const RFITableHeader: React.FC<Props> = props => {
       />
       <div className={'spacer--requestText'}/>
       <div className={'spacer--button'}/>
+      <StyledUnsortableHeaderCell
+        text={'Description'}
+        className={'header-cell--description'}
+      />
+
+      <div className={'spacer--gets-button'}/>
     </div>
   );
 };
 
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = {
@@ -69,30 +76,33 @@ export const StyledRFITableHeader = styled(
   width: max-content;
   
   .header-cell {
+    padding-left: 16px;
     margin: 0 16px;
   }
   
   .header-cell--id {
     justify-content: flex-end;
-    width: 72px;
+    width: 88px;
   }
   
   .header-cell--country {
-    width: 40px;
+    width: 56px;
   }
   
   .header-cell--customer{
-    width: 136px;
+    width: 152px;
   }
   
   .header-cell--ltiov {
-    width: 80px;
+    width: 96px;
+    margin-left: 9px;
   }
   
-  .spacer--button {
-    width: 168px;
+  .spacer--gets-button {
+    width: 184px;
   }
   .spacer--requestText {
     width: 928px;
   }
+
 `;

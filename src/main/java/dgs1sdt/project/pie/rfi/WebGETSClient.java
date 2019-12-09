@@ -32,6 +32,8 @@ public class WebGETSClient implements GETSClient {
 
     String minDate = getDateTwoMonthsAgo();
 
+    System.out.println(uri + "&status=CLOSED&mincloseDate=" + minDate);
+
     document = this.makeRequest(uri + "&status=CLOSED&mincloseDate=" + minDate);
     htmlRFIs = document.getElementsByTagName("getsrfi:RequestForInformation");
 

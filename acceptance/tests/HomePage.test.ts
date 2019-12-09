@@ -29,5 +29,30 @@ Scenario ('should be able to sort by clickin\' BUTTons', (I) => {
   I.see('1 FW', locate('.region--pending').find('.rfi-row').at(1));
   I.click('.header-cell--customer');
   I.see('HQ ACC', locate('.region--pending').find('.rfi-row').at(1));
+});
+
+Scenario ('Should log and display metrics', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  I.click('.section--button');
+
+  I.amOnPage('/metrics');
+  I.waitForText('Site Visits: 3', 10);
+  I.waitForText('GETS URL Clicks: 1', 10);
+});
+
+Scenario ('Should expand and collapse descriptions', (I) => {
+  I.amOnPage('/');
+  I.waitForText('See more', 10);
+  I.see('See more', locate('.region--pending').find('.rfi-row').at(1));
+  I.dontSee('See less');
+
+  I.click('.see-more');
+  I.waitForText('See less', 10);
+  I.dontSee('See more', locate('.region--pending').find('.rfi-row').at(1));
+
+  I.click('.see-less');
+  I.waitForText('See more', 10);
+  I.dontSee('See less');
 
 });

@@ -56,6 +56,7 @@ export const StyledRFIRowButtonSection = styled(connect(mapStateToProps, mapDisp
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  flex: 1;
     
   :hover {
     color: ${(props) => props.theme.color.backgroundBase};
