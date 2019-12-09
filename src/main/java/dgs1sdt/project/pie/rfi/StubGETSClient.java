@@ -12,6 +12,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -29,9 +30,7 @@ public class StubGETSClient implements GETSClient {
 
     document = this.makeRequest(xmlClosed);
     htmlRFIs = document.getElementsByTagName("getsrfi:RequestForInformation");
-
     List<RFI> closedRfiList = new ArrayList<>();
-
     extractElements(closedRfiList, htmlRFIs);
 
     Collections.sort(closedRfiList, new SortByRecentFirst());
@@ -99,7 +98,7 @@ public class StubGETSClient implements GETSClient {
     "        </getsrfi:requestText>\n" +
     "        <gets:url>http://www.yahoo.com</gets:url>\n" +
     "        <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
-    "        <getsrfi:receiveDate>2019-11-11T14:21:22Z</getsrfi:receiveDate>\n" +
+    "        <getsrfi:receiveDate>2019-11-11T00:00:00Z</getsrfi:receiveDate>\n" +
     "        <getsrfi:RequestingPOC>\n" +
     "          <gets:unit>633 ABW KUYGEUYGIUYGWOUY FJWUYTDAUIYGDUYFID UYBSOIUHOIUD</gets:unit>\n" +
     "        </getsrfi:RequestingPOC>\n" +
@@ -160,11 +159,11 @@ public class StubGETSClient implements GETSClient {
     "        </getsrfi:requestText>\n" +
     "        <gets:url>http://www.msn.com</gets:url>\n" +
     "        <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
-    "        <gets:lastUpdate>2019-11-10T14:21:24Z</gets:lastUpdate>\n" +
+    "        <gets:lastUpdate>2020-04-10T14:21:24Z</gets:lastUpdate>\n" +
     "        <getsrfi:RequestingPOC>\n" +
     "          <gets:unit>HQ ACC</gets:unit>\n" +
     "        </getsrfi:RequestingPOC>\n" +
-    "        <gets:ltiov>2020-05-05T14:21:21Z</gets:ltiov>\n" +
+    "        <gets:ltiov>2020-02-04T04:21:21Z</gets:ltiov>\n" +
     "        <gets:CountryCodeList>\n" +
     "          <gets:iso1366trigraph>MEX</gets:iso1366trigraph>\n" +
     "        </gets:CountryCodeList>\n" +
@@ -243,11 +242,11 @@ public class StubGETSClient implements GETSClient {
     "        </getsrfi:requestText>\n" +
     "        <gets:url>http://www.google.com</gets:url>\n" +
     "        <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
-    "        <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>\n" +
+    "        <gets:lastUpdate>2019-10-16T04:59:58Z</gets:lastUpdate>\n" +
     "        <getsrfi:RequestingPOC>\n" +
     "          <gets:unit>1 FW</gets:unit>\n" +
     "        </getsrfi:RequestingPOC>\n" +
-    "        <gets:ltiov>2022-11-09T14:21:21Z</gets:ltiov>\n" +
+    "        <gets:ltiov>2022-11-09T00:00:00Z</gets:ltiov>\n" +
     "        <gets:CountryCodeList>\n" +
     "          <gets:iso1366trigraph>CAN</gets:iso1366trigraph>\n" +
     "        </gets:CountryCodeList>\n" +
@@ -568,7 +567,7 @@ public class StubGETSClient implements GETSClient {
     "      </getsrfi:requestText>\n" +
     "      <gets:url>http://www.aol.com</gets:url>\n" +
     "      <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
-    "      <gets:lastUpdate>2019-10-30T14:21:28Z</gets:lastUpdate>\n" +
+    "      <gets:lastUpdate>2019-10-20T14:21:28Z</gets:lastUpdate>\n" +
     "      <getsrfi:RequestingPOC>\n" +
     "        <gets:unit>1 FW</gets:unit>\n" +
     "      </getsrfi:RequestingPOC>\n" +
@@ -634,6 +633,27 @@ public class StubGETSClient implements GETSClient {
     "      <gets:CountryCodeList>\n" +
     "        <gets:iso1366trigraph>CAN</gets:iso1366trigraph>\n" +
     "      </gets:CountryCodeList>\n" +
+    "    </getsrfi:Request>\n" +
+    "    <getsrfi:ResponseList>\n" +
+    "      <getsrfi:Response id=\"DGS-1-SDT-2020-00330\" orgid=\"DGS-1\">\n" +
+    "        <gets:producerOrganization>DGS-1</gets:producerOrganization>\n" +
+    "        <getsrfi:responseStatus>CLOSED</getsrfi:responseStatus>\n" +
+    "      </getsrfi:Response>\n" +
+    "    </getsrfi:ResponseList>\n" +
+    "  </getsrfi:RequestForInformation>\n" +
+    "  <getsrfi:RequestForInformation id=\"DGS-1-SDT-2020-00331\">\n" +
+    "    <getsrfi:Request id=\"DGS-1-SDT-2020-00331\">\n" +
+    "        <getsrfi:requestText>this is a test</getsrfi:requestText>\n" +
+    "      <gets:url>http://www.ask.com</gets:url>\n" +
+    "      <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>\n" +
+    "      <gets:lastUpdate>2019-07-01T14:21:30Z</gets:lastUpdate>\n" +
+    "      <getsrfi:RequestingPOC>\n" +
+    "        <gets:unit>1 FW</gets:unit>\n" +
+    "      </getsrfi:RequestingPOC>\n" +
+    "      <gets:CountryCodeList>\n" +
+    "        <gets:iso1366trigraph>CAN</gets:iso1366trigraph>\n" +
+    "      </gets:CountryCodeList>\n" +
+    "      <gets:ltiov>2019-07-01T14:21:30Z</gets:ltiov>\n" +
     "    </getsrfi:Request>\n" +
     "    <getsrfi:ResponseList>\n" +
     "      <getsrfi:Response id=\"DGS-1-SDT-2020-00330\" orgid=\"DGS-1\">\n" +

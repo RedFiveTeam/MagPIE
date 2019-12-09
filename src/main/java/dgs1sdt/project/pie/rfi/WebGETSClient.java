@@ -30,9 +30,8 @@ public class WebGETSClient implements GETSClient {
 
     extractElements(rfiList, htmlRFIs);
 
-    String minDate = getDateTwoMonthsAgo();
-
-    System.out.println(uri + "&status=CLOSED&mincloseDate=" + minDate);
+    String minDate = getDateOneMonthAgo();
+    System.out.println("this is the minimum date: " + minDate);
 
     document = this.makeRequest(uri + "&status=CLOSED&mincloseDate=" + minDate);
     htmlRFIs = document.getElementsByTagName("getsrfi:RequestForInformation");
@@ -49,13 +48,14 @@ public class WebGETSClient implements GETSClient {
     return rfiList;
   }
 
-  private String getDateTwoMonthsAgo() {
+  private String getDateOneMonthAgo() {
     String minDate;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     Date date = new Date();
-    date.setTime(date.getTime() - 5256000000L);
-
-    minDate = dateFormat.format(date) + "000000";
+    date.setTime(date.getTime() - 2628000000L);
+    System.out.println(date + ": DATE DATE DATE");
+    minDate = dateFormat.format(date);
+    System.out.println("min date" + minDate);
     return minDate;
   }
 
@@ -132,6 +132,7 @@ public class WebGETSClient implements GETSClient {
 
   private Document makeRequest(String uri) throws Exception {
     URL url = new URL(uri);
+    System.out.println(uri);
     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
     connection.setRequestMethod("GET");
     connection.setRequestProperty("Accept", "application/xml");

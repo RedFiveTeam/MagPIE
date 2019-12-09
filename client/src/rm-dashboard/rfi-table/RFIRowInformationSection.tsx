@@ -42,14 +42,13 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
       <span className={classNames('cell', 'cell--ltiov')}>
             {props.rfi.ltiov !== undefined ? props.rfi.ltiov.utc().format("D MMM YY").toUpperCase() : '-'}
           </span>
-      <span className={classNames('cell', 'cell--requestText')}>
-          <div>{props.rfi.requestText}</div>
-      </span>
+      <div className={'description-container'}>
       <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}  id={props.rfi.id}>
           {props.rfi.description}
       </span>
+      </div>
       <div className={classNames(expanded ? 'see-less' : 'see-more',
-        props.rfi.description.length > 75 ? '' : 'hidden')} onClick={() => {handleClick()}}>
+        props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {handleClick()}}>
         <div>{expanded ? <IconShowLess/> : ''}</div>
         <div>{expanded ? 'See less' : 'See more'}</div>
         <div>{expanded ? <IconShowLess/> : <IconShowMore/>}</div>
@@ -61,21 +60,19 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
 export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   display: flex;
   flex-direction: row;
-  flex: 1 1;
+  flex: 1 1 0%;
   min-width: 855px;
   max-width: 1336px;
   justify-content: space-around;
   border-top-left-radius: 8px;
-  padding: 2px 0 2px 0;
+
   font-size: ${(props) => props.theme.font.sizeRow};
   text-align: left;
   align-items: start;
   flex-wrap: wrap;
   
   .cell {
-    margin: 0 16px;
     padding-left: 16px;
-
     line-height: 56px;
   }
   
@@ -109,10 +106,23 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
     z-index: -100;
   }
   
+  
+  .description-container {
+     display: flex;
+     flex: 1;
+     flex-direction: row;
+     overflow: hidden;
+     max-width: 928px;
+     min-width: 304px;
+     justify-content: space-between;
+     align-items: flex-start;
+
+  }  
+  
   .cell--description {
      padding-top: 7px;
      display: flex;
-     flex: 1 1;
+     flex: 1 1 0;
      max-height: 3em;
      overflow: hidden;
      max-width: 928px;
@@ -164,11 +174,4 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
     width: 65px;
   }
   
-  
-  .cell--requestText div {
-   max-height: 2.3em;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   width: 928px;
-  }
 `;

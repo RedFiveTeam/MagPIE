@@ -27,7 +27,7 @@ export class RFIDeserializer {
           item.customer,
           item.ltiov === 0 ? undefined : moment.unix(item.ltiov).utc(),
           item.country,
-          item.requestText
+          item.description
         );
       });
     }

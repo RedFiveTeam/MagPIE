@@ -44,7 +44,7 @@ export const StyledRFIRow = styled(RFIRow)`
   .section--left {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex: 1 1 0;
     
     .border-left {
       border-bottom-left-radius: 8px;

@@ -41,10 +41,6 @@ describe('RFIRowInformationSection', () => {
   });
 
   it('should contain the RFI request text', () => {
-    expect(subject.find('.cell--requestText').text()).toBe('hi');
-  });
-
-  it('should contain the RFI request text', () => {
     expect(subject.find('.cell--description').text()).toBe('hi');
   });
 

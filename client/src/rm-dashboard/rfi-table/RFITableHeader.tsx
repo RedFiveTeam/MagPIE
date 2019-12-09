@@ -37,8 +37,6 @@ export const RFITableHeader: React.FC<Props> = props => {
         sort={props.sortByLtiov}
         className={'header-cell--ltiov'}
       />
-      <div className={'spacer--requestText'}/>
-      <div className={'spacer--button'}/>
       <StyledUnsortableHeaderCell
         text={'Description'}
         className={'header-cell--description'}
@@ -77,7 +75,6 @@ export const StyledRFITableHeader = styled(
   
   .header-cell {
     padding-left: 16px;
-    margin: 0 16px;
   }
   
   .header-cell--id {
@@ -100,9 +97,6 @@ export const StyledRFITableHeader = styled(
   
   .spacer--gets-button {
     width: 184px;
-  }
-  .spacer--requestText {
-    width: 928px;
   }
 
 `;
