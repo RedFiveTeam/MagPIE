@@ -1,8 +1,8 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import { RFITable } from './RFITable';
-import { StyledRFITableHeader } from './RFITableHeader';
 import { StyledRegion } from './Region';
+import { StyledRFITableHeader } from './RFITableHeader';
+import { RFITable } from './RFITable';
 
 describe('RFITable', () => {
   let subject: ShallowWrapper;

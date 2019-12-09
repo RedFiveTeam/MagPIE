@@ -25,7 +25,9 @@ export class RFIDeserializer {
           item.getsUrl,
           matchEnum(item.status),
           item.customer,
-          item.ltiov === 0 ? undefined : moment.unix(item.ltiov).utc(),
+          item.ltiov === null
+            ? undefined
+            : moment(item.ltiov, moment.ISO_8601).utc(),
           item.country,
           item.description
         );

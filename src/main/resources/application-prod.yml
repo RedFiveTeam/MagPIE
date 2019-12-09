@@ -1,1 +1,3 @@
 GetsBaseURL: {$GETS_URL}
+UriGETSPendingOpen: {$GETS_URI_OPEN_PENDING}
+UriGETSClosed: {$GETS_URI_CLOSED}

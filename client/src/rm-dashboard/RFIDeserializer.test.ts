@@ -9,24 +9,24 @@ describe('RFIDeserializer', () => {
         rfiId: 'id',
         getsUrl: 'getsUrl',
         status: 'NEW',
-        lastUpdate: '123',
+        lastUpdate: '2020-11-10T14:21:21.000+0000',
         customer: 'customer',
-        ltiov: 1575158400,
+        ltiov: '2020-11-20T00:00:00.000+0000',
         country: 'country'
       },
       {
         rfiId: 'id',
         getsUrl: 'getsUrl',
         status: 'OPEN',
-        lastUpdate: '123',
+        lastUpdate: '2020-11-10T14:21:21.000+0000',
         customer: 'customer',
-        ltiov: 0,
+        ltiov: null,
         country: 'country'
       }];
 
     let rfis = RFIDeserializer.deserialize(json);
     let actual = rfis[0];
-    expect(actual.ltiov!.isSame(moment.utc('2019-12-01'), 'second')).toBeTruthy();
+    expect(actual.ltiov!.isSame(moment.utc('2020-11-20'), 'second')).toBeTruthy();
     expect(actual.id).toBe('id');
     expect(actual.getsUrl).toBe('getsUrl');
     expect(actual.status).toBe(RFIStatus.PENDING);

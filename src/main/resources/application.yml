@@ -20,4 +20,6 @@ spring:
 
 server.compression.enabled: false
 
+UriGETSPendingOpen: {$GETS_URI_OPEN_PENDING}
+UriGETSClosed: {$GETS_URI_CLOSED}
 
