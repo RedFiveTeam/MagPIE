@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import RFIModel from '../RFIModel';
 import classNames from 'classnames';
 import { StyledRFITableHeader } from './RFITableHeader';
-import ScrollShadow from 'react-scroll-shadow';
+import ScrollShadow from './scroll-shadow';
 import theme from '../../styles/theme';
 import { StyledRegion } from './Region';
 import { ClosedRFIRow, OpenRFIRow, PendingRFIRow } from './RFIRow';
@@ -16,30 +16,33 @@ interface Props {
   className?: string;
 }
 
-function pendingRFIs(rfis: RFIModel[]) {
+function pendingRFIs(rfis: RFIModel[], scrollRegionRef: any) {
   return rfis.map((rfi: RFIModel, index: number) =>
-    <PendingRFIRow rfi={rfi} key={index}/>
+    <PendingRFIRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef}/>
   );
 }
 
-function openRFIs(rfis: RFIModel[]) {
+function openRFIs(rfis: RFIModel[], scrollRegionRef: any) {
   return rfis.map((rfi: RFIModel, index: number) =>
-    <OpenRFIRow rfi={rfi} key={index}/>
+    <OpenRFIRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef}/>
   )
 }
 
-function closedRFIs(rfis: RFIModel[]) {
+function closedRFIs(rfis: RFIModel[], scrollRegionRef: any) {
   return rfis.map((rfi: RFIModel, index: number) =>
-    <ClosedRFIRow rfi={rfi} key={index}/>
+    <ClosedRFIRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef}/>
   );
 }
 
 export const RFITable: React.FC<Props> = props => {
+  let scrollRegionRef = React.createRef();
+
   return (
     <div className={classNames('rfi-table', props.className)}>
       <StyledRFITableHeader/>
-      <div className={'rfi-table--body'}   id={'this is the rfi table'}>
+      <div className={'rfi-table--body'}>
         <ScrollShadow
+          scrollRef={scrollRegionRef}
           bottomShadowColors={{
             active: 'linear-gradient(to top, #000000 0%, #00000000 100%);',
             inactive: theme.color.backgroundBase
@@ -51,23 +54,22 @@ export const RFITable: React.FC<Props> = props => {
           shadowSize={10}
         >
           <StyledRegion
-
             title={'pending'}
             emptyMessage={'Congratulations! Your team opened all the new RFIs in GETS.'}
           >
-            {pendingRFIs(props.pendingRfis)}
+            {pendingRFIs(props.pendingRfis, scrollRegionRef)}
           </StyledRegion>
           <StyledRegion
             title={'open'}
             emptyMessage={'No Open found'}
           >
-            {openRFIs(props.openRfis)}
+            {openRFIs(props.openRfis, scrollRegionRef)}
           </StyledRegion>
           <StyledRegion
             title={'closed'}
             emptyMessage={''}
           >
-            {closedRFIs(props.closedRfis)}
+            {closedRFIs(props.closedRfis, scrollRegionRef)}
           </StyledRegion>
         </ScrollShadow>
       </div>

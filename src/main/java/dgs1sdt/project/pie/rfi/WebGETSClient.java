@@ -64,8 +64,6 @@ public class WebGETSClient implements GETSClient {
       Node node = htmlRFIs.item(i);
       Element element = (Element) node;
 
-      System.out.println(getRFIID(node));
-
       rfiList.add(
         new RFI(
           getRFIID(node),

@@ -5,8 +5,10 @@ import RFIModel from '../RFIModel';
 import IconShowMore from '../../resources/ShowMoreVector';
 import IconShowLess from '../../resources/ShowLessVector';
 
+
 interface Props {
   rfi: RFIModel;
+  scrollRegionRef: any;
   className?: string;
 }
 
@@ -17,13 +19,39 @@ const formatID = (id: string): string => {
 };
 
 export const RFIRowInformationSection: React.FC<Props> = props => {
-
   const [expanded, setExpanded] = React.useState(false);
+  let descriptionRef = React.createRef<HTMLSpanElement>();
+
+  function scrollFit(descriptionContainer: HTMLSpanElement) {
+    let scrollRegion = props.scrollRegionRef.current!;
+    const distanceToPageTop = descriptionContainer.getBoundingClientRect().top;
+    const expandedRowHeight = descriptionContainer.scrollHeight + 32;
+    const clientHeight = scrollRegion.clientHeight;
+    const offsetTop = descriptionContainer.offsetTop;
+    const buffer = 12;
+    const headerHeight = 98;
+
+    if (distanceToPageTop + expandedRowHeight > clientHeight + headerHeight) { //Bottom of row extends beyond client
+      if (expandedRowHeight > clientHeight) { //row is longer than window, so scroll to top of row
+        scrollRegion.scrollTo({
+          top: offsetTop - buffer,
+          behavior: 'smooth'
+        });
+      } else { //push up just enough to leave row at bottom
+        scrollRegion.scrollTo({
+          top: offsetTop - (clientHeight - expandedRowHeight) + buffer,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }
 
   function handleClick() {
+    let descriptionContainer = descriptionRef.current!;
     setExpanded(!expanded);
     if(!expanded)
-      document.getElementById(props.rfi.id)!.scrollIntoView({behavior: "smooth", block: "start", inline: "start"});
+      setTimeout(scrollFit, 50, descriptionContainer); //slight delay to ensure we use the expanded row height
+      // scrollFit();
   }
 
   return (
@@ -43,7 +71,8 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
             {props.rfi.ltiov !== undefined ? props.rfi.ltiov.utc().format("D MMM YY").toUpperCase() : '-'}
           </span>
       <div className={'description-container'}>
-      <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}  id={props.rfi.id}>
+      <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}
+            ref={descriptionRef}>
           {props.rfi.description}
       </span>
       </div>
@@ -133,6 +162,7 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   
   .cell--description-expanded {
      padding-top: 7px;
+     padding-right: 7px;
      display: flex;
      flex: 1 1;
      max-width: 928px;

@@ -7,6 +7,7 @@ import { StyledRFIRowButtonSection } from './RFIRowButtonSection';
 
 interface Props {
   rfi: RFIModel;
+  scrollRegionRef: any;
   className?: string;
 }
 
@@ -17,7 +18,7 @@ export const RFIRow: React.FC<Props> = props => {
       key={props.rfi.id}
     >
       <div className={classNames('section', 'section--left')}>
-        <StyledRFIRowInformationSection rfi={props.rfi}/>
+        <StyledRFIRowInformationSection rfi={props.rfi} scrollRegionRef={props.scrollRegionRef}/>
         <div className={classNames('border', 'border-left')}/>
       </div>
       <div className={classNames('section', 'section--right')}>
