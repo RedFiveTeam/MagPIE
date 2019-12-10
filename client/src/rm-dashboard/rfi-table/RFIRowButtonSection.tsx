@@ -14,6 +14,7 @@ interface Props {
   className?: string;
 }
 
+//TODO: tests
 export const RFIRowButtonSection: React.FC<Props> = props => {
 
   function buttonText() {

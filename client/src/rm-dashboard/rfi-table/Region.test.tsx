@@ -12,9 +12,9 @@ describe('Region', () => {
 
   beforeEach(() => {
     rows = [
-      <RFIRow rfi={new RFIModel('19-001', 'url', RFIStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi')} key={'1'}/>,
-      <RFIRow rfi={new RFIModel('19-004', 'url', RFIStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi')} key={'2'}/>,
-      <RFIRow rfi={new RFIModel('19-003', 'url', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi')} key={'3'}/>,
+      <RFIRow scrollRegionRef={React.createRef()} rfi={new RFIModel('19-001', 'url', RFIStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi')} key={'1'}/>,
+      <RFIRow scrollRegionRef={React.createRef()} rfi={new RFIModel('19-004', 'url', RFIStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi')} key={'2'}/>,
+      <RFIRow scrollRegionRef={React.createRef()} rfi={new RFIModel('19-003', 'url', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi')} key={'3'}/>,
     ];
 
     subject = shallow(

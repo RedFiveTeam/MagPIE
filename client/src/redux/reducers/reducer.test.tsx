@@ -46,10 +46,27 @@ describe('reducer', () => {
     multiStatusRfiList = [openRfi2, openRfi1, pendingRfi2, closedRfi1, pendingRfi1,];
   });
 
+  it('should handle FETCH_PENDING', () => {
+    let mockAction = {
+      type: ActionTypes.FETCH_RFI_PENDING
+    };
+
+    expect(
+      reducer(undefined, mockAction)
+    ).toEqual({
+      rfis: [],
+      sortKey: new SortKey(Field.LTIOV, false),
+      pendingRfis: [],
+      openRfis: [],
+      closedRfis: [],
+      loading: true
+    });
+  });
+
   it('should handle FETCH_SUCCESS', () => {
     let mockAction = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: singleStatusRfiList
+      body: singleStatusRfiList,
     };
 
     let sortedRfis = [
@@ -57,6 +74,7 @@ describe('reducer', () => {
       new RFIModel('19-004', '', RFIStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi'),
       new RFIModel('19-003', '', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi'),
     ];
+
     expect(
       reducer(undefined, mockAction)
     ).toEqual({
@@ -64,7 +82,8 @@ describe('reducer', () => {
       sortKey: new SortKey(Field.LTIOV, true),
       pendingRfis: [],
       openRfis: sortedRfis,
-      closedRfis: []
+      closedRfis: [],
+      loading: false
     });
   });
 
@@ -191,4 +210,26 @@ describe('reducer', () => {
     expect(closedRfis.length).toBe(1);
     expect(closedRfis).toContain(closedRfi1);
   });
+
+  //TODO
+  // it('should post sort click metrics', () => {
+  //
+  //   jest.mock('../../users/UserActions');
+  //   let postSortClickSpy: jest.Mock = jest.fn();
+  //
+  //
+  //   let setupRfis = {
+  //     type: ActionTypes.FETCH_RFI_SUCCESS,
+  //     body: multiStatusRfiList
+  //   };
+  //   let state = reducer(undefined, setupRfis);
+  //
+  //   let sortAction = {type: ActionTypes.SORT_RFIS_BY_LTIOV};
+  //
+  //   state = reducer(state, sortAction);
+  //
+  //   expect(postSortClickSpy).toHaveBeenCalled();
+  //   expect(postSortClickSpy).toHaveBeenCalledWith(Field.LTIOV, false);
+  //
+  // });
 });

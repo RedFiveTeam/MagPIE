@@ -5,12 +5,25 @@ import { StyledRFITable } from './rfi-table/RFITable';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { postSiteVisit } from '../users/UserActions';
+import { StyledLoadingScreen } from './LoadingScreen';
 
 interface Props {
   fetchRFIs: () => void;
   postSiteVisit: () => void;
+  loading: boolean;
   className?: string;
 }
+
+const displayScreen = (loading: boolean, className: string | undefined): any => {
+  if (loading)
+    return <StyledLoadingScreen/>;
+
+  return (
+    <div className={classNames('rm-dashboard', className)}>
+      <StyledRFITable/>
+    </div>
+  );
+};
 
 export class RMDashboardContainer extends React.Component<Props> {
   componentDidMount(): void {
@@ -19,15 +32,12 @@ export class RMDashboardContainer extends React.Component<Props> {
   }
 
   render() {
-    return (
-      <div className={classNames('rm-dashboard', this.props.className)}>
-        <StyledRFITable/>
-      </div>
-    )
+    return displayScreen(this.props.loading, this.props.className);
   }
 }
 
-const mapStateToProps = () => ({
+const mapStateToProps = (state: any) => ({
+  loading: state.loading
 });
 
 const mapDispatchToProps = {

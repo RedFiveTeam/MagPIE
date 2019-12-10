@@ -4,12 +4,14 @@ Feature('Home Page');
 
 Scenario ('should see a home page', (I) => {
     I.amOnPage('/');
+    I.see("LOADING");
     I.waitForText('RFI', 10);
     I.waitForText('20-321', 10);
     I.waitForText('633d', 10);
     I.waitForText('USA', 10);
     I.waitForText('4 FEB 20', 10);
     I.waitForText('hi', 10);
+    I.dontSee("LOADING");
 });
 
 Scenario ('should be able to sort by clickin\' BUTTons', (I) => {

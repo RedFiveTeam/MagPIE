@@ -11,6 +11,7 @@ describe('RFIRowInformationSection', () => {
     let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi');
     subject = shallow(
       <RFIRowInformationSection
+        scrollRegionRef={React.createRef()}
         rfi={rfi}
       />
     )
@@ -30,6 +31,7 @@ describe('RFIRowInformationSection', () => {
     let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', undefined, 'CAN', 'hi');
     subject = shallow(
       <RFIRowInformationSection
+        scrollRegionRef={React.createRef()}
         rfi={rfi}
       />
     );
@@ -49,6 +51,7 @@ describe('RFIRowInformationSection', () => {
     let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', undefined, 'CAN', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
     subject = shallow(
       <RFIRowInformationSection
+        scrollRegionRef={React.createRef()}
         rfi={rfi}
       />
     );

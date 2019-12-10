@@ -1,5 +1,7 @@
 import { crayonBox } from './crayonBox';
 import './fonts/roboto/roboto.css';
+import './fonts/helveticaneue/helveticaneue.css';
+import './fonts/arvo/arvo.css';
 
 const theme = {
   color: {
@@ -9,7 +11,8 @@ const theme = {
     backgroundInformation: crayonBox.steelGray,
     backgroundInactive: crayonBox.blueGrayLight,
     backgroundAction: crayonBox.safetyOrange,
-    backgroundAssigned: crayonBox.notEggWhite
+    backgroundAssigned: crayonBox.notEggWhite,
+    fontLoading: crayonBox.lightGray
   },
 
   font: {

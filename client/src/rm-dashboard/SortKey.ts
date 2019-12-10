@@ -1,8 +1,8 @@
 export enum Field {
-  LTIOV,
-  ID,
-  CUSTOMER,
-  COUNTRY
+  LTIOV = 'LTIOV',
+  ID = 'ID',
+  CUSTOMER = 'CUSTOMER',
+  COUNTRY = 'COUNTRY'
 }
 
 export class SortKey{

@@ -14,6 +14,12 @@ export const sortByLtiov = () => {
   return {type: ActionTypes.SORT_RFIS_BY_LTIOV}
 };
 
+const fetchRfiPending = () => {
+  return {
+    type: ActionTypes.FETCH_RFI_PENDING
+  }
+};
+
 const fetchRFISuccess = (body: any) => {
   let rfis = RFIDeserializer.deserialize(body);
   return {
@@ -22,9 +28,11 @@ const fetchRFISuccess = (body: any) => {
   }
 };
 
+
 export const fetchRFIs = () => {
   return (dispatch: any) => {
     return fetch('/api/rfis')
+      .then(dispatch(fetchRfiPending()))
       .then(response => response.json())
       .then(body => dispatch(fetchRFISuccess(body)));
   }

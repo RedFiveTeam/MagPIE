@@ -7,5 +7,6 @@ export const crayonBox = {
   pitchBlack: '#000000',
   tarBlack: '#010102',
   steelGray: '#464646',
-  notEggWhite: '#FEFEFE'
+  notEggWhite: '#FEFEFE',
+  lightGray: '#C4C4C4'
 };

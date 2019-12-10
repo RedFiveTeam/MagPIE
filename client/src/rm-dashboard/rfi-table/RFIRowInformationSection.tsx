@@ -5,7 +5,6 @@ import RFIModel from '../RFIModel';
 import IconShowMore from '../../resources/ShowMoreVector';
 import IconShowLess from '../../resources/ShowLessVector';
 
-
 interface Props {
   rfi: RFIModel;
   scrollRegionRef: any;
