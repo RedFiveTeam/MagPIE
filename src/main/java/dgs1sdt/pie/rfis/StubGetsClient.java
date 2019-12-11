@@ -54,8 +54,7 @@ public class StubGetsClient implements GetsClient {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder db = dbf.newDocumentBuilder();
     if (uri.contains("xml")) {
-      File xmlFile = new ClassPathResource(uri).getFile();
-      return db.parse(xmlFile);
+      return db.parse(new ClassPathResource(uri).getInputStream());
     }
     return db.parse(new URL(uri).openStream());
   }
