@@ -12,7 +12,8 @@ describe('RFIDeserializer', () => {
         lastUpdate: '2020-11-10T14:21:21.000+0000',
         customer: 'customer',
         ltiov: '2020-11-20T00:00:00.000+0000',
-        country: 'country'
+        country: 'country',
+        priority: -1
       },
       {
         rfiId: 'id',
@@ -21,7 +22,8 @@ describe('RFIDeserializer', () => {
         lastUpdate: '2020-11-10T14:21:21.000+0000',
         customer: 'customer',
         ltiov: null,
-        country: 'country'
+        country: 'country',
+        priority: 7
       }];
 
     let rfis = RFIDeserializer.deserialize(json);
@@ -32,7 +34,9 @@ describe('RFIDeserializer', () => {
     expect(actual.status).toBe(RFIStatus.PENDING);
     expect(actual.customer).toBe('customer');
     expect(actual.country).toBe('country');
+    expect(actual.priority).toBe(-1);
 
     expect(rfis[1].ltiov).toBe(undefined);
+    expect(rfis[1].priority).toBe(7);
   });
 });

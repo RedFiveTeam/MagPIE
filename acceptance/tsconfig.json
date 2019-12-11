@@ -10,7 +10,7 @@
     "jsx": "react",
     "module": "commonjs",
     "moduleResolution": "node",
-    "rootDir": "src",
+    "rootDir": "tests",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,

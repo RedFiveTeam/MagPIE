@@ -50,6 +50,29 @@ public class Rfi {
     this.description = description;
     this.priority = -1;
   }
+
+  public Rfi(
+    String rfiId,
+    String getsUrl,
+    String status,
+    Date lastUpdate,
+    String customer,
+    Date ltiov,
+    String country,
+    String description,
+    int priority
+  ) {
+    this.getsUrl = getsUrl;
+    this.rfiId = rfiId;
+    this.status = status;
+    this.lastUpdate = lastUpdate;
+    this.customer = customer;
+    this.ltiov = ltiov;
+    this.country = country;
+    this.description = description;
+    this.priority = priority;
+  }
+
 }
 
 class SortByRecentFirst implements Comparator<Rfi> {

@@ -315,5 +315,29 @@
         </getsrfi:Response>
       </getsrfi:ResponseList>
     </getsrfi:RequestForInformation>
+    <getsrfi:RequestForInformation id="DGS-1-SDT-2020-00338">
+      <getsrfi:Request id="DGS-1-SDT-2020-00338">
+        <getsrfi:requestText>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequa
+        </getsrfi:requestText>
+        <gets:url>http://www.google.com</gets:url>
+        <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
+        <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>
+        <getsrfi:RequestingPOC>
+          <gets:unit>1 FW</gets:unit>
+        </getsrfi:RequestingPOC>
+        <gets:CountryCodeList>
+          <gets:iso1366trigraph>CAN</gets:iso1366trigraph>
+        </gets:CountryCodeList>
+      </getsrfi:Request>
+      <getsrfi:ResponseList>
+        <getsrfi:Response id="DGS-1-SDT-2020-00338" orgid="DGS-1">
+          <gets:producerOrganizationID>DGS-1</gets:producerOrganizationID>
+          <getsrfi:responseStatus>OPEN</getsrfi:responseStatus>
+        </getsrfi:Response>
+      </getsrfi:ResponseList>
+    </getsrfi:RequestForInformation>
   </RFIList>
 </GETS_RFI_Query_Results>

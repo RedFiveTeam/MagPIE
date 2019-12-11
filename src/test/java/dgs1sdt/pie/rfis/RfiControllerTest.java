@@ -2,15 +2,11 @@ package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.BaseIntegrationTest;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 
 @TestPropertySource(
   properties = {
@@ -47,15 +43,17 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[10].status", equalTo("OPEN"))
       .body("[10].priority", greaterThan(0))
 
-      .body("[14].rfiId", equalTo("DGS-1-SDT-2020-00329"))
-      .body("[14].getsUrl", equalTo("http://www.msn.com"))
-      .body("[14].lastUpdate", equalTo("2018-03-16T14:21:29.000+0000"))
-      .body("[14].status", equalTo("CLOSED"))
-      .body("[14].customer", equalTo("1 FW"))
-      .body("[14].ltiov", equalTo(null))
-      .body("[14].country", equalTo("MEX"))
-      .body("[14].description", equalTo(longDescription))
-      .body("[14].priority", equalTo(-1));
+      .body("[15].rfiId", equalTo("DGS-1-SDT-2020-00329"))
+      .body("[15].getsUrl", equalTo("http://www.msn.com"))
+      .body("[15].lastUpdate", equalTo("2018-03-16T14:21:29.000+0000"))
+      .body("[15].status", equalTo("CLOSED"))
+      .body("[15].customer", equalTo("1 FW"))
+      .body("[15].ltiov", equalTo(null))
+      .body("[15].country", equalTo("MEX"))
+      .body("[15].description", equalTo(longDescription))
+      .body("[15].priority", equalTo(-1));
   }
+
+
 }
 

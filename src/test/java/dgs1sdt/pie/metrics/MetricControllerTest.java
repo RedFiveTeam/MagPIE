@@ -1,21 +1,30 @@
 package dgs1sdt.pie.metrics;
 
 import dgs1sdt.pie.BaseIntegrationTest;
-import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
 import dgs1sdt.pie.metrics.getsclick.GETSClicksRepository;
 import dgs1sdt.pie.metrics.getsclick.GetsClick;
+import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
+import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChange;
+import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChangeRepository;
+import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
+import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
 import dgs1sdt.pie.metrics.sortclick.SortClickJson;
 import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 public class MetricControllerTest extends BaseIntegrationTest {
+  @Autowired
+  private MetricController metricController;
+
   @Autowired
   private GETSClicksRepository getsClicksRepository;
 
@@ -24,6 +33,12 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Autowired
   private SortClicksRepository sortClicksRepository;
+
+  @Autowired
+  private RfiPriorityChangeRepository rfiPriorityChangeRepository;
+
+  @Autowired
+  private RfiUpdateRepository rfiUpdateRepository;
 
   @Test
   public void postCreatesNewSiteVisit() {
@@ -103,5 +118,34 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .statusCode(200);
 
     assertEquals(sortClickCount + 1, sortClicksRepository.count());
+  }
+
+  @Test
+  public void createsNewPriorityChangeMetric() {
+    RfiPriorityChange rfiPriorityChange1 = new RfiPriorityChange("20-001", 1, 2, new Date());
+    RfiPriorityChange rfiPriorityChange2 = new RfiPriorityChange("20-002", 2, 1, new Date());
+
+    List<RfiPriorityChange> priChanges = new ArrayList<>();
+    priChanges.add(rfiPriorityChange1);
+    priChanges.add(rfiPriorityChange2);
+
+    long priChangeCount = rfiPriorityChangeRepository.count();
+
+    metricController.addRfiPriorityChanges(priChanges);
+
+    assertEquals(priChangeCount + 2, rfiPriorityChangeRepository.count());
+  }
+
+  @Test
+  public void createsNewRfiUpdateMetric() {
+    RfiUpdate rfiUpdate1 = new RfiUpdate("20-005", new Date());
+    RfiUpdate rfiUpdate2 = new RfiUpdate("20-005", new Date());
+
+    long rfiUpdateCount = rfiUpdateRepository.count();
+
+    metricController.addRfiUpdate(rfiUpdate1);
+    metricController.addRfiUpdate(rfiUpdate2);
+
+    assertEquals(rfiUpdateCount + 2, rfiUpdateRepository.count());
   }
 }

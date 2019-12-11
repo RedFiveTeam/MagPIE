@@ -1,8 +1,9 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import { StyledRegion } from './Region';
 import { StyledRFITableHeader } from './RFITableHeader';
 import { RFITable } from './RFITable';
+import { Field, SortKey } from '../SortKey';
+import { Droppable } from 'react-beautiful-dnd';
 
 describe('RFITable', () => {
   let subject: ShallowWrapper;
@@ -13,6 +14,8 @@ describe('RFITable', () => {
         pendingRfis={[]}
         openRfis={[]}
         closedRfis={[]}
+        reorderRfis={()=> {}}
+        sortKey={new SortKey(Field.PRIORITY, true)}
       />
     );
   });
@@ -21,7 +24,7 @@ describe('RFITable', () => {
     expect(subject.find(StyledRFITableHeader).exists()).toBeTruthy();
   });
 
-  it('should contain three regions for RFIs', () => {
-    expect(subject.find(StyledRegion).length).toBe(3);
+  it('should contain three droppable regions for RFIs', () => {
+    expect(subject.find(Droppable).length).toBe(3);
   });
 });

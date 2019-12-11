@@ -4,10 +4,14 @@ import classNames from 'classnames';
 import RFIModel from '../RFIModel';
 import IconShowMore from '../../resources/ShowMoreVector';
 import IconShowLess from '../../resources/ShowLessVector';
+import IconDnDBurger from '../../styles/icons/DnDBurger';
+import { connect } from 'react-redux';
+import { Field } from '../SortKey';
 
 interface Props {
   rfi: RFIModel;
   scrollRegionRef: any;
+  prioritizing: boolean;
   className?: string;
 }
 
@@ -48,15 +52,29 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
   function handleClick() {
     let descriptionContainer = descriptionRef.current!;
     setExpanded(!expanded);
-    if(!expanded)
+    if (!expanded)
       setTimeout(scrollFit, 50, descriptionContainer); //slight delay to ensure we use the expanded row height
-      // scrollFit();
+    // scrollFit();
   }
 
   return (
     <div
       className={classNames('row-section', 'section--information', props.className)}
     >
+      {props.rfi.priority > -1 ? props.prioritizing ?
+            <span className={classNames('cell', 'cell--pri-prioritizing')}>
+                <IconDnDBurger/>
+              {props.rfi.priority}
+            </span>
+            :
+            <span className={classNames('cell', 'cell--pri')}>
+              {props.rfi.priority}
+            </span>
+        :
+        <span className={classNames('cell', 'cell--pri')}>
+            N/A
+          </span>
+      }
       <span className={classNames('cell', 'cell--id')}>
         {formatID(props.rfi.id)}
       </span>
@@ -76,7 +94,9 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
       </span>
       </div>
       <div className={classNames(expanded ? 'see-less' : 'see-more',
-        props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {handleClick()}}>
+        props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {
+        handleClick()
+      }}>
         <div>{expanded ? <IconShowLess/> : ''}</div>
         <div>{expanded ? 'See less' : 'See more'}</div>
         <div>{expanded ? <IconShowLess/> : <IconShowMore/>}</div>
@@ -85,11 +105,15 @@ export const RFIRowInformationSection: React.FC<Props> = props => {
   );
 };
 
-export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
+const mapStateToProps = (state: any) => ({
+  prioritizing: state.sortKey.field === Field.PRIORITY && state.sortKey.defaultOrder,
+});
+
+export const StyledRFIRowInformationSection = styled(connect(mapStateToProps)(RFIRowInformationSection))`
   display: flex;
   flex-direction: row;
   flex: 1 1 0%;
-  min-width: 855px;
+  min-width: 887px;
   max-width: 1336px;
   justify-content: space-around;
   border-top-left-radius: 8px;
@@ -102,6 +126,23 @@ export const StyledRFIRowInformationSection = styled(RFIRowInformationSection)`
   .cell {
     padding-left: 16px;
     line-height: 56px;
+  }
+  
+  .cell--pri {
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 88px;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .cell--pri-prioritizing {
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 88px;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
   }
   
   .cell--id {

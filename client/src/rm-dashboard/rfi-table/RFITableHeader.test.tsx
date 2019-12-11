@@ -3,7 +3,7 @@ import * as React from 'react';
 import { RFITableHeader } from './RFITableHeader';
 import { StyledHeaderCell } from './HeaderCell';
 
-describe('Dashboard tests', () => {
+describe('RfiTableHeader', () => {
   let subject: ReactWrapper;
 
   beforeEach(() => {
@@ -13,11 +13,12 @@ describe('Dashboard tests', () => {
         sortById={()=>{}}
         sortByCustomer={()=>{}}
         sortByLtiov={()=>{}}
+        sortByPriority={()=>{}}
       />
     );
   });
 
   it('should container a header for each field', () => {
-    expect(subject.find(StyledHeaderCell).length).toBe(4);
+    expect(subject.find(StyledHeaderCell).length).toBe(5);
   });
 });

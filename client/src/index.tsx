@@ -22,9 +22,9 @@ export const store = createStore(
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <Provider store={store}>
-      <App/>
-    </Provider>
+      <Provider store={store}>
+        <App/>
+      </Provider>
   </ThemeProvider>
   , document.getElementById('root'));
 

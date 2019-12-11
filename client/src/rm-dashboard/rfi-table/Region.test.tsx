@@ -12,18 +12,33 @@ describe('Region', () => {
 
   beforeEach(() => {
     rows = [
-      <RFIRow scrollRegionRef={React.createRef()} rfi={new RFIModel('19-001', 'url', RFIStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi')} key={'1'}/>,
-      <RFIRow scrollRegionRef={React.createRef()} rfi={new RFIModel('19-004', 'url', RFIStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi')} key={'2'}/>,
-      <RFIRow scrollRegionRef={React.createRef()} rfi={new RFIModel('19-003', 'url', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi')} key={'3'}/>,
+      <RFIRow
+        rfi={new RFIModel('19-001', 'url', RFIStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi', -1)}
+        key={'1'}
+        scrollRegionRef={{}}
+        index={0}
+      />,
+      <RFIRow
+        rfi={new RFIModel('19-004', 'url', RFIStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi', -1)}
+        key={'2'}
+        scrollRegionRef={{}}
+        index={1}
+      />,
+      <RFIRow
+        rfi={new RFIModel('19-003', 'url', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', -1)}
+        key={'3'}
+        scrollRegionRef={{}}
+        index={2}
+      />,
     ];
-
     subject = shallow(
-      <Region
-        title={'title'}
-        emptyMessage={'empty'}
-      >
-        {rows}
-      </Region>
+        <Region
+          title={'title'}
+          emptyMessage={'empty'}
+          provided={{innerRef:0}}
+        >
+          {rows}
+        </Region>
     );
   });
 
@@ -40,10 +55,12 @@ describe('Region', () => {
     expect(subject.text()).not.toContain(emptyMessage);
 
     subject = shallow(
-      <Region
-        title={'title'}
-        emptyMessage={emptyMessage}
-      />
+        <Region
+          title={'title'}
+          emptyMessage={emptyMessage}
+          provided={{innerRef:0}}
+        />
+
     );
     expect(subject.text()).toContain(emptyMessage);
   });

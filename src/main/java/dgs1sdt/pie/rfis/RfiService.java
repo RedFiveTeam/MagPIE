@@ -1,5 +1,7 @@
 package dgs1sdt.pie.rfis;
 
+import dgs1sdt.pie.metrics.MetricController;
+import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -7,6 +9,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -19,9 +22,15 @@ public class RfiService {
   @Autowired
   private GetsClient getsClient;
 
-  public RfiService(RfiRepository rfiRepository, GetsClient getsClient) {
+  @Autowired
+  private MetricController metricController;
+
+  public RfiService(RfiRepository rfiRepository,
+                    GetsClient getsClient,
+                    MetricController metricController) {
     this.rfiRepository = rfiRepository;
     this.getsClient = getsClient;
+    this.metricController = metricController;
   }
 
   public List<Rfi> fetchRfis(String[] uris) throws Exception {
@@ -62,19 +71,28 @@ public class RfiService {
     }
   }
 
-  private void createOrUpdate(List<Rfi> rfis) {
+  void createOrUpdate(List<Rfi> rfis) {
+    Date currDate = new Date();
     for (Rfi rfi : rfis) {
-      linkToExisting(rfi);
+      linkToExisting(rfi, currDate);
       rfiRepository.save(rfi);
     }
   }
 
-  private void linkToExisting(Rfi rfi) {
+  private void linkToExisting(Rfi rfi, Date currDate) {
     Rfi savedRfi = rfiRepository.findByRfiId(rfi.getRfiId());
     if (exists(savedRfi)) {
       rfi.setPriority(savedRfi.getPriority());
       rfi.setId(savedRfi.getId());
+
+      //send update metric (check for other changes)
+      if (hasChanged(rfi, savedRfi))
+        metricController.addRfiUpdate(new RfiUpdate(rfi.getRfiId(), currDate));
     }
+  }
+
+  private boolean hasChanged(Rfi rfi, Rfi savedRfi) {
+    return !rfi.equals(savedRfi);
   }
 
   private boolean exists(Rfi rfi) {

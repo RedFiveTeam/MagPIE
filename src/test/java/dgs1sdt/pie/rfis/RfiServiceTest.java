@@ -2,22 +2,21 @@ package dgs1sdt.pie.rfis;
 
 
 import dgs1sdt.pie.BaseIntegrationTest;
+import dgs1sdt.pie.metrics.MetricController;
+import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RfiServiceTest extends BaseIntegrationTest {
   @Autowired
@@ -26,10 +25,11 @@ public class RfiServiceTest extends BaseIntegrationTest {
   @Autowired
   RfiRepository rfiRepository;
 
+  @Autowired
+  RfiService rfiService;
+
   @Test
   public void marshallsXmlDocIntoRfis() throws Exception {
-    RfiService rfiService = new RfiService(rfiRepository, getsClient);
-
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder db = dbf.newDocumentBuilder();
     Document document = db.parse(new File("src/test/java/dgs1sdt/pie/rfis/rfis.xml"));
@@ -40,19 +40,22 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
   @Test
   public void returnsAllNewOpenAndLastThreeClosedRfis() throws Exception {
+
     String[] files = {
       "RfisNewOpen.xml",
       "RfisClosed.xml"
     };
+
     Rfi rfiExisting = new Rfi();
     rfiExisting.setRfiId("DGS-1-SDT-2020-00321");
     rfiExisting.setGetsUrl("jabberwocky");
     rfiRepository.save(rfiExisting);
 
-    RfiService rfiService = new RfiService(rfiRepository, getsClient);
+    long rfiCount = rfiRepository.count();
+
     List<Rfi> rfis = rfiService.fetchRfis(files);
 
-    assertEquals(15, rfis.size());
+    assertEquals(rfiCount + 15, rfis.size());
     assertEquals(3, rfis.stream()
       .filter(rfi -> rfi.getStatus().equals("CLOSED"))
       .count()
@@ -65,7 +68,6 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
   @Test
   public void assignsLastPriorityToNewlyOpenedRfis() throws Exception {
-    RfiService rfiService = new RfiService(rfiRepository, getsClient);
     String[] filePath = {"RfisNewOpen.xml"};
     rfiService.fetchRfis(filePath);
 
@@ -73,6 +75,8 @@ public class RfiServiceTest extends BaseIntegrationTest {
       .filter(rfi -> rfi.getStatus().equals("OPEN"))
       .sorted(new SortByAscendingPriority())
       .collect(Collectors.toList());
+
+    long rfiCount = savedOpenRfis.size();
 
     Rfi rfiFirst = savedOpenRfis.get(0);
     Rfi rfiSecond = savedOpenRfis.get(1);
@@ -90,6 +94,31 @@ public class RfiServiceTest extends BaseIntegrationTest {
     assertEquals(1, rfiFirst.getPriority());
 
     Rfi newlyOpenedRfi = rfiRepository.findByRfiId("DGS-1-SDT-2020-00323");
-    assertEquals(5, newlyOpenedRfi.getPriority());
+    assertEquals(rfiCount + 1, newlyOpenedRfi.getPriority());
+  }
+
+  @Autowired
+  MetricController metricController;
+
+  @Autowired
+  RfiUpdateRepository rfiUpdateRepository;
+
+  @Test
+  public void sendsRfiUpdateMetricIfThereIsAChangeInAnRfi() {
+    Rfi rfi = new Rfi("id", "url", "NEW", new Date(), "customer", new Date(), "USA", "a description");
+    Rfi updatedRfi = new Rfi("id", "url", "NEW", new Date(), "customer", new Date(), "USA", "a new and improved description");
+    Rfi rfi2 = new Rfi("id2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description");
+
+    long rfiUpdateCount = rfiUpdateRepository.count();
+
+    rfiRepository.save(rfi);
+    rfiRepository.save(rfi2);
+
+    List<Rfi> rfis = new ArrayList<>();
+    rfis.add(updatedRfi);
+    rfis.add(rfi2);
+
+    rfiService.createOrUpdate(rfis);
+    assertEquals(rfiUpdateCount + 1, rfiUpdateRepository.count());
   }
 }

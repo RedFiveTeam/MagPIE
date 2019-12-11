@@ -8,6 +8,7 @@ import { StyledRFIRowButtonSection } from './RFIRowButtonSection';
 interface Props {
   rfi: RFIModel;
   scrollRegionRef: any;
+  index: number;
   className?: string;
 }
 

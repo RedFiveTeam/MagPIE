@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import IconOpenNewPage from '../../styles/IconOpenNewPage';
+import IconOpenNewPage from '../../styles/icons/IconOpenNewPage';
 import { connect } from 'react-redux';
 import GETSClickRequestModel from '../../metrics/Model/GETSClickRequestModel';
 import { postGETSClick } from '../../users/UserActions';

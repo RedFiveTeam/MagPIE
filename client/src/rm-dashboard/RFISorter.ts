@@ -2,6 +2,17 @@ import RFIModel from './RFIModel';
 import { Field, SortKey } from './SortKey';
 
 export class RFISorter {
+
+  static sortByPriority = (rfis: RFIModel[], sortKey: SortKey) => {
+    if (rfis) {
+      if (sortKey.field === Field.PRIORITY && sortKey.defaultOrder) {
+        return sortDescendingPriority(rfis);
+      }
+      return sortAscendingPriority(rfis);
+    }
+    return [];
+  };
+
   static sortById = (rfis: RFIModel[], sortKey: SortKey) => {
     if (rfis) {
       if (sortKey.field === Field.ID && sortKey.defaultOrder) {
@@ -41,6 +52,18 @@ export class RFISorter {
     }
     return [];
   };
+}
+
+function sortDescendingPriority(rfis: RFIModel[]) {
+  return rfis.sort(function (a, b) {
+    return a.priority > b.priority ? -1 : 1
+  });
+}
+
+function sortAscendingPriority(rfis: RFIModel[]) {
+  return rfis.sort(function (a, b) {
+    return a.priority < b.priority ? -1 : 1
+  });
 }
 
 function sortAscendingId(rfis: RFIModel[]) {

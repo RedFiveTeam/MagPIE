@@ -6,6 +6,11 @@ import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetch;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetchJson;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetchRepository;
+import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
+import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChange;
+import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChangeRepository;
+import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
+import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
 import dgs1sdt.pie.metrics.sortclick.SortClick;
 import dgs1sdt.pie.metrics.sortclick.SortClickJson;
 import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(MetricController.URI)
@@ -23,13 +29,21 @@ public class MetricController {
   private SiteVisitRepository siteVisitRepository;
   private SortClicksRepository sortClicksRepository;
   private RfiFetchRepository rfiFetchRepository;
+  private RfiPriorityChangeRepository rfiPriorityChangeRepository;
+  private RfiUpdateRepository rfiUpdateRepository;
 
-  public MetricController(GETSClicksRepository getsClicksRepository, SiteVisitRepository siteVisitRepository,
-                          SortClicksRepository sortClicksRepository, RfiFetchRepository rfiFetchRepository) {
+  public MetricController(GETSClicksRepository getsClicksRepository,
+                          SiteVisitRepository siteVisitRepository,
+                          SortClicksRepository sortClicksRepository,
+                          RfiFetchRepository rfiFetchRepository,
+                          RfiPriorityChangeRepository rfiPriorityChangeRepository,
+                          RfiUpdateRepository rfiUpdateRepository) {
     this.getsClicksRepository = getsClicksRepository;
     this.siteVisitRepository = siteVisitRepository;
     this.sortClicksRepository = sortClicksRepository;
     this.rfiFetchRepository = rfiFetchRepository;
+    this.rfiPriorityChangeRepository = rfiPriorityChangeRepository;
+    this.rfiUpdateRepository = rfiUpdateRepository;
   }
 
   @GetMapping(path = "/site-visits")
@@ -49,7 +63,7 @@ public class MetricController {
   }
 
   @PostMapping(path = "/gets-click")
-  public GetsClick create (@Valid @RequestBody GetsClickJSON getsClickJSON) {
+  public GetsClick create(@Valid @RequestBody GetsClickJSON getsClickJSON) {
     GetsClick getsClick = new GetsClick(
       new Date(),
       getsClickJSON.getStatus(),
@@ -60,14 +74,14 @@ public class MetricController {
   }
 
   @PostMapping(path = "/sort-click")
-  public SortClick create (@Valid @RequestBody SortClickJson sortClickJSON) {
+  public SortClick create(@Valid @RequestBody SortClickJson sortClickJSON) {
     SortClick sortClick = new SortClick(
       new Date(),
       sortClickJSON.getKey(),
       sortClickJSON.getOrder()
     );
     return this.sortClicksRepository.save(sortClick);
-    }
+  }
 
   @PostMapping(path = "/rfi-fetch")
   public RfiFetch create (@Valid @RequestBody RfiFetchJson rfiFetchJson) {
@@ -76,6 +90,14 @@ public class MetricController {
       new Date(rfiFetchJson.getEnd_time())
     );
     return this.rfiFetchRepository.save(rfiFetch);
+  }
+
+  public List<RfiPriorityChange> addRfiPriorityChanges(List<RfiPriorityChange> rfiPriorityChanges) {
+    return this.rfiPriorityChangeRepository.saveAll(rfiPriorityChanges);
+  }
+
+  public RfiUpdate addRfiUpdate(RfiUpdate rfiUpdate) {
+    return this.rfiUpdateRepository.save(rfiUpdate);
   }
 
 }

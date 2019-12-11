@@ -6,21 +6,27 @@ import classNames from 'classnames';
 interface Props {
   title: string;
   emptyMessage: string;
+  provided: any;
   className?: string;
 }
 
 export const Region: React.FC<Props> = props => {
 
-  function displayMessage() {
-    return <div className={'empty-message'}>{props.emptyMessage}</div>;
+  function displayMessage(message: string) {
+    return <div className={'empty-message'}>{message}</div>;
   }
 
-  return (
-    <div className={classNames('region', `region--${props.title}`, props.className)}>
-      <StyledRFIRegionDivider regionTitle={props.title}/>
-      {React.Children.count(props.children) === 0 ? displayMessage() : props.children}
-    </div>
-  )
+        return (
+          <div
+            className={classNames('region', `region--${props.title}`, props.className)}
+            ref={props.provided.innerRef}
+          >
+            <StyledRFIRegionDivider regionTitle={props.title}/>
+            {React.Children.count(props.children) === 0 ? displayMessage(props.emptyMessage) : props.children}
+            {props.provided.placeholder}
+          </div>
+        );
+
 };
 
 export const StyledRegion = styled(Region)`

@@ -2,21 +2,15 @@ package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.Utils;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RfiDeserializerTest {
   @Test
@@ -43,5 +37,4 @@ public class RfiDeserializerTest {
       rfi
     );
   }
-
 }

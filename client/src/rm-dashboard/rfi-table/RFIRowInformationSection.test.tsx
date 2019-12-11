@@ -3,16 +3,19 @@ import { RFIRowInformationSection } from './RFIRowInformationSection';
 import React from 'react';
 import RFIModel, { RFIStatus } from '../RFIModel';
 import moment from 'moment';
+import IconDnDBurger from '../../styles/icons/DnDBurger';
 
 describe('RFIRowInformationSection', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
-    let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi');
+    let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
     subject = shallow(
       <RFIRowInformationSection
         scrollRegionRef={React.createRef()}
         rfi={rfi}
+        scrollRegionRef={{}}
+        prioritizing={false}
       />
     )
   });
@@ -27,12 +30,13 @@ describe('RFIRowInformationSection', () => {
 
   it('should contain the RFI LTIOV or dash', () => {
     expect(subject.find('.cell--ltiov').text()).toBe('20 NOV 19');
-
-    let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', undefined, 'CAN', 'hi');
+    let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', undefined, 'CAN', 'hi', -1);
     subject = shallow(
       <RFIRowInformationSection
         scrollRegionRef={React.createRef()}
         rfi={rfi}
+        scrollRegionRef={{}}
+        prioritizing={false}
       />
     );
     expect(subject.find('.cell--ltiov').text()).toBe('-');
@@ -47,15 +51,28 @@ describe('RFIRowInformationSection', () => {
   });
 
   it('should have a see more button', () => {
-
-    let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', undefined, 'CAN', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
+    let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', undefined, 'CAN', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', -1);
     subject = shallow(
       <RFIRowInformationSection
         scrollRegionRef={React.createRef()}
         rfi={rfi}
+        scrollRegionRef={{}}
+        prioritizing={false}
       />
     );
-
     expect(subject.find('.section--information').text().toLowerCase()).toContain('see more');
+  });
+
+  it('should display a hamburger only when prioritizing', () => {
+    expect(subject.find(IconDnDBurger).exists()).toBeFalsy();
+    let rfi = new RFIModel('2020-00123', 'google.com', RFIStatus.OPEN, '1 FW', undefined, 'CAN', 'hi', 1);
+    subject = shallow(
+      <RFIRowInformationSection
+        rfi={rfi}
+        scrollRegionRef={{}}
+        prioritizing={true}
+      />
+    );
+    expect(subject.find(IconDnDBurger).exists()).toBeTruthy()
   });
 });

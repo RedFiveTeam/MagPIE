@@ -25,12 +25,10 @@ export class RFIDeserializer {
           item.getsUrl,
           matchEnum(item.status),
           item.customer,
-          item.ltiov === null
-            ? undefined
-            : moment(item.ltiov, moment.ISO_8601).utc(),
+          item.ltiov === null ? undefined : moment(item.ltiov, moment.ISO_8601).utc(),
           item.country,
-          item.description
-        );
+          item.description,
+          item.priority);
       });
     }
     return [];

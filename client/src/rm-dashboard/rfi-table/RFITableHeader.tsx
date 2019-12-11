@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledHeaderCell } from './HeaderCell';
 import { connect } from 'react-redux';
-import { sortByCountry, sortByCustomer, sortById, sortByLtiov } from '../RFIActions';
+import { sortByCountry, sortByCustomer, sortById, sortByLtiov, sortByPriority } from '../RFIActions';
 import { StyledUnsortableHeaderCell } from './UnsortableHeaderCell';
 
 interface Props {
+  sortByPriority: () => void;
   sortById: () => void;
   sortByCountry: () => void;
   sortByCustomer: () => void;
@@ -17,6 +18,11 @@ interface Props {
 export const RFITableHeader: React.FC<Props> = props => {
   return (
     <div className={classNames('header', props.className)}>
+      <StyledHeaderCell
+        text={'PRI'}
+        sort={props.sortByPriority}
+        className={'header-cell--pri'}
+      />
       <StyledHeaderCell
         text={'RFI'}
         sort={props.sortById}
@@ -52,6 +58,7 @@ const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = {
+  sortByPriority: sortByPriority,
   sortById: sortById,
   sortByCountry: sortByCountry,
   sortByCustomer: sortByCustomer,

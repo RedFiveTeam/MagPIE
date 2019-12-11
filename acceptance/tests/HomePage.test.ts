@@ -14,13 +14,13 @@ Scenario ('should see a home page', (I) => {
     I.dontSee("LOADING");
 });
 
-Scenario ('should be able to sort by clickin\' BUTTons', (I) => {
+Scenario ('should be able to sort by clickin\' Buttons', (I) => {
   I.amOnPage('/');
   I.waitForText('20-321', 10);
 
-  I.see('4 FEB 20', locate('.region--pending').find('.rfi-row').at(1));
-  I.click('.header-cell--ltiov');
   I.see('-', locate('.region--pending').find('.rfi-row').at(1));
+  I.click('.header-cell--ltiov');
+  I.see('4 FEB 20', locate('.region--pending').find('.rfi-row').at(1));
 
   I.click('.header-cell--country');
   I.see('CAN', locate('.region--pending').find('.rfi-row').at(1));
@@ -56,5 +56,4 @@ Scenario ('Should expand and collapse descriptions', (I) => {
   I.click('.see-less');
   I.waitForText('See more', 10);
   I.dontSee('See less');
-
 });
