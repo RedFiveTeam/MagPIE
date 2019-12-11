@@ -10,5 +10,6 @@ spring:
 
 UriGETSPendingOpen: {$GETS_URI_OPEN_PENDING}
 UriGETSClosed: {$GETS_URI_CLOSED}
+GETSRequestTimeFrame: {$GETS_REQUEST_TIME_FRAME_IN_DAYS}
 
 

@@ -1,9 +1,7 @@
 package dgs1sdt.pie.rfis;
 
-import java.util.List;
+import org.w3c.dom.Document;
 
 public interface GetsClient {
-  List<Rfi> getRfis() throws Exception;
-
-  List<Rfi> getRfis(String uri) throws Exception;
+  Document rfiResponseDocument(String uri) throws Exception;
 }
