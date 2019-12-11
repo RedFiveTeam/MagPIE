@@ -15,8 +15,9 @@ function main {
             unitTests
         ;;
         *)
-            jarBuild
+            yarnBuild
             unitTests
+            jarBuild
             acceptanceTests
         ;;
     esac
@@ -25,6 +26,9 @@ function main {
 # Tests
 function acceptanceTests {
     showBanner "Acceptance Tests"
+
+    export GETS_URI_OPEN_PENDING="RfisNewOpen.xml"
+    export GETS_URI_CLOSED="RfisClosed.xml"
 
     SPECIFIC_TESTS=""
 
@@ -36,7 +40,7 @@ function acceptanceTests {
         ./seed_db.sh
     popd
 
-    java -jar ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
+    java -jar -Dspring.profiles.active=test ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
     echo $! > ${BASE_DIR}/tmp/pie.pid
 
     testConnection ${REACT_APP_HOST} $(cat ${BASE_DIR}/tmp/pie.pid)
@@ -61,6 +65,7 @@ function unitTests {
 
     pushd ${BASE_DIR}
         if [[ $(mvn test | grep -E "\[INFO\]|\[ERROR\]|Expected" | grep "\[ERROR\]" | wc -l) -gt 0 ]]; then
+            echo "Unit Tests Failed... Exiting"
             exit 1
         fi
     popd
@@ -85,7 +90,11 @@ trap cleanup EXIT
 
 function jarBuild {
     showBanner "Build JAR"
-    ${BASE_DIR}/scripts/build_jar.sh
+    pushd ${BASE_DIR}
+        mvn -Dflyway.user=${PIE_DB_USERNAME} -Dflyway.password= -Dflyway.url=${PIE_DB_URL} clean flyway:migrate package
+        rm ${BASE_DIR}/artifacts/pie.jar || true
+        cp ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar ${BASE_DIR}/artifacts/pie.jar
+    popd
 }
 
 function setup {

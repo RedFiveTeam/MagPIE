@@ -9,7 +9,7 @@ pushd ${BASE_DIR}/client
 popd
 
 pushd ${BASE_DIR}
-   mvn -Dflyway.user=${PIE_DB_USERNAME} -Dflyway.password= -Dflyway.url=${PIE_DB_URL} clean flyway:migrate package -DskipTests
+   mvn -Dflyway.user=${PIE_DB_USERNAME} -Dflyway.password= -Dflyway.url=${PIE_DB_URL} clean flyway:migrate package
     rm ${BASE_DIR}/artifacts/pie.jar || true
     cp ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar ${BASE_DIR}/artifacts/pie.jar
 popd
