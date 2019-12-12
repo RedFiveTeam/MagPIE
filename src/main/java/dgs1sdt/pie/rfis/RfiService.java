@@ -2,7 +2,11 @@ package dgs1sdt.pie.rfis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,8 +54,11 @@ public class RfiService {
 
   private void updateRepoFromGETS(String[] uris) throws Exception {
     for (String uri : uris) {
-      List<Rfi> rfis = getsClient.getRfis(uri);
-      createOrUpdate(rfis);
+      createOrUpdate(
+        marshallDocumentToRfis(
+          getsClient.rfiResponseDocument(uri)
+        )
+      );
     }
   }
 
@@ -82,5 +89,22 @@ public class RfiService {
 
     int maxRfis = Math.min(filteredList.size(), 3);
     return filteredList.subList(0, maxRfis);
+  }
+
+  public List<Rfi> marshallDocumentToRfis(Document document) throws Exception {
+    NodeList nodeList = document.getElementsByTagName("getsrfi:RequestForInformation");
+
+    return rfisFromElements(nodeList);
+  }
+
+  private static List<Rfi> rfisFromElements(NodeList htmlRfis) throws Exception {
+    List<Rfi> rfiList = new ArrayList<>();
+
+    for (int i = 0; i < htmlRfis.getLength(); i++) {
+      Node node = htmlRfis.item(i);
+      rfiList.add(RfiDeserializer.deserialize(node));
+    }
+
+    return rfiList;
   }
 }

@@ -101,7 +101,7 @@ function setup {
     showBanner "Setup"
 
     BASE_DIR="$(dirname $( cd "$(dirname "$0")" ; pwd -P ))"
-
+    source "${BASE_DIR}/scripts/setup_env.sh"
     REACT_APP_HOST=http://localhost:9090
 
     mkdir -p ${BASE_DIR}/tmp

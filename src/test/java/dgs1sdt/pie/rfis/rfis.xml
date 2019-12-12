@@ -2,7 +2,7 @@
   <RFIList>
     <getsrfi:RequestForInformation id="DGS-1-SDT-2020-00321">
       <getsrfi:Request id="DGS-1-SDT-2020-00321">
-        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</getsrfi:requestText>
+        <getsrfi:requestText>hello rfi</getsrfi:requestText>
         <gets:url>http://www.google.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-05T14:21:21Z</gets:lastUpdate>

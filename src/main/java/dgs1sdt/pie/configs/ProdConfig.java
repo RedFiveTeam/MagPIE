@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class ProdConfig {
     @Bean
-    public GetsClient getsClient(@Value("${GETS_URL}") String uri) {
-        return new WebGetsClient(uri);
+    public GetsClient getsClient() {
+        return new WebGetsClient();
     }
 }

@@ -4,7 +4,16 @@ package dgs1sdt.pie.rfis;
 import dgs1sdt.pie.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,6 +25,18 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
   @Autowired
   RfiRepository rfiRepository;
+
+  @Test
+  public void marshallsXmlDocIntoRfis() throws Exception {
+    RfiService rfiService = new RfiService(rfiRepository, getsClient);
+
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilder db = dbf.newDocumentBuilder();
+    Document document = db.parse(new File("src/test/java/dgs1sdt/pie/rfis/rfis.xml"));
+    List<Rfi> rfiList = rfiService.marshallDocumentToRfis(document);
+
+    assertEquals(2, rfiList.size());
+  }
 
   @Test
   public void returnsAllNewOpenAndLastThreeClosedRfis() throws Exception {
