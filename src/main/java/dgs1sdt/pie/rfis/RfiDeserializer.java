@@ -5,8 +5,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class RfiDeserializer {
@@ -41,7 +39,10 @@ public class RfiDeserializer {
   }
 
   private static String getTextFromElement(Element element, String s) {
-    return element.getElementsByTagName(s).item(0).getTextContent();
+    if (element.getElementsByTagName(s) != null) {
+      return element.getElementsByTagName(s).item(0).getTextContent();
+    }
+    return "N/A";
   }
 
   private static String getRfiID(Node node) {
