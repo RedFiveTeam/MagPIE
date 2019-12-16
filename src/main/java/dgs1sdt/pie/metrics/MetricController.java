@@ -1,8 +1,11 @@
 package dgs1sdt.pie.metrics;
 
-import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
 import dgs1sdt.pie.metrics.getsclick.GETSClicksRepository;
 import dgs1sdt.pie.metrics.getsclick.GetsClick;
+import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
+import dgs1sdt.pie.metrics.rfifetch.RfiFetch;
+import dgs1sdt.pie.metrics.rfifetch.RfiFetchJson;
+import dgs1sdt.pie.metrics.rfifetch.RfiFetchRepository;
 import dgs1sdt.pie.metrics.sortclick.SortClick;
 import dgs1sdt.pie.metrics.sortclick.SortClickJson;
 import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
@@ -19,12 +22,14 @@ public class MetricController {
   private GETSClicksRepository getsClicksRepository;
   private SiteVisitRepository siteVisitRepository;
   private SortClicksRepository sortClicksRepository;
+  private RfiFetchRepository rfiFetchRepository;
 
   public MetricController(GETSClicksRepository getsClicksRepository, SiteVisitRepository siteVisitRepository,
-                          SortClicksRepository sortClicksRepository) {
+                          SortClicksRepository sortClicksRepository, RfiFetchRepository rfiFetchRepository) {
     this.getsClicksRepository = getsClicksRepository;
     this.siteVisitRepository = siteVisitRepository;
     this.sortClicksRepository = sortClicksRepository;
+    this.rfiFetchRepository = rfiFetchRepository;
   }
 
   @GetMapping(path = "/site-visits")
@@ -63,5 +68,14 @@ public class MetricController {
     );
     return this.sortClicksRepository.save(sortClick);
     }
+
+  @PostMapping(path = "/rfi-fetch")
+  public RfiFetch create (@Valid @RequestBody RfiFetchJson rfiFetchJson) {
+    RfiFetch rfiFetch = new RfiFetch(
+      new Date(rfiFetchJson.getStart_time()),
+      new Date(rfiFetchJson.getEnd_time())
+    );
+    return this.rfiFetchRepository.save(rfiFetch);
+  }
 
 }

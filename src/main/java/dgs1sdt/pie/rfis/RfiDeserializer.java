@@ -29,7 +29,7 @@ public class RfiDeserializer {
     for (int i = 0; i < responses.getLength(); i++) {
       Node node = responses.item(i);
       Element curr = (Element) node;
-      if (curr.getElementsByTagName("gets:producerOrganizationID").item(0).getTextContent().equals("DGS-1")) {
+      if (curr.getTextContent().contains("DGS-1")) {
         return curr.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent();
       }
     }

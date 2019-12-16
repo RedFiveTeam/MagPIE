@@ -5,3 +5,4 @@ export GETS_URL="https://ec2-96-127-73-112.us-gov-west-1.compute.amazonaws.com/w
 export SPRING_PROFILES_ACTIVE=test
 export GETS_URI_OPEN_PENDING="RfisNewOpen.xml"
 export GETS_URI_CLOSED="RfisClosed.xml"
+export GETS_REQUEST_TIME_FRAME_IN_DAYS="20"

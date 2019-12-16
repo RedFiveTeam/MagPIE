@@ -1,5 +1,6 @@
 import GETSClickRequestModel from '../metrics/Model/GETSClickRequestModel';
 import SortClickRequestModel from '../metrics/Model/SortClickRequestModel';
+import RfiFetchRequestModel from '../metrics/Model/RfiFetchRequestModel';
 
 export const postSiteVisit = () => {
   return () => {
@@ -10,6 +11,7 @@ export const postSiteVisit = () => {
     );
   }
 };
+
 export const postGETSClick = (getsClickRequestModel: GETSClickRequestModel) => {
     return fetch(
       '/api/metrics/gets-click',
@@ -34,6 +36,20 @@ export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(sortClickRequestModel),
+    }
+  )
+};
+
+export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestModel) => {
+  return fetch(
+    '/api/metrics/rfi-fetch',
+    {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(rfiFetchRequestModel),
     }
   )
 };
