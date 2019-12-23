@@ -66,7 +66,8 @@ export const RFITable: React.FC<Props> = props => {
   function reorder(dropResult: DropResult) {
     console.log(dropResult.destination);
     console.log(props.sortKey);
-    if (props.sortKey.field === Field.PRIORITY && props.sortKey.defaultOrder)
+    if (dropResult.destination && dropResult.destination.droppableId === "region--droppable--open"
+     && props.sortKey.field === Field.PRIORITY && props.sortKey.defaultOrder)
       props.reorderRfis(props.openRfis, dropResult.draggableId, dropResult.destination!.index);
   }
 
