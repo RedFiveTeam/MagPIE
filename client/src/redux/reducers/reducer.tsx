@@ -1,52 +1,52 @@
 import { ActionTypes } from '../actions/ActionTypes';
-import RFIModel, { RFIStatus } from '../../rm-dashboard/RFIModel';
-import { RFISorter } from '../../rm-dashboard/RFISorter';
-import { Field, SortKey } from '../../rm-dashboard/SortKey';
+import RfiModel, { RfiStatus } from '../../rm-dashboard/RfiModel';
+import { RfiSorter } from '../../rm-dashboard/RfiSorter';
+import { Field, SortKeyModel } from '../../rm-dashboard/SortKeyModel';
 import { postSortClick } from '../../users/UserActions';
 import SortClickRequestModel from '../../metrics/Model/SortClickRequestModel';
 
 const initState = {
-  rfis: [] as RFIModel[],
-  sortKey: new SortKey(Field.PRIORITY, false),
-  pendingRfis: [] as RFIModel[],
-  openRfis: [] as RFIModel[],
-  closedRfis: [] as RFIModel[],
+  rfis: [] as RfiModel[],
+  sortKey: new SortKeyModel(Field.PRIORITY, false),
+  pendingRfis: [] as RfiModel[],
+  openRfis: [] as RfiModel[],
+  closedRfis: [] as RfiModel[],
   loading: true
 };
 
-function flipSortKey(sortKey: SortKey, field: Field) {
-  return new SortKey(
+function flipSortKey(sortKey: SortKeyModel, field: Field) {
+  return new SortKeyModel(
     field,
     sortKey.field === field ? !sortKey.defaultOrder : true
   );
 }
 
-function filterRfisByStatus(rfis: RFIModel[], status: RFIStatus) {
-  return rfis.filter((rfi: RFIModel) => rfi.status === status);
+function filterRfisByStatus(rfis: RfiModel[], status: RfiStatus) {
+  return rfis.filter((rfi: RfiModel) => rfi.status === status);
 }
 
-function filterRfis(sortedRfis: RFIModel[]) {
+function filterRfis(sortedRfis: RfiModel[]) {
   return {
-    pendingRfis: filterRfisByStatus(sortedRfis, RFIStatus.PENDING),
-    openRfis: filterRfisByStatus(sortedRfis, RFIStatus.OPEN),
-    closedRfis: filterRfisByStatus(sortedRfis, RFIStatus.CLOSED),
+    pendingRfis: filterRfisByStatus(sortedRfis, RfiStatus.PENDING),
+    openRfis: filterRfisByStatus(sortedRfis, RfiStatus.OPEN),
+    closedRfis: filterRfisByStatus(sortedRfis, RfiStatus.CLOSED),
   }
 }
 
 const reducer = (state = initState, action: any) => {
-  let sortedRfis: RFIModel[];
-  let newSortKey: SortKey;
+  let sortedRfis: RfiModel[];
+  let newSortKey: SortKeyModel;
 
   switch (action.type) {
     case ActionTypes.FETCH_RFI_PENDING:
       return {...state, loading: true};
     case ActionTypes.FETCH_RFI_SUCCESS:
-      sortedRfis = RFISorter.sortByPriority(action.body, state.sortKey);
+      sortedRfis = RfiSorter.sortByPriority(action.body, state.sortKey);
       return {
         ...state,
         ...filterRfis(sortedRfis),
         rfis: sortedRfis,
-        sortKey: new SortKey(Field.PRIORITY, true),
+        sortKey: new SortKeyModel(Field.PRIORITY, true),
         loading: false
       };
     case ActionTypes.FETCH_SITE_VISITS_SUCCESS:
@@ -54,7 +54,7 @@ const reducer = (state = initState, action: any) => {
     case ActionTypes.FETCH_GETS_CLICKS_SUCCESS:
       return {...state, GETSClicks: action.body};
     case ActionTypes.SORT_RFIS_BY_PRIORITY:
-      sortedRfis = RFISorter.sortByPriority(state.rfis, state.sortKey);
+      sortedRfis = RfiSorter.sortByPriority(state.rfis, state.sortKey);
       newSortKey = flipSortKey(state.sortKey,Field.PRIORITY);
       postSortClick(new SortClickRequestModel(newSortKey.field, newSortKey.defaultOrder));
       return {
@@ -64,7 +64,7 @@ const reducer = (state = initState, action: any) => {
         sortKey: newSortKey
       };
     case ActionTypes.SORT_RFIS_BY_ID:
-      sortedRfis = RFISorter.sortById(state.rfis, state.sortKey);
+      sortedRfis = RfiSorter.sortById(state.rfis, state.sortKey);
       newSortKey = flipSortKey(state.sortKey,Field.ID);
       postSortClick(new SortClickRequestModel(newSortKey.field, newSortKey.defaultOrder));
       return {
@@ -74,37 +74,37 @@ const reducer = (state = initState, action: any) => {
         sortKey: newSortKey
       };
     case ActionTypes.SORT_RFIS_BY_CUSTOMER:
-      sortedRfis = RFISorter.sortByCustomer(state.rfis, state.sortKey);
+      sortedRfis = RfiSorter.sortByCustomer(state.rfis, state.sortKey);
       newSortKey = flipSortKey(state.sortKey,Field.CUSTOMER);
       postSortClick(new SortClickRequestModel(newSortKey.field, newSortKey.defaultOrder));
       return {
         ...state,
         ...filterRfis(sortedRfis),
-        rfis: RFISorter.sortByCustomer(state.rfis, state.sortKey),
+        rfis: RfiSorter.sortByCustomer(state.rfis, state.sortKey),
         sortKey: newSortKey
       };
     case ActionTypes.SORT_RFIS_BY_COUNTRY:
-      sortedRfis = RFISorter.sortByCountry(state.rfis, state.sortKey);
+      sortedRfis = RfiSorter.sortByCountry(state.rfis, state.sortKey);
       newSortKey = flipSortKey(state.sortKey,Field.COUNTRY);
       postSortClick(new SortClickRequestModel(newSortKey.field, newSortKey.defaultOrder));
       return {
         ...state,
         ...filterRfis(sortedRfis),
-        rfis: RFISorter.sortByCountry(state.rfis, state.sortKey),
+        rfis: RfiSorter.sortByCountry(state.rfis, state.sortKey),
         sortKey: newSortKey
       };
     case ActionTypes.SORT_RFIS_BY_LTIOV:
-      sortedRfis = RFISorter.sortByLtiov(state.rfis, state.sortKey);
+      sortedRfis = RfiSorter.sortByLtiov(state.rfis, state.sortKey);
       newSortKey = flipSortKey(state.sortKey,Field.LTIOV);
       postSortClick(new SortClickRequestModel(newSortKey.field, newSortKey.defaultOrder));
       return {
         ...state,
         ...filterRfis(sortedRfis),
-        rfis: RFISorter.sortByLtiov(state.rfis, state.sortKey),
+        rfis: RfiSorter.sortByLtiov(state.rfis, state.sortKey),
         sortKey: newSortKey
       };
     case ActionTypes.REPRIORITIZE_RFIS:
-      let newRfis: RFIModel[] = [].concat(action.reprioritizedList);
+      let newRfis: RfiModel[] = [].concat(action.reprioritizedList);
       newRfis = newRfis.concat(state.pendingRfis);
       newRfis = newRfis.concat(state.closedRfis);
       return {

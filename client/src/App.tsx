@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import RMDashboardContainer from './rm-dashboard/RMDashboardContainer';
+import RMDashboardContainer from './rm-dashboard/RmDashboardContainer';
 import MetricsContainer from './metrics/MetricsContainer';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 

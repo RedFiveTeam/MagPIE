@@ -1,10 +1,10 @@
-import { RFIRow } from './RFIRow';
-import RFIModel, { RFIStatus } from '../RFIModel';
+import { RfiRow } from './RfiRow';
+import RfiModel, { RfiStatus } from '../RfiModel';
 import moment from 'moment';
 import React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { Region } from './Region';
-import { StyledRFIRegionDivider } from './RFIRegionDivider';
+import { StyledRfiRegionDivider } from './RfiRegionDivider';
 
 describe('Region', () => {
   let rows: any[];
@@ -12,20 +12,20 @@ describe('Region', () => {
 
   beforeEach(() => {
     rows = [
-      <RFIRow
-        rfi={new RFIModel('19-001', 'url', RFIStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi', -1)}
+      <RfiRow
+        rfi={new RfiModel('19-001', 'url', RfiStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi', -1)}
         key={'1'}
         scrollRegionRef={{}}
         index={0}
       />,
-      <RFIRow
-        rfi={new RFIModel('19-004', 'url', RFIStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi', -1)}
+      <RfiRow
+        rfi={new RfiModel('19-004', 'url', RfiStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi', -1)}
         key={'2'}
         scrollRegionRef={{}}
         index={1}
       />,
-      <RFIRow
-        rfi={new RFIModel('19-003', 'url', RFIStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', -1)}
+      <RfiRow
+        rfi={new RfiModel('19-003', 'url', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', -1)}
         key={'3'}
         scrollRegionRef={{}}
         index={2}
@@ -43,11 +43,11 @@ describe('Region', () => {
   });
 
   it('should display a divider', () => {
-    expect(subject.find(StyledRFIRegionDivider).exists()).toBeTruthy();
+    expect(subject.find(StyledRfiRegionDivider).exists()).toBeTruthy();
   });
 
   it('should present all given rows', () => {
-    expect(subject.find(RFIRow).length).toBe(3);
+    expect(subject.find(RfiRow).length).toBe(3);
   });
 
   it('should display a message when there are no rows', () => {

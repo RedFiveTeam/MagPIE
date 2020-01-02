@@ -51,7 +51,9 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[15].ltiov", equalTo(null))
       .body("[15].country", equalTo("MEX"))
       .body("[15].description", equalTo(longDescription))
-      .body("[15].priority", equalTo(-1));
+      .body("[15].priority", equalTo(-1))
+
+      .body("[16].rfiId", equalTo(null));
   }
 
 

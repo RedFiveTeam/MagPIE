@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { StyledRFIRegionDivider } from './RFIRegionDivider';
+import { StyledRfiRegionDivider } from './RfiRegionDivider';
 import classNames from 'classnames';
 
 interface Props {
@@ -21,7 +21,7 @@ export const Region: React.FC<Props> = props => {
             className={classNames('region', `region--${props.title}`, props.className)}
             ref={props.provided.innerRef}
           >
-            <StyledRFIRegionDivider regionTitle={props.title}/>
+            <StyledRfiRegionDivider regionTitle={props.title}/>
             {React.Children.count(props.children) === 0 ? displayMessage(props.emptyMessage) : props.children}
             {props.provided.placeholder}
           </div>

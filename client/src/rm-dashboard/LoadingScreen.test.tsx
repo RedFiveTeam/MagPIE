@@ -7,7 +7,7 @@ describe('LoadingScreen', () => {
 
   beforeEach(() => {
     subject = shallow(
-        <LoadingScreen/>
+        <LoadingScreen />
     );
   });
 

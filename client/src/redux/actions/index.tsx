@@ -1,1 +1,1 @@
-export * from '../../rm-dashboard/RFIActions';
+export * from '../../rm-dashboard/RfiActions';

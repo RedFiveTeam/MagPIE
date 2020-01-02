@@ -1,4 +1,4 @@
-import GETSClickRequestModel from '../metrics/Model/GETSClickRequestModel';
+import GetsClickRequestModel from '../metrics/Model/GetsClickRequestModel';
 import SortClickRequestModel from '../metrics/Model/SortClickRequestModel';
 import RfiFetchRequestModel from '../metrics/Model/RfiFetchRequestModel';
 
@@ -12,7 +12,7 @@ export const postSiteVisit = () => {
   }
 };
 
-export const postGETSClick = (getsClickRequestModel: GETSClickRequestModel) => {
+export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
     return fetch(
       '/api/metrics/gets-click',
       {
