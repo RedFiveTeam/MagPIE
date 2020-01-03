@@ -32,7 +32,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
   public void marshallsXmlDocIntoRfis() throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder db = dbf.newDocumentBuilder();
-    Document document = db.parse(new File("src/test/java/dgs1sdt/pie/rfis/rfis.xml"));
+    Document document = db.parse(new File("src/main/resources/rfis.xml"));
     List<Rfi> rfiList = rfiService.marshallDocumentToRfis(document);
 
     assertEquals(2, rfiList.size());
@@ -46,23 +46,14 @@ public class RfiServiceTest extends BaseIntegrationTest {
       "RfisClosed.xml"
     };
 
-    Rfi rfiExisting = new Rfi();
-    rfiExisting.setRfiId("DGS-1-SDT-2020-00321");
-    rfiExisting.setGetsUrl("jabberwocky");
-    rfiRepository.save(rfiExisting);
+    List<Rfi> rfis = rfiService.fetchRfis(files);
 
     long rfiCount = rfiRepository.count();
 
-    List<Rfi> rfis = rfiService.fetchRfis(files);
-
-    assertEquals(rfiCount + 15, rfis.size());
+    assertEquals(rfiCount - 1, rfis.size());
     assertEquals(3, rfis.stream()
       .filter(rfi -> rfi.getStatus().equals("CLOSED"))
       .count()
-    );
-    assertEquals(
-      "http://www.google.com",
-      rfiRepository.findByRfiId("DGS-1-SDT-2020-00321").getGetsUrl()
     );
   }
 
@@ -105,9 +96,11 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
   @Test
   public void sendsRfiUpdateMetricIfThereIsAChangeInAnRfi() {
-    Rfi rfi = new Rfi("id", "url", "NEW", new Date(), "customer", new Date(), "USA", "a description");
-    Rfi updatedRfi = new Rfi("id", "url", "NEW", new Date(), "customer", new Date(), "USA", "a new and improved description");
-    Rfi rfi2 = new Rfi("id2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description");
+    Date rfi1ltiov = new Date();
+
+    Rfi rfi = new Rfi("id", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a description");
+    Rfi updatedRfi = new Rfi("id", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved description");
+    Rfi rfi2 = new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description");
 
     long rfiUpdateCount = rfiUpdateRepository.count();
 
@@ -118,7 +111,8 @@ public class RfiServiceTest extends BaseIntegrationTest {
     rfis.add(updatedRfi);
     rfis.add(rfi2);
 
-    rfiService.createOrUpdate(rfis);
+    rfiService.updateAndSaveRfis(rfis);
     assertEquals(rfiUpdateCount + 1, rfiUpdateRepository.count());
+
   }
 }

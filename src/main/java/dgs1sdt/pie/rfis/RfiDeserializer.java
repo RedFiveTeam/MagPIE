@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class RfiDeserializer {
@@ -55,24 +56,25 @@ public class RfiDeserializer {
     return rawUrl.replace(".smil.mil", ".smil.mil/internal");
   }
 
-  private static Date getLtiov(Element element) {
-    Date ltiov;
+  private static Timestamp getLtiov(Element element) {
+    Timestamp ltiov;
     try {
-      ltiov = Utils.parseDate(getTextFromElement(element, "gets:ltiov"));
+      Date date = Utils.parseDate(getTextFromElement(element, "gets:ltiov"));
+      ltiov = new Timestamp(date.getTime());
     } catch (Exception e) {
-      ltiov = null;
+      ltiov = null; //new Timestamp(0);
     }
     return ltiov;
   }
 
-  private static Date getLastUpdate(Element element) throws Exception {
+  private static Timestamp getLastUpdate(Element element) throws Exception {
     Date lastUpdate;
     try {
       lastUpdate = Utils.parseDate(getTextFromElement(element, "gets:lastUpdate"));
     } catch (Exception e) {
       lastUpdate = Utils.parseDate(getTextFromElement(element, "getsrfi:receiveDate"));
     }
-    return lastUpdate;
+    return new Timestamp(lastUpdate.getTime());
   }
 
 }

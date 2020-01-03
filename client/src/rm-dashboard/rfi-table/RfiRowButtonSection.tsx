@@ -15,6 +15,8 @@ interface Props {
 }
 
 //TODO: tests
+// test that RfiRowButtonSection renders is in RfiRow.test.tsx
+
 export const RfiRowButtonSection: React.FC<Props> = props => {
 
   function buttonText() {

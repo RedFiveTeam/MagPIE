@@ -71,7 +71,7 @@
   "proxy": "http://localhost:8080",
   "jest": {
     "collectCoverageFrom": [
-      "**/*.{ts,tsx}",
+      "*/**.{ts,tsx}",
       "!**/{App,index}.tsx",
       "!**/*Model.ts",
       "!**/{serviceWorker,setupEnzyme}.ts",

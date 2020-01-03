@@ -14,6 +14,14 @@ const fetchGETSClicksSuccess = (body: any) => {
   }
 };
 
+const fetchRefreshClicksSuccess = (body: any) => {
+  return {
+    type: ActionTypes.FETCH_REFRESH_CLICKS_SUCCESS,
+    body
+  }
+};
+
+
 export const fetchSiteVisitMetrics = () => {
   return (dispatch: any) => {
     return fetch('/api/metrics/site-visits')
@@ -30,3 +38,10 @@ export const fetchGETSClicksMetrics = () => {
   }
 };
 
+export const fetchRefreshClicksMetrics = () => {
+  return (dispatch: any) => {
+    return fetch('/api/metrics/refresh-clicks')
+      .then(response => response.text())
+      .then(body => dispatch(fetchRefreshClicksSuccess(body)));
+  }
+}

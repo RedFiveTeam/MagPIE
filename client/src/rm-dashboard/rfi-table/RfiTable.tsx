@@ -88,19 +88,7 @@ export const RfiTable: React.FC<Props> = props => {
             }}
             shadowSize={10}
           >
-            <Droppable droppableId={`region--droppable--pending`}>
-              {(provided, snapshot) => {
-                return (
-                  <StyledRegion
-                    title={'pending'}
-                    emptyMessage={'Congratulations! Your team opened all the new RFIs in GETS.'}
-                    provided={provided}
-                  >
-                    {pendingRfis(props.pendingRfis, scrollRegionRef)}
-                  </StyledRegion>
-                )
-              }}
-            </Droppable>
+
             <Droppable droppableId={`region--droppable--open`}>
               {(provided, snapshot) => {
                 return (
@@ -114,6 +102,19 @@ export const RfiTable: React.FC<Props> = props => {
                 )
               }}
             </Droppable>
+            <Droppable droppableId={`region--droppable--pending`}>
+            {(provided, snapshot) => {
+              return (
+                <StyledRegion
+                  title={'pending'}
+                  emptyMessage={'Congratulations! Your team opened all the new RFIs in GETS.'}
+                  provided={provided}
+                >
+                  {pendingRfis(props.pendingRfis, scrollRegionRef)}
+                </StyledRegion>
+              )
+            }}
+          </Droppable>
             <Droppable droppableId={`region--droppable--closed`}>
               {(provided, snapshot) => {
                 return (

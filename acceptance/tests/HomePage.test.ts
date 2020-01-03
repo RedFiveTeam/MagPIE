@@ -46,12 +46,12 @@ Scenario ('Should log and display metrics', (I) => {
 Scenario ('Should expand and collapse descriptions', (I) => {
   I.amOnPage('/');
   I.waitForText('See more', 10);
-  I.see('See more', locate('.region--pending').find('.rfi-row').at(1));
+  I.see('See more', locate('.region--open').find('.rfi-row').at(1));
   I.dontSee('See less');
 
   I.click('.see-more');
   I.waitForText('See less', 10);
-  I.dontSee('See more', locate('.region--pending').find('.rfi-row').at(1));
+  I.dontSee('See more', locate('.region--open').find('.rfi-row').at(1));
 
   I.click('.see-less');
   I.waitForText('See more', 10);

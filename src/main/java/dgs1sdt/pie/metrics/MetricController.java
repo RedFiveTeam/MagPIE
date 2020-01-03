@@ -3,14 +3,17 @@ package dgs1sdt.pie.metrics;
 import dgs1sdt.pie.metrics.getsclick.GETSClicksRepository;
 import dgs1sdt.pie.metrics.getsclick.GetsClick;
 import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
+import dgs1sdt.pie.metrics.refreshclick.RefreshClick;
+import dgs1sdt.pie.metrics.refreshclick.RefreshClickRepository;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetch;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetchJson;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetchRepository;
-import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
 import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChange;
 import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChangeRepository;
 import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
 import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
+import dgs1sdt.pie.metrics.sitevisit.SiteVisit;
+import dgs1sdt.pie.metrics.sitevisit.SiteVisitRepository;
 import dgs1sdt.pie.metrics.sortclick.SortClick;
 import dgs1sdt.pie.metrics.sortclick.SortClickJson;
 import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
@@ -31,19 +34,23 @@ public class MetricController {
   private RfiFetchRepository rfiFetchRepository;
   private RfiPriorityChangeRepository rfiPriorityChangeRepository;
   private RfiUpdateRepository rfiUpdateRepository;
+  private RefreshClickRepository refreshClickRepository;
 
   public MetricController(GETSClicksRepository getsClicksRepository,
                           SiteVisitRepository siteVisitRepository,
                           SortClicksRepository sortClicksRepository,
                           RfiFetchRepository rfiFetchRepository,
                           RfiPriorityChangeRepository rfiPriorityChangeRepository,
-                          RfiUpdateRepository rfiUpdateRepository) {
+                          RfiUpdateRepository rfiUpdateRepository,
+                          RefreshClickRepository refreshClickRepository
+  ) {
     this.getsClicksRepository = getsClicksRepository;
     this.siteVisitRepository = siteVisitRepository;
     this.sortClicksRepository = sortClicksRepository;
     this.rfiFetchRepository = rfiFetchRepository;
     this.rfiPriorityChangeRepository = rfiPriorityChangeRepository;
     this.rfiUpdateRepository = rfiUpdateRepository;
+    this.refreshClickRepository = refreshClickRepository;
   }
 
   @GetMapping(path = "/site-visits")
@@ -55,6 +62,17 @@ public class MetricController {
   public void logSiteVisit() {
     SiteVisit siteVisit = new SiteVisit(new Date());
     this.siteVisitRepository.save(siteVisit);
+  }
+
+  @GetMapping(path = "/refresh-clicks")
+  public long getRefreshClickCount() {
+    return refreshClickRepository.count();
+  }
+
+  @PostMapping(path = "/refresh-click")
+  public void logRefreshClick() {
+    RefreshClick refreshClick = new RefreshClick(new Date());
+    this.refreshClickRepository.save(refreshClick);
   }
 
   @GetMapping(path = "/gets-clicks")

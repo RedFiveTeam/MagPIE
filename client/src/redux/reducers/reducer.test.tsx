@@ -1,6 +1,7 @@
 import { ActionTypes } from '../actions/ActionTypes';
 import RfiModel, { RfiStatus } from '../../rm-dashboard/RfiModel';
 import reducer from './reducer';
+// @ts-ignore
 import moment from 'moment';
 import { Field, SortKeyModel } from '../../rm-dashboard/SortKeyModel';
 

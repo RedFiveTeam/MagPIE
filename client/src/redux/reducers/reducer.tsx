@@ -51,6 +51,8 @@ const reducer = (state = initState, action: any) => {
       };
     case ActionTypes.FETCH_SITE_VISITS_SUCCESS:
       return {...state, siteVisits: action.body};
+    case ActionTypes.FETCH_REFRESH_CLICKS_SUCCESS:
+      return {...state, refreshClicks: action.body};
     case ActionTypes.FETCH_GETS_CLICKS_SUCCESS:
       return {...state, GETSClicks: action.body};
     case ActionTypes.SORT_RFIS_BY_PRIORITY:

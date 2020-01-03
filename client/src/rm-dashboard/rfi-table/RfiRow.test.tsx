@@ -19,4 +19,5 @@ describe('RFIRow', () => {
     expect(subject.find(StyledRfiRowInformationSection).exists()).toBeTruthy();
     expect(subject.find(StyledRfiRowButtonSection).exists()).toBeTruthy();
   });
+
 });

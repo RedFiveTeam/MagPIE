@@ -2,6 +2,7 @@ package dgs1sdt.pie.rfis;
 
 import org.junit.Test;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -13,9 +14,9 @@ public class RfiTest {
     Rfi rfiOld = new Rfi();
     Rfi rfiMiddle = new Rfi();
     Rfi rfiNew = new Rfi();
-    rfiOld.setLastUpdate(new Date(123456789));
-    rfiMiddle.setLastUpdate(new Date(345678912));
-    rfiNew.setLastUpdate(new Date(567891234));
+    rfiOld.setLastUpdate(new Timestamp(new Date(123456789).getTime()));
+    rfiMiddle.setLastUpdate(new Timestamp(new Date(345678912).getTime()));
+    rfiNew.setLastUpdate(new Timestamp(new Date(567891234).getTime()));
     List<Rfi> rfiList = new ArrayList<>();
     rfiList.add(rfiMiddle);
     rfiList.add(rfiOld);

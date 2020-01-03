@@ -53,3 +53,14 @@ export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestMode
     }
   )
 };
+
+export const postRefreshClick = () => {
+  return () => {
+    return fetch(
+      '/api/metrics/refresh-click',
+      {
+        method: 'post'
+      }
+    );
+  }
+};

@@ -6,8 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,15 +21,14 @@ public class Rfi {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-  @Column(columnDefinition = "LONGVARCHAR")
+  @Column(length = 65535)
   private String description;
-
   private String rfiId;
   private String getsUrl;
   private String status;
-  private Date lastUpdate;
+  private Timestamp lastUpdate;
   private String customer;
-  private Date ltiov;
+  private Timestamp ltiov;
   private String country;
   private int priority;
 
@@ -43,9 +45,15 @@ public class Rfi {
     this.getsUrl = getsUrl;
     this.rfiId = rfiId;
     this.status = status;
-    this.lastUpdate = lastUpdate;
+    this.lastUpdate = new Timestamp(lastUpdate.getTime());
     this.customer = customer;
-    this.ltiov = ltiov;
+
+    try {
+      this.ltiov = new Timestamp(ltiov.getTime());
+    } catch (NullPointerException e) {
+      this.ltiov = null;
+    }
+
     this.country = country;
     this.description = description;
     this.priority = -1;
@@ -65,15 +73,64 @@ public class Rfi {
     this.getsUrl = getsUrl;
     this.rfiId = rfiId;
     this.status = status;
-    this.lastUpdate = lastUpdate;
+    this.lastUpdate = new Timestamp(lastUpdate.getTime());
     this.customer = customer;
-    this.ltiov = ltiov;
+    this.ltiov = new Timestamp(ltiov.getTime());
     this.country = country;
     this.description = description;
     this.priority = priority;
   }
 
+  public List<String> compare(Rfi otherRfi) throws NullPointerException {
+    List<String> diff = new ArrayList<>();
+
+    if (!this.getsUrl.equals(otherRfi.getsUrl))
+      diff.add("getsUrl");
+
+    try {
+      if (!this.status.equals(otherRfi.status))
+        diff.add("status");
+    } catch (NullPointerException e) {
+      diff.add("status");
+    }
+
+    try {
+      if (!this.customer.equals(otherRfi.customer))
+        diff.add("customer");
+    } catch (NullPointerException e) {
+      diff.add("customer");
+    }
+
+    try {
+      if (!this.ltiov.equals(otherRfi.ltiov))
+        diff.add("ltiov");
+    } catch (NullPointerException e) {
+      diff.add("ltiov");
+    }
+
+    try {
+      if (!this.country.equals(otherRfi.country))
+        diff.add("country");
+    } catch (NullPointerException e) {
+      diff.add("country");
+    }
+
+    try {
+      if (!this.description.equals(otherRfi.description))
+        diff.add("description");
+    } catch (NullPointerException e) {
+      diff.add("description");
+    }
+
+    return diff;
+  }
+
 }
+
+/*
+TODO a function to update some fields of the rfi based on a second rfi
+ */
+
 
 class SortByRecentFirst implements Comparator<Rfi> {
   public int compare(Rfi a, Rfi b) {

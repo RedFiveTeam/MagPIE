@@ -7,6 +7,7 @@ function main {
 
     case "${1}" in
         acc|acceptance)
+            yarnBuild
             jarBuild
             acceptanceTests ${@}
         ;;

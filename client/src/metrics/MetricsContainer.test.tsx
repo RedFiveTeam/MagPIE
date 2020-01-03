@@ -9,11 +9,13 @@ describe('MetricsContainer', () => {
   beforeEach(() => {
 
     subject = shallow(
-        <MetricsContainer
+      // @ts-ignore
+      <MetricsContainer
           GETSClicks={15}
           fetchGETSClicksMetrics={() => null}
           fetchSiteVisitMetrics={() => null}
-          siteVisits={10}/>
+          siteVisits={10}
+        />
     );
   });
 

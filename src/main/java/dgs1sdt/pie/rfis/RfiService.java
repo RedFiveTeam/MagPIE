@@ -34,7 +34,7 @@ public class RfiService {
   }
 
   public List<Rfi> fetchRfis(String[] uris) throws Exception {
-    this.updateRepoFromGETS(uris);
+    this.updateRepoFromGets(uris);
     this.updatePrioritiesInRepo(rfiRepository);
     return pendingOpenAndLastThreeClosedRfis();
   }
@@ -61,9 +61,9 @@ public class RfiService {
     return !rfi.getStatus().equals("CLOSED") || lastThreeClosed.contains(rfi);
   }
 
-  private void updateRepoFromGETS(String[] uris) throws Exception {
+  private void updateRepoFromGets(String[] uris) throws Exception {
     for (String uri : uris) {
-      createOrUpdate(
+      updateAndSaveRfis(
         marshallDocumentToRfis(
           getsClient.rfiResponseDocument(uri)
         )
@@ -71,31 +71,40 @@ public class RfiService {
     }
   }
 
-  void createOrUpdate(List<Rfi> rfis) {
+  void updateAndSaveRfis(List<Rfi> newRfis) {
     Date currDate = new Date();
-    for (Rfi rfi : rfis) {
-      linkToExisting(rfi, currDate);
-      rfiRepository.save(rfi);
+    for (Rfi newRfi : newRfis) {
+      createOrUpdateRfi(newRfi, currDate);
+      rfiRepository.save(newRfi);
     }
   }
 
-  private void linkToExisting(Rfi rfi, Date currDate) {
-    Rfi savedRfi = rfiRepository.findByRfiId(rfi.getRfiId());
-    if (exists(savedRfi)) {
-      rfi.setPriority(savedRfi.getPriority());
-      rfi.setId(savedRfi.getId());
-
-      //send update metric (check for other changes)
-      if (hasChanged(rfi, savedRfi))
-        metricController.addRfiUpdate(new RfiUpdate(rfi.getRfiId(), currDate));
+  private void createOrUpdateRfi(Rfi newRfi, Date currDate) {
+    Rfi oldRfi = rfiRepository.findByRfiId(newRfi.getRfiId());
+    if (existsInRepo(oldRfi)) {
+      linkNewRfiToOldRfi(newRfi, oldRfi);
+      if (hasChanged(newRfi, oldRfi)) {
+        postUpdateMetrics(newRfi, currDate, oldRfi);
+      }
     }
   }
 
-  private boolean hasChanged(Rfi rfi, Rfi savedRfi) {
-    return !rfi.equals(savedRfi);
+  private void postUpdateMetrics(Rfi newRfi, Date currDate, Rfi oldRfi) {
+    for (String field : oldRfi.compare(newRfi)) {
+      metricController.addRfiUpdate(new RfiUpdate(currDate, newRfi, oldRfi, field));
+    }
   }
 
-  private boolean exists(Rfi rfi) {
+  private void linkNewRfiToOldRfi(Rfi newRfi, Rfi oldRfi) {
+    newRfi.setPriority(oldRfi.getPriority());
+    newRfi.setId(oldRfi.getId());
+  }
+
+  private boolean hasChanged(Rfi newRfi, Rfi oldRfi) {
+    return !newRfi.equals(oldRfi);
+  }
+
+  private boolean existsInRepo(Rfi rfi) {
     return rfi != null;
   }
 

@@ -4,10 +4,13 @@ import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.getsclick.GETSClicksRepository;
 import dgs1sdt.pie.metrics.getsclick.GetsClick;
 import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
+import dgs1sdt.pie.metrics.refreshclick.RefreshClickRepository;
 import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChange;
 import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChangeRepository;
 import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
 import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
+import dgs1sdt.pie.metrics.sitevisit.SiteVisit;
+import dgs1sdt.pie.metrics.sitevisit.SiteVisitRepository;
 import dgs1sdt.pie.metrics.sortclick.SortClickJson;
 import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
 import org.junit.Test;
@@ -40,6 +43,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private RfiUpdateRepository rfiUpdateRepository;
 
+  @Autowired
+  private RefreshClickRepository refreshClickRepository;
+
   @Test
   public void postCreatesNewSiteVisit() {
     long siteVisitCount = siteVisitRepository.count();
@@ -68,7 +74,20 @@ public class MetricControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void getReturnsGETSClickCount() {
+  public void postCreatesNewRefreshClick() {
+    long refreshClickCount = refreshClickRepository.count();
+    given()
+      .port(port)
+      .when()
+      .post(MetricController.URI + "/refresh-click")
+      .then()
+      .statusCode(200);
+
+    assertEquals(refreshClickCount + 1, refreshClickRepository.count());
+  }
+
+  @Test
+  public void getReturnsGetsClickCount() {
     getsClicksRepository.save(new GetsClick(new Date(), "OPEN", "www.google.com"));
     getsClicksRepository.save(new GetsClick(new Date(), "OPEN", "www.google.com"));
     given()
@@ -81,7 +100,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void postCreatesNewGETSClick() throws Exception {
+  public void postCreatesNewGetsClick() throws Exception {
 
     GetsClickJSON getsClickJSON = new GetsClickJSON(new Date(), "OPEN", "www.google.com");
 
@@ -138,8 +157,8 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Test
   public void createsNewRfiUpdateMetric() {
-    RfiUpdate rfiUpdate1 = new RfiUpdate("20-005", new Date());
-    RfiUpdate rfiUpdate2 = new RfiUpdate("20-005", new Date());
+    RfiUpdate rfiUpdate1 = new RfiUpdate("20-005", new Date(), "field", "old", "new");
+    RfiUpdate rfiUpdate2 = new RfiUpdate("20-005", new Date(), "field", "old", "new");
 
     long rfiUpdateCount = rfiUpdateRepository.count();
 

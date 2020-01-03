@@ -17,7 +17,7 @@ public class RfiDeserializerTest {
   public void extractsRfiFromXml() throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder db = dbf.newDocumentBuilder();
-    Document document = db.parse(new File("src/test/java/dgs1sdt/pie/rfis/rfis.xml"));
+    Document document = db.parse(new File("src/main/resources/rfis.xml"));
     NodeList nodeList = document.getElementsByTagName("getsrfi:RequestForInformation");
     Node rfiNode = nodeList.item(0);
 
