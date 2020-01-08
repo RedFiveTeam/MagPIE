@@ -4,7 +4,7 @@ import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.getsclick.GETSClicksRepository;
 import dgs1sdt.pie.metrics.getsclick.GetsClick;
 import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
-import dgs1sdt.pie.metrics.refreshclick.RefreshClickRepository;
+import dgs1sdt.pie.metrics.refreshclicks.RefreshClicksRepository;
 import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChange;
 import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChangeRepository;
 import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
@@ -44,7 +44,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
   private RfiUpdateRepository rfiUpdateRepository;
 
   @Autowired
-  private RefreshClickRepository refreshClickRepository;
+  private RefreshClicksRepository refreshClicksRepository;
 
   @Test
   public void postCreatesNewSiteVisit() {
@@ -75,7 +75,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Test
   public void postCreatesNewRefreshClick() {
-    long refreshClickCount = refreshClickRepository.count();
+    long refreshClickCount = refreshClicksRepository.count();
     given()
       .port(port)
       .when()
@@ -83,7 +83,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .then()
       .statusCode(200);
 
-    assertEquals(refreshClickCount + 1, refreshClickRepository.count());
+    assertEquals(refreshClickCount + 1, refreshClicksRepository.count());
   }
 
   @Test

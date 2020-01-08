@@ -3,8 +3,8 @@ package dgs1sdt.pie.metrics;
 import dgs1sdt.pie.metrics.getsclick.GETSClicksRepository;
 import dgs1sdt.pie.metrics.getsclick.GetsClick;
 import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
-import dgs1sdt.pie.metrics.refreshclick.RefreshClick;
-import dgs1sdt.pie.metrics.refreshclick.RefreshClickRepository;
+import dgs1sdt.pie.metrics.refreshclicks.RefreshClicksRepository;
+import dgs1sdt.pie.metrics.refreshclicks.RefreshClicks;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetch;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetchJson;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetchRepository;
@@ -34,7 +34,7 @@ public class MetricController {
   private RfiFetchRepository rfiFetchRepository;
   private RfiPriorityChangeRepository rfiPriorityChangeRepository;
   private RfiUpdateRepository rfiUpdateRepository;
-  private RefreshClickRepository refreshClickRepository;
+  private RefreshClicksRepository refreshClicksRepository;
 
   public MetricController(GETSClicksRepository getsClicksRepository,
                           SiteVisitRepository siteVisitRepository,
@@ -42,7 +42,7 @@ public class MetricController {
                           RfiFetchRepository rfiFetchRepository,
                           RfiPriorityChangeRepository rfiPriorityChangeRepository,
                           RfiUpdateRepository rfiUpdateRepository,
-                          RefreshClickRepository refreshClickRepository
+                          RefreshClicksRepository refreshClicksRepository
   ) {
     this.getsClicksRepository = getsClicksRepository;
     this.siteVisitRepository = siteVisitRepository;
@@ -50,7 +50,7 @@ public class MetricController {
     this.rfiFetchRepository = rfiFetchRepository;
     this.rfiPriorityChangeRepository = rfiPriorityChangeRepository;
     this.rfiUpdateRepository = rfiUpdateRepository;
-    this.refreshClickRepository = refreshClickRepository;
+    this.refreshClicksRepository = refreshClicksRepository;
   }
 
   @GetMapping(path = "/site-visits")
@@ -66,13 +66,13 @@ public class MetricController {
 
   @GetMapping(path = "/refresh-clicks")
   public long getRefreshClickCount() {
-    return refreshClickRepository.count();
+    return refreshClicksRepository.count();
   }
 
   @PostMapping(path = "/refresh-click")
   public void logRefreshClick() {
-    RefreshClick refreshClick = new RefreshClick(new Date());
-    this.refreshClickRepository.save(refreshClick);
+    RefreshClicks refreshClicks = new RefreshClicks(new Date());
+    this.refreshClicksRepository.save(refreshClicks);
   }
 
   @GetMapping(path = "/gets-clicks")

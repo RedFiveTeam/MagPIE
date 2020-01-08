@@ -1,4 +1,4 @@
-package dgs1sdt.pie.metrics.refreshclick;
+package dgs1sdt.pie.metrics.refreshclicks;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,13 +14,13 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Data
-public class RefreshClick {
+public class RefreshClicks {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
   private Date datetime;
 
-  public RefreshClick(Date datetime) {
+  public RefreshClicks(Date datetime) {
     this.datetime = datetime;
   }
 }

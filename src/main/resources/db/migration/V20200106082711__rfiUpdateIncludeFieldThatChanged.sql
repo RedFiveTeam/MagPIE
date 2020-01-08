@@ -5,4 +5,4 @@ ALTER TABLE rfi_update
     ADD old_data TEXT;
 
 ALTER TABLE rfi_update
-    ADD new_date TEXT;
+    ADD new_data TEXT;
