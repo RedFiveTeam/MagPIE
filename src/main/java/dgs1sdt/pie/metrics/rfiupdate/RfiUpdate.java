@@ -45,7 +45,49 @@ public class RfiUpdate {
     this.rfiId = newRfi.getRfiId();
     this.datetime = datetime;
     this.field = field;
-    this.oldData = oldRfi.getDescription();
-    this.newData = newRfi.getDescription();
+    switch (field) {
+      case "description":
+        this.oldData = oldRfi.getDescription();
+        this.newData = newRfi.getDescription();
+        break;
+
+      case "country":
+        this.oldData = oldRfi.getCountry();
+        this.newData = newRfi.getCountry();
+        break;
+
+      case "ltiov": // this is the only field that could be null to string
+        if (oldRfi.getLtiov() == null) {
+          this.oldData = "not set";
+        } else {
+          this.oldData = oldRfi.getLtiov().toString();
+        }
+
+        if (newRfi.getLtiov() == null) {
+          this.newData = "not set";
+        } else {
+          this.newData = newRfi.getLtiov().toString();
+        }
+
+        break;
+
+      case "customer":
+        this.oldData = oldRfi.getCustomer();
+        this.newData = newRfi.getCustomer();
+        break;
+
+      case "status":
+        this.oldData = oldRfi.getStatus();
+        this.newData = newRfi.getStatus();
+        break;
+
+      case "getsUrl":
+        this.oldData = oldRfi.getGetsUrl();
+        this.newData = newRfi.getGetsUrl();
+        break;
+
+      default:
+        break;
+    }
   }
 }

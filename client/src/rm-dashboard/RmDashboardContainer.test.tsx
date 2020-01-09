@@ -7,13 +7,7 @@ describe('RMDashboardContainer', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
-    subject = shallow(
-        <RmDashboardContainer
-        fetchRfis={()=>{}}
-        postSiteVisit={()=>{}}
-        loading={false}
-        />
-    );
+    subject = shallow(<RmDashboardContainer fetchRfis={()=>{}} postSiteVisit={()=>{}} loading={false}/>);
   });
 
   it('should display loading screen while app is loading', () => {
@@ -21,9 +15,7 @@ describe('RMDashboardContainer', () => {
   });
 
   it('should display the rm dashboard upon loading of app', () => {
-    subject = shallow(
-      <RmDashboardContainer fetchRfis={()=>{}} postSiteVisit={()=>{}} loading={true}/>
-    );
+    subject = shallow(<RmDashboardContainer fetchRfis={()=>{}} postSiteVisit={()=>{}} loading={true}/>);
     setTimeout(() => {
       expect(subject.find('.rm-dashboard').exists()).toBeTruthy();
     }, 1000);

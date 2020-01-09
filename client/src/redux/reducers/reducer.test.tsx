@@ -56,7 +56,7 @@ describe('reducer', () => {
       reducer(undefined, mockAction)
     ).toEqual({
       rfis: [],
-      sortKey: new SortKeyModel(Field.PRIORITY, false),
+      sortKey: new SortKeyModel(Field.PRIORITY, true),
       pendingRfis: [],
       openRfis: [],
       closedRfis: [],

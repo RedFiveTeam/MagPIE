@@ -7,7 +7,7 @@ import SortClickRequestModel from '../../metrics/Model/SortClickRequestModel';
 
 const initState = {
   rfis: [] as RfiModel[],
-  sortKey: new SortKeyModel(Field.PRIORITY, false),
+  sortKey: new SortKeyModel(Field.PRIORITY, true),
   pendingRfis: [] as RfiModel[],
   openRfis: [] as RfiModel[],
   closedRfis: [] as RfiModel[],
@@ -41,7 +41,7 @@ const reducer = (state = initState, action: any) => {
     case ActionTypes.FETCH_RFI_PENDING:
       return {...state, loading: true};
     case ActionTypes.FETCH_RFI_SUCCESS:
-      sortedRfis = RfiSorter.sortByPriority(action.body, state.sortKey);
+      sortedRfis = RfiSorter.sortByPriority(action.body, new SortKeyModel(Field.PRIORITY, false));
       return {
         ...state,
         ...filterRfis(sortedRfis),

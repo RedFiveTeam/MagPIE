@@ -17,11 +17,21 @@ public class RfiDeserializer {
       getUrl(element),
       getStatus(element),
       getLastUpdate(element),
-      getTextFromElement(element, "gets:unit"),
+      getStringFromElement(element, "gets:unit"),
       getLtiov(element),
-      getTextFromElement(element, "gets:iso1366trigraph"),
-      getTextFromElement(element, "getsrfi:requestText")
+      getStringFromElement(element, "gets:iso1366trigraph"),
+      getStringFromElement(element, "getsrfi:requestText")
     );
+  }
+
+  private static String getRfiID(Node node) {
+    return node.getAttributes().getNamedItem("id").getNodeValue();
+  }
+
+  private static String getUrl(Element element) {
+    String rawUrl = getStringFromElement(element, "gets:url");
+
+    return rawUrl.replace(".smil.mil", ".smil.mil/internal");
   }
 
   private static String getStatus(Element element) {
@@ -30,51 +40,39 @@ public class RfiDeserializer {
     for (int i = 0; i < responses.getLength(); i++) {
       Node node = responses.item(i);
       Element curr = (Element) node;
-      if (curr.getTextContent().contains("DGS-1")) {
+      if (curr.getElementsByTagName("gets:producerOrganizationID").item(0).getTextContent().contains("DGS-1")) {
         return curr.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent();
       }
     }
-
-    System.out.println("could not find status for DGS-1 RFI!<---------------------------");
     return element.getElementsByTagName("getsrfi:responseStatus").item(0).getTextContent();
-  }
-
-  private static String getTextFromElement(Element element, String s) {
-    if (element.getElementsByTagName(s) != null) {
-      return element.getElementsByTagName(s).item(0).getTextContent();
-    }
-    return "N/A";
-  }
-
-  private static String getRfiID(Node node) {
-    return node.getAttributes().getNamedItem("id").getNodeValue();
-  }
-
-  private static String getUrl(Element element) {
-    String rawUrl = getTextFromElement(element, "gets:url");
-
-    return rawUrl.replace(".smil.mil", ".smil.mil/internal");
-  }
-
-  private static Timestamp getLtiov(Element element) {
-    Timestamp ltiov;
-    try {
-      Date date = Utils.parseDate(getTextFromElement(element, "gets:ltiov"));
-      ltiov = new Timestamp(date.getTime());
-    } catch (Exception e) {
-      ltiov = null; //new Timestamp(0);
-    }
-    return ltiov;
   }
 
   private static Timestamp getLastUpdate(Element element) throws Exception {
     Date lastUpdate;
     try {
-      lastUpdate = Utils.parseDate(getTextFromElement(element, "gets:lastUpdate"));
+      lastUpdate = Utils.parseDate(getStringFromElement(element, "gets:lastUpdate"));
     } catch (Exception e) {
-      lastUpdate = Utils.parseDate(getTextFromElement(element, "getsrfi:receiveDate"));
+      lastUpdate = Utils.parseDate(getStringFromElement(element, "getsrfi:receiveDate"));
     }
     return new Timestamp(lastUpdate.getTime());
+  }
+
+  private static Timestamp getLtiov(Element element) {
+    Timestamp ltiov;
+    try {
+      Date date = Utils.parseDate(getStringFromElement(element, "gets:ltiov"));
+      ltiov = new Timestamp(date.getTime());
+    } catch (Exception e) {
+      ltiov = null;
+    }
+    return ltiov;
+  }
+
+  private static String getStringFromElement(Element element, String string) {
+    if (element.getElementsByTagName(string) != null) {
+      return element.getElementsByTagName(string).item(0).getTextContent();
+    }
+    return "N/A";
   }
 
 }

@@ -25,7 +25,7 @@ const displayScreen = (loading: boolean, className: string | undefined): any => 
   );
 };
 
-export class RmDashboardContainer extends React.Component<Props> {
+export class RmDashboardContainer extends React.Component<Props, any> {
   componentDidMount(): void {
     this.props.postSiteVisit();
     this.props.fetchRfis();

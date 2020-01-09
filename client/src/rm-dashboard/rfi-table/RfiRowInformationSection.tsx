@@ -85,7 +85,7 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
           <div>{props.rfi.customer}</div>
       </span>
       <span className={classNames('cell', 'cell--ltiov')}>
-            {props.rfi.ltiov !== undefined ? props.rfi.ltiov.utc().format("D MMM YY").toUpperCase() : '-'}
+            {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format("D MMM YY").toUpperCase()}
           </span>
       <div className={'description-container'}>
       <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}
