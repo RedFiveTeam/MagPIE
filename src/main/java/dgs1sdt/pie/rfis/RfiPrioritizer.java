@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RfiPrioritizer {
-  public synchronized static List<Rfi> prioritize(List<Rfi> rfis) {
+  public static List<Rfi> prioritize(List<Rfi> rfis) {
     int nextPriority = lowestExistingPriority(rfis);
     for (Rfi rfi : unprioritizedOpenRfis(rfis)) {
       rfi.setPriority(++nextPriority);
