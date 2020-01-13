@@ -1,6 +1,17 @@
 import RfiModel, { RfiStatus } from './RfiModel';
-import moment from 'moment';
+// @ts-ignore
 import { reorderRfis } from './RfiActions';
+// @ts-ignore
+import fetch from 'jest-fetch-mock';
+import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
+import { Field, SortKeyModel } from './SortKeyModel';
+import { RfiSorter } from './RfiSorter';
+// @ts-ignore
+import moment from 'moment'
+
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe('RfiActions', () => {
   it('should re-prioritize RFIs based on a drag and drop priority change', () => {
@@ -12,20 +23,35 @@ describe('RfiActions', () => {
 
     let rfiList = [rfi1, rfi2, rfi3, rfi4, rfi5];
 
-    let reprioritizedList = reorderRfis(rfiList, '19-004', 2).reprioritizedList;
+    let reprioritizedList;
 
+    const store = mockStore({openRfis: rfiList});
+
+    //Mock response from backend as successful reprioritization
+    fetch.mockResponse(JSON.stringify({PromiseValue: true}));
+
+    // @ts-ignore
+    store.dispatch(reorderRfis(rfiList, '19-004', 2));
+    // @ts-ignore
+    reprioritizedList = RfiSorter.sortByPriority(store.getState().openRfis, new SortKeyModel(Field.ID, false));
     expect(reprioritizedList).toEqual([rfi1, rfi3, rfi2, rfi4, rfi5]);
 
-    reprioritizedList = reorderRfis(reprioritizedList, '19-007', 2).reprioritizedList;
-
+    // @ts-ignore
+    store.dispatch(reorderRfis(reprioritizedList, '19-007', 2));
+    // @ts-ignore
+    reprioritizedList = RfiSorter.sortByPriority(store.getState().openRfis, new SortKeyModel(Field.ID, false));
     expect(reprioritizedList).toEqual([rfi1, rfi3, rfi4, rfi2, rfi5]);
 
-    reprioritizedList = reorderRfis(reprioritizedList, '19-009', 2).reprioritizedList;
-
+    // @ts-ignore
+    store.dispatch(reorderRfis(reprioritizedList, '19-009', 2));
+    // @ts-ignore
+    reprioritizedList = RfiSorter.sortByPriority(store.getState().openRfis, new SortKeyModel(Field.ID, false));
     expect(reprioritizedList).toEqual([rfi1, rfi3, rfi5, rfi4, rfi2]);
 
-    reprioritizedList = reorderRfis(reprioritizedList, '19-001', 2).reprioritizedList;
-
+    // @ts-ignore
+    store.dispatch(reorderRfis(reprioritizedList, '19-001', 2));
+    // @ts-ignore
+    reprioritizedList = RfiSorter.sortByPriority(store.getState().openRfis, new SortKeyModel(Field.ID, false));
     expect(reprioritizedList).toEqual([rfi3, rfi5, rfi1, rfi4, rfi2]);
 
   });

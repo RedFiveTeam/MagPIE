@@ -4,6 +4,7 @@ package dgs1sdt.pie.rfis;
 import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.MetricController;
 import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
@@ -27,6 +28,11 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
   @Autowired
   RfiService rfiService;
+
+  @Before
+  public void clean() {
+    rfiRepository.deleteAll();
+  }
 
   @Test
   public void marshallsXmlDocIntoRfis() throws Exception {

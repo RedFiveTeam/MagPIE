@@ -112,7 +112,7 @@ const reducer = (state = initState, action: any) => {
       return {
         ...state,
         rfis: newRfis,
-        openRfis:action.reprioritizedList,
+        openRfis: action.reprioritizedList,
       };
     default:
       return state;

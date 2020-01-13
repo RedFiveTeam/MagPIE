@@ -59,8 +59,21 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
   //resort by new priority
   RfiSorter.sortByPriority(reprioritizedList, new SortKeyModel(Field.PRIORITY, false));
 
-  postRfiPriorityUpdate(postRfis);
+  //Try to post updates; if they are invalid, reload page instead
+  return (dispatch: any) => {
+    postRfiPriorityUpdate(postRfis)
+      .then(response => response.json())
+      .then(success => {
+        if (success)
+          dispatch(reprioritizeRfis(reprioritizedList));
+        else
+          dispatch(fetchRfis());
+      });
+  };
 
+};
+
+const reprioritizeRfis = (reprioritizedList: RfiModel[]) => {
   return {
     type: ActionTypes.REPRIORITIZE_RFIS,
     reprioritizedList: reprioritizedList

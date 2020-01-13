@@ -64,8 +64,6 @@ export const RfiTable: React.FC<Props> = props => {
   let scrollRegionRef = React.createRef();
 
   function reorder(dropResult: DropResult) {
-    console.log(dropResult.destination);
-    console.log(props.sortKey);
     if (dropResult.destination && dropResult.destination.droppableId === "region--droppable--open"
      && props.sortKey.field === Field.PRIORITY && props.sortKey.defaultOrder)
       props.reorderRfis(props.openRfis, dropResult.draggableId, dropResult.destination!.index);

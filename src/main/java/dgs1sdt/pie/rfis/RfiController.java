@@ -17,13 +17,14 @@ import java.util.List;
 public class RfiController {
   public static final String URI = "/api/rfis";
 
-  private RfiRepository rfiRepository;
-
   @Value("${GETS_URI_OPEN_PENDING}")
   private String getsUriOpenPending;
 
   @Value("${GETS_URI_CLOSED}")
   private String getsUriClosed;
+
+  @Autowired
+  private RfiRepository rfiRepository;
 
   @Autowired
   private RfiService rfiService;
@@ -42,10 +43,14 @@ public class RfiController {
     return this.rfiService.fetchRfis(uris);
   }
 
+  //Return value: whether the passed priority change results in a valid priority list
   @PostMapping(path = "/update-priority")
-  public List<Rfi> create (@Valid @RequestBody RfiJson[] rfiJsons) {
+  public boolean updatePriority (@Valid @RequestBody RfiJson[] rfiJsons) {
     List<Rfi> rfis = new ArrayList<>();
     List<RfiPriorityChange> metrics = new ArrayList<>();
+
+    List<Rfi> repoRfis = rfiRepository.findAll();
+    repoRfis.removeIf(rfi -> rfi.getPriority() < 1);
 
     for (RfiJson rfiJson : rfiJsons) {
       Rfi rfiToUpdate = rfiRepository.findByRfiId(rfiJson.getRfiId());
@@ -58,12 +63,40 @@ public class RfiController {
         rfis.add(rfiToUpdate);
 
       } else {
-        System.err.println("Updating priority on previously unknown RFI!");
+        System.err.println("Updating priority on previously unknown RFI " + rfiJson.getRfiId());
       }
     }
 
-    metricController.addRfiPriorityChanges(metrics);
+    //Update priorities in repo list from frontend priorities
+    for (Rfi rfi : rfis) {
+      for (Rfi repoRfi : repoRfis) {
+        if (repoRfi.getRfiId().equals(rfi.getRfiId())) {
+          repoRfi.setPriority(rfi.getPriority());
+          break;
+        }
+      }
+    }
 
-    return this.rfiRepository.saveAll(rfis);
+    //Check to make sure each priority 1 through n is used
+    int length = repoRfis.size();
+    boolean [] priorityExists = new boolean[length];
+
+    for (int i = 0; i < length; i++) //initialize
+      priorityExists[i] = false;
+
+    for (Rfi rfi : repoRfis) { // mark used
+      priorityExists[rfi.getPriority() - 1] = true;
+    }
+
+    for (int i = 0; i < length; i++) //Check all priorities
+      if (!priorityExists[i]) //A priority is missing, so tell front end that reprioritization failed
+        return false;
+
+    //Add metrics and save pri updates
+    metricController.addRfiPriorityChanges(metrics);
+    rfiRepository.saveAll(repoRfis);
+
+    //Tell front end that repriotitization was successful
+    return true;
   }
 }

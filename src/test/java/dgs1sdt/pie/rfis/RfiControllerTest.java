@@ -1,12 +1,19 @@
 package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.BaseIntegrationTest;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @TestPropertySource(
   properties = {
@@ -14,6 +21,17 @@ import static org.hamcrest.Matchers.greaterThan;
     "GETS_URI_CLOSED=RfisClosed.xml",
   })
 public class RfiControllerTest extends BaseIntegrationTest {
+
+  @Autowired
+  RfiController rfiController;
+
+  @Autowired
+  RfiRepository rfiRepository;
+
+  @Before
+  public void clean() {
+    rfiRepository.deleteAll();
+  }
 
   @Test
   public void getRfisDirectlyFromGETS() {
@@ -54,6 +72,61 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[15].priority", equalTo(-1))
 
       .body("[16].rfiId", equalTo(null));
+  }
+
+  @Test
+  public void checksPriorityChangeLegality() {
+    Rfi rfi1 = new Rfi();
+    Rfi rfi2 = new Rfi();
+    Rfi rfi3 = new Rfi();
+    Rfi rfi4 = new Rfi();
+    Rfi rfi5 = new Rfi();
+    rfi1.setRfiId("id1");
+    rfi2.setRfiId("id2");
+    rfi3.setRfiId("id3");
+    rfi4.setRfiId("id4");
+    rfi5.setRfiId("id5");
+    rfi1.setPriority(2);
+    rfi2.setPriority(3);
+    rfi3.setPriority(1);
+    rfi4.setPriority(4);
+    rfi5.setPriority(5);
+
+    List<Rfi> rfis = new ArrayList<>();
+    rfis.add(rfi1);
+    rfis.add(rfi2);
+    rfis.add(rfi3);
+    rfis.add(rfi4);
+    rfis.add(rfi5);
+
+
+    rfiRepository.saveAll(rfis);
+
+
+
+    RfiJson [] rfiJsons = {
+      new RfiJson("id1", 1),
+      new RfiJson("id2", 2),
+      new RfiJson("id3", 3)
+    };
+
+    assertTrue(rfiController.updatePriority(rfiJsons));
+
+    rfiJsons = new RfiJson[]{
+      new RfiJson("id2", 1),
+      new RfiJson("id3", 2)
+    };
+
+    assertFalse(rfiController.updatePriority(rfiJsons));
+
+    rfiJsons = new RfiJson[]{
+      new RfiJson("id4", 2),
+      new RfiJson("id1", 3),
+      new RfiJson("id2", 4)
+    };
+
+    assertFalse(rfiController.updatePriority(rfiJsons));
+
   }
 
 
