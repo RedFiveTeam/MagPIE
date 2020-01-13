@@ -107,6 +107,7 @@ const reducer = (state = initState, action: any) => {
       };
     case ActionTypes.REPRIORITIZE_RFIS:
       let newRfis: RfiModel[] = [].concat(action.reprioritizedList);
+      console.log(action.reprioritizedList);
       newRfis = newRfis.concat(state.pendingRfis);
       newRfis = newRfis.concat(state.closedRfis);
       return {

@@ -25,8 +25,8 @@ export const LoadingScreen: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = () => {
-};
+const mapStateToProps = () => ({
+});
 
 const mapDispatchToProps = {};
 

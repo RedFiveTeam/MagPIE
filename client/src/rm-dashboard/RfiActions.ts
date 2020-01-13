@@ -59,14 +59,14 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
   //resort by new priority
   RfiSorter.sortByPriority(reprioritizedList, new SortKeyModel(Field.PRIORITY, false));
 
+
   //Try to post updates; if they are invalid, reload page instead
   return (dispatch: any) => {
+    dispatch(reprioritizeRfis(reprioritizedList));
     postRfiPriorityUpdate(postRfis)
       .then(response => response.json())
       .then(success => {
-        if (success)
-          dispatch(reprioritizeRfis(reprioritizedList));
-        else
+        if (!success)
           dispatch(fetchRfis());
       });
   };
