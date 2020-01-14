@@ -1,0 +1,4 @@
+export enum CoiActionTypes {
+  NAVIGATE_TO_COI_PAGE = 'NAVIGATE_TO_COI_PAGE',
+  EXIT_COI_PAGE = 'EXIT_COI_PAGE'
+}

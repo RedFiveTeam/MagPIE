@@ -77,7 +77,7 @@
       "!**/{App,index}.tsx",
       "!**/*Model.ts",
       "!**/{serviceWorker,setupEnzyme}.ts",
-      "!**/{resources,styles,users,utils}/**"
+      "!**/resources/**"
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"

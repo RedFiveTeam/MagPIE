@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { fetchGetsClicksMetrics, fetchSiteVisitMetrics, fetchSiteVisitsGraphWeek } from './MetricsActions';
+import { fetchGetsClicksMetrics, fetchSiteVisitMetrics, fetchSiteVisitsGraphWeek } from '../state/actions';
 import { Bar, defaults } from 'react-chartjs-2';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
   className?: string;
 }
 
-export class MetricsContainer extends React.Component<Props> {
+export class MetricsContainer extends React.Component<Props, any> {
   componentDidMount(): void {
     this.props.fetchSiteVisitMetrics();
     this.props.fetchGetsClicksMetrics();
@@ -26,7 +26,7 @@ export class MetricsContainer extends React.Component<Props> {
     defaults.global.defaultFontFamily = "Roboto";
     defaults.global.defaultFontColor = "#FEFEFE";
     defaults.global.defaultFontSize = 14;
-    const data = {
+    return {
       labels: ['6 Days Ago', '5 Days Ago', '4 Days Ago', '3 Days Ago', '2 Days Ago', 'Yesterday', 'Today'],
       datasets: [
         {
@@ -40,7 +40,6 @@ export class MetricsContainer extends React.Component<Props> {
         }
       ]
     };
-    return data;
   }
 
   render() {
@@ -61,7 +60,6 @@ export class MetricsContainer extends React.Component<Props> {
           />
         </div>
       </div>
-
     )
   }
 }
@@ -78,7 +76,8 @@ const mapDispatchToProps = {
   fetchSiteVisitsGraphWeek: fetchSiteVisitsGraphWeek
 };
 
-export default styled(connect(mapStateToProps, mapDispatchToProps)(MetricsContainer))`
+export const StyledMetricsContainer = styled(
+  connect(mapStateToProps, mapDispatchToProps)(MetricsContainer))`
   display: flex;
   color: white;
   width: 100%;
@@ -110,5 +109,4 @@ export default styled(connect(mapStateToProps, mapDispatchToProps)(MetricsContai
     width: 1000px;
     height: 500px;
   }
-  
 `;

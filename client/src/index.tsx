@@ -9,8 +9,8 @@ import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import App from './App';
 import { ThemeProvider } from 'styled-components';
-import theme from './styles/theme';
-import reducer from './redux/reducers/reducer';
+import theme from './resources/theme';
+import reducer from './state/reducers/reducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 export const store = createStore(
