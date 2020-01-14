@@ -134,10 +134,10 @@ export const RfiTable: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: any) => ({
-  pendingRfis: state.pendingRfis,
-  openRfis: state.openRfis,
-  closedRfis: state.closedRfis,
-  sortKey: state.sortKey
+  pendingRfis: state.rfiReducer.pendingRfis,
+  openRfis: state.rfiReducer.openRfis,
+  closedRfis: state.rfiReducer.closedRfis,
+  sortKey: state.rfiReducer.sortKey
 });
 
 const mapDispatchToProps = {

@@ -7,7 +7,7 @@ const fetchSiteVisitsSuccess = (body: any) => {
   }
 };
 
-const fetchGETSClicksSuccess = (body: any) => {
+const fetchGetsClicksSuccess = (body: any) => {
   return {
     type: ActionTypes.FETCH_GETS_CLICKS_SUCCESS,
     body
@@ -21,6 +21,13 @@ const fetchRefreshClicksSuccess = (body: any) => {
   }
 };
 
+const fetchSiteVisitsGraphWeekSuccess = (body: any) => {
+  return {
+    type: ActionTypes.FETCH_SITE_VISITS_GRAPH_WEEK_SUCCESS,
+    body
+  }
+};
+
 
 export const fetchSiteVisitMetrics = () => {
   return (dispatch: any) => {
@@ -30,11 +37,19 @@ export const fetchSiteVisitMetrics = () => {
   }
 };
 
-export const fetchGETSClicksMetrics = () => {
+export const fetchGetsClicksMetrics = () => {
   return (dispatch: any) => {
     return fetch('/api/metrics/gets-clicks')
       .then(response => response.text())
-      .then(body => dispatch(fetchGETSClicksSuccess(body)));
+      .then(body => dispatch(fetchGetsClicksSuccess(body)));
+  }
+};
+
+export const fetchSiteVisitsGraphWeek = () => {
+  return (dispatch: any) => {
+    return fetch('/api/metrics/site-visits-week')
+      .then(response => response.json())
+      .then(body => dispatch(fetchSiteVisitsGraphWeekSuccess(body)));
   }
 };
 
@@ -44,4 +59,4 @@ export const fetchRefreshClicksMetrics = () => {
       .then(response => response.text())
       .then(body => dispatch(fetchRefreshClicksSuccess(body)));
   }
-}
+};

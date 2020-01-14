@@ -106,7 +106,7 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: any) => ({
-  prioritizing: state.sortKey.field === Field.PRIORITY && state.sortKey.defaultOrder,
+  prioritizing: state.rfiReducer.sortKey.field === Field.PRIORITY && state.rfiReducer.sortKey.defaultOrder,
 });
 
 export const StyledRfiRowInformationSection = styled(connect(mapStateToProps)(RfiRowInformationSection))`

@@ -53,7 +53,7 @@ describe('reducer', () => {
     };
 
     expect(
-      reducer(undefined, mockAction)
+      reducer(undefined, mockAction).rfiReducer
     ).toEqual({
       rfis: [],
       sortKey: new SortKeyModel(Field.PRIORITY, true),
@@ -77,7 +77,7 @@ describe('reducer', () => {
     ];
 
     expect(
-      reducer(undefined, mockAction)
+      reducer(undefined, mockAction).rfiReducer
     ).toEqual({
       rfis: sortedRfis,
       sortKey: new SortKeyModel(Field.PRIORITY, true),
@@ -98,15 +98,15 @@ describe('reducer', () => {
 
     state = reducer(state, sortAction);
 
-    expect(state.rfis).toEqual(sortedById);
-    expect(state.pendingRfis).toEqual([pendingRfi1, pendingRfi2]);
-    expect(state.openRfis).toEqual([openRfi1, openRfi2]);
-    expect(state.closedRfis).toEqual([closedRfi1]);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.ID, true));
+    expect(state.rfiReducer.rfis).toEqual(sortedById);
+    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi1, pendingRfi2]);
+    expect(state.rfiReducer.openRfis).toEqual([openRfi1, openRfi2]);
+    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.ID, true));
 
     state = reducer(state, sortAction);
-    expect(state.rfis).toEqual(reverseById);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.ID, false));
+    expect(state.rfiReducer.rfis).toEqual(reverseById);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.ID, false));
   });
 
   it('should sort by customer and flip the sort key', () => {
@@ -119,15 +119,15 @@ describe('reducer', () => {
 
     state = reducer(state, sortAction);
 
-    expect(state.rfis).toEqual(sortedByCustomer);
-    expect(state.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
-    expect(state.openRfis).toEqual([openRfi1, openRfi2]);
-    expect(state.closedRfis).toEqual([closedRfi1]);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.CUSTOMER, true));
+    expect(state.rfiReducer.rfis).toEqual(sortedByCustomer);
+    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
+    expect(state.rfiReducer.openRfis).toEqual([openRfi1, openRfi2]);
+    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.CUSTOMER, true));
 
     state = reducer(state, sortAction);
-    expect(state.rfis).toEqual(reverseByCustomer);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.CUSTOMER, false));
+    expect(state.rfiReducer.rfis).toEqual(reverseByCustomer);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.CUSTOMER, false));
   });
 
   it('should sort by country and flip the sort key', () => {
@@ -140,15 +140,15 @@ describe('reducer', () => {
 
     state = reducer(state, sortAction);
 
-    expect(state.rfis).toEqual(sortedByCountry);
-    expect(state.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
-    expect(state.openRfis).toEqual([openRfi2, openRfi1]);
-    expect(state.closedRfis).toEqual([closedRfi1]);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.COUNTRY, true));
+    expect(state.rfiReducer.rfis).toEqual(sortedByCountry);
+    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
+    expect(state.rfiReducer.openRfis).toEqual([openRfi2, openRfi1]);
+    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.COUNTRY, true));
 
     state = reducer(state, sortAction);
-    expect(state.rfis).toEqual(reverseByCountry);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.COUNTRY, false));
+    expect(state.rfiReducer.rfis).toEqual(reverseByCountry);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.COUNTRY, false));
   });
 
   it('should sort by ltiov and flip the sort key', () => {
@@ -162,19 +162,19 @@ describe('reducer', () => {
 
     state = reducer(state, sortAction);
 
-    expect(state.rfis).toEqual(sortedByLtiov);
-    expect(state.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
-    expect(state.openRfis).toEqual([openRfi1, openRfi2]);
-    expect(state.closedRfis).toEqual([closedRfi1]);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.LTIOV, true));
+    expect(state.rfiReducer.rfis).toEqual(sortedByLtiov);
+    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
+    expect(state.rfiReducer.openRfis).toEqual([openRfi1, openRfi2]);
+    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.LTIOV, true));
 
     state = reducer(state, sortAction);
 
-    expect(state.rfis).toEqual(reverseByLtiov);
-    expect(state.pendingRfis).toEqual([pendingRfi1, pendingRfi2]);
-    expect(state.openRfis).toEqual([openRfi2, openRfi1]);
-    expect(state.closedRfis).toEqual([closedRfi1]);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.LTIOV, false));
+    expect(state.rfiReducer.rfis).toEqual(reverseByLtiov);
+    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi1, pendingRfi2]);
+    expect(state.rfiReducer.openRfis).toEqual([openRfi2, openRfi1]);
+    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.LTIOV, false));
   });
 
   it('should sort by priority and flip the sort key', () => {
@@ -196,15 +196,15 @@ describe('reducer', () => {
     ];
 
     let state = reducer(undefined, setupRfis);
-    expect(state.rfis).toEqual(sortedRfis);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, true));
+    expect(state.rfiReducer.rfis).toEqual(sortedRfis);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, true));
 
     let sortAction = {type: ActionTypes.SORT_RFIS_BY_PRIORITY};
 
     state = reducer(state, sortAction);
 
-    expect(state.rfis).toEqual(reverseRfis);
-    expect(state.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, false));
+    expect(state.rfiReducer.rfis).toEqual(reverseRfis);
+    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, false));
 
   });
 
@@ -214,7 +214,7 @@ describe('reducer', () => {
       body: multiStatusRfiList
     };
 
-    let pendingRfis = reducer(undefined, fetchRfisAction).pendingRfis;
+    let pendingRfis = reducer(undefined, fetchRfisAction).rfiReducer.pendingRfis;
 
     expect(pendingRfis.length).toBe(2);
     expect(pendingRfis).toContain(pendingRfi1);
@@ -227,7 +227,7 @@ describe('reducer', () => {
       body: multiStatusRfiList
     };
 
-    let openRfis = reducer(undefined, fetchRfisAction).openRfis;
+    let openRfis = reducer(undefined, fetchRfisAction).rfiReducer.openRfis;
 
     expect(openRfis.length).toBe(2);
     expect(openRfis).toContain(openRfi1);
@@ -240,7 +240,7 @@ describe('reducer', () => {
       body: multiStatusRfiList
     };
 
-    let closedRfis = reducer(undefined, fetchRfisAction).closedRfis;
+    let closedRfis = reducer(undefined, fetchRfisAction).rfiReducer.closedRfis;
 
     expect(closedRfis.length).toBe(1);
     expect(closedRfis).toContain(closedRfi1);

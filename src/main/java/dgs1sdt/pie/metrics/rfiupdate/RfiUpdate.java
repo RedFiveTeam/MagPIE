@@ -2,12 +2,14 @@ package dgs1sdt.pie.metrics.rfiupdate;
 
 import dgs1sdt.pie.rfis.Rfi;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class RfiUpdate {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

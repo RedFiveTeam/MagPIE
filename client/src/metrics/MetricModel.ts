@@ -1,18 +1,18 @@
 export default class MetricModel {
   private readonly _siteVisits: string;
-  private readonly _GETSButtonClicks: string;
+  private readonly _GetsButtonClicks: string;
 
   constructor(siteVisits: string, GETSButtonClicks: string) {
     this._siteVisits = siteVisits;
-    this._GETSButtonClicks = GETSButtonClicks;
+    this._GetsButtonClicks = GETSButtonClicks;
   }
 
   get siteVisits(): string {
     return this._siteVisits;
   }
 
-  get GETSClicks(): string {
-    return this._GETSButtonClicks;
+  get GetsClicks(): string {
+    return this._GetsButtonClicks;
   }
 
 }

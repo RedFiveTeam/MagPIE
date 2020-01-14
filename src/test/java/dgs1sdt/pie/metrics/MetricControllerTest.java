@@ -1,7 +1,7 @@
 package dgs1sdt.pie.metrics;
 
 import dgs1sdt.pie.BaseIntegrationTest;
-import dgs1sdt.pie.metrics.getsclick.GETSClicksRepository;
+import dgs1sdt.pie.metrics.getsclick.GetsClicksRepository;
 import dgs1sdt.pie.metrics.getsclick.GetsClick;
 import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
 import dgs1sdt.pie.metrics.refreshclicks.RefreshClicksRepository;
@@ -13,6 +13,7 @@ import dgs1sdt.pie.metrics.sitevisit.SiteVisit;
 import dgs1sdt.pie.metrics.sitevisit.SiteVisitRepository;
 import dgs1sdt.pie.metrics.sortclick.SortClickJson;
 import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,14 +23,14 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricController metricController;
 
   @Autowired
-  private GETSClicksRepository getsClicksRepository;
+  private GetsClicksRepository getsClicksRepository;
 
   @Autowired
   private SiteVisitRepository siteVisitRepository;
@@ -45,6 +46,16 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Autowired
   private RefreshClicksRepository refreshClicksRepository;
+
+  @Before
+  public void setup() {
+    getsClicksRepository.deleteAll();
+    siteVisitRepository.deleteAll();
+    sortClicksRepository.deleteAll();
+    rfiPriorityChangeRepository.deleteAll();
+    rfiUpdateRepository.deleteAll();
+    refreshClicksRepository.deleteAll();
+  }
 
   @Test
   public void postCreatesNewSiteVisit() {
@@ -96,7 +107,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .get(MetricController.URI + "/gets-clicks")
       .then()
       .statusCode(200)
-      .body(equalTo("3"));
+      .body(equalTo("2"));
   }
 
   @Test
@@ -148,11 +159,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
     priChanges.add(rfiPriorityChange1);
     priChanges.add(rfiPriorityChange2);
 
-    long priChangeCount = rfiPriorityChangeRepository.count();
-
     metricController.addRfiPriorityChanges(priChanges);
 
-    assertEquals(priChangeCount + 2, rfiPriorityChangeRepository.count());
+    assertEquals(2, rfiPriorityChangeRepository.count());
   }
 
   @Test
@@ -166,5 +175,37 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricController.addRfiUpdate(rfiUpdate2);
 
     assertEquals(rfiUpdateCount + 2, rfiUpdateRepository.count());
+  }
+
+  @Test
+  public void getsSiteVisitsOverLast7Days() throws Exception{
+    Date sixDaysAgo = new Date(new Date().getTime() - 518400000L);
+    Date fourDaysAgo = new Date(new Date().getTime() - 345600000L);
+    Date oneDayAgo = new Date(new Date().getTime() - 86400000L);
+
+    List<SiteVisit> siteVisits = new ArrayList<>();
+    for (int i = 0; i < 356; i++) {
+      siteVisits.add(new SiteVisit(sixDaysAgo));
+    }
+
+    for (int i = 0; i < 23; i++) {
+      siteVisits.add(new SiteVisit(fourDaysAgo));
+    }
+
+    for (int i = 0; i < 1; i++) {
+      siteVisits.add(new SiteVisit(oneDayAgo));
+    }
+
+    for (int i = 0; i < 65; i++) {
+      siteVisits.add(new SiteVisit(new Date()));
+    }
+
+    siteVisitRepository.saveAll(siteVisits);
+
+    int[] last7DaysActual = metricController.getSiteVisitsLast7Days();
+    int[] last7DaysExpected = {356, 0, 23, 0, 0, 1, 65};
+
+    assertArrayEquals(last7DaysExpected, last7DaysActual);
+
   }
 }

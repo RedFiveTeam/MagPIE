@@ -1,5 +1,4 @@
 import RfiModel, { RfiStatus } from './RfiModel';
-// @ts-ignore
 import { reorderRfis } from './RfiActions';
 // @ts-ignore
 import fetch from 'jest-fetch-mock';

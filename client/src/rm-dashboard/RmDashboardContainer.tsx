@@ -37,7 +37,7 @@ export class RmDashboardContainer extends React.Component<Props, any> {
 }
 
 const mapStateToProps = (state: any) => ({
-  loading: state.loading
+  loading: state.rfiReducer.loading
 });
 
 const mapDispatchToProps = {

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StyledRfiTableHeader } from './RfiTableHeader';
 import { RfiTable } from './RfiTable';
 import { Droppable } from 'react-beautiful-dnd';
+import { Field, SortKeyModel } from '../SortKeyModel';
 
 describe('RFITable', () => {
   let subject: ShallowWrapper;
@@ -14,6 +15,7 @@ describe('RFITable', () => {
         openRfis={[]}
         closedRfis={[]}
         reorderRfis={()=> {}}
+        sortKey={new SortKeyModel(Field.ID, true)}
       />
     );
   });
