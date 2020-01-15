@@ -1,6 +1,6 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RfiTableHeaderCell } from '../../workflow/rfi-page/header/RfiTableHeaderCell';
-import React from 'react';
+import * as React from 'react';
 
 describe('HeaderCell', () => {
   let subject: ShallowWrapper;

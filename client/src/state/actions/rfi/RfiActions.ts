@@ -5,26 +5,10 @@ import { RfiSorter } from '../../utils/RfiSorter';
 import { Field, SortKeyModel } from '../../../workflow/rfi-page/models/SortKeyModel';
 import RfiFetchRequestModel from '../../../metrics/models/RfiFetchRequestModel';
 import RfiPostModel from '../../../workflow/rfi-page/models/RfiPostModel';
-import { postRfiFetchTimeMetric } from '../metrics/LogMetricsActions';
+import { postRfiFetchTimeMetric } from '..';
 
-export const sortByPriority = () => {
-  return {type: ActionTypes.SORT_RFIS_BY_PRIORITY}
-};
-
-export const sortById = () => {
-  return {type: ActionTypes.SORT_RFIS_BY_ID}
-};
-
-export const sortByCountry = () => {
-  return {type: ActionTypes.SORT_RFIS_BY_COUNTRY}
-};
-
-export const sortByCustomer = () => {
-  return {type: ActionTypes.SORT_RFIS_BY_CUSTOMER}
-};
-
-export const sortByLtiov = () => {
-  return {type: ActionTypes.SORT_RFIS_BY_LTIOV}
+export const sortRfis = (field: Field) => {
+  return {type: ActionTypes.SORT_RFIS, field: field}
 };
 
 export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number) => {
@@ -57,7 +41,7 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
   postRfis.push(new RfiPostModel(changingRfi!.id, changingRfi!.priority));
 
   //resort by new priority
-  RfiSorter.sortByPriority(reprioritizedList, new SortKeyModel(Field.PRIORITY, false));
+  RfiSorter.sort(reprioritizedList, new SortKeyModel(Field.PRIORITY, true));
 
 
   //Try to post updates; if they are invalid, reload page instead
@@ -67,7 +51,7 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
       .then(response => response.json())
       .then(success => {
         if (!success)
-          dispatch(fetchRfis());
+          dispatch(fetchLocalUpdate());
       });
   };
 
@@ -101,12 +85,11 @@ const fetchRfiPending = () => {
 };
 
 const fetchRfiSuccess = (rfis: any, startTime: number) => {
-  // (rfis === null) ? rfiList = {} : rfiList = RfiDeserializer.deserialize(rfis)
   let rfiList = RfiDeserializer.deserialize(rfis);
   postRfiFetchTimeMetric(new RfiFetchRequestModel(startTime, new Date().getTime()));
   return {
     type: ActionTypes.FETCH_RFI_SUCCESS,
-    body: rfiList
+    rfis: rfiList
   }
 };
 
@@ -120,3 +103,18 @@ export const fetchRfis = () => {
   }
 };
 
+export const fetchRfiUpdating = (rfis: any) => {
+  let rfiList = RfiDeserializer.deserialize(rfis);
+  return {
+    type: ActionTypes.FETCH_RFI_UPDATE,
+    rfis: rfiList
+  }
+};
+
+export const fetchLocalUpdate = () => {
+  return (dispatch: any) => {
+    return fetch('/api/rfis')
+      .then(response => response.json())
+      .then(rfis => dispatch(fetchRfiUpdating(rfis)))
+  }
+};

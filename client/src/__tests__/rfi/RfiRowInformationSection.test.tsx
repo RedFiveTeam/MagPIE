@@ -1,9 +1,11 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RfiRowInformationSection } from '../../workflow/rfi-page/row/RfiRowInformationSection';
-import React from 'react';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
+
+// @ts-ignore
 import moment from 'moment';
 import IconDnDBurger from '../../resources/icons/DnDBurgerVector';
+import * as React from 'react';
 
 describe('RFIRowInformationSection', () => {
   let subject: ShallowWrapper;

@@ -1,8 +1,7 @@
 import { ActionTypes } from '../state/actions/ActionTypes';
 import RfiModel, { RfiStatus } from '../workflow/rfi-page/models/RfiModel';
 import reducer from '../state/reducers/reducer';
-// @ts-ignore
-import moment from 'moment';
+import * as moment from 'moment';
 import { Field, SortKeyModel } from '../workflow/rfi-page/models/SortKeyModel';
 
 describe('reducer', () => {
@@ -67,7 +66,7 @@ describe('reducer', () => {
   it('should handle FETCH_SUCCESS', () => {
     let mockAction = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: singleStatusRfiList,
+      rfis: singleStatusRfiList,
     };
 
     let sortedRfis = [
@@ -107,10 +106,10 @@ describe('reducer', () => {
   it('should sort by id and flip the sort key', () => {
     let setupRfis = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: multiStatusRfiList
+      rfis: multiStatusRfiList
     };
     let state = reducer(undefined, setupRfis);
-    let sortAction = {type: ActionTypes.SORT_RFIS_BY_ID};
+    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.ID};
 
     state = reducer(state, sortAction);
 
@@ -128,10 +127,10 @@ describe('reducer', () => {
   it('should sort by customer and flip the sort key', () => {
     let setupRfis = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: multiStatusRfiList
+      rfis: multiStatusRfiList
     };
     let state = reducer(undefined, setupRfis);
-    let sortAction = {type: ActionTypes.SORT_RFIS_BY_CUSTOMER};
+    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.CUSTOMER};
 
     state = reducer(state, sortAction);
 
@@ -149,10 +148,10 @@ describe('reducer', () => {
   it('should sort by country and flip the sort key', () => {
     let setupRfis = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: multiStatusRfiList
+      rfis: multiStatusRfiList
     };
     let state = reducer(undefined, setupRfis);
-    let sortAction = {type: ActionTypes.SORT_RFIS_BY_COUNTRY};
+    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.COUNTRY};
 
     state = reducer(state, sortAction);
 
@@ -170,11 +169,11 @@ describe('reducer', () => {
   it('should sort by ltiov and flip the sort key', () => {
     let setupRfis = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: multiStatusRfiList
+      rfis: multiStatusRfiList
     };
 
     let state = reducer(undefined, setupRfis);
-    let sortAction = {type: ActionTypes.SORT_RFIS_BY_LTIOV};
+    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.LTIOV};
 
     state = reducer(state, sortAction);
 
@@ -196,7 +195,7 @@ describe('reducer', () => {
   it('should sort by priority and flip the sort key', () => {
     let setupRfis = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: singleStatusRfiList
+      rfis: singleStatusRfiList
     };
 
     let sortedRfis = [
@@ -215,7 +214,7 @@ describe('reducer', () => {
     expect(state.rfiReducer.rfis).toEqual(sortedRfis);
     expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, true));
 
-    let sortAction = {type: ActionTypes.SORT_RFIS_BY_PRIORITY};
+    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.PRIORITY};
 
     state = reducer(state, sortAction);
 
@@ -227,7 +226,7 @@ describe('reducer', () => {
   it('should filter pending RFIs from total RFI list', () => {
     let fetchRfisAction = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: multiStatusRfiList
+      rfis: multiStatusRfiList
     };
 
     let pendingRfis = reducer(undefined, fetchRfisAction).rfiReducer.pendingRfis;
@@ -240,7 +239,7 @@ describe('reducer', () => {
   it('should filter open RFIs from total RFI list', () => {
     let fetchRfisAction = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: multiStatusRfiList
+      rfis: multiStatusRfiList
     };
 
     let openRfis = reducer(undefined, fetchRfisAction).rfiReducer.openRfis;
@@ -253,13 +252,55 @@ describe('reducer', () => {
   it('should filter closed RFIs from total RFI list', () => {
     let fetchRfisAction = {
       type: ActionTypes.FETCH_RFI_SUCCESS,
-      body: multiStatusRfiList
+      rfis: multiStatusRfiList
     };
 
     let closedRfis = reducer(undefined, fetchRfisAction).rfiReducer.closedRfis;
 
     expect(closedRfis.length).toBe(1);
     expect(closedRfis).toContain(closedRfi1);
+  });
+
+  it('should handle FETCH_UPDATE', () => {
+    let setupRfis = {
+      type: ActionTypes.FETCH_RFI_SUCCESS,
+      rfis:singleStatusRfiList
+    };
+    let state = reducer(undefined, setupRfis);
+
+    //Priority update
+    let newSingleStatusRfis = [
+        new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 2),
+        new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 3),
+        new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1)
+      ];
+
+    //Sort bt LTIOV; should stay sorted after update
+    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.LTIOV};
+    state = reducer(state, sortAction);
+
+    let refreshRfis = {
+      type: ActionTypes.FETCH_RFI_UPDATE,
+      rfis: newSingleStatusRfis,
+    };
+
+    let sortedRfis = [
+      new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 2),
+      new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 3),
+      new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
+    ];
+
+    expect(
+      reducer(state, refreshRfis).rfiReducer
+    ).toEqual({
+      rfis: sortedRfis,
+      sortKey: new SortKeyModel(Field.LTIOV, true),
+      pendingRfis: [],
+      openRfis: sortedRfis,
+      closedRfis: [],
+      loading: false
+    });
+
   });
 
   //TODO
@@ -271,7 +312,7 @@ describe('reducer', () => {
   //
   //   let setupRfis = {
   //     type: ActionTypes.FETCH_RFI_SUCCESS,
-  //     body: multiStatusRfiList
+  //     rfis: multiStatusRfiList
   //   };
   //   let state = reducer(undefined, setupRfis);
   //

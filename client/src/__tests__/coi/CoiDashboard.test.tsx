@@ -2,6 +2,7 @@ import { CoiDashboard } from '../../workflow/coi-page/CoiDashboard';
 import { shallow, ShallowWrapper } from 'enzyme';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import * as React from 'react';
+
 // @ts-ignore
 import moment from 'moment';
 

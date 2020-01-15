@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import RfiModel from '../models/RfiModel';
 import classNames from 'classnames';
@@ -8,7 +8,7 @@ import { StyledRfiRowButtonSection } from './RfiRowButtonSection';
 interface Props {
   rfi: RfiModel;
   scrollRegionRef: any;
-  index: number;
+  index?: number;
   className?: string;
 }
 

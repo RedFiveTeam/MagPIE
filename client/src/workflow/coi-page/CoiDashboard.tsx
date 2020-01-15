@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import RfiModel from '../rfi-page/models/RfiModel';
-import { exitCoiPage } from '../../state/actions/coi/CoiActions';
+import { exitCoiPage } from '../../state/actions';
 import BackButtonVector from '../../resources/icons/BackButtonVector';
 
 interface Props {

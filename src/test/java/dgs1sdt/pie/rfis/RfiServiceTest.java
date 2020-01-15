@@ -52,7 +52,8 @@ public class RfiServiceTest extends BaseIntegrationTest {
       "RfisClosed.xml"
     };
 
-    List<Rfi> rfis = rfiService.fetchRfis(files);
+    rfiService.fetchRfisFromUris(files);
+    List<Rfi> rfis = rfiService.fetchRfisFromRepo();
 
     long rfiCount = rfiRepository.count();
 
@@ -66,7 +67,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
   @Test
   public void assignsLastPriorityToNewlyOpenedRfis() throws Exception {
     String[] filePath = {"RfisNewOpen.xml"};
-    rfiService.fetchRfis(filePath);
+    rfiService.fetchRfisFromUris(filePath);
 
     List<Rfi> savedOpenRfis = rfiRepository.findAll().stream()
       .filter(rfi -> rfi.getStatus().equals("OPEN"))
@@ -85,7 +86,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
     assertEquals(4, rfiFourth.getPriority());
 
     filePath[0] = "RfisNewOpenRefreshed.xml";
-    rfiService.fetchRfis(filePath);
+    rfiService.fetchRfisFromUris(filePath);
 
     rfiFirst = rfiRepository.findById(rfiFirst.getId()).get();
     assertEquals(1, rfiFirst.getPriority());

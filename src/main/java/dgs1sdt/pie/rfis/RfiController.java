@@ -17,30 +17,32 @@ import java.util.List;
 public class RfiController {
   public static final String URI = "/api/rfis";
 
-  @Value("${GETS_URI_OPEN_PENDING}")
-  private String getsUriOpenPending;
-
-  @Value("${GETS_URI_CLOSED}")
-  private String getsUriClosed;
-
-  @Autowired
   private RfiRepository rfiRepository;
-
-  @Autowired
   private RfiService rfiService;
-
-  @Autowired
   private MetricController metricController;
 
+  @Autowired
+  public void setRfiRepository(RfiRepository rfiRepository) {
+    this.rfiRepository = rfiRepository;
+  }
+  @Autowired
+  public void setRfiService(RfiService rfiService) {
+    this.rfiService = rfiService;
+  }
+  @Autowired
+  public void setMetricController(MetricController metricController) {
+    this.metricController = metricController;
+  }
+
+  @Autowired
   public RfiController(RfiService rfiService, RfiRepository rfiRepository) {
     this.rfiService = rfiService;
     this.rfiRepository = rfiRepository;
   }
 
   @GetMapping
-  public List<Rfi> getAllRfis() throws Exception {
-    String[] uris = {getsUriOpenPending, getsUriClosed};
-    return this.rfiService.fetchRfis(uris);
+  public List<Rfi> getAllRfis() {
+    return this.rfiService.fetchRfisFromRepo();
   }
 
   //Return value: whether the passed priority change results in a valid priority list

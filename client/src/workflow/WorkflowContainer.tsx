@@ -1,12 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { fetchRfis } from '../state/actions';
+import { fetchRfis, postSiteVisit } from '../state/actions';
 import { StyledRfiDashboard } from './rfi-page/RfiDashboard';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledLoadingScreen } from './loading-page/LoadingScreen';
 import { StyledCoiDashboard } from './coi-page/CoiDashboard';
-import { postSiteVisit } from '../state/actions';
 
 interface Props {
   fetchRfis: () => void;

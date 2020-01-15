@@ -4,6 +4,7 @@ import { RfiTableHeader } from '../../workflow/rfi-page/header/RfiTableHeader';
 import { StyledHeaderCell } from '../../workflow/rfi-page/header/RfiTableHeaderCell';
 import { StyledButtonSection } from '../../workflow/rfi-page/header/RfiTableHeaderButtonSection';
 import { StyledUnsortableHeaderCell } from '../../workflow/rfi-page/header/RfiTableUnsortableHeaderCell';
+import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
 
 describe('RfiTableHeader', () => {
   let subject: ReactWrapper;
@@ -11,13 +12,10 @@ describe('RfiTableHeader', () => {
   beforeEach(() => {
     subject = mount(
       <RfiTableHeader
-        sortByCountry={()=>{}}
-        sortById={()=>{}}
-        sortByCustomer={()=>{}}
-        sortByLtiov={()=>{}}
-        sortByPriority={()=>{}}
-        fetchRfis={()=>{}}
-        refreshClick={()=>{}}
+        fetchLocalUpdate={() => {}}
+        postRefreshClick={() => {}}
+        sortKey={new SortKeyModel(Field.PRIORITY, false)}
+        sortRfis={() => {}}
       />
     );
   });

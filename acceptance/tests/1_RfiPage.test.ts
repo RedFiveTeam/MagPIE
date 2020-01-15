@@ -4,7 +4,7 @@ Feature('RFI Page');
 
 Scenario ('Should see the loading screen and RFI page', (I) => {
     I.amOnPage('/');
-    I.see("LOADING");
+    // I.see("LOADING");
     I.waitForText('RFI', 10);
     I.waitForText('20-321', 10);
     I.waitForText('633d', 10);

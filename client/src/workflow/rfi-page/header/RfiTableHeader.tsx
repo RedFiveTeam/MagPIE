@@ -3,19 +3,17 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledHeaderCell } from './RfiTableHeaderCell';
 import { connect } from 'react-redux';
-import { fetchRfis, sortByCountry, sortByCustomer, sortById, sortByLtiov, sortByPriority } from '../../../state/actions/rfi/RfiActions';
 import { StyledUnsortableHeaderCell } from './RfiTableUnsortableHeaderCell';
 import { StyledButtonSection } from './RfiTableHeaderButtonSection';
-import { postRefreshClick } from '../../../state/actions/metrics/LogMetricsActions';
+import { postRefreshClick } from '../../../state/actions';
+import { Field, SortKeyModel } from '../models/SortKeyModel';
+import { fetchLocalUpdate, sortRfis } from '../../../state/actions';
 
 interface Props {
-  sortByPriority: () => void;
-  sortById: () => void;
-  sortByCountry: () => void;
-  sortByCustomer: () => void;
-  sortByLtiov: () => void;
-  refreshClick: () => void;
-  fetchRfis: () => void;
+  sortRfis: (field: Field) => void;
+  postRefreshClick: () => void;
+  fetchLocalUpdate: () => void;
+  sortKey: SortKeyModel;
   className?: string;
 }
 
@@ -25,27 +23,27 @@ export const RfiTableHeader: React.FC<Props> = props => {
       <div className={'header-cell--textLabels'}>
         <StyledHeaderCell
           text={'PRI'}
-          sort={props.sortByPriority}
+          sort={() => props.sortRfis(Field.PRIORITY)}
           className={'header-cell--pri'}
         />
         <StyledHeaderCell
           text={'RFI'}
-          sort={props.sortById}
+          sort={() => props.sortRfis(Field.ID)}
           className={'header-cell--id'}
         />
         <StyledHeaderCell
           text={'CC'}
-          sort={props.sortByCountry}
+          sort={() => props.sortRfis(Field.COUNTRY)}
           className={'header-cell--country'}
         />
         <StyledHeaderCell
           text={'Customer'}
-          sort={props.sortByCustomer}
+          sort={() => props.sortRfis(Field.CUSTOMER)}
           className={'header-cell--customer'}
         />
         <StyledHeaderCell
           text={'LTIOV'}
-          sort={props.sortByLtiov}
+          sort={() => props.sortRfis(Field.LTIOV)}
           className={'header-cell--ltiov'}
         />
         <StyledUnsortableHeaderCell
@@ -58,8 +56,9 @@ export const RfiTableHeader: React.FC<Props> = props => {
         />
       </div>
       <StyledButtonSection
-        refreshClick={props.refreshClick}
-        fetchRfis={props.fetchRfis}
+        postRefreshClick={props.postRefreshClick}
+        fetchLocalUpdate={props.fetchLocalUpdate}
+        sortKey={props.sortKey}
         className={'header-cell--buttonSection'}
       />
     </div>
@@ -67,17 +66,14 @@ export const RfiTableHeader: React.FC<Props> = props => {
 };
 
 
-const mapStateToProps = () => ({
+const mapStateToProps = (state: any) => ({
+  sortKey: state.sortKey
 });
 
 const mapDispatchToProps = {
-  sortByPriority: sortByPriority,
-  sortById: sortById,
-  sortByCountry: sortByCountry,
-  sortByCustomer: sortByCustomer,
-  sortByLtiov: sortByLtiov,
-  refreshClick: postRefreshClick,
-  fetchRfis: fetchRfis
+  sortRfis: sortRfis,
+  postRefreshClick: postRefreshClick,
+  fetchLocalUpdate: fetchLocalUpdate
 };
 
 export const StyledRfiTableHeader = styled(

@@ -28,6 +28,9 @@ public class RfiControllerTest extends BaseIntegrationTest {
   @Autowired
   RfiRepository rfiRepository;
 
+  @Autowired
+  RfiService rfiService;
+
   @Before
   public void clean() {
     rfiRepository.deleteAll();
@@ -35,6 +38,12 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void getRfisDirectlyFromGETS() {
+    String[] files = {
+      "RfisNewOpen.xml",
+      "RfisClosed.xml"
+    };
+    rfiService.fetchRfisFromUris(files);
+
     String firstDescription = "hi";
     String longDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
       "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
@@ -48,30 +57,35 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .get(RfiController.URI)
       .then()
       .statusCode(200)
-      .body("[0].rfiId", equalTo("DGS-1-SDT-2020-00321"))
-      .body("[0].getsUrl", equalTo("http://www.google.com"))
-      .body("[0].lastUpdate", equalTo("2019-11-05T14:21:21.000+0000"))
-      .body("[0].status", equalTo("NEW"))
-      .body("[0].customer", equalTo("633d ABW"))
-      .body("[0].ltiov", equalTo("2020-11-05T14:21:21.000+0000"))
-      .body("[0].country", equalTo("USA"))
-      .body("[0].description", equalTo(firstDescription))
-      .body("[0].priority", equalTo(-1))
+      .body("[2].rfiId", equalTo("DGS-1-SDT-2020-00321"))
+      .body("[2].getsUrl", equalTo("http://www.google.com"))
+      .body("[2].lastUpdate", equalTo("2019-11-05T14:21:21.000+0000"))
+      .body("[2].status", equalTo("NEW"))
+      .body("[2].customer", equalTo("633d ABW"))
+      .body("[2].ltiov", equalTo("2020-11-05T14:21:21.000+0000"))
+      .body("[2].country", equalTo("USA"))
+      .body("[2].description", equalTo(firstDescription))
+      .body("[2].priority", equalTo(-1))
 
-      .body("[10].status", equalTo("OPEN"))
-      .body("[10].priority", greaterThan(0))
+      .body("[5].status", equalTo("OPEN"))
+      .body("[5].priority", greaterThan(0))
 
-      .body("[15].rfiId", equalTo("DGS-1-SDT-2020-00329"))
-      .body("[15].getsUrl", equalTo("http://www.msn.com"))
-      .body("[15].lastUpdate", equalTo("2018-03-16T14:21:29.000+0000"))
-      .body("[15].status", equalTo("CLOSED"))
+      .body("[9].rfiId", equalTo("DGS-1-SDT-2020-00329"))
+      .body("[9].status", equalTo("CLOSED"))
+      .body("[9].description", equalTo(longDescription))
+      .body("[9].priority", equalTo(-1))
+
+      .body("[15].rfiId", equalTo("DGS-1-SDT-2020-00338"))
+      .body("[15].getsUrl", equalTo("http://www.google.com"))
+      .body("[15].lastUpdate", equalTo("2019-10-16T20:21:26.000+0000"))
+      .body("[15].status", equalTo("OPEN"))
       .body("[15].customer", equalTo("1 FW"))
       .body("[15].ltiov", equalTo(null))
-      .body("[15].country", equalTo("MEX"))
-      .body("[15].description", equalTo(longDescription))
-      .body("[15].priority", equalTo(-1))
+      .body("[15].country", equalTo("CAN"))
 
       .body("[16].rfiId", equalTo(null));
+
+    System.out.println();
   }
 
   @Test

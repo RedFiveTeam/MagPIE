@@ -17,6 +17,7 @@ import dgs1sdt.pie.metrics.sitevisit.SiteVisitRepository;
 import dgs1sdt.pie.metrics.sortclick.SortClick;
 import dgs1sdt.pie.metrics.sortclick.SortClickJson;
 import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,6 +38,36 @@ public class MetricController {
   private RfiUpdateRepository rfiUpdateRepository;
   private RefreshClicksRepository refreshClicksRepository;
 
+  @Autowired
+  public void setGetsClicksRepository(GetsClicksRepository getsClicksRepository) {
+    this.getsClicksRepository = getsClicksRepository;
+  }
+  @Autowired
+  public void setSiteVisitRepository(SiteVisitRepository siteVisitRepository) {
+    this.siteVisitRepository = siteVisitRepository;
+  }
+  @Autowired
+  public void setSortClicksRepository(SortClicksRepository sortClicksRepository) {
+    this.sortClicksRepository = sortClicksRepository;
+  }
+  @Autowired
+  public void setRfiFetchRepository(RfiFetchRepository rfiFetchRepository) {
+    this.rfiFetchRepository = rfiFetchRepository;
+  }
+  @Autowired
+  public void setRfiPriorityChangeRepository(RfiPriorityChangeRepository rfiPriorityChangeRepository) {
+    this.rfiPriorityChangeRepository = rfiPriorityChangeRepository;
+  }
+  @Autowired
+  public void setRfiUpdateRepository(RfiUpdateRepository rfiUpdateRepository) {
+    this.rfiUpdateRepository = rfiUpdateRepository;
+  }
+  @Autowired
+  public void setRefreshClicksRepository(RefreshClicksRepository refreshClicksRepository) {
+    this.refreshClicksRepository = refreshClicksRepository;
+  }
+
+  @Autowired
   public MetricController(GetsClicksRepository getsClicksRepository,
                           SiteVisitRepository siteVisitRepository,
                           SortClicksRepository sortClicksRepository,
@@ -67,9 +98,8 @@ public class MetricController {
     Date[] daysAgo = setupDaysAgo(7);
 
 //    Returns array of site visits
-    int [] last7Days = matchSiteVisitsToDays(allSiteVisits, daysAgo);
 
-    return last7Days;
+    return matchSiteVisitsToDays(allSiteVisits, daysAgo);
   }
 
   private int[] matchSiteVisitsToDays(List<SiteVisit> allSiteVisits, Date[] daysAgo) {

@@ -8,7 +8,7 @@ import IconDnDBurger from '../../../resources/icons/DnDBurgerVector';
 import { connect } from 'react-redux';
 import { Field } from '../models/SortKeyModel';
 import AddCoiButtonVector from '../../../resources/icons/AddCoiButtonVector';
-import { navigateToCoiPage } from '../../../state/actions/coi/CoiActions';
+import { navigateToCoiPage } from '../../../state/actions';
 
 interface Props {
   rfi: RfiModel;
@@ -57,7 +57,6 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
     setExpanded(!expanded);
     if (!expanded)
       setTimeout(scrollFit, 50, descriptionContainer); //slight delay to ensure we use the expanded row height
-    // scrollFit();
   }
 
   function addCoiToRFI() {

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { RfiDeserializer } from '../../state/utils/RfiDeserializer';
 import { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 

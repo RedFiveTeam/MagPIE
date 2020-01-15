@@ -5,7 +5,7 @@ import ExternalLinkVector from '../../../resources/icons/ExternalLinkVector';
 import { connect } from 'react-redux';
 import GetsClickRequestModel from '../../../metrics/models/GetsClickRequestModel';
 import { RfiStatus } from '../models/RfiModel';
-import { postGetsClick } from '../../../state/actions/metrics/LogMetricsActions';
+import { postGetsClick } from '../../../state/actions';
 
 interface Props {
   status: RfiStatus;

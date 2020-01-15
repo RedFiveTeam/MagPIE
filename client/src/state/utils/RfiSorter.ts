@@ -2,53 +2,20 @@ import RfiModel from '../../workflow/rfi-page/models/RfiModel';
 import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
 
 export class RfiSorter {
-
-  static sortByPriority = (rfis: RfiModel[], sortKey: SortKeyModel) => {
+  static sort = (rfis: RfiModel[], sortKey: SortKeyModel) => {
     if (rfis) {
-      if (sortKey.field === Field.PRIORITY && sortKey.defaultOrder) {
-        return sortDescendingPriority(rfis);
+      switch (sortKey.field) {
+        case Field.ID:
+          return (sortKey.defaultOrder ? sortAscendingId(rfis) : sortDescendingId(rfis));
+        case Field.CUSTOMER:
+          return (sortKey.defaultOrder ? sortAscendingCustomer(rfis) : sortDescendingCustomer(rfis));
+        case Field.LTIOV:
+          return (sortKey.defaultOrder ? sortAscendingLtiov(rfis) : sortDescendingLtiov(rfis));
+        case Field.COUNTRY:
+          return (sortKey.defaultOrder ? sortAscendingCountry(rfis) : sortDescendingCountry(rfis));
+        default:
+        return (sortKey.defaultOrder ? sortAscendingPriority(rfis) : sortDescendingPriority(rfis));
       }
-      return sortAscendingPriority(rfis);
-    }
-    return [];
-  };
-
-  static sortById = (rfis: RfiModel[], sortKey: SortKeyModel) => {
-    if (rfis) {
-      if (sortKey.field === Field.ID && sortKey.defaultOrder) {
-        return sortDescendingId(rfis);
-      }
-      return sortAscendingId(rfis);
-    }
-    return [];
-  };
-
-  static sortByCustomer = (rfis: RfiModel[], sortKey: SortKeyModel) => {
-    if (rfis) {
-      if (sortKey.field === Field.CUSTOMER && sortKey.defaultOrder) {
-        return sortDescendingCustomer(rfis);
-      }
-      return sortAscendingCustomer(rfis);
-    }
-    return [];
-  };
-
-  static sortByCountry = (rfis: RfiModel[], sortKey: SortKeyModel) => {
-    if (rfis) {
-      if (sortKey.field === Field.COUNTRY && sortKey.defaultOrder) {
-        return sortDescendingCountry(rfis);
-      }
-      return sortAscendingCountry(rfis);
-    }
-    return [];
-  };
-
-  static sortByLtiov = (rfis: RfiModel[], sortKey: SortKeyModel) => {
-    if (rfis) {
-      if (sortKey.field === Field.LTIOV && sortKey.defaultOrder) {
-        return sortDescendingLtiov(rfis);
-      }
-      return sortAscendingLtiov(rfis);
     }
     return [];
   };

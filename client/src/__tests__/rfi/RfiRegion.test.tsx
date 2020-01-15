@@ -1,9 +1,9 @@
 import { RfiRow } from '../../workflow/rfi-page/row/RfiRow';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
+
 // @ts-ignore
 import moment from 'moment';
-// @ts-ignore
-import React from 'react';
+import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RfiRegion } from '../../workflow/rfi-page/RfiRegion';
 import { StyledRfiRegionDivider } from '../../workflow/rfi-page/RfiRegionDivider';

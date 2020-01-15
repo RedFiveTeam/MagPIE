@@ -1,11 +1,12 @@
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-import { reorderRfis } from '../../state/actions/rfi/RfiActions';
+import { reorderRfis } from '../../state/actions';
 // @ts-ignore
 import fetch from 'jest-fetch-mock';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
 import { RfiSorter } from '../../state/utils/RfiSorter';
+
 // @ts-ignore
 import moment from 'moment'
 
@@ -32,25 +33,25 @@ describe('RfiActions', () => {
     // @ts-ignore
     store.dispatch(reorderRfis(rfiList, '19-004', 2));
     // @ts-ignore
-    reprioritizedList = RfiSorter.sortByPriority(store.getState().openRfis, new SortKeyModel(Field.ID, false));
+    reprioritizedList = RfiSorter.sort(store.getState().openRfis, new SortKeyModel(Field.PRIORITY, true));
     expect(reprioritizedList).toEqual([rfi1, rfi3, rfi2, rfi4, rfi5]);
 
     // @ts-ignore
     store.dispatch(reorderRfis(reprioritizedList, '19-007', 2));
     // @ts-ignore
-    reprioritizedList = RfiSorter.sortByPriority(store.getState().openRfis, new SortKeyModel(Field.ID, false));
+    reprioritizedList = RfiSorter.sort(store.getState().openRfis, new SortKeyModel(Field.PRIORITY, true));
     expect(reprioritizedList).toEqual([rfi1, rfi3, rfi4, rfi2, rfi5]);
 
     // @ts-ignore
     store.dispatch(reorderRfis(reprioritizedList, '19-009', 2));
     // @ts-ignore
-    reprioritizedList = RfiSorter.sortByPriority(store.getState().openRfis, new SortKeyModel(Field.ID, false));
+    reprioritizedList = RfiSorter.sort(store.getState().openRfis, new SortKeyModel(Field.PRIORITY, true));
     expect(reprioritizedList).toEqual([rfi1, rfi3, rfi5, rfi4, rfi2]);
 
     // @ts-ignore
     store.dispatch(reorderRfis(reprioritizedList, '19-001', 2));
     // @ts-ignore
-    reprioritizedList = RfiSorter.sortByPriority(store.getState().openRfis, new SortKeyModel(Field.ID, false));
+    reprioritizedList = RfiSorter.sort(store.getState().openRfis, new SortKeyModel(Field.PRIORITY, true));
     expect(reprioritizedList).toEqual([rfi3, rfi5, rfi1, rfi4, rfi2]);
 
   });

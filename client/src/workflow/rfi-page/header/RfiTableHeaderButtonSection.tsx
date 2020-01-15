@@ -2,18 +2,31 @@ import * as React from 'react';
 import classNames from 'classnames';
 import RefreshButtonVector from '../../../resources/icons/RefreshButtonVector';
 import styled from 'styled-components';
+import { SortKeyModel } from '../models/SortKeyModel';
+import { useEffect } from 'react';
 
 interface Props {
-  refreshClick: () => void;
-  fetchRfis: () => void;
+  fetchLocalUpdate: () => void;
+  sortKey: SortKeyModel;
+  postRefreshClick: () => void;
   className?: string;
 }
 
 export const RfiTableHeaderButtonSection: React.FC<Props> = props => {
   function refreshPage() {
-    props.refreshClick();
-    props.fetchRfis();
+    props.postRefreshClick();
+    props.fetchLocalUpdate();
   }
+
+  function refreshData() {
+    props.fetchLocalUpdate();
+  }
+
+  useEffect(() => {
+    setInterval(() => {
+      refreshData();
+    }, 5000)
+  });
 
   return (
     <div className={classNames('header-cell', props.className)}>
