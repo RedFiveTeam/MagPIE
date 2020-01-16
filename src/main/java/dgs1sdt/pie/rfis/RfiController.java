@@ -50,7 +50,7 @@ public class RfiController {
     List<RfiPriorityChange> metrics = new ArrayList<>();
 
     List<Rfi> repoRfis = rfiRepository.findAll();
-    repoRfis.removeIf(rfi -> rfi.getPriority() < 1);
+    repoRfis.removeIf(rfi -> rfi.getPriority() < 1 || !rfi.getStatus().equals("OPEN"));
 
     for (RfiJson rfiJson : rfiJsons) {
       Rfi rfiToUpdate = rfiRepository.findByRfiId(rfiJson.getRfiId());

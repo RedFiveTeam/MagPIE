@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @TestPropertySource(
   properties = {
@@ -76,21 +76,13 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void checksPriorityChangeLegality() {
-    Rfi rfi1 = new Rfi();
-    Rfi rfi2 = new Rfi();
-    Rfi rfi3 = new Rfi();
-    Rfi rfi4 = new Rfi();
-    Rfi rfi5 = new Rfi();
-    rfi1.setRfiId("id1");
-    rfi2.setRfiId("id2");
-    rfi3.setRfiId("id3");
-    rfi4.setRfiId("id4");
-    rfi5.setRfiId("id5");
-    rfi1.setPriority(2);
-    rfi2.setPriority(3);
-    rfi3.setPriority(1);
-    rfi4.setPriority(4);
-    rfi5.setPriority(5);
+    Rfi rfi2 = new Rfi("id2", "", "OPEN", new Date(), "", new Date(), "", "", 1);
+    Rfi rfi3 = new Rfi("id3", "", "OPEN", new Date(), "", new Date(), "", "", 2);
+    Rfi rfi1 = new Rfi("id1", "", "OPEN", new Date(), "", new Date(), "", "", 3);
+
+    Rfi rfi4 = new Rfi("id4", "", "OPEN", new Date(), "", new Date(), "", "", 4);
+    Rfi rfi5 = new Rfi("id5", "", "OPEN", new Date(), "", new Date(), "", "", 5);
+    Rfi rfi6 = new Rfi("id6", "", "CLOSED", new Date(), "", new Date(), "", "", 3);
 
     List<Rfi> rfis = new ArrayList<>();
     rfis.add(rfi1);
@@ -98,11 +90,9 @@ public class RfiControllerTest extends BaseIntegrationTest {
     rfis.add(rfi3);
     rfis.add(rfi4);
     rfis.add(rfi5);
-
+    rfis.add(rfi6);
 
     rfiRepository.saveAll(rfis);
-
-
 
     RfiJson [] rfiJsons = {
       new RfiJson("id1", 1),
@@ -111,21 +101,28 @@ public class RfiControllerTest extends BaseIntegrationTest {
     };
 
     assertTrue(rfiController.updatePriority(rfiJsons));
+    assertEquals(1, rfiRepository.findByRfiId("id1").getPriority());
 
     rfiJsons = new RfiJson[]{
-      new RfiJson("id2", 1),
-      new RfiJson("id3", 2)
+      new RfiJson("id1", 2),
+      new RfiJson("id3", 3)
     };
 
     assertFalse(rfiController.updatePriority(rfiJsons));
+    assertEquals(1, rfiRepository.findByRfiId("id1").getPriority());
+    assertEquals(3, rfiRepository.findByRfiId("id3").getPriority());
 
     rfiJsons = new RfiJson[]{
       new RfiJson("id4", 2),
-      new RfiJson("id1", 3),
-      new RfiJson("id2", 4)
+      new RfiJson("id3", 3),
+      new RfiJson("id1", 4)
     };
 
     assertFalse(rfiController.updatePriority(rfiJsons));
+    assertEquals(1, rfiRepository.findByRfiId("id1").getPriority());
+    assertEquals(2, rfiRepository.findByRfiId("id2").getPriority());
+    assertEquals(3, rfiRepository.findByRfiId("id3").getPriority());
+    assertEquals(4, rfiRepository.findByRfiId("id4").getPriority());
 
   }
 
