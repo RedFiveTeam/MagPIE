@@ -77,6 +77,13 @@ export const StyledCoiDashboard = styled(
     justify-content: space-around;
     align-items: center;
     color: ${(props) => props.theme.color.backgroundAction};
+    
+    :hover {
+      color: ${(props) => props.theme.color.buttonBackgroundActive};
+      path {
+        fill: ${(props) => props.theme.color.buttonBackgroundActive};
+      }
+    }
   }
   
   .coi-dash--header--rfi-id-container {

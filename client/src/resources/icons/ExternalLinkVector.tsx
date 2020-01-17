@@ -21,7 +21,7 @@ const ExternalLinkVector = () => {
       >
         <path
           d={pathD}
-          fill={theme.color.fontPrimary}
+          fill={theme.color.buttonInactive}
         />
       </svg>
   );

@@ -103,4 +103,18 @@ describe('RFISorter', () => {
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
     ]);
   });
+
+  it('should not sort closed', () => {
+    rfiList = [
+      new RfiModel('19-001', '', RfiStatus.CLOSED, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
+      new RfiModel('19-004', '', RfiStatus.CLOSED, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
+      new RfiModel('19-003', '', RfiStatus.CLOSED, 'HQ ACC', undefined, 'MEX', 'hi', 1)
+    ];
+    let rfiListOriginal: RfiModel[] = rfiList.slice(0);
+
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.LTIOV, false))).toEqual(rfiListOriginal);
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.ID, true))).toEqual(rfiListOriginal);
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.CUSTOMER, false))).toEqual(rfiListOriginal);
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.PRIORITY, true))).toEqual(rfiListOriginal);
+  });
 });

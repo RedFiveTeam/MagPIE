@@ -1,20 +1,22 @@
-import RfiModel from '../../workflow/rfi-page/models/RfiModel';
+import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
 
 export class RfiSorter {
   static sort = (rfis: RfiModel[], sortKey: SortKeyModel) => {
     if (rfis) {
+    let openPending: RfiModel[] = rfis.filter(rfi => rfi.status !== RfiStatus.CLOSED);
+    let closed: RfiModel[] = rfis.filter(rfi => rfi.status === RfiStatus.CLOSED);
       switch (sortKey.field) {
         case Field.ID:
-          return (sortKey.defaultOrder ? sortAscendingId(rfis) : sortDescendingId(rfis));
+          return (sortKey.defaultOrder ? sortAscendingId(openPending) : sortDescendingId(openPending)).concat(closed);
         case Field.CUSTOMER:
-          return (sortKey.defaultOrder ? sortAscendingCustomer(rfis) : sortDescendingCustomer(rfis));
+          return (sortKey.defaultOrder ? sortAscendingCustomer(openPending) : sortDescendingCustomer(openPending)).concat(closed);
         case Field.LTIOV:
-          return (sortKey.defaultOrder ? sortAscendingLtiov(rfis) : sortDescendingLtiov(rfis));
+          return (sortKey.defaultOrder ? sortAscendingLtiov(openPending) : sortDescendingLtiov(openPending)).concat(closed);
         case Field.COUNTRY:
-          return (sortKey.defaultOrder ? sortAscendingCountry(rfis) : sortDescendingCountry(rfis));
+          return (sortKey.defaultOrder ? sortAscendingCountry(openPending) : sortDescendingCountry(openPending)).concat(closed);
         default:
-        return (sortKey.defaultOrder ? sortAscendingPriority(rfis) : sortDescendingPriority(rfis));
+          return (sortKey.defaultOrder ? sortAscendingPriority(openPending) : sortDescendingPriority(openPending)).concat(closed);
       }
     }
     return [];

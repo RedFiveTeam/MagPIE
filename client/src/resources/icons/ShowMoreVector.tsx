@@ -13,7 +13,7 @@ const IconShowMore = () => {
       xmlns="http://www.w3.org/2000/svg">
       <path
         d={pathD}
-        fill={theme.color.fontPrimary}
+        fill={theme.color.buttonInactive}
       />
     </svg>
   );

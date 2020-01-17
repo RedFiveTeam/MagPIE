@@ -9,5 +9,6 @@ export const crayonBox = {
   steelGray: '#464646',
   notEggWhite: '#FEFEFE',
   lightGray: '#C4C4C4',
-  mediumGray: '#8D8D8D'
+  mediumGray: '#8D8D8D',
+  subtleGray: '#575757'
 };

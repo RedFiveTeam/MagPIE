@@ -14,7 +14,7 @@ const AddCoiButtonVector = () => {
     >
       <path
         d={pathD}
-        fill={theme.color.fontInactive}
+        fill={theme.color.buttonInactive}
       />
     </svg>
   );

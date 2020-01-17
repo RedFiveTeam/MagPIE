@@ -14,8 +14,8 @@ interface Props {
   rfi: RfiModel;
   scrollRegionRef: any;
   prioritizing: boolean;
-  className?: string;
   navigateToCoiPage: (rfi: RfiModel) => void;
+  className?: string;
 }
 
 const formatID = (id: string): string => {
@@ -67,18 +67,18 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
     <div
       className={classNames('row-section', 'section--information', props.className)}
     >
-      {props.rfi.priority > -1 ? props.prioritizing ?
-            <span className={classNames('cell', 'cell--pri-prioritizing')}>
+      {props.rfi.priority > -1 && props.rfi.status === "OPEN" ? props.prioritizing ?
+        <span className={classNames('cell', 'cell--pri-prioritizing')}>
                 <IconDnDBurger/>
-              {props.rfi.priority}
+          {props.rfi.priority}
             </span>
-            :
-            <span className={classNames('cell', 'cell--pri')}>
+        :
+        <span className={classNames('cell', 'cell--pri')}>
               {props.rfi.priority}
             </span>
         :
         <span className={classNames('cell', 'cell--pri')}>
-            N/A
+            -
           </span>
       }
       <span className={classNames('cell', 'cell--id')}>
@@ -108,9 +108,11 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
         props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {
         handleClick()
       }}>
-        <div>{expanded ? <IconShowLess/> : ''}</div>
-        <div>{expanded ? 'See less' : 'See more'}</div>
-        <div>{expanded ? <IconShowLess/> : <IconShowMore/>}</div>
+        <div>
+          <div>{expanded ? <IconShowLess/> : ''}</div>
+          <div>{expanded ? 'See less' : ''}</div>
+          <div>{expanded ? <IconShowLess/> : <IconShowMore/>}</div>
+        </div>
       </div>
     </div>
   );
@@ -199,7 +201,7 @@ export const StyledRfiRowInformationSection = styled(
     
     :hover {
       path {
-        fill: ${(props) => props.theme.color.fontPrimary};
+        fill: ${(props) => props.theme.color.buttonActive};
       }
     }
   }
@@ -243,14 +245,20 @@ export const StyledRfiRowInformationSection = styled(
   .see-more {
     display:flex;
     flex-direction: column;
-    flex: 0 0 87px;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 0 0 62px;
     height:52px;
     align-self: start;
     padding-right: 7px;
     padding-left: 5px;
     cursor: pointer;
-    align-items: center;
-    justify-content: center;
+    
+    :hover {
+      path {
+        fill: ${(props) => props.theme.color.buttonActive};
+      }
+    }
   }
    
   .see-less {
@@ -262,15 +270,32 @@ export const StyledRfiRowInformationSection = styled(
     justify-content: space-between;
     flex-direction: row;
     flex-wrap: nowrap;
-    background: linear-gradient(180deg, rgba(32, 32, 32, 0) 0%, rgba(32, 32, 32, 0.5) 46.88%);
-  }
-  
-  .see-less:hover {
-    background: linear-gradient(180deg, rgba(70, 70, 70, 0.5) 0%, rgba(0, 0, 0, 0.5) 46.88%);
-  }
-  
-  .see-less div {
-    width: 65px;
+    padding: 4px 4px 4px 4px;
+    
+    div {
+      display: flex;
+      flex-basis: 100%;
+      justify-content: space-between;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      background: ${(props) => props.theme.color.showLessBackground}
+      
+      div {
+        display: flex;
+        flex-direction: row;
+        flex: 0 0 57px;
+        align-items: center;
+        justify-content: center;
+      }
+      
+    }
+    
+    :hover {
+      color: ${(props) => props.theme.color.buttonActive};
+      path {
+        fill: ${(props) => props.theme.color.buttonActive};
+      }
+    }
   }
   
 `;

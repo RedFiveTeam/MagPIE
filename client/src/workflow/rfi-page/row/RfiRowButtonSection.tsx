@@ -62,9 +62,9 @@ export const StyledRfiRowButtonSection = styled(connect(mapStateToProps, mapDisp
   flex: 1;
     
   :hover {
-    color: ${(props) => props.theme.color.backgroundBase};
+    color: ${(props) => props.theme.color.buttonActive};
     path {
-      fill: ${(props) => props.theme.color.backgroundBase};
+      fill: ${(props) => props.theme.color.buttonActive};
     }
   }
   

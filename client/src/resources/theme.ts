@@ -13,7 +13,11 @@ const theme = {
     backgroundAction: crayonBox.safetyOrange,
     backgroundAssigned: crayonBox.notEggWhite,
     fontLoading: crayonBox.lightGray,
-    fontInactive: crayonBox.mediumGray
+    fontInactive: crayonBox.mediumGray,
+    buttonInactive: crayonBox.notEggWhite,
+    buttonActive: crayonBox.softMetal,
+    buttonBackgroundActive: crayonBox.pitchBlack,
+    showLessBackground: crayonBox.subtleGray
   },
 
   font: {
