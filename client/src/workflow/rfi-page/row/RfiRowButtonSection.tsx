@@ -10,7 +10,7 @@ import { postGetsClick } from '../../../state/actions';
 interface Props {
   status: RfiStatus;
   url: string;
-  postGetsClick: (getsClickRequestModel: GetsClickRequestModel) => void;
+  postGetsClick: (getsClickRequestModel: GetsClickRequestModel) => Promise<any>;
   className?: string;
 }
 
@@ -27,15 +27,16 @@ export const RfiRowButtonSection: React.FC<Props> = props => {
     );
   }
 
-  function handleClick() {
-    postGetsClick(new GetsClickRequestModel(props.status, props.url));
+  function handleClick(postGetsClick: (getsClickRequestModel: GetsClickRequestModel) => Promise<any>) {
+    postGetsClick(new GetsClickRequestModel(props.status, props.url))
+      .catch((reason => {console.log("Failed to post GETS click metric: " + reason)}));
     window.open(props.url, '_blank');
   }
 
   return (
     <div
       className={classNames('row-section', 'section--button', props.className)}
-      onClick={() => handleClick()}
+      onClick={() => handleClick(props.postGetsClick)}
     >
       {buttonText()}
       <ExternalLinkVector/>

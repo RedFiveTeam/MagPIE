@@ -68,7 +68,8 @@ const rfiReducer = (state = initState, action: any) => {
     case ActionTypes.SORT_RFIS:
       newSortKey = flipSortKey(state.sortKey, action.field);
       sortedRfis = RfiSorter.sort(state.rfis, newSortKey);
-      postSortClick(new SortClickRequestModel(newSortKey.field, newSortKey.defaultOrder));
+      postSortClick(new SortClickRequestModel(newSortKey.field, newSortKey.defaultOrder))
+        .catch((reason => {console.log("Failed to post sort click metric: " + reason)}));
       return {
         ...state,
         ...filterRfis(sortedRfis),

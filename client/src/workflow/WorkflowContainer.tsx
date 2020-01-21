@@ -9,7 +9,7 @@ import { StyledCoiDashboard } from './coi-page/CoiDashboard';
 
 interface Props {
   fetchRfis: () => void;
-  postSiteVisit: () => void;
+  postSiteVisit: () => Promise<any>;
   loading: boolean;
   viewCoiPage: boolean;
   className?: string;
@@ -30,7 +30,8 @@ const displayScreen = (loading: boolean, viewCoiPage: boolean, className: string
 
 export class WorkflowContainer extends React.Component<Props, any> {
   componentDidMount(): void {
-    this.props.postSiteVisit();
+    this.props.postSiteVisit()
+      .catch((reason => {console.log("Failed to post sort click metric: " + reason)}));;
     this.props.fetchRfis();
   }
 

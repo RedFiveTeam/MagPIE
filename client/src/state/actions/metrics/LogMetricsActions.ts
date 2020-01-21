@@ -1,20 +1,19 @@
 import GetsClickRequestModel from '../../../metrics/models/GetsClickRequestModel';
 import SortClickRequestModel from '../../../metrics/models/SortClickRequestModel';
 import RfiFetchRequestModel from '../../../metrics/models/RfiFetchRequestModel';
+import { server } from '../../../config';
 
 export const postSiteVisit = () => {
-  return () => {
-    return fetch('/api/metrics/site-visit',
+      return fetch(server + '/api/metrics/site-visit',
       {
         method: 'post'
       }
     );
-  }
 };
 
 export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
     return fetch(
-      '/api/metrics/gets-click',
+      server + '/api/metrics/gets-click',
       {
         method: 'post',
         headers: {
@@ -28,7 +27,7 @@ export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
 
 export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
   return fetch(
-    '/api/metrics/sort-click',
+    server + '/api/metrics/sort-click',
     {
       method: 'post',
       headers: {
@@ -42,7 +41,7 @@ export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
 
 export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestModel) => {
   return fetch(
-    '/api/metrics/rfi-fetch',
+    server + '/api/metrics/rfi-fetch',
     {
       method: 'post',
       headers: {
@@ -57,7 +56,7 @@ export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestMode
 export const postRefreshClick = () => {
   return () => {
     return fetch(
-      '/api/metrics/refresh-click',
+      server + '/api/metrics/refresh-click',
       {
         method: 'post'
       }

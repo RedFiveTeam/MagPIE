@@ -23,6 +23,9 @@ describe('reducer', () => {
   let openRfi2: RfiModel;
   let closedRfi1: RfiModel;
 
+  //Ignore .catch() logs
+  console.log = jest.fn();
+
   beforeEach(() => {
     pendingRfi1 = new RfiModel('19-003', '', RfiStatus.PENDING, 'HQ ACC', undefined, 'MEX', 'hi', -1);
     pendingRfi2 = new RfiModel('19-004', '', RfiStatus.PENDING, '633 ABW', moment.utc('2019-12-02'), 'ALB', 'hi', -1);
@@ -45,6 +48,14 @@ describe('reducer', () => {
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 3)
     ];
     multiStatusRfiList = [openRfi2, openRfi1, pendingRfi2, closedRfi1, pendingRfi1,];
+  });
+
+  afterEach(() => {
+    const check = () => {
+        setTimeout(check, 2000); // check again in a second
+      };
+    check();
+
   });
 
   it('should handle FETCH_PENDING', () => {
