@@ -1,3 +1,3 @@
 
 export const server =
-    'http://' + window.location.host;
+    window.location.protocol + "//" + window.location.host;
