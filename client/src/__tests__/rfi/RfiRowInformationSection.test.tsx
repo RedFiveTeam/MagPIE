@@ -6,6 +6,7 @@ import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import moment from 'moment';
 import IconDnDBurger from '../../resources/icons/DnDBurgerVector';
 import * as React from 'react';
+import IconShowMore from '../../resources/icons/ShowMoreVector';
 
 describe('RFIRowInformationSection', () => {
   let subject: ShallowWrapper;
@@ -66,7 +67,7 @@ describe('RFIRowInformationSection', () => {
         navigateToCoiPage={() => {}}
       />
     );
-    expect(subject.find('.section--information').text().toLowerCase()).toContain('see more');
+    expect(subject.find('.section--information').text().toLowerCase()).toContain('iconshowmore');
   });
 
   it('should display a hamburger only when prioritizing', () => {

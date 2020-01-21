@@ -2,7 +2,7 @@
 
 Feature('RFI Page');
 
-Scenario ('Should see the loading screen and RFI page', (I) => {
+Scenario ('Should see the RFI page', (I) => {
     I.amOnPage('/');
     // I.see("LOADING");
     I.waitForText('RFI', 10);
@@ -35,15 +35,16 @@ Scenario ('Should be able to sort by clickin\' Buttons', (I) => {
 
 Scenario ('Should expand and collapse descriptions', (I) => {
   I.amOnPage('/');
-  I.waitForText('See more', 10);
-  I.see('See more', locate('.region--open').find('.rfi-row').at(1));
+  I.waitForText('RFI', 10);
+  // @ts-ignore
+  I.seeElement('.see-more', locate('.region--open').find('.rfi-row').at(1));
   I.dontSee('See less');
 
   I.click('.see-more');
   I.waitForText('See less', 10);
-  I.dontSee('See more', locate('.region--open').find('.rfi-row').at(1));
+  I.dontSeeElement(locate('.region--open').find('.rfi-row').at(1).find('.see-more'));
 
   I.click('.see-less');
-  I.waitForText('See more', 10);
+  I.wait(1);
   I.dontSee('See less');
 });

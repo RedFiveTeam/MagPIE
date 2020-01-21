@@ -72,12 +72,14 @@ public class RfiService {
   private List<Rfi> pendingOpenAndLastThreeClosedRfis() {
     List<Rfi> allRfis = this.rfiRepository.findAll();
     List<Rfi> lastThreeClosed = this.filterLastThreeClosed(allRfis);
-    List<Rfi> pendingOpenAndLastThreeClosed;
+    List<Rfi> pendingOpenAndLastThreeClosed = new ArrayList<>();
 
-    pendingOpenAndLastThreeClosed = allRfis.stream()
-      .filter(rfi -> isPendingOpenOrRecentlyClosed(lastThreeClosed, rfi))
-      .collect(Collectors.toList());
+    for (Rfi rfi : allRfis)
+      if (isPendingOpenOrRecentlyClosed(lastThreeClosed, rfi))
+        pendingOpenAndLastThreeClosed.add(rfi);
+
     pendingOpenAndLastThreeClosed.sort(Comparator.comparing(Rfi::getRfiId));
+
     return pendingOpenAndLastThreeClosed;
   }
 

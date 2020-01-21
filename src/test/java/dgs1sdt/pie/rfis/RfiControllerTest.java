@@ -15,10 +15,12 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 
+// Prevent duplicate RFIs from race condition between rfiService.fetchRfisFromUris(files) in getRfisDirectlyFromGETS()
+// test and scheduled function fetchRfisFromGets()
 @TestPropertySource(
   properties = {
-    "GETS_URI_OPEN_PENDING=RfisNewOpen.xml",
-    "GETS_URI_CLOSED=RfisClosed.xml",
+    "GETS_URI_OPEN_PENDING=",
+    "GETS_URI_CLOSED=",
   })
 public class RfiControllerTest extends BaseIntegrationTest {
 
@@ -30,6 +32,21 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   @Autowired
   RfiService rfiService;
+
+  @Autowired
+  public void setRfiRepository(RfiRepository rfiRepository) {
+    this.rfiRepository = rfiRepository;
+  }
+
+  @Autowired
+  public void setRfiController(RfiController rfiController) {
+    this.rfiController = rfiController;
+  }
+
+  @Autowired
+  public void setRfiService(RfiService rfiService) {
+    this.rfiService = rfiService;
+  }
 
   @Before
   public void clean() {
