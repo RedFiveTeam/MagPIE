@@ -8,14 +8,13 @@ import { useEffect } from 'react';
 interface Props {
   fetchLocalUpdate: () => void;
   sortKey: SortKeyModel;
-  postRefreshClick: () => Promise<any>;
+  postRefreshClick: () => void;
   className?: string;
 }
 
 export const RfiTableHeaderButtonSection: React.FC<Props> = props => {
   function refreshPage() {
-    props.postRefreshClick()
-      .catch((reason => {console.log("Failed to post refresh click metric: " + reason)}));
+    props.postRefreshClick();
     props.fetchLocalUpdate();
   }
 
