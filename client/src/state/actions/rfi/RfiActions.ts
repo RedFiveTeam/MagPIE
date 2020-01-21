@@ -41,7 +41,7 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
   postRfis.push(new RfiPostModel(changingRfi!.id, changingRfi!.priority));
 
   //resort by new priority
-  RfiSorter.sort(reprioritizedList, new SortKeyModel(Field.PRIORITY, true));
+  reprioritizedList = RfiSorter.sort(reprioritizedList, new SortKeyModel(Field.PRIORITY, true));
 
 
   //Try to post updates; if they are invalid, reload page instead
