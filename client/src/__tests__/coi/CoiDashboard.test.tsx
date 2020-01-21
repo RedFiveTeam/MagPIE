@@ -1,13 +1,12 @@
 import { CoiDashboard } from '../../workflow/coi-page/CoiDashboard';
+import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import * as React from 'react';
 
-// @ts-ignore
-import moment from 'moment';
-
 describe('CoiDashboardContainer', () => {
   let subject: ShallowWrapper;
+  const moment = require('moment');
   let rfiTest = new RfiModel("DGS-SPC-2335", "www.spacejam.com", RfiStatus.OPEN, "space forse", moment('2019-11-20').utc(), "USLT", "Good morning starshine, the earth says hello", 42);
   let exitSpy: jest.Mock;
 

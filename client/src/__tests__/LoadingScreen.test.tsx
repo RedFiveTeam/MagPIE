@@ -1,3 +1,4 @@
+import '../setupEnzyme';
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { LoadingScreen } from '../workflow/loading-page/LoadingScreen';

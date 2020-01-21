@@ -1,8 +1,7 @@
+import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RfiRow } from '../../workflow/rfi-page/row/RfiRow';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-// @ts-ignore
-import moment from 'moment';
 import * as React from 'react';
 import { StyledRfiRowInformationSection } from '../../workflow/rfi-page/row/RfiRowInformationSection';
 import { StyledRfiRowButtonSection } from '../../workflow/rfi-page/row/RfiRowButtonSection';
@@ -11,6 +10,7 @@ describe('RFIRow', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
+    const moment = require('moment');
     subject = shallow(
       <RfiRow
         rfi={new RfiModel('id', 'url', RfiStatus.PENDING, 'customer', moment(), 'country', 'hi', -1)}

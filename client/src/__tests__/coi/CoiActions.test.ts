@@ -1,6 +1,6 @@
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import { ActionTypes } from '../../state/actions/ActionTypes';
-import { exitCoiPage, navigateToCoiPage } from '../../state/actions/coi/CoiActions';
+import { exitCoiPage, navigateToCoiPage } from '../../state/actions';
 // @ts-ignore
 import moment from 'moment'
 

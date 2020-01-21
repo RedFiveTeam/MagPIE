@@ -3,6 +3,7 @@ import RfiModel, { RfiStatus } from '../workflow/rfi-page/models/RfiModel';
 import reducer from '../state/reducers/reducer';
 import * as moment from 'moment';
 import { Field, SortKeyModel } from '../workflow/rfi-page/models/SortKeyModel';
+import 'isomorphic-fetch';
 
 describe('reducer', () => {
   let singleStatusRfiList: RfiModel[];

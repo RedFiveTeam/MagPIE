@@ -1,3 +1,4 @@
+import '../../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { RfiTableHeader } from '../../workflow/rfi-page/header/RfiTableHeader';

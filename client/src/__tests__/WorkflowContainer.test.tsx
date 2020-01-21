@@ -4,13 +4,13 @@ import { StyledLoadingScreen } from '../workflow/loading-page/LoadingScreen';
 import { StyledCoiDashboard } from '../workflow/coi-page/CoiDashboard';
 import { WorkflowContainer } from '../workflow/WorkflowContainer';
 import { StyledRfiDashboard } from '../workflow/rfi-page/RfiDashboard';
+import '../setupEnzyme';
 
 describe('RMDashboardContainer', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
     subject = shallow(
-    // @ts-ignore
       <WorkflowContainer
         fetchRfis={()=>{}}
         postSiteVisit={()=>{}}
@@ -21,7 +21,6 @@ describe('RMDashboardContainer', () => {
 
   it('should display loading screen while app is loading', () => {
     subject = shallow(
-    // @ts-ignore
       <WorkflowContainer
         fetchRfis={()=>{}}
         postSiteVisit={()=>{}}
@@ -32,7 +31,6 @@ describe('RMDashboardContainer', () => {
     expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledCoiDashboard).exists()).toBeFalsy();
     subject = shallow(
-    // @ts-ignore
       <WorkflowContainer
         fetchRfis={()=>{}}
         postSiteVisit={()=>{}}
@@ -46,7 +44,6 @@ describe('RMDashboardContainer', () => {
 
   it('should display the rfi page upon loading of app', () => {
     subject = shallow(
-      // @ts-ignore
       <WorkflowContainer
         fetchRfis={()=>{}}
         postSiteVisit={()=>{}}
@@ -60,7 +57,6 @@ describe('RMDashboardContainer', () => {
 
   it('should display the coi page when user navigates through rfi', () => {
     subject = shallow(
-      // @ts-ignore
       <WorkflowContainer
         fetchRfis={()=>{}}
         postSiteVisit={()=>{}}

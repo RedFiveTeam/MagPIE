@@ -6,9 +6,7 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
 import { RfiSorter } from '../../state/utils/RfiSorter';
-
-// @ts-ignore
-import moment from 'moment'
+import * as moment from 'moment';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -28,6 +26,7 @@ describe('RfiActions', () => {
     const store = mockStore({openRfis: rfiList});
 
     //Mock response from backend as successful reprioritization
+    // @ts-ignore
     fetch.mockResponse(JSON.stringify({PromiseValue: true}));
 
     // @ts-ignore

@@ -1,17 +1,15 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RfiRowInformationSection } from '../../workflow/rfi-page/row/RfiRowInformationSection';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-
-// @ts-ignore
-import moment from 'moment';
 import IconDnDBurger from '../../resources/icons/DnDBurgerVector';
 import * as React from 'react';
-import IconShowMore from '../../resources/icons/ShowMoreVector';
+import '../../setupEnzyme';
 
 describe('RFIRowInformationSection', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
+    const moment = require('moment');
     let rfi = new RfiModel('2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
     subject = shallow(
       <RfiRowInformationSection

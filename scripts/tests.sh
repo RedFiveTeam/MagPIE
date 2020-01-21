@@ -72,7 +72,7 @@ function unitTests {
     popd
 
     pushd ${BASE_DIR}/client
-        CI=true yarn test
+        CI=true yarn jest
     popd
 }
 

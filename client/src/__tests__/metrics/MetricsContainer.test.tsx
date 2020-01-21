@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { MetricsContainer } from '../../metrics/MetricsContainer';
-
+import '../../setupEnzyme';
 
 describe('MetricsContainer', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {
-
     subject = shallow(
-      // @ts-ignore
       <MetricsContainer
           GetsClicks={15}
           fetchGetsClicksMetrics={() => null}

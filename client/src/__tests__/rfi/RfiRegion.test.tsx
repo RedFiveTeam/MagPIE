@@ -1,18 +1,17 @@
 import { RfiRow } from '../../workflow/rfi-page/row/RfiRow';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-
-// @ts-ignore
-import moment from 'moment';
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RfiRegion } from '../../workflow/rfi-page/RfiRegion';
 import { StyledRfiRegionDivider } from '../../workflow/rfi-page/RfiRegionDivider';
+import '../../setupEnzyme';
 
 describe('Region', () => {
   let rows: any[];
   let subject: ShallowWrapper;
 
   beforeEach(() => {
+    const moment = require('moment');
     rows = [
       <RfiRow
         rfi={new RfiModel('19-001', 'url', RfiStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi', -1)}

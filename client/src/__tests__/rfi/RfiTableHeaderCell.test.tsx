@@ -1,3 +1,4 @@
+import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { RfiTableHeaderCell } from '../../workflow/rfi-page/header/RfiTableHeaderCell';
 import * as React from 'react';
