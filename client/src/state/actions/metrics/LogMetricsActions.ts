@@ -4,14 +4,18 @@ import RfiFetchRequestModel from '../../../metrics/models/RfiFetchRequestModel';
 import { server } from '../../../config';
 
 export const postSiteVisit = () => {
-      return fetch(server + '/api/metrics/site-visit',
+  return () => {
+    return fetch(
+      server + '/api/metrics/site-visit',
       {
         method: 'post'
       }
-    );
+    ).catch((reason => {console.log("Failed to post sort click metric: " + reason)}));
+  }
 };
 
 export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
+  return () => {
     return fetch(
       server + '/api/metrics/gets-click',
       {
@@ -22,35 +26,40 @@ export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
         },
         body: JSON.stringify(getsClickRequestModel),
       }
-    )
+    ).catch((reason => {console.log("Failed to post GETS click metric: " + reason)}));
+  }
 };
 
 export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
-  return fetch(
-    server + '/api/metrics/sort-click',
-    {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(sortClickRequestModel),
-    }
-  )
+  return () => {
+    return fetch(
+      server + '/api/metrics/sort-click',
+      {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sortClickRequestModel),
+      }
+    ).catch((reason => {console.log("Failed to post sort click metric: " + reason)}));
+  }
 };
 
 export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestModel) => {
-  return fetch(
-    server + '/api/metrics/rfi-fetch',
-    {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(rfiFetchRequestModel),
-    }
-  )
+  return () => {
+    return fetch(
+      server + '/api/metrics/rfi-fetch',
+      {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(rfiFetchRequestModel),
+      }
+    ).catch((reason => {console.log("Failed to post RFI fetch time metric: " + reason)}));
+  }
 };
 
 export const postRefreshClick = () => {
@@ -60,6 +69,6 @@ export const postRefreshClick = () => {
       {
         method: 'post'
       }
-    );
+    ).catch((reason => {console.log("Failed to post refresh click metric: " + reason)}));
   }
 };

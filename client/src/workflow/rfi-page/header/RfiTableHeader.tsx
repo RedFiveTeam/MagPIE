@@ -11,7 +11,7 @@ import { fetchLocalUpdate, sortRfis } from '../../../state/actions';
 
 interface Props {
   sortRfis: (field: Field) => void;
-  postRefreshClick: () => void;
+  postRefreshClick: () => Promise<any>;
   fetchLocalUpdate: () => void;
   sortKey: SortKeyModel;
   className?: string;
