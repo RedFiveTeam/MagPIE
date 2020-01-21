@@ -29,9 +29,9 @@ export const RfiTableHeader: React.FC<Props> = props => {
         />
         <StyledHeaderCell
           text={'RFI'}
-          sort={() => props.sortRfis(Field.ID)}
-          field={Field.ID}
-          className={'header-cell--id'}
+          sort={() => props.sortRfis(Field.RFINUM)}
+          field={Field.RFINUM}
+          className={'header-cell--rfi-num'}
         />
         <StyledHeaderCell
           text={'CC'}
@@ -108,7 +108,7 @@ export const StyledRfiTableHeader = styled(
     flex-direction: row;
   }
   
-  .header-cell--id {
+  .header-cell--rfi-num {
     justify-content: flex-start;
     width: 70px;
   }

@@ -14,7 +14,7 @@ public class RfiUpdate {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  private String rfiId;
+  private String rfiNum;
   private Date datetime; // time change *observed*
   private String field;
 
@@ -25,13 +25,13 @@ public class RfiUpdate {
   private String newData;
 
   public RfiUpdate(
-    String rfiId,
+    String rfiNum,
     Date datetime,
     String field,
     String oldData,
     String newData
   ) {
-    this.rfiId = rfiId;
+    this.rfiNum = rfiNum;
     this.datetime = datetime;
     this.field = field;
     this.oldData = oldData;
@@ -44,7 +44,7 @@ public class RfiUpdate {
     Rfi oldRfi,
     String field
   ) {
-    this.rfiId = newRfi.getRfiId();
+    this.rfiNum = newRfi.getRfiNum();
     this.datetime = datetime;
     this.field = field;
     switch (field) {

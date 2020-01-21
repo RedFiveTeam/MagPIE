@@ -14,13 +14,13 @@ describe('RFISorter', () => {
     ];
   });
 
-  it('should sort by RFI ID ascending and descending', () => {
-    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.ID, true))).toEqual([
+  it('should sort by RFI RFINUM ascending and descending', () => {
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.RFINUM, true))).toEqual([
       new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
     ]);
-    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.ID, false))).toEqual([
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.RFINUM, false))).toEqual([
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
       new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
@@ -43,7 +43,7 @@ describe('RFISorter', () => {
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
       new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
     ]);
-    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.ID, true))).toEqual([
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.RFINUM, true))).toEqual([
       new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
@@ -61,7 +61,7 @@ describe('RFISorter', () => {
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
     ]);
-    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.ID, false))).toEqual([
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.RFINUM, false))).toEqual([
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
       new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
@@ -79,7 +79,7 @@ describe('RFISorter', () => {
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
     ]);
-    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.ID, false))).toEqual([
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.RFINUM, false))).toEqual([
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
       new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
@@ -97,7 +97,7 @@ describe('RFISorter', () => {
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
       new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
     ]);
-    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.ID, true))).toEqual([
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.RFINUM, true))).toEqual([
       new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 3),
       new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1),
       new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2),
@@ -113,7 +113,7 @@ describe('RFISorter', () => {
     let rfiListOriginal: RfiModel[] = rfiList.slice(0);
 
     expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.LTIOV, false))).toEqual(rfiListOriginal);
-    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.ID, true))).toEqual(rfiListOriginal);
+    expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.RFINUM, true))).toEqual(rfiListOriginal);
     expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.CUSTOMER, false))).toEqual(rfiListOriginal);
     expect(RfiSorter.sort(rfiList, new SortKeyModel(Field.PRIORITY, true))).toEqual(rfiListOriginal);
   });

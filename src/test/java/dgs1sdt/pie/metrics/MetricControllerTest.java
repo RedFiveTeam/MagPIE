@@ -5,6 +5,8 @@ import dgs1sdt.pie.metrics.getsclick.GetsClicksRepository;
 import dgs1sdt.pie.metrics.getsclick.GetsClick;
 import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
 import dgs1sdt.pie.metrics.refreshclicks.RefreshClicksRepository;
+import dgs1sdt.pie.metrics.rfiexploitdateschange.RfiExploitDatesChange;
+import dgs1sdt.pie.metrics.rfiexploitdateschange.RfiExploitDatesChangeRepository;
 import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChange;
 import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChangeRepository;
 import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
@@ -17,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +50,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private RefreshClicksRepository refreshClicksRepository;
 
+  @Autowired
+  private RfiExploitDatesChangeRepository rfiExploitDatesChangeRepository;
+
   @Before
   public void setup() {
     getsClicksRepository.deleteAll();
@@ -55,6 +61,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     rfiPriorityChangeRepository.deleteAll();
     rfiUpdateRepository.deleteAll();
     refreshClicksRepository.deleteAll();
+    rfiExploitDatesChangeRepository.deleteAll();
   }
 
   @Test
@@ -207,5 +214,16 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
     assertArrayEquals(last7DaysExpected, last7DaysActual);
 
+  }
+
+  @Test
+  public void createsNewExploitDatesChangeMetric() {
+    RfiExploitDatesChange rfiExploitDatesChange1 = new RfiExploitDatesChange("20-001", null, null, new Timestamp(1), new Timestamp(2), new Timestamp(100));
+    RfiExploitDatesChange rfiExploitDatesChange2 = new RfiExploitDatesChange("20-002", null, null, new Timestamp(3), new Timestamp(4), new Timestamp(100));
+
+    metricController.addRfiExploitDatesChange(rfiExploitDatesChange1);
+    metricController.addRfiExploitDatesChange(rfiExploitDatesChange2);
+
+    assertEquals(2, rfiExploitDatesChangeRepository.count());
   }
 }

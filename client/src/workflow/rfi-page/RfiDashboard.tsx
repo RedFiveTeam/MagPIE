@@ -31,13 +31,13 @@ function openRfis(rfis: RfiModel[], scrollRegionRef: any, sortKey: SortKeyModel)
 
   if (sortKey.field === Field.PRIORITY && sortKey.defaultOrder) {
     return rfis.map((rfi: RfiModel, index: number) =>
-      <Draggable draggableId={rfi.id} index={index} key={rfi.id}>
+      <Draggable draggableId={rfi.rfiNum} index={index} key={rfi.rfiNum}>
         {(provided, snapshot) => {
           return (
             <div
               {...provided.draggableProps}
               {...provided.dragHandleProps}
-              key={rfi.id}
+              key={rfi.rfiNum}
               ref={provided.innerRef}
             >
               <OpenRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}/>

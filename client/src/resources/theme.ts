@@ -17,12 +17,14 @@ const theme = {
     buttonInactive: crayonBox.notEggWhite,
     buttonActive: crayonBox.softMetal,
     buttonBackgroundActive: crayonBox.pitchBlack,
-    showLessBackground: crayonBox.subtleGray
+    showLessBackground: crayonBox.subtleGray,
+    addButtonBackground: crayonBox.forestGreen
   },
 
   font: {
     familyRow: 'Roboto',
     weightRow: 400,
+    weightMedium: 500,
     weightBold: 700,
     sizeRow: '16px',
     familyHeader: 'Roboto',
@@ -38,6 +40,10 @@ const theme = {
     tableWidth: '607px',
     rowWidth: '576px',
     leftWidth: '408px'
+  },
+
+  flatpickr: {
+    headerBackground: crayonBox.safetyOrange
   }
 };
 

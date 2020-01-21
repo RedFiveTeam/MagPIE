@@ -34,6 +34,8 @@ public class RfiService {
     this.rfiRepository = rfiRepository;
   }
 
+
+
   @Value("${GETS_URI_OPEN_PENDING}")
   String getsUriOpenPending;
 
@@ -51,7 +53,6 @@ public class RfiService {
 
   @Scheduled(fixedDelay = 60000)
   public void fetchRfisFromGets() {
-    System.out.println("Fetching from GETS!");
     String[] uris = {getsUriOpenPending, getsUriClosed};
     fetchRfisFromUris(uris);
   }
@@ -78,7 +79,7 @@ public class RfiService {
       if (isPendingOpenOrRecentlyClosed(lastThreeClosed, rfi))
         pendingOpenAndLastThreeClosed.add(rfi);
 
-    pendingOpenAndLastThreeClosed.sort(Comparator.comparing(Rfi::getRfiId));
+    pendingOpenAndLastThreeClosed.sort(Comparator.comparing(Rfi::getRfiNum));
 
     return pendingOpenAndLastThreeClosed;
   }
@@ -115,7 +116,7 @@ public class RfiService {
   }
 
   private void createOrUpdateRfi(Rfi newRfi, Date currDate) {
-    Rfi oldRfi = rfiRepository.findByRfiId(newRfi.getRfiId());
+    Rfi oldRfi = rfiRepository.findByRfiNum(newRfi.getRfiNum());
     if (existsInRepo(oldRfi)) {
       linkNewRfiToOldRfi(newRfi, oldRfi);
       if (hasChanged(newRfi, oldRfi)) {
@@ -133,6 +134,8 @@ public class RfiService {
   private void linkNewRfiToOldRfi(Rfi newRfi, Rfi oldRfi) {
     newRfi.setPriority(oldRfi.getPriority());
     newRfi.setId(oldRfi.getId());
+    newRfi.setExploitStart(oldRfi.getExploitStart());
+    newRfi.setExploitEnd(oldRfi.getExploitEnd());
   }
 
   private boolean hasChanged(Rfi newRfi, Rfi oldRfi) {
@@ -169,4 +172,5 @@ public class RfiService {
 
     return rfiList;
   }
+
 }

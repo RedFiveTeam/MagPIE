@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import RfiModel from '../models/RfiModel';
+import RfiModel, { RfiStatus } from '../models/RfiModel';
 import IconShowMore from '../../../resources/icons/ShowMoreVector';
 import IconShowLess from '../../../resources/icons/ShowLessVector';
 import IconDnDBurger from '../../../resources/icons/DnDBurgerVector';
@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { Field } from '../models/SortKeyModel';
 import AddCoiButtonVector from '../../../resources/icons/AddCoiButtonVector';
 import { navigateToCoiPage } from '../../../state/actions';
+import { formatRfiNum } from '../../../utils';
 
 interface Props {
   rfi: RfiModel;
@@ -17,12 +18,6 @@ interface Props {
   navigateToCoiPage: (rfi: RfiModel) => void;
   className?: string;
 }
-
-const formatID = (id: string): string => {
-  let year: string = id.substr(id.length - 8, 2);
-  let number: string = id.substr(id.length - 3, 3);
-  return `${year}-${number}`;
-};
 
 export const RfiRowInformationSection: React.FC<Props> = props => {
   const [expanded, setExpanded] = React.useState(false);
@@ -81,8 +76,8 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
             -
           </span>
       }
-      <span className={classNames('cell', 'cell--id')}>
-        {formatID(props.rfi.id)}
+      <span className={classNames('cell', 'cell--rfiNum')}>
+        {formatRfiNum(props.rfi.rfiNum)}
       </span>
       <span className={classNames('cell', 'cell--country')}>
           {props.rfi.country}
@@ -94,9 +89,15 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
             {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format("D MMM YY").toUpperCase()}
       </span>
       <div>
-        <button onClick={addCoiToRFI} className={'cell--addCoiButton'}>
+          {props.rfi.status === RfiStatus.OPEN ?
+        <button onClick={addCoiToRFI} className={'cell--add-coi-button'}>
           <AddCoiButtonVector/>
         </button>
+            :
+            <div className={'cell--add-coi-button-disabled'}>
+              <span>-</span>
+            </div>
+          }
       </div>
       <div className={'description-container'}>
         <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}
@@ -192,18 +193,32 @@ export const StyledRfiRowInformationSection = styled(
     z-index: -100;
   }
   
-  .cell--addCoiButton {
+  .cell--add-coi-button {
     border: none;
     cursor: pointer;
     background: none;
     padding-top: 9px;
     padding-left: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     
     :hover {
       path {
         fill: ${(props) => props.theme.color.buttonActive};
       }
     }
+  }
+  
+  .cell--add-coi-button-disabled {
+    border: none;
+    background: none;
+    width: 59px;  
+    height: 49px;
+    padding-left: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   

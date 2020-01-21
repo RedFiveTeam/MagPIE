@@ -29,17 +29,17 @@ public class GetsClickJSON {
     this.datetime = datetime;
   }
 
-  public GetsClickJSON(Date datetime, String status, String url) {
-    this.datetime = datetime;
-    this.status = status;
-    this.url = url;
-  }
-
   public String getUrl() {
     return url;
   }
 
   public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public GetsClickJSON(Date datetime, String status, String url) {
+    this.datetime = datetime;
+    this.status = status;
     this.url = url;
   }
 }

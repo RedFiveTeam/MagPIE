@@ -16,7 +16,7 @@ describe('RFITable', () => {
         openRfis={[]}
         closedRfis={[]}
         reorderRfis={()=> {}}
-        sortKey={new SortKeyModel(Field.ID, true)}
+        sortKey={new SortKeyModel(Field.RFINUM, true)}
       />
     );
   });

@@ -7,13 +7,15 @@ import org.w3c.dom.NodeList;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class RfiDeserializer {
   public static Rfi deserialize(Node rfiNode) throws Exception {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     Element element = (Element) rfiNode;
 
     return new Rfi(
-      getRfiID(rfiNode),
+      getRfiNum(rfiNode),
       getUrl(element),
       getStatus(element),
       getLastUpdate(element),
@@ -24,7 +26,7 @@ public class RfiDeserializer {
     );
   }
 
-  private static String getRfiID(Node node) {
+  private static String getRfiNum(Node node) {
     return node.getAttributes().getNamedItem("id").getNodeValue();
   }
 

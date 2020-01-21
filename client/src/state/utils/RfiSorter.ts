@@ -7,8 +7,8 @@ export class RfiSorter {
     let openPending: RfiModel[] = rfis.filter(rfi => rfi.status !== RfiStatus.CLOSED);
     let closed: RfiModel[] = rfis.filter(rfi => rfi.status === RfiStatus.CLOSED);
       switch (sortKey.field) {
-        case Field.ID:
-          return (sortKey.defaultOrder ? sortAscendingId(openPending) : sortDescendingId(openPending)).concat(closed);
+        case Field.RFINUM:
+          return (sortKey.defaultOrder ? sortAscendingNum(openPending) : sortDescendingNum(openPending)).concat(closed);
         case Field.CUSTOMER:
           return (sortKey.defaultOrder ? sortAscendingCustomer(openPending) : sortDescendingCustomer(openPending)).concat(closed);
         case Field.LTIOV:
@@ -35,15 +35,15 @@ function sortAscendingPriority(rfis: RfiModel[]) {
   });
 }
 
-function sortAscendingId(rfis: RfiModel[]) {
+function sortAscendingNum(rfis: RfiModel[]) {
   return rfis.sort(function (a, b) {
-    return a.id < b.id ? -1 : 1
+    return a.rfiNum < b.rfiNum ? -1 : 1
   });
 }
 
-function sortDescendingId(rfis: RfiModel[]) {
+function sortDescendingNum(rfis: RfiModel[]) {
   return rfis.sort(function (a, b) {
-    return a.id > b.id ? -1 : 1
+    return a.rfiNum > b.rfiNum ? -1 : 1
   });
 }
 

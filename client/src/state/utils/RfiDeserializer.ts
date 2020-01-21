@@ -21,14 +21,17 @@ export class RfiDeserializer {
     if (items.map) {
       return items.map((item: any) => {
         return new RfiModel(
-          item.rfiId,
+          item.rfiNum,
           item.getsUrl,
           matchEnum(item.status),
           item.customer,
           item.ltiov === null ? undefined : moment(item.ltiov, moment.ISO_8601).utc(),
           item.country,
           item.description,
-          item.priority);
+          item.priority,
+          item.exploitStart === null ? null : moment(item.exploitStart, moment.ISO_8601).utc(),
+          item.exploitEnd === null ? null : moment(item.exploitEnd, moment.ISO_8601).utc()
+          );
       });
     }
     return [];

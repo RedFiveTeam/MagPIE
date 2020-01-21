@@ -8,13 +8,22 @@ export enum RfiStatus {
 
 export default class RfiModel {
   constructor(
-    public id: string,
+    public rfiNum: string,
     public getsUrl: string,
     public status: RfiStatus = RfiStatus.PENDING,
     public customer: string,
     public ltiov: Moment | undefined,
     public country: string,
     public description: string,
-    public priority: number) {
+    public priority: number,
+    public exploitStart?: Moment | null,
+    public exploitEnd?: Moment | null
+  ) {
+    if (!exploitStart) {
+      this.exploitStart = null;
+    }
+    if (!exploitEnd) {
+      this.exploitEnd = null;
+    }
   }
 }

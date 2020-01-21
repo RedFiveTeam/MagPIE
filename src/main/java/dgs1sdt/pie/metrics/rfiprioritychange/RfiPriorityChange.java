@@ -16,13 +16,13 @@ public class RfiPriorityChange {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  private String rfiId;
+  private String rfiNum;
   private int oldPri;
   private int newPri;
   private Date datetime;
 
-  public RfiPriorityChange(String rfiId, int oldPri, int newPri, Date datetime) {
-    this.rfiId = rfiId;
+  public RfiPriorityChange(String rfiNum, int oldPri, int newPri, Date datetime) {
+    this.rfiNum = rfiNum;
     this.oldPri = oldPri;
     this.newPri = newPri;
     this.datetime = datetime;

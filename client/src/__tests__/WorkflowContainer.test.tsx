@@ -13,6 +13,7 @@ describe('WorkflowContainer', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
+        fetchLocalUpdate={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={true}
         viewCoiPage={false}
@@ -23,6 +24,7 @@ describe('WorkflowContainer', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
+        fetchLocalUpdate={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={true}
         viewCoiPage={true}
@@ -36,6 +38,7 @@ describe('WorkflowContainer', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
+        fetchLocalUpdate={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
         viewCoiPage={false}
@@ -49,6 +52,7 @@ describe('WorkflowContainer', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
+        fetchLocalUpdate={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
         viewCoiPage={true}

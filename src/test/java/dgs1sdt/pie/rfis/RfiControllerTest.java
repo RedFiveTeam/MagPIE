@@ -5,10 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -21,22 +22,13 @@ import static org.junit.Assert.*;
   properties = {
     "GETS_URI_OPEN_PENDING=",
     "GETS_URI_CLOSED=",
+    "GETS_REQUEST_TIME_FRAME_IN_DAYS=20"
   })
 public class RfiControllerTest extends BaseIntegrationTest {
 
-  @Autowired
   RfiController rfiController;
-
-  @Autowired
-  RfiRepository rfiRepository;
-
-  @Autowired
   RfiService rfiService;
-
-  @Autowired
-  public void setRfiRepository(RfiRepository rfiRepository) {
-    this.rfiRepository = rfiRepository;
-  }
+  RfiRepository rfiRepository;
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -48,18 +40,32 @@ public class RfiControllerTest extends BaseIntegrationTest {
     this.rfiService = rfiService;
   }
 
+  @Autowired
+  public void setRfiRepository(RfiRepository rfiRepository) {
+    this.rfiRepository = rfiRepository;
+  }
+
+
   @Before
   public void clean() {
     rfiRepository.deleteAll();
   }
 
   @Test
-  public void getRfisDirectlyFromGETS() {
+  public void getRfisDirectlyFromGETS() throws Exception{
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     String[] files = {
       "RfisNewOpen.xml",
       "RfisClosed.xml"
     };
     rfiService.fetchRfisFromUris(files);
+
+    Rfi exploitingRfi = new Rfi("ZZZZZ", "", "OPEN", new Date(), "", new Date(), "", "", 1,
+      new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020"),
+      new SimpleDateFormat("dd/MM/yyyy").parse("15/11/2020"));
+
+    rfiRepository.save(exploitingRfi);
+
 
     String firstDescription = "hi";
     String longDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
@@ -74,7 +80,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .get(RfiController.URI)
       .then()
       .statusCode(200)
-      .body("[2].rfiId", equalTo("DGS-1-SDT-2020-00321"))
+      .body("[2].rfiNum", equalTo("DGS-1-SDT-2020-00321"))
       .body("[2].getsUrl", equalTo("http://www.google.com"))
       .body("[2].lastUpdate", equalTo("2019-11-05T14:21:21.000+0000"))
       .body("[2].status", equalTo("NEW"))
@@ -83,16 +89,18 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[2].country", equalTo("USA"))
       .body("[2].description", equalTo(firstDescription))
       .body("[2].priority", equalTo(-1))
+      .body("[2].exploitStart", equalTo(null))
+      .body("[2].exploitEnd", equalTo(null))
 
       .body("[5].status", equalTo("OPEN"))
       .body("[5].priority", greaterThan(0))
 
-      .body("[9].rfiId", equalTo("DGS-1-SDT-2020-00329"))
+      .body("[9].rfiNum", equalTo("DGS-1-SDT-2020-00329"))
       .body("[9].status", equalTo("CLOSED"))
       .body("[9].description", equalTo(longDescription))
       .body("[9].priority", equalTo(-1))
 
-      .body("[15].rfiId", equalTo("DGS-1-SDT-2020-00338"))
+      .body("[15].rfiNum", equalTo("DGS-1-SDT-2020-00338"))
       .body("[15].getsUrl", equalTo("http://www.google.com"))
       .body("[15].lastUpdate", equalTo("2019-10-16T20:21:26.000+0000"))
       .body("[15].status", equalTo("OPEN"))
@@ -100,9 +108,12 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[15].ltiov", equalTo(null))
       .body("[15].country", equalTo("CAN"))
 
-      .body("[16].rfiId", equalTo(null));
+      .body("[16].rfiNum", equalTo("ZZZZZ"))
+      .body("[16].exploitStart", equalTo("2020-11-11T00:00:00.000+0000"))
+      .body("[16].exploitEnd", equalTo("2020-11-15T00:00:00.000+0000"))
 
-    System.out.println();
+      .body("[17].rfiNum", equalTo(null));
+
   }
 
   @Test
@@ -125,38 +136,62 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     rfiRepository.saveAll(rfis);
 
-    RfiJson [] rfiJsons = {
-      new RfiJson("id1", 1),
-      new RfiJson("id2", 2),
-      new RfiJson("id3", 3)
+    RfiPriorityJson [] rfiJsons = {
+      new RfiPriorityJson("id1", 1),
+      new RfiPriorityJson("id2", 2),
+      new RfiPriorityJson("id3", 3)
     };
 
     assertTrue(rfiController.updatePriority(rfiJsons));
-    assertEquals(1, rfiRepository.findByRfiId("id1").getPriority());
+    assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
 
-    rfiJsons = new RfiJson[]{
-      new RfiJson("id1", 2),
-      new RfiJson("id3", 3)
+    rfiJsons = new RfiPriorityJson[]{
+      new RfiPriorityJson("id1", 2),
+      new RfiPriorityJson("id3", 3)
     };
 
     assertFalse(rfiController.updatePriority(rfiJsons));
-    assertEquals(1, rfiRepository.findByRfiId("id1").getPriority());
-    assertEquals(3, rfiRepository.findByRfiId("id3").getPriority());
+    assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
+    assertEquals(3, rfiRepository.findByRfiNum("id3").getPriority());
 
-    rfiJsons = new RfiJson[]{
-      new RfiJson("id4", 2),
-      new RfiJson("id3", 3),
-      new RfiJson("id1", 4)
+    rfiJsons = new RfiPriorityJson[]{
+      new RfiPriorityJson("id4", 2),
+      new RfiPriorityJson("id3", 3),
+      new RfiPriorityJson("id1", 4)
     };
 
     assertFalse(rfiController.updatePriority(rfiJsons));
-    assertEquals(1, rfiRepository.findByRfiId("id1").getPriority());
-    assertEquals(2, rfiRepository.findByRfiId("id2").getPriority());
-    assertEquals(3, rfiRepository.findByRfiId("id3").getPriority());
-    assertEquals(4, rfiRepository.findByRfiId("id4").getPriority());
+    assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
+    assertEquals(2, rfiRepository.findByRfiNum("id2").getPriority());
+    assertEquals(3, rfiRepository.findByRfiNum("id3").getPriority());
+    assertEquals(4, rfiRepository.findByRfiNum("id4").getPriority());
 
   }
 
+  @Test
+  public void updatesExploitDates() throws Exception {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    String[] files = {
+      "RfisNewOpen.xml",
+      "RfisClosed.xml"
+    };
+    rfiService.fetchRfisFromUris(files);
+
+    RfiExploitDatesJson update = new RfiExploitDatesJson(
+      "DGS-1-SDT-2020-00338",
+      new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020"),
+      new SimpleDateFormat("dd/MM/yyyy").parse("15/11/2020"));
+
+    rfiController.updateExploitDates(update);
+
+    Rfi updatedRfi = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338");
+
+    assertEquals("2020-11-11 00:00:00.0", updatedRfi.getExploitStart().toString());
+    assertEquals("2020-11-15 00:00:00.0", updatedRfi.getExploitEnd().toString());
+
+
+
+  }
 
 }
 

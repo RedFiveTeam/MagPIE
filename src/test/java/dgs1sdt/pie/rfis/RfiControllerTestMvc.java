@@ -28,7 +28,7 @@ public class RfiControllerTestMvc {
   @Test
   public void getRfisFromFrontEnd() throws Exception {
     String jsonString = "[{" +
-      "\"rfiId\":" + "\"20-005\"," +
+      "\"rfiNum\":" + "\"20-005\"," +
       "\"priority\":" + "1" +
       "}]";
 

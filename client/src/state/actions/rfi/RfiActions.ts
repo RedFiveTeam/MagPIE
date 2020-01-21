@@ -4,7 +4,7 @@ import RfiModel from "../../../workflow/rfi-page/models/RfiModel";
 import { RfiSorter } from '../../utils/RfiSorter';
 import { Field, SortKeyModel } from '../../../workflow/rfi-page/models/SortKeyModel';
 import RfiFetchRequestModel from '../../../metrics/models/RfiFetchRequestModel';
-import RfiPostModel from '../../../workflow/rfi-page/models/RfiPostModel';
+import RfiPriorityPostModel from '../../../workflow/rfi-page/models/RfiPriorityPostModel';
 import { postRfiFetchTimeMetric } from '..';
 import { server } from '../../../config';
 
@@ -16,30 +16,30 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
   //clone rfiList
   let reprioritizedList: RfiModel[] = Object.assign([], rfiList);
 
-  //find the rfi by id
+  //find the rfi by rfiNum
   let changingRfi = rfiList.find((rfi) => {
-    return rfi.id === rfiId;
+    return rfi.rfiNum === rfiId;
   });
 
   let originalPriority = changingRfi!.priority;
-  let postRfis: RfiPostModel[] = [];
+  let postRfis: RfiPriorityPostModel[] = [];
 
   //change everything after it
   if (newIndex + 1 < originalPriority) { //moving up
     for (let i = newIndex; i < originalPriority - 1; i++) {
       reprioritizedList[i].priority = reprioritizedList[i].priority + 1;
-      postRfis.push(new RfiPostModel(reprioritizedList[i].id, reprioritizedList[i].priority));
+      postRfis.push(new RfiPriorityPostModel(reprioritizedList[i].rfiNum, reprioritizedList[i].priority));
     }
   } else { //moving down
     for (let i = originalPriority; i <= newIndex; i++) {
       reprioritizedList[i].priority = reprioritizedList[i].priority - 1;
-      postRfis.push(new RfiPostModel(reprioritizedList[i].id, reprioritizedList[i].priority));
+      postRfis.push(new RfiPriorityPostModel(reprioritizedList[i].rfiNum, reprioritizedList[i].priority));
     }
   }
 
   //change its prio
   changingRfi!.priority = newIndex + 1;
-  postRfis.push(new RfiPostModel(changingRfi!.id, changingRfi!.priority));
+  postRfis.push(new RfiPriorityPostModel(changingRfi!.rfiNum, changingRfi!.priority));
 
   //resort by new priority
   reprioritizedList = RfiSorter.sort(reprioritizedList, new SortKeyModel(Field.PRIORITY, true));
@@ -65,7 +65,7 @@ const reprioritizeRfis = (reprioritizedList: RfiModel[]) => {
   };
 };
 
-const postRfiPriorityUpdate = (rfis: RfiPostModel[]) => {
+const postRfiPriorityUpdate = (rfis: RfiPriorityPostModel[]) => {
   return fetch(
     server + '/api/rfis/update-priority',
     {

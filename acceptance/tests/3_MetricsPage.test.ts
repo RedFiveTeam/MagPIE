@@ -8,6 +8,6 @@ Scenario ('Should log and display metrics', (I) => {
   I.click('.section--button');
 
   I.amOnPage('/metrics');
-  I.waitForText('Site Visits: 5', 10);
+  I.waitForText('Site Visits: 6', 10);
   I.waitForText('GETS URL Clicks: 1', 10);
 });

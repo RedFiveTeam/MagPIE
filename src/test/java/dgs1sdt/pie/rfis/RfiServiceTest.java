@@ -91,7 +91,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
     rfiFirst = rfiRepository.findById(rfiFirst.getId()).get();
     assertEquals(1, rfiFirst.getPriority());
 
-    Rfi newlyOpenedRfi = rfiRepository.findByRfiId("DGS-1-SDT-2020-00323");
+    Rfi newlyOpenedRfi = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00323");
     assertEquals(rfiCount + 1, newlyOpenedRfi.getPriority());
   }
 
@@ -105,8 +105,8 @@ public class RfiServiceTest extends BaseIntegrationTest {
   public void sendsRfiUpdateMetricIfThereIsAChangeInAnRfi() {
     Date rfi1ltiov = new Date();
 
-    Rfi rfi = new Rfi("id", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a description");
-    Rfi updatedRfi = new Rfi("id", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved description");
+    Rfi rfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a description");
+    Rfi updatedRfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved description");
     Rfi rfi2 = new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description");
 
     long rfiUpdateCount = rfiUpdateRepository.count();

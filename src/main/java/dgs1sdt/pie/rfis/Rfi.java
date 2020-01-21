@@ -1,20 +1,15 @@
 package dgs1sdt.pie.rfis;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 public class Rfi {
   @Id
@@ -23,7 +18,7 @@ public class Rfi {
 
   @Column(length = 65535)
   private String description;
-  private String rfiId;
+  private String rfiNum;
   private String getsUrl;
   private String status;
   private Timestamp lastUpdate;
@@ -31,9 +26,11 @@ public class Rfi {
   private Timestamp ltiov;
   private String country;
   private int priority;
+  private Timestamp exploitStart;
+  private Timestamp exploitEnd;
 
   public Rfi(
-    String rfiId,
+    String rfiNum,
     String getsUrl,
     String status,
     Date lastUpdate,
@@ -42,8 +39,9 @@ public class Rfi {
     String country,
     String description
   ) {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     this.getsUrl = getsUrl;
-    this.rfiId = rfiId;
+    this.rfiNum = rfiNum;
     this.status = status;
     this.lastUpdate = new Timestamp(lastUpdate.getTime());
     this.customer = customer;
@@ -57,10 +55,12 @@ public class Rfi {
     this.country = country;
     this.description = description;
     this.priority = -1;
+    this.exploitStart = null;
+    this.exploitEnd = null;
   }
 
   public Rfi(
-    String rfiId,
+    String rfiNum,
     String getsUrl,
     String status,
     Date lastUpdate,
@@ -70,8 +70,9 @@ public class Rfi {
     String description,
     int priority
   ) {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     this.getsUrl = getsUrl;
-    this.rfiId = rfiId;
+    this.rfiNum = rfiNum;
     this.status = status;
     this.lastUpdate = new Timestamp(lastUpdate.getTime());
     this.customer = customer;
@@ -79,7 +80,37 @@ public class Rfi {
     this.country = country;
     this.description = description;
     this.priority = priority;
+    this.exploitStart = null;
+    this.exploitEnd = null;
   }
+
+  public Rfi(
+    String rfiNum,
+    String getsUrl,
+    String status,
+    Date lastUpdate,
+    String customer,
+    Date ltiov,
+    String country,
+    String description,
+    int priority,
+    Date exploitStart,
+    Date exploitEnd
+  ) {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    this.getsUrl = getsUrl;
+    this.rfiNum = rfiNum;
+    this.status = status;
+    this.lastUpdate = new Timestamp(lastUpdate.getTime());
+    this.customer = customer;
+    this.ltiov = new Timestamp(ltiov.getTime());
+    this.country = country;
+    this.description = description;
+    this.priority = priority;
+    this.exploitStart = new Timestamp(exploitStart.getTime());
+    this.exploitEnd = new Timestamp(exploitEnd.getTime());
+  }
+
 
   public List<String> compare(Rfi otherRfi) throws NullPointerException {
     List<String> diff = new ArrayList<>();

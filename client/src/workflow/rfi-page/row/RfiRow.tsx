@@ -16,7 +16,7 @@ export const RfiRow: React.FC<Props> = props => {
   return (
     <div
       className={classNames('rfi-row', props.className)}
-      key={props.rfi.id}
+      key={props.rfi.rfiNum}
     >
       <div className={classNames('section', 'section--left')}>
         <StyledRfiRowInformationSection rfi={props.rfi} scrollRegionRef={props.scrollRegionRef}/>

@@ -5,6 +5,8 @@ import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
 import dgs1sdt.pie.metrics.getsclick.GetsClicksRepository;
 import dgs1sdt.pie.metrics.refreshclicks.RefreshClicks;
 import dgs1sdt.pie.metrics.refreshclicks.RefreshClicksRepository;
+import dgs1sdt.pie.metrics.rfiexploitdateschange.RfiExploitDatesChange;
+import dgs1sdt.pie.metrics.rfiexploitdateschange.RfiExploitDatesChangeRepository;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetch;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetchJson;
 import dgs1sdt.pie.metrics.rfifetch.RfiFetchRepository;
@@ -17,6 +19,7 @@ import dgs1sdt.pie.metrics.sitevisit.SiteVisitRepository;
 import dgs1sdt.pie.metrics.sortclick.SortClick;
 import dgs1sdt.pie.metrics.sortclick.SortClickJson;
 import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +30,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(MetricController.URI)
+@AllArgsConstructor
 public class MetricController {
   public static final String URI = "/api/metrics";
 
@@ -37,6 +41,7 @@ public class MetricController {
   private RfiPriorityChangeRepository rfiPriorityChangeRepository;
   private RfiUpdateRepository rfiUpdateRepository;
   private RefreshClicksRepository refreshClicksRepository;
+  private RfiExploitDatesChangeRepository rfiExploitDatesChangeRepository;
 
   @Autowired
   public void setGetsClicksRepository(GetsClicksRepository getsClicksRepository) {
@@ -66,24 +71,11 @@ public class MetricController {
   public void setRefreshClicksRepository(RefreshClicksRepository refreshClicksRepository) {
     this.refreshClicksRepository = refreshClicksRepository;
   }
-
   @Autowired
-  public MetricController(GetsClicksRepository getsClicksRepository,
-                          SiteVisitRepository siteVisitRepository,
-                          SortClicksRepository sortClicksRepository,
-                          RfiFetchRepository rfiFetchRepository,
-                          RfiPriorityChangeRepository rfiPriorityChangeRepository,
-                          RfiUpdateRepository rfiUpdateRepository,
-                          RefreshClicksRepository refreshClicksRepository
-  ) {
-    this.getsClicksRepository = getsClicksRepository;
-    this.siteVisitRepository = siteVisitRepository;
-    this.sortClicksRepository = sortClicksRepository;
-    this.rfiFetchRepository = rfiFetchRepository;
-    this.rfiPriorityChangeRepository = rfiPriorityChangeRepository;
-    this.rfiUpdateRepository = rfiUpdateRepository;
-    this.refreshClicksRepository = refreshClicksRepository;
+  public void setRfiExploitDatesChangeRepository(RfiExploitDatesChangeRepository rfiExploitDatesChangeRepository) {
+    this.rfiExploitDatesChangeRepository = rfiExploitDatesChangeRepository;
   }
+
   @GetMapping(path = "/site-visits")
   public long getSiteVisitCount() {
     return siteVisitRepository.count();
@@ -195,4 +187,7 @@ public class MetricController {
     return this.rfiUpdateRepository.save(rfiUpdate);
   }
 
+  public RfiExploitDatesChange addRfiExploitDatesChange(RfiExploitDatesChange rfiExploitDatesChange) {
+    return this.rfiExploitDatesChangeRepository.save(rfiExploitDatesChange);
+  }
 }
