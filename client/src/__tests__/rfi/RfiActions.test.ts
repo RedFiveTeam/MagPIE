@@ -13,6 +13,9 @@ const mockStore = configureMockStore(middlewares);
 
 describe('RfiActions', () => {
   it('should re-prioritize RFIs based on a drag and drop priority change', () => {
+    //Ignore .catch() logs
+    console.log = jest.fn();
+
     let rfi1 = new RfiModel('19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 1);
     let rfi2 = new RfiModel('19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2);
     let rfi3 = new RfiModel('19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 3);
@@ -27,7 +30,7 @@ describe('RfiActions', () => {
 
     //Mock response from backend as successful reprioritization
     // @ts-ignore
-    fetch.mockResponse(JSON.stringify({PromiseValue: true}));
+    fetch.mockResponse(JSON.stringify({PromiseValue: true})).resolves;
 
     // @ts-ignore
     store.dispatch(reorderRfis(rfiList, '19-004', 2));
@@ -37,6 +40,7 @@ describe('RfiActions', () => {
 
     // @ts-ignore
     store.dispatch(reorderRfis(reprioritizedList, '19-007', 2));
+
     // @ts-ignore
     reprioritizedList = RfiSorter.sort(store.getState().openRfis, new SortKeyModel(Field.PRIORITY, true));
     expect(reprioritizedList).toEqual([rfi1, rfi3, rfi4, rfi2, rfi5]);
@@ -52,6 +56,8 @@ describe('RfiActions', () => {
     // @ts-ignore
     reprioritizedList = RfiSorter.sort(store.getState().openRfis, new SortKeyModel(Field.PRIORITY, true));
     expect(reprioritizedList).toEqual([rfi3, rfi5, rfi1, rfi4, rfi2]);
+
+
 
   });
 });

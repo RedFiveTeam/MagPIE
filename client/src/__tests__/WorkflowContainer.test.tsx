@@ -6,24 +6,14 @@ import { WorkflowContainer } from '../workflow/WorkflowContainer';
 import { StyledRfiDashboard } from '../workflow/rfi-page/RfiDashboard';
 import '../setupEnzyme';
 
-describe('RMDashboardContainer', () => {
+describe('WorkflowContainer', () => {
   let subject: ShallowWrapper;
-
-  beforeEach(() => {
-    subject = shallow(
-      <WorkflowContainer
-        fetchRfis={()=>{}}
-        postSiteVisit={()=>{}}
-        loading={false}
-        viewCoiPage={false}
-      />);
-  });
 
   it('should display loading screen while app is loading', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
-        postSiteVisit={()=>{}}
+        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={true}
         viewCoiPage={false}
       />);
@@ -33,7 +23,7 @@ describe('RMDashboardContainer', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
-        postSiteVisit={()=>{}}
+        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={true}
         viewCoiPage={true}
       />);
@@ -46,7 +36,7 @@ describe('RMDashboardContainer', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
-        postSiteVisit={()=>{}}
+        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
         viewCoiPage={false}
       />);
@@ -59,7 +49,7 @@ describe('RMDashboardContainer', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
-        postSiteVisit={()=>{}}
+        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
         viewCoiPage={true}
       />);

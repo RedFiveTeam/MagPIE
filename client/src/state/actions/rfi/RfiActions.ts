@@ -6,6 +6,7 @@ import { Field, SortKeyModel } from '../../../workflow/rfi-page/models/SortKeyMo
 import RfiFetchRequestModel from '../../../metrics/models/RfiFetchRequestModel';
 import RfiPostModel from '../../../workflow/rfi-page/models/RfiPostModel';
 import { postRfiFetchTimeMetric } from '..';
+import { server } from '../../../config';
 
 export const sortRfis = (field: Field) => {
   return {type: ActionTypes.SORT_RFIS, field: field}
@@ -48,7 +49,7 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
   return (dispatch: any) => {
     dispatch(reprioritizeRfis(reprioritizedList));
     postRfiPriorityUpdate(postRfis)
-      .then(response => response.json())
+      .then(response => response.json()).catch((reason) => {console.log(reason)})
       .then(success => {
         if (!success)
           dispatch(fetchLocalUpdate());
@@ -66,7 +67,7 @@ const reprioritizeRfis = (reprioritizedList: RfiModel[]) => {
 
 const postRfiPriorityUpdate = (rfis: RfiPostModel[]) => {
   return fetch(
-    '/api/rfis/update-priority',
+    server + '/api/rfis/update-priority',
     {
       method: 'post',
       headers: {
@@ -86,7 +87,8 @@ const fetchRfiPending = () => {
 
 const fetchRfiSuccess = (rfis: any, startTime: number) => {
   let rfiList = RfiDeserializer.deserialize(rfis);
-  postRfiFetchTimeMetric(new RfiFetchRequestModel(startTime, new Date().getTime()));
+  postRfiFetchTimeMetric(new RfiFetchRequestModel(startTime, new Date().getTime()))
+    .catch((reason => {console.log("Failed to post RFI fetch time metric: " + reason)}));;
   return {
     type: ActionTypes.FETCH_RFI_SUCCESS,
     rfis: rfiList
@@ -96,10 +98,11 @@ const fetchRfiSuccess = (rfis: any, startTime: number) => {
 export const fetchRfis = () => {
   let startTime: number = new Date().getTime();
   return (dispatch: any) => {
-    return fetch('/api/rfis')
+    return fetch(server + '/api/rfis')
       .then(dispatch(fetchRfiPending()))
       .then(response => response.json())
       .then(rfis => dispatch(fetchRfiSuccess(rfis, startTime)))
+      .catch((reason => {console.log("Failed to fetch RFIs: " + reason)}));
   }
 };
 
@@ -113,8 +116,9 @@ export const fetchRfiUpdating = (rfis: any) => {
 
 export const fetchLocalUpdate = () => {
   return (dispatch: any) => {
-    return fetch('/api/rfis')
+    return fetch(server + '/api/rfis')
       .then(response => response.json())
       .then(rfis => dispatch(fetchRfiUpdating(rfis)))
+      .catch((reason => {console.log("Failed to fetch RFIs: " + reason)}));
   }
 };
