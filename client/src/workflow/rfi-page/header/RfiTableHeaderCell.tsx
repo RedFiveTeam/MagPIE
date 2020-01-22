@@ -1,15 +1,23 @@
 import * as React from 'react';
-import SortButtonVector from '../../../resources/icons/SortButtonVector';
 import classNames from 'classnames';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { Field, SortKeyModel } from '../models/SortKeyModel';
+import UpperSortButtonVector from '../../../resources/icons/UpperSortButton';
+import ActiveLowerSortButtonVector from '../../../resources/icons/ActiveLowerSortButton';
+import LowerSortButtonVector from '../../../resources/icons/LowerSortButton';
+import ActiveUpperSortButtonVector from '../../../resources/icons/ActiveUpperSortButton';
 
 interface Props {
   text: string;
   sort: () => void;
+  sortKey: SortKeyModel;
+  field: Field;
   className?: string;
 }
 
 export const RfiTableHeaderCell: React.FC<Props> = props => {
+
   return (
     <div
       className={classNames('header-cell', props.className)}
@@ -18,19 +26,47 @@ export const RfiTableHeaderCell: React.FC<Props> = props => {
       <span className={'header--' + props.text.toLowerCase()}>
         {props.text}
       </span>
-      <span className={classNames('icon--sort', 'sort--' + props.text)}>
-        <SortButtonVector/>
+      <div className={classNames('icon--sort', props.className)}>
+      <span className={classNames('upper--sort')}>
+        {props.sortKey.defaultOrder &&
+        (props.sortKey.field === props.field)  ?
+          <ActiveUpperSortButtonVector/> : <UpperSortButtonVector/>}
       </span>
+      <span className={classNames('lower--sort')}>
+        {!props.sortKey.defaultOrder &&
+        (props.sortKey.field === props.field) ?
+          <ActiveLowerSortButtonVector/> : <LowerSortButtonVector/>}
+      </span>
+      </div>
     </div>
   )
 };
 
-export const StyledHeaderCell = styled(RfiTableHeaderCell)`
+const mapStateToProps = (state: any) => ({
+  sortKey: state.rfiReducer.sortKey
+});
+
+export const StyledHeaderCell = styled(connect(mapStateToProps)(RfiTableHeaderCell))`
   display: flex;
   flex-direction: row;
   cursor: pointer;
   
   .icon--sort {
     margin-left: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: -10px;
   }
+  
+  .upper--sort {
+    height: 10px;
+    width:10px;
+  }
+  
+  .lower--sort {
+    height: 10px;
+    width: 10px;
+  }
+
 `;

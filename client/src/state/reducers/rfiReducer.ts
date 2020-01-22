@@ -11,7 +11,7 @@ const initState = {
   pendingRfis: [] as RfiModel[],
   openRfis: [] as RfiModel[],
   closedRfis: [] as RfiModel[],
-  loading: true
+  loading: true,
 };
 
 function flipSortKey(sortKey: SortKeyModel, field: Field) {
@@ -73,7 +73,7 @@ const rfiReducer = (state = initState, action: any) => {
         ...state,
         ...filterRfis(sortedRfis),
         rfis: sortedRfis,
-        sortKey: newSortKey
+        sortKey: newSortKey,
       };
     default:
       return {...state};

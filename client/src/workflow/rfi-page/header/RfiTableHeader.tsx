@@ -24,26 +24,31 @@ export const RfiTableHeader: React.FC<Props> = props => {
         <StyledHeaderCell
           text={'PRI'}
           sort={() => props.sortRfis(Field.PRIORITY)}
+          field={Field.PRIORITY}
           className={'header-cell--pri'}
         />
         <StyledHeaderCell
           text={'RFI'}
           sort={() => props.sortRfis(Field.ID)}
+          field={Field.ID}
           className={'header-cell--id'}
         />
         <StyledHeaderCell
           text={'CC'}
           sort={() => props.sortRfis(Field.COUNTRY)}
+          field={Field.COUNTRY}
           className={'header-cell--country'}
         />
         <StyledHeaderCell
           text={'Customer'}
           sort={() => props.sortRfis(Field.CUSTOMER)}
+          field={Field.CUSTOMER}
           className={'header-cell--customer'}
         />
         <StyledHeaderCell
           text={'LTIOV'}
           sort={() => props.sortRfis(Field.LTIOV)}
+          field={Field.LTIOV}
           className={'header-cell--ltiov'}
         />
         <StyledUnsortableHeaderCell
@@ -58,7 +63,6 @@ export const RfiTableHeader: React.FC<Props> = props => {
       <StyledButtonSection
         postRefreshClick={props.postRefreshClick}
         fetchLocalUpdate={props.fetchLocalUpdate}
-        sortKey={props.sortKey}
         className={'header-cell--buttonSection'}
       />
     </div>
@@ -67,7 +71,7 @@ export const RfiTableHeader: React.FC<Props> = props => {
 
 
 const mapStateToProps = (state: any) => ({
-  sortKey: state.sortKey
+  sortKey: state.rfiReducer.sortKey
 });
 
 const mapDispatchToProps = {
@@ -96,8 +100,7 @@ export const StyledRfiTableHeader = styled(
   }
   
   .header-cell--pri {
-    padding-left: 33px;
-    width: 85px;
+    width: 102px;
   }
   
   .header-cell--textLabels {
@@ -106,8 +109,8 @@ export const StyledRfiTableHeader = styled(
   }
   
   .header-cell--id {
-    justify-content: flex-end;
-    width: 91px;
+    justify-content: flex-start;
+    width: 70px;
   }
   
   .header-cell--country {
@@ -115,12 +118,11 @@ export const StyledRfiTableHeader = styled(
   }
   
   .header-cell--customer{
-    width: 158px;
+    width: 168px;
   }
   
   .header-cell--ltiov {
     width: 80px;
-    margin-left: 9px;
   }
   
   .header-cell--coi {

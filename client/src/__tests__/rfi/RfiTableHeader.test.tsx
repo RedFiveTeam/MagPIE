@@ -1,5 +1,5 @@
 import '../../setupEnzyme';
-import { mount, ReactWrapper } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { RfiTableHeader } from '../../workflow/rfi-page/header/RfiTableHeader';
 import { StyledHeaderCell } from '../../workflow/rfi-page/header/RfiTableHeaderCell';
@@ -8,10 +8,10 @@ import { StyledUnsortableHeaderCell } from '../../workflow/rfi-page/header/RfiTa
 import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
 
 describe('RfiTableHeader', () => {
-  let subject: ReactWrapper;
+  let subject: ShallowWrapper;
 
   beforeEach(() => {
-    subject = mount(
+    subject = shallow(
       <RfiTableHeader
         fetchLocalUpdate={() => {}}
         postRefreshClick={() => {}}

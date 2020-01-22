@@ -87,7 +87,7 @@ const fetchRfiPending = () => {
 
 const fetchRfiSuccess = (rfis: any, startTime: number) => {
   let rfiList = RfiDeserializer.deserialize(rfis);
-  postRfiFetchTimeMetric(new RfiFetchRequestModel(startTime, new Date().getTime()))
+  postRfiFetchTimeMetric(new RfiFetchRequestModel(startTime, new Date().getTime()));
   return {
     type: ActionTypes.FETCH_RFI_SUCCESS,
     rfis: rfiList

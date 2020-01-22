@@ -2,12 +2,10 @@ import * as React from 'react';
 import classNames from 'classnames';
 import RefreshButtonVector from '../../../resources/icons/RefreshButtonVector';
 import styled from 'styled-components';
-import { SortKeyModel } from '../models/SortKeyModel';
 import { useEffect } from 'react';
 
 interface Props {
   fetchLocalUpdate: () => void;
-  sortKey: SortKeyModel;
   postRefreshClick: () => void;
   className?: string;
 }
