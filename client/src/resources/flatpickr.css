@@ -123,7 +123,7 @@
     border-bottom-color: var(--background-body);
 }
 .flatpickr-calendar.arrowTop:after {
-    border-bottom-color: ;
+    border-bottom-color: var(--background-body);
 }
 .flatpickr-calendar.arrowBottom:before,
 .flatpickr-calendar.arrowBottom:after {
@@ -342,7 +342,6 @@
 }
 .flatpickr-current-month .numInputWrapper {
     width: 6ch;
-    width: 7ch\0;
     display: inline-block;
 }
 .flatpickr-current-month .numInputWrapper span.arrowUp:after {
