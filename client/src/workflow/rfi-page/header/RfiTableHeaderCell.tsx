@@ -52,11 +52,11 @@ export const StyledHeaderCell = styled(connect(mapStateToProps)(RfiTableHeaderCe
   cursor: pointer;
   
   .icon--sort {
-    margin-left: 5px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-top: -10px;
+    margin-left: 4px;
   }
   
   .upper--sort {

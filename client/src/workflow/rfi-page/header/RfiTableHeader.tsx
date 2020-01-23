@@ -90,7 +90,6 @@ export const StyledRfiTableHeader = styled(
   margin-right: 20px;
   height: 48px;
   display: flex;
-  width: available;
   flex: 1 1;
   flex-direction: row;
   justify-content: space-between;
@@ -100,7 +99,7 @@ export const StyledRfiTableHeader = styled(
   }
   
   .header-cell--pri {
-    width: 102px;
+    width: 88px;
   }
   
   .header-cell--textLabels {
@@ -114,7 +113,12 @@ export const StyledRfiTableHeader = styled(
   }
   
   .header-cell--country {
+    padding-left: 0;
     width: 56px;
+  }
+  
+  .header--cc {
+    padding-left: 10px;
   }
   
   .header-cell--customer{
@@ -122,11 +126,16 @@ export const StyledRfiTableHeader = styled(
   }
   
   .header-cell--ltiov {
-    width: 80px;
+    width: 96px;
   }
   
   .header-cell--coi {
-    width: 50px;  
+    padding-left: 2px;
+    width: 59px;  
+  }
+  
+  .header-cell--description {
+    padding-left: 0px;
   }
   
   .header-cell--buttonSection {

@@ -22,6 +22,5 @@ export const RfiTableUnsortableHeaderCell: React.FC<Props> = props => {
 export const StyledUnsortableHeaderCell = styled(RfiTableUnsortableHeaderCell)`
   display: flex;
   flex-direction: row;
-  cursor: pointer;
   margin-left: 8px;
 `;
