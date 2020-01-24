@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,23 +104,18 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
   @Test
   public void sendsRfiUpdateMetricIfThereIsAChangeInAnRfi() {
-    Date rfi1ltiov = new Date();
+    RandomRfi randomRfi = new RandomRfi();
 
-    Rfi rfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a description");
-    Rfi updatedRfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved description");
-    Rfi rfi2 = new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description");
+    Rfi rfi1 = randomRfi.toRfi();
+    Rfi rfi1mod = new Rfi(rfi1);
+    rfi1mod.setDescription(randomRfi.get.randomDescription());
+    Rfi rfi2 = randomRfi.toRfi();
 
     long rfiUpdateCount = rfiUpdateRepository.count();
-
-    rfiRepository.save(rfi);
+    rfiRepository.save(rfi1);
     rfiRepository.save(rfi2);
+    rfiService.updateAndSaveRfis(Arrays.asList(rfi1mod, rfi2));
 
-    List<Rfi> rfis = new ArrayList<>();
-    rfis.add(updatedRfi);
-    rfis.add(rfi2);
-
-    rfiService.updateAndSaveRfis(rfis);
     assertEquals(rfiUpdateCount + 1, rfiUpdateRepository.count());
-
   }
 }

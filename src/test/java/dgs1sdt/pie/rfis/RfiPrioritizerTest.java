@@ -11,18 +11,19 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 
 public class RfiPrioritizerTest {
+  RandomRfi randomRfi = new RandomRfi();
+
   @Test
   public void prioritizesOpenRfis() {
-    Rfi rfi1 = new Rfi("1", "url", "OPEN", new Date(12345), "cust", new Date(), "count", "desc");
-    Rfi rfi2 = new Rfi("2", "url", "OPEN", new Date(22345), "cust", new Date(), "count", "desc");
-    Rfi rfi3 = new Rfi("3", "url", "OPEN", new Date(32345), "cust", new Date(), "count", "desc");
-    Rfi rfi4 = new Rfi("4", "url", "OPEN", new Date(42345), "cust", new Date(), "count", "desc");
-    Rfi rfi5 = new Rfi("5", "url", "OPEN", new Date(52345), "cust", new Date(), "count", "desc");
-    Rfi rfi6 = new Rfi("6", "url", "CLOSED", new Date(62345), "cust", new Date(), "count", "desc");
-    Rfi rfi7 = new Rfi("7", "url", "NEW", new Date(72345), "cust", new Date(), "count", "desc");
-    rfi1.setPriority(1);
-    List<Rfi> rfis = new ArrayList<>(Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5, rfi6, rfi7));
+    Rfi rfi1 = randomRfi.setRfiId("1").setLastUpdate(new Date(12345)).setStatus("OPEN").setPriority(1).toRfi();
+    Rfi rfi2 = randomRfi.setRfiId("2").setLastUpdate(new Date(22345)).setStatus("OPEN").toRfi();
+    Rfi rfi3 = randomRfi.setRfiId("3").setLastUpdate(new Date(32345)).setStatus("OPEN").toRfi();
+    Rfi rfi4 = randomRfi.setRfiId("4").setLastUpdate(new Date(42345)).setStatus("OPEN").toRfi();
+    Rfi rfi5 = randomRfi.setRfiId("5").setLastUpdate(new Date(52345)).setStatus("OPEN").toRfi();
+    Rfi rfi6 = randomRfi.setRfiId("6").setLastUpdate(new Date(62345)).setStatus("CLOSED").toRfi();
+    Rfi rfi7 = randomRfi.setRfiId("7").setLastUpdate(new Date(72345)).setStatus("NEW").toRfi();
 
+    List<Rfi> rfis = Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5, rfi6, rfi7);
     RfiPrioritizer.prioritize(rfis);
 
     assertEquals(-1, rfi7.getPriority());

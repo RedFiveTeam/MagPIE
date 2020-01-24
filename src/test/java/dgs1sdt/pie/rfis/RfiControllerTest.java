@@ -6,10 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -29,6 +26,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
   RfiController rfiController;
   RfiService rfiService;
   RfiRepository rfiRepository;
+
+  RandomRfi randomRfi = new RandomRfi();
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -118,54 +117,45 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void checksPriorityChangeLegality() {
-    Rfi rfi2 = new Rfi("id2", "", "OPEN", new Date(), "", new Date(), "", "", 1);
-    Rfi rfi3 = new Rfi("id3", "", "OPEN", new Date(), "", new Date(), "", "", 2);
-    Rfi rfi1 = new Rfi("id1", "", "OPEN", new Date(), "", new Date(), "", "", 3);
+    Rfi rfi2 = randomRfi.setStatus("OPEN").setPriority(1).toRfi();
+    Rfi rfi3 = randomRfi.setStatus("OPEN").setPriority(2).toRfi();
+    Rfi rfi1 = randomRfi.setStatus("OPEN").setPriority(3).toRfi();
 
-    Rfi rfi4 = new Rfi("id4", "", "OPEN", new Date(), "", new Date(), "", "", 4);
-    Rfi rfi5 = new Rfi("id5", "", "OPEN", new Date(), "", new Date(), "", "", 5);
-    Rfi rfi6 = new Rfi("id6", "", "CLOSED", new Date(), "", new Date(), "", "", 3);
+    Rfi rfi4 = randomRfi.setStatus("OPEN").setPriority(4).toRfi();
+    Rfi rfi5 = randomRfi.setStatus("OPEN").setPriority(5).toRfi();
+    Rfi rfi6 = randomRfi.setStatus("CLOSED").setPriority(3).toRfi();
 
-    List<Rfi> rfis = new ArrayList<>();
-    rfis.add(rfi1);
-    rfis.add(rfi2);
-    rfis.add(rfi3);
-    rfis.add(rfi4);
-    rfis.add(rfi5);
-    rfis.add(rfi6);
-
-    rfiRepository.saveAll(rfis);
+    rfiRepository.saveAll(Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5, rfi6));
 
     RfiPriorityJson [] rfiJsons = {
-      new RfiPriorityJson("id1", 1),
-      new RfiPriorityJson("id2", 2),
-      new RfiPriorityJson("id3", 3)
+      new RfiPriorityJson(rfi1.getRfiNum(), 1),
+      new RfiPriorityJson(rfi2.getRfiNum(), 2),
+      new RfiPriorityJson(rfi3.getRfiNum(), 3)
     };
 
     assertTrue(rfiController.updatePriority(rfiJsons));
-    assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
+    assertEquals(1, rfiRepository.findByRfiNum(rfi1.getRfiNum()).getPriority());
 
     rfiJsons = new RfiPriorityJson[]{
-      new RfiPriorityJson("id1", 2),
-      new RfiPriorityJson("id3", 3)
+      new RfiPriorityJson(rfi1.getRfiNum(), 2),
+      new RfiPriorityJson(rfi3.getRfiNum(), 3)
     };
 
     assertFalse(rfiController.updatePriority(rfiJsons));
-    assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
-    assertEquals(3, rfiRepository.findByRfiNum("id3").getPriority());
+    assertEquals(1, rfiRepository.findByRfiNum(rfi1.getRfiNum()).getPriority());
+    assertEquals(3, rfiRepository.findByRfiNum(rfi3.getRfiNum()).getPriority());
 
     rfiJsons = new RfiPriorityJson[]{
-      new RfiPriorityJson("id4", 2),
-      new RfiPriorityJson("id3", 3),
-      new RfiPriorityJson("id1", 4)
+      new RfiPriorityJson(rfi4.getRfiNum(), 2),
+      new RfiPriorityJson(rfi3.getRfiNum(), 3),
+      new RfiPriorityJson(rfi1.getRfiNum(), 4)
     };
 
     assertFalse(rfiController.updatePriority(rfiJsons));
-    assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
-    assertEquals(2, rfiRepository.findByRfiNum("id2").getPriority());
-    assertEquals(3, rfiRepository.findByRfiNum("id3").getPriority());
-    assertEquals(4, rfiRepository.findByRfiNum("id4").getPriority());
-
+    assertEquals(1, rfiRepository.findByRfiNum(rfi1.getRfiNum()).getPriority());
+    assertEquals(2, rfiRepository.findByRfiNum(rfi2.getRfiNum()).getPriority());
+    assertEquals(3, rfiRepository.findByRfiNum(rfi3.getRfiNum()).getPriority());
+    assertEquals(4, rfiRepository.findByRfiNum(rfi4.getRfiNum()).getPriority());
   }
 
   @Test
@@ -188,10 +178,6 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals("2020-11-11 00:00:00.0", updatedRfi.getExploitStart().toString());
     assertEquals("2020-11-15 00:00:00.0", updatedRfi.getExploitEnd().toString());
-
-
-
   }
-
 }
 

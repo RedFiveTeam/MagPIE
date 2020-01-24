@@ -111,6 +111,20 @@ public class Rfi {
     this.exploitEnd = new Timestamp(exploitEnd.getTime());
   }
 
+  public Rfi(Rfi rfi){
+    this.getsUrl = rfi.getsUrl;
+    this.rfiNum = rfi.rfiNum;
+    this.status = rfi.status;
+    this.lastUpdate = rfi.lastUpdate;
+    this.customer = rfi.customer;
+    this.ltiov = rfi.ltiov;
+    this.country = rfi.country;
+    this.description = rfi.description;
+    this.priority = rfi.priority;
+    this.exploitStart = rfi.exploitStart;
+    this.exploitEnd = rfi.exploitEnd;
+  }
+
 
   public List<String> compare(Rfi otherRfi) throws NullPointerException {
     List<String> diff = new ArrayList<>();
