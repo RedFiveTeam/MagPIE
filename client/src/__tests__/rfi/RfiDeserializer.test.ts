@@ -13,9 +13,7 @@ describe('RFIDeserializer', () => {
         customer: 'customer',
         ltiov: '2020-11-20T00:00:00.000+0000',
         country: 'country',
-        priority: -1,
-        exploitStart: null,
-        exploitEnd: null
+        priority: -1
       },
       {
         rfiNum: 'id',
@@ -25,9 +23,7 @@ describe('RFIDeserializer', () => {
         customer: 'customer',
         ltiov: null,
         country: 'country',
-        priority: 7,
-        exploitStart: '2020-11-11T00:00:00.000+0000',
-        exploitEnd: '2020-11-15T00:00:00.000+0000'
+        priority: 7
       }];
 
     let rfis = RfiDeserializer.deserialize(json);
@@ -38,12 +34,8 @@ describe('RFIDeserializer', () => {
     expect(rfis[0].customer).toBe('customer');
     expect(rfis[0].country).toBe('country');
     expect(rfis[0].priority).toBe(-1);
-    expect(rfis[0].exploitStart).toBe(null);
-    expect(rfis[0].exploitEnd).toBe(null);
 
     expect(rfis[1].ltiov).toBe(undefined);
     expect(rfis[1].priority).toBe(7);
-    expect(rfis[1].exploitStart!.isSame(moment.utc('2020-11-11'), 'second')).toBeTruthy();
-    expect(rfis[1].exploitEnd!.isSame(moment.utc('2020-11-15'), 'second')).toBeTruthy();
   });
 });

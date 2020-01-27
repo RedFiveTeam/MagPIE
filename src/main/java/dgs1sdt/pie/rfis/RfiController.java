@@ -1,18 +1,18 @@
 package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.metrics.MetricController;
-import dgs1sdt.pie.metrics.rfiexploitdateschange.RfiExploitDatesChange;
-import dgs1sdt.pie.metrics.rfiexploitdateschange.RfiExploitDatesChangeRepository;
-import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChange;
+import dgs1sdt.pie.metrics.changerfipriority.MetricChangeRfiPriority;
+import dgs1sdt.pie.rfis.exploitdates.ExploitDate;
+import dgs1sdt.pie.rfis.exploitdates.ExploitDateJson;
+import dgs1sdt.pie.rfis.exploitdates.ExploitDateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 
 @RestController
@@ -23,10 +23,15 @@ public class RfiController {
   private RfiRepository rfiRepository;
   private RfiService rfiService;
   private MetricController metricController;
+  private ExploitDateRepository exploitDateRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
     this.rfiRepository = rfiRepository;
+  }
+  @Autowired
+  public void setExploitDateRepository(ExploitDateRepository exploitDateRepository) {
+    this.exploitDateRepository = exploitDateRepository;
   }
   @Autowired
   public void setRfiService(RfiService rfiService) {
@@ -39,9 +44,11 @@ public class RfiController {
 
   @Autowired
   public RfiController(RfiService rfiService,
-                       RfiRepository rfiRepository) {
+                       RfiRepository rfiRepository,
+                       ExploitDateRepository exploitDateRepository) {
     this.rfiService = rfiService;
     this.rfiRepository = rfiRepository;
+    this.exploitDateRepository = exploitDateRepository;
   }
 
   @GetMapping
@@ -53,7 +60,7 @@ public class RfiController {
   @PostMapping(path = "/update-priority")
   public boolean updatePriority (@Valid @RequestBody RfiPriorityJson[] rfiPriorityJsons) {
     List<Rfi> rfis = new ArrayList<>();
-    List<RfiPriorityChange> metrics = new ArrayList<>();
+    List<MetricChangeRfiPriority> metrics = new ArrayList<>();
 
     List<Rfi> repoRfis = rfiRepository.findAll();
     repoRfis.removeIf(rfi -> rfi.getPriority() < 1 || !rfi.getStatus().equals("OPEN"));
@@ -62,7 +69,7 @@ public class RfiController {
       Rfi rfiToUpdate = rfiRepository.findByRfiNum(rfiPriorityJson.getRfiNum());
       if(rfiToUpdate != null) {
         metrics.add(
-          new RfiPriorityChange(rfiToUpdate.getRfiNum(), rfiToUpdate.getPriority(), rfiPriorityJson.getPriority(), new Date())
+          new MetricChangeRfiPriority(rfiToUpdate.getRfiNum(), rfiToUpdate.getPriority(), rfiPriorityJson.getPriority(), new Date())
         );
 
         rfiToUpdate.setPriority(rfiPriorityJson.getPriority());
@@ -99,31 +106,54 @@ public class RfiController {
         return false;
 
     //Add metrics and save pri updates
-    metricController.addRfiPriorityChanges(metrics);
+    metricController.addChangeRfiPriority(metrics);
     rfiRepository.saveAll(repoRfis);
 
     //Tell front end that reprioritization was successful
     return true;
   }
 
-  @PostMapping(path = "update-exploit-dates")
-  public void updateExploitDates(@Valid @RequestBody RfiExploitDatesJson updatedRfiExploitDates) {
-    try {
-      TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-      Rfi rfiToUpdate = rfiRepository.findByRfiNum(updatedRfiExploitDates.getRfiNum());
-      RfiExploitDatesChange metric = new RfiExploitDatesChange(rfiToUpdate.getRfiNum(),
-        rfiToUpdate.getExploitStart(),
-        rfiToUpdate.getExploitEnd(),
-        new Timestamp(updatedRfiExploitDates.getExploitStart().getTime()),
-        new Timestamp(updatedRfiExploitDates.getExploitEnd().getTime()),
-        new Timestamp(new Date().getTime())
-      );
-      rfiToUpdate.setExploitStart(new Timestamp(updatedRfiExploitDates.getExploitStart().getTime()));
-      rfiToUpdate.setExploitEnd(new Timestamp(updatedRfiExploitDates.getExploitEnd().getTime()));
-      rfiRepository.save(rfiToUpdate);
-      metricController.addRfiExploitDatesChange(metric);
-    } catch (Exception e) {
-      System.err.println("Failed to update exploit dates on RFI " + updatedRfiExploitDates.getRfiNum());
+  @PostMapping(path = "/change-exploit-date")
+  public void changeExploitDate(@Valid @RequestBody ExploitDateJson exploitDateJson) {
+    Rfi rfi = rfiRepository.findByRfiNum(exploitDateJson.getRfiNum());
+    if (
+      exploitDateRepository.findAllByRfiId(rfi.getId()).stream()
+        .noneMatch(exploitDate -> exploitDate.getExploitDate().equals(exploitDateJson.getNewExploitDate()))
+    ) {
+      ExploitDate exploitDate = new ExploitDate(exploitDateJson.getNewExploitDate(), rfi.getId());
+      exploitDateRepository.save(exploitDate);
+      metricController.addChangeExploitDate(exploitDateJson);
     }
   }
+
+  @PostMapping(path = "/dates")
+  public List<ExploitDate> fetchExploitDates(@Valid @RequestBody String rfiNum) {
+    System.out.println(rfiNum);
+    List<ExploitDate> dates = exploitDateRepository.findAllByRfiId(
+      rfiRepository.findByRfiNum(rfiNum).getId()
+    );
+    dates.sort(Comparator.comparing(ExploitDate::getExploitDate));
+    return dates;
+  }
+
+//  @PostMapping(path = "update-exploit-dates")
+//  public void updateExploitDates(@Valid @RequestBody RfiExploitDatesJson updatedRfiExploitDates) {
+//    try {
+//      TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+//      Rfi rfiToUpdate = rfiRepository.findByRfiNum(updatedRfiExploitDates.getRfiNum());
+//      RfiExploitDatesChange metric = new RfiExploitDatesChange(rfiToUpdate.getRfiNum(),
+//        rfiToUpdate.getExploitStart(),
+//        rfiToUpdate.getExploitEnd(),
+//        new Timestamp(updatedRfiExploitDates.getExploitStart().getTime()),
+//        new Timestamp(updatedRfiExploitDates.getExploitEnd().getTime()),
+//        new Timestamp(new Date().getTime())
+//      );
+//      rfiToUpdate.setExploitStart(new Timestamp(updatedRfiExploitDates.getExploitStart().getTime()));
+//      rfiToUpdate.setExploitEnd(new Timestamp(updatedRfiExploitDates.getExploitEnd().getTime()));
+//      rfiRepository.save(rfiToUpdate);
+//      metricController.addRfiExploitDatesChange(metric);
+//    } catch (Exception e) {
+//      System.err.println("Failed to update exploit dates on RFI " + updatedRfiExploitDates.getRfiNum());
+//    }
+//  }
 }

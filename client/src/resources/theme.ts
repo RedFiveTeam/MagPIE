@@ -14,11 +14,13 @@ const theme = {
     backgroundAssigned: crayonBox.notEggWhite,
     fontLoading: crayonBox.lightGray,
     fontInactive: crayonBox.mediumGray,
+    fontBackgroundInactive: crayonBox.mediumLightGray,
     buttonInactive: crayonBox.notEggWhite,
     buttonActive: crayonBox.softMetal,
     buttonBackgroundActive: crayonBox.pitchBlack,
     showLessBackground: crayonBox.subtleGray,
-    addButtonBackground: crayonBox.forestGreen
+    addButtonBackground: crayonBox.forestGreen,
+    fontAddDate: crayonBox.eggGray
   },
 
   font: {
@@ -30,6 +32,7 @@ const theme = {
     familyHeader: 'Roboto',
     weightHeader: 400,
     sizeHeader: '24px',
+    sizeHeaderSmall: '16px',
     familyRegion: 'Roboto',
     weightRegion: 100,
     sizeRegion: '18px'

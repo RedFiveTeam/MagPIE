@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledHeaderCell } from './RfiTableHeaderCell';
 import { connect } from 'react-redux';
-import { StyledUnsortableHeaderCell } from './RfiTableUnsortableHeaderCell';
+import { StyledUnsortableTableHeaderCell } from './UnsortableTableHeaderCell';
 import { StyledButtonSection } from './RfiTableHeaderButtonSection';
 import { postRefreshClick } from '../../../state/actions';
 import { Field, SortKeyModel } from '../models/SortKeyModel';
@@ -51,11 +51,11 @@ export const RfiTableHeader: React.FC<Props> = props => {
           field={Field.LTIOV}
           className={'header-cell--ltiov'}
         />
-        <StyledUnsortableHeaderCell
-          text={'COIs'}
-          className={'header-cell--coi'}
+        <StyledUnsortableTableHeaderCell
+          text={'TGTs'}
+          className={'header-cell--tgt'}
         />
-        <StyledUnsortableHeaderCell
+        <StyledUnsortableTableHeaderCell
           text={'Description'}
           className={'header-cell--description'}
         />
@@ -129,7 +129,7 @@ export const StyledRfiTableHeader = styled(
     width: 96px;
   }
   
-  .header-cell--coi {
+  .header-cell--tgt {
     padding-left: 2px;
     width: 59px;  
   }

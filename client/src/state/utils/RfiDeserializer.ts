@@ -28,9 +28,7 @@ export class RfiDeserializer {
           item.ltiov === null ? undefined : moment(item.ltiov, moment.ISO_8601).utc(),
           item.country,
           item.description,
-          item.priority,
-          item.exploitStart === null ? null : moment(item.exploitStart, moment.ISO_8601).utc(),
-          item.exploitEnd === null ? null : moment(item.exploitEnd, moment.ISO_8601).utc()
+          item.priority
           );
       });
     }

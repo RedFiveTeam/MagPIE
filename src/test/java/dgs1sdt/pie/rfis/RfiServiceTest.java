@@ -3,7 +3,7 @@ package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.MetricController;
-import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
+import dgs1sdt.pie.metrics.changerfi.MetricChangeRfiRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +99,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
   MetricController metricController;
 
   @Autowired
-  RfiUpdateRepository rfiUpdateRepository;
+  MetricChangeRfiRepository metricChangeRfiRepository;
 
   @Test
   public void sendsRfiUpdateMetricIfThereIsAChangeInAnRfi() {
@@ -109,7 +109,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
     Rfi updatedRfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved description");
     Rfi rfi2 = new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description");
 
-    long rfiUpdateCount = rfiUpdateRepository.count();
+    long rfiUpdateCount = metricChangeRfiRepository.count();
 
     rfiRepository.save(rfi);
     rfiRepository.save(rfi2);
@@ -119,7 +119,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
     rfis.add(rfi2);
 
     rfiService.updateAndSaveRfis(rfis);
-    assertEquals(rfiUpdateCount + 1, rfiUpdateRepository.count());
+    assertEquals(rfiUpdateCount + 1, metricChangeRfiRepository.count());
 
   }
 }

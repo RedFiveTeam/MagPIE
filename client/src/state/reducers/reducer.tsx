@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux'
 import rfiReducer from './rfiReducer';
 import metricsReducer from './metricsReducer';
-import coiReducer from './coiReducer';
+import tgtReducer from './tgtReducer';
 
 const reducer = combineReducers({
   rfiReducer,
   metricsReducer,
-  coiReducer
+  tgtReducer
 });
 
 export default reducer;

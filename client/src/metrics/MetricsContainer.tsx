@@ -45,13 +45,13 @@ export class MetricsContainer extends React.Component<Props, any> {
   render() {
     return (
       <div className={classNames('metrics-dashboard', this.props.className)}>
-        <div className={classNames('dashboard-siteVisits', this.props.className)}>
+        <div className={classNames('dashboard--site-visits', this.props.className)}>
           <span>Site Visits: {this.props.siteVisits}</span>
         </div>
-        <div className={classNames('dashboard-GETSButtonClicks', this.props.className)}>
+        <div className={classNames('dashboard--gets-clicks', this.props.className)}>
           <span>GETS URL Clicks: {this.props.GetsClicks}</span>
         </div>
-        <div className={classNames('dashboard-siteVisitsGraphWeek', this.props.className)}>
+        <div className={classNames('dashboard--site-visits-graph-week', this.props.className)}>
           <Bar
             data={this.setupData(this.props.siteVisitsGraphWeek)}
             width={100}
@@ -97,15 +97,15 @@ export const StyledMetricsContainer = styled(
     flex-wrap: wrap;    
   }
   
-  .dashboard-siteVisits {
+  .dashboard--site-visits {
     width: 150px;
   }
   
-  .dashboard-GETSButtonClicks {
+  .dashboard--gets-clicks {
     width: 200px;
   }
   
-  .dashboard-siteVisitsGraphWeek {
+  .dashboard--site-visits-graph-week {
     width: 1000px;
     height: 500px;
   }

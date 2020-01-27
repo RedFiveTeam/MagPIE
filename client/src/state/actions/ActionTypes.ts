@@ -1,5 +1,5 @@
 import { MetricsActionTypes } from './metrics/MetricsActionTypes';
 import { RfiActionTypes } from './rfi/RfiActionTypes';
-import { CoiActionTypes } from './coi/CoiActionTypes';
+import { TgtActionTypes } from './tgt/TgtActionTypes';
 
-export const ActionTypes = {...RfiActionTypes, ...MetricsActionTypes, ...CoiActionTypes};
+export const ActionTypes = {...RfiActionTypes, ...MetricsActionTypes, ...TgtActionTypes};

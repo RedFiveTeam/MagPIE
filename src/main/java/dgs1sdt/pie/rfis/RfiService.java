@@ -1,7 +1,7 @@
 package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.metrics.MetricController;
-import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
+import dgs1sdt.pie.metrics.changerfi.MetricChangeRfi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -127,15 +127,13 @@ public class RfiService {
 
   private void postUpdateMetrics(Rfi newRfi, Date currDate, Rfi oldRfi) {
     for (String field : oldRfi.compare(newRfi)) {
-      metricController.addRfiUpdate(new RfiUpdate(currDate, newRfi, oldRfi, field));
+      metricController.addChangeRfi(new MetricChangeRfi(currDate, newRfi, oldRfi, field));
     }
   }
 
   private void linkNewRfiToOldRfi(Rfi newRfi, Rfi oldRfi) {
     newRfi.setPriority(oldRfi.getPriority());
     newRfi.setId(oldRfi.getId());
-    newRfi.setExploitStart(oldRfi.getExploitStart());
-    newRfi.setExploitEnd(oldRfi.getExploitEnd());
   }
 
   private boolean hasChanged(Rfi newRfi, Rfi oldRfi) {

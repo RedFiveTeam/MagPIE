@@ -1,25 +1,28 @@
 package dgs1sdt.pie.metrics;
 
 import dgs1sdt.pie.BaseIntegrationTest;
-import dgs1sdt.pie.metrics.getsclick.GetsClicksRepository;
-import dgs1sdt.pie.metrics.getsclick.GetsClick;
-import dgs1sdt.pie.metrics.getsclick.GetsClickJSON;
-import dgs1sdt.pie.metrics.refreshclicks.RefreshClicksRepository;
-import dgs1sdt.pie.metrics.rfiexploitdateschange.RfiExploitDatesChange;
-import dgs1sdt.pie.metrics.rfiexploitdateschange.RfiExploitDatesChangeRepository;
-import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChange;
-import dgs1sdt.pie.metrics.rfiprioritychange.RfiPriorityChangeRepository;
-import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
-import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
-import dgs1sdt.pie.metrics.sitevisit.SiteVisit;
-import dgs1sdt.pie.metrics.sitevisit.SiteVisitRepository;
-import dgs1sdt.pie.metrics.sortclick.SortClickJson;
-import dgs1sdt.pie.metrics.sortclick.SortClicksRepository;
+import dgs1sdt.pie.metrics.changeexploitdate.MetricChangeExploitDateRepository;
+import dgs1sdt.pie.metrics.changerfi.MetricChangeRfi;
+import dgs1sdt.pie.metrics.changerfi.MetricChangeRfiRepository;
+import dgs1sdt.pie.metrics.changerfipriority.MetricChangeRfiPriority;
+import dgs1sdt.pie.metrics.changerfipriority.MetricChangeRfiPriorityRepository;
+import dgs1sdt.pie.metrics.clickgets.MetricClickGets;
+import dgs1sdt.pie.metrics.clickgets.MetricClickGetsJson;
+import dgs1sdt.pie.metrics.clickgets.MetricClickGetsRepository;
+import dgs1sdt.pie.metrics.clickrefresh.MetricClickRefreshRepository;
+import dgs1sdt.pie.metrics.rfifetchtime.MetricRfiFetchTimeJson;
+import dgs1sdt.pie.metrics.rfifetchtime.MetricRfiFetchTimeRepository;
+import dgs1sdt.pie.metrics.sitevisit.MetricSiteVisit;
+import dgs1sdt.pie.metrics.sitevisit.MetricSiteVisitRepository;
+import dgs1sdt.pie.metrics.sortclick.MetricClickSortJson;
+import dgs1sdt.pie.metrics.sortclick.MetricClickSortRepository;
+import dgs1sdt.pie.rfis.exploitdates.ExploitDateJson;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,40 +36,43 @@ public class MetricControllerTest extends BaseIntegrationTest {
   private MetricController metricController;
 
   @Autowired
-  private GetsClicksRepository getsClicksRepository;
+  private MetricClickGetsRepository metricClickGetsRepository;
 
   @Autowired
-  private SiteVisitRepository siteVisitRepository;
+  private MetricSiteVisitRepository metricSiteVisitRepository;
 
   @Autowired
-  private SortClicksRepository sortClicksRepository;
+  private MetricClickSortRepository metricClickSortRepository;
 
   @Autowired
-  private RfiPriorityChangeRepository rfiPriorityChangeRepository;
+  private MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository;
 
   @Autowired
-  private RfiUpdateRepository rfiUpdateRepository;
+  private MetricChangeRfiRepository metricChangeRfiRepository;
 
   @Autowired
-  private RefreshClicksRepository refreshClicksRepository;
+  private MetricClickRefreshRepository metricClickRefreshRepository;
 
   @Autowired
-  private RfiExploitDatesChangeRepository rfiExploitDatesChangeRepository;
+  private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
+
+  @Autowired
+  private MetricRfiFetchTimeRepository metricRfiFetchTimeRepository;
 
   @Before
   public void setup() {
-    getsClicksRepository.deleteAll();
-    siteVisitRepository.deleteAll();
-    sortClicksRepository.deleteAll();
-    rfiPriorityChangeRepository.deleteAll();
-    rfiUpdateRepository.deleteAll();
-    refreshClicksRepository.deleteAll();
-    rfiExploitDatesChangeRepository.deleteAll();
+    metricClickGetsRepository.deleteAll();
+    metricSiteVisitRepository.deleteAll();
+    metricClickSortRepository.deleteAll();
+    metricChangeRfiPriorityRepository.deleteAll();
+    metricChangeRfiRepository.deleteAll();
+    metricClickRefreshRepository.deleteAll();
+    metricChangeExploitDateRepository.deleteAll();
   }
 
   @Test
   public void postCreatesNewSiteVisit() {
-    long siteVisitCount = siteVisitRepository.count();
+    long siteVisitCount = metricSiteVisitRepository.count();
     given()
       .port(port)
       .when()
@@ -74,13 +80,13 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .then()
       .statusCode(200);
 
-    assertEquals(siteVisitCount + 1, siteVisitRepository.count());
+    assertEquals(siteVisitCount + 1, metricSiteVisitRepository.count());
   }
 
   @Test
   public void getReturnsSiteVisitCount() {
-    siteVisitRepository.save(new SiteVisit(new Date()));
-    siteVisitRepository.save(new SiteVisit(new Date()));
+    metricSiteVisitRepository.save(new MetricSiteVisit(new Date()));
+    metricSiteVisitRepository.save(new MetricSiteVisit(new Date()));
 
     given()
       .port(port)
@@ -93,7 +99,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Test
   public void postCreatesNewRefreshClick() {
-    long refreshClickCount = refreshClicksRepository.count();
+    long refreshClickCount = metricClickRefreshRepository.count();
     given()
       .port(port)
       .when()
@@ -101,13 +107,13 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .then()
       .statusCode(200);
 
-    assertEquals(refreshClickCount + 1, refreshClicksRepository.count());
+    assertEquals(refreshClickCount + 1, metricClickRefreshRepository.count());
   }
 
   @Test
   public void getReturnsGetsClickCount() {
-    getsClicksRepository.save(new GetsClick(new Date(), "OPEN", "www.google.com"));
-    getsClicksRepository.save(new GetsClick(new Date(), "OPEN", "www.google.com"));
+    metricClickGetsRepository.save(new MetricClickGets(new Date(), "OPEN", "www.google.com"));
+    metricClickGetsRepository.save(new MetricClickGets(new Date(), "OPEN", "www.google.com"));
     given()
       .port(port)
       .when()
@@ -120,11 +126,11 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Test
   public void postCreatesNewGetsClick() throws Exception {
 
-    GetsClickJSON getsClickJSON = new GetsClickJSON(new Date(), "OPEN", "www.google.com");
+    MetricClickGetsJson metricClickGetsJson = new MetricClickGetsJson(new Date(), "OPEN", "www.google.com");
 
-    long getsClickCount = getsClicksRepository.count();
+    long getsClickCount = metricClickGetsRepository.count();
 
-    final String json = objectMapper.writeValueAsString(getsClickJSON);
+    final String json = objectMapper.writeValueAsString(metricClickGetsJson);
     given()
       .port(port)
       .contentType("application/json")
@@ -134,17 +140,15 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .then()
       .statusCode(200);
 
-    assertEquals(getsClickCount + 1, getsClicksRepository.count());
+    assertEquals(getsClickCount + 1, metricClickGetsRepository.count());
   }
 
   @Test
   public void postCreatesNewSortClick() throws Exception {
 
-    SortClickJson sortClickJSON = new SortClickJson(new Date(), "ltiov", true);
+    MetricClickSortJson metricClickSortJSON = new MetricClickSortJson(new Date(), "ltiov", true);
 
-    long sortClickCount = sortClicksRepository.count();
-
-    final String json = objectMapper.writeValueAsString(sortClickJSON);
+    final String json = objectMapper.writeValueAsString(metricClickSortJSON);
     given()
       .port(port)
       .contentType("application/json")
@@ -154,34 +158,54 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .then()
       .statusCode(200);
 
-    assertEquals(sortClickCount + 1, sortClicksRepository.count());
+    assertEquals(1, metricClickSortRepository.count());
+  }
+
+  @Test
+  public void postCreatesNewRfiFetchTimeMetric() throws Exception {
+    MetricRfiFetchTimeJson metricRfiFetchTimeJson = new MetricRfiFetchTimeJson(12345L, 12350L);
+
+    final String json = objectMapper.writeValueAsString(metricRfiFetchTimeJson);
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(MetricController.URI + "/rfi-fetch")
+      .then()
+      .statusCode(200);
+
+    assertEquals(1, metricRfiFetchTimeRepository.findAll().size());
+
+
   }
 
   @Test
   public void createsNewPriorityChangeMetric() {
-    RfiPriorityChange rfiPriorityChange1 = new RfiPriorityChange("20-001", 1, 2, new Date());
-    RfiPriorityChange rfiPriorityChange2 = new RfiPriorityChange("20-002", 2, 1, new Date());
+    MetricChangeRfiPriority metricChangeRfiPriority1 = new MetricChangeRfiPriority("20-001", 1, 2, new Date());
+    MetricChangeRfiPriority metricChangeRfiPriority2 = new MetricChangeRfiPriority("20-002", 2, 1, new Date());
 
-    List<RfiPriorityChange> priChanges = new ArrayList<>();
-    priChanges.add(rfiPriorityChange1);
-    priChanges.add(rfiPriorityChange2);
+    List<MetricChangeRfiPriority> priChanges = new ArrayList<>();
+    priChanges.add(metricChangeRfiPriority1);
+    priChanges.add(metricChangeRfiPriority2);
 
-    metricController.addRfiPriorityChanges(priChanges);
+    metricController.addChangeRfiPriority(priChanges);
 
-    assertEquals(2, rfiPriorityChangeRepository.count());
+    assertEquals(2, metricChangeRfiPriorityRepository.count());
   }
 
   @Test
   public void createsNewRfiUpdateMetric() {
-    RfiUpdate rfiUpdate1 = new RfiUpdate("20-005", new Date(), "field", "old", "new");
-    RfiUpdate rfiUpdate2 = new RfiUpdate("20-005", new Date(), "field", "old", "new");
+    MetricChangeRfi metricChangeRfi1 = new MetricChangeRfi("20-005", new Date(), "field", "old", "new");
+    MetricChangeRfi metricChangeRfi2 = new MetricChangeRfi("20-005", new Date(), "field", "old", "new");
 
-    long rfiUpdateCount = rfiUpdateRepository.count();
+    long rfiUpdateCount = metricChangeRfiRepository.count();
 
-    metricController.addRfiUpdate(rfiUpdate1);
-    metricController.addRfiUpdate(rfiUpdate2);
+    metricController.addChangeRfi(metricChangeRfi1);
+    metricController.addChangeRfi(metricChangeRfi2);
 
-    assertEquals(rfiUpdateCount + 2, rfiUpdateRepository.count());
+    assertEquals(rfiUpdateCount + 2, metricChangeRfiRepository.count());
   }
 
   @Test
@@ -190,24 +214,24 @@ public class MetricControllerTest extends BaseIntegrationTest {
     Date fourDaysAgo = new Date(new Date().getTime() - 345600000L);
     Date oneDayAgo = new Date(new Date().getTime() - 86400000L);
 
-    List<SiteVisit> siteVisits = new ArrayList<>();
+    List<MetricSiteVisit> metricSiteVisits = new ArrayList<>();
     for (int i = 0; i < 356; i++) {
-      siteVisits.add(new SiteVisit(sixDaysAgo));
+      metricSiteVisits.add(new MetricSiteVisit(sixDaysAgo));
     }
 
     for (int i = 0; i < 23; i++) {
-      siteVisits.add(new SiteVisit(fourDaysAgo));
+      metricSiteVisits.add(new MetricSiteVisit(fourDaysAgo));
     }
 
     for (int i = 0; i < 1; i++) {
-      siteVisits.add(new SiteVisit(oneDayAgo));
+      metricSiteVisits.add(new MetricSiteVisit(oneDayAgo));
     }
 
     for (int i = 0; i < 65; i++) {
-      siteVisits.add(new SiteVisit(new Date()));
+      metricSiteVisits.add(new MetricSiteVisit(new Date()));
     }
 
-    siteVisitRepository.saveAll(siteVisits);
+    metricSiteVisitRepository.saveAll(metricSiteVisits);
 
     int[] last7DaysActual = metricController.getSiteVisitsLast7Days();
     int[] last7DaysExpected = {356, 0, 23, 0, 0, 1, 65};
@@ -217,13 +241,30 @@ public class MetricControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void createsNewExploitDatesChangeMetric() {
-    RfiExploitDatesChange rfiExploitDatesChange1 = new RfiExploitDatesChange("20-001", null, null, new Timestamp(1), new Timestamp(2), new Timestamp(100));
-    RfiExploitDatesChange rfiExploitDatesChange2 = new RfiExploitDatesChange("20-002", null, null, new Timestamp(3), new Timestamp(4), new Timestamp(100));
+  public void addsExploitDateChangeMetric() throws Exception {
+    ExploitDateJson exploitDateJson = new ExploitDateJson(
+      null,
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "DGS-1-SDT-2020-00338");
 
-    metricController.addRfiExploitDatesChange(rfiExploitDatesChange1);
-    metricController.addRfiExploitDatesChange(rfiExploitDatesChange2);
+    metricController.addChangeExploitDate(exploitDateJson);
 
-    assertEquals(2, rfiExploitDatesChangeRepository.count());
+    assertEquals(1, metricChangeExploitDateRepository.findAll().size());
+    assertEquals(
+      "2020-11-11 00:00:00.0",
+      metricChangeExploitDateRepository.findAll().get(0).getNewExploitDate().toString()
+    );
+    assertNull(metricChangeExploitDateRepository.findAll().get(0).getOldExploitDate());
   }
+
+//  @Test
+//  public void createsNewExploitDatesChangeMetric() {
+//    MetricChangeExploitDate metricChangeExploitDate1 = new MetricChangeExploitDate("20-001", null, null, new Timestamp(1), new Timestamp(2), new Timestamp(100));
+//    MetricChangeExploitDate metricChangeExploitDate2 = new MetricChangeExploitDate("20-002", null, null, new Timestamp(3), new Timestamp(4), new Timestamp(100));
+//
+//    metricController.addRfiExploitDatesChange(metricChangeExploitDate1);
+//    metricController.addRfiExploitDatesChange(metricChangeExploitDate2);
+//
+//    assertEquals(2, metricChangeExploitDateRepository.count());
+//  }
 }

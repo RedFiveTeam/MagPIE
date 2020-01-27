@@ -1,10 +1,16 @@
 package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.BaseIntegrationTest;
+import dgs1sdt.pie.metrics.changeexploitdate.MetricChangeExploitDateRepository;
+import dgs1sdt.pie.rfis.exploitdates.ExploitDate;
+import dgs1sdt.pie.rfis.exploitdates.ExploitDateJson;
+import dgs1sdt.pie.rfis.exploitdates.ExploitDateRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
+
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +35,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
   RfiController rfiController;
   RfiService rfiService;
   RfiRepository rfiRepository;
+  ExploitDateRepository exploitDateRepository;
+  MetricChangeExploitDateRepository metricChangeExploitDateRepository;
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -45,10 +53,21 @@ public class RfiControllerTest extends BaseIntegrationTest {
     this.rfiRepository = rfiRepository;
   }
 
+  @Autowired
+  public void setExploitDateRepository(ExploitDateRepository exploitDateRepository) {
+    this.exploitDateRepository = exploitDateRepository;
+  }
+
+ @Autowired
+  public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
+    this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
+  }
+
 
   @Before
   public void clean() {
     rfiRepository.deleteAll();
+    exploitDateRepository.deleteAll();
   }
 
   @Test
@@ -60,9 +79,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
     };
     rfiService.fetchRfisFromUris(files);
 
-    Rfi exploitingRfi = new Rfi("ZZZZZ", "", "OPEN", new Date(), "", new Date(), "", "", 1,
-      new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020"),
-      new SimpleDateFormat("dd/MM/yyyy").parse("15/11/2020"));
+    Rfi exploitingRfi = new Rfi("ZZZZZ", "", "OPEN", new Date(), "", new Date(), "", "", 1);
 
     rfiRepository.save(exploitingRfi);
 
@@ -89,8 +106,6 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[2].country", equalTo("USA"))
       .body("[2].description", equalTo(firstDescription))
       .body("[2].priority", equalTo(-1))
-      .body("[2].exploitStart", equalTo(null))
-      .body("[2].exploitEnd", equalTo(null))
 
       .body("[5].status", equalTo("OPEN"))
       .body("[5].priority", greaterThan(0))
@@ -109,8 +124,6 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[15].country", equalTo("CAN"))
 
       .body("[16].rfiNum", equalTo("ZZZZZ"))
-      .body("[16].exploitStart", equalTo("2020-11-11T00:00:00.000+0000"))
-      .body("[16].exploitEnd", equalTo("2020-11-15T00:00:00.000+0000"))
 
       .body("[17].rfiNum", equalTo(null));
 
@@ -168,29 +181,92 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   }
 
+//  @Test
+//  public void updatesExploitDates() throws Exception {
+//    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+//    String[] files = {
+//      "RfisNewOpen.xml",
+//      "RfisClosed.xml"
+//    };
+//    rfiService.fetchRfisFromUris(files);
+//
+//    RfiExploitDatesJson update = new RfiExploitDatesJson(
+//      "DGS-1-SDT-2020-00338",
+//      new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020"),
+//      new SimpleDateFormat("dd/MM/yyyy").parse("15/11/2020"));
+//
+//    rfiController.updateExploitDates(update);
+//
+//    Rfi updatedRfi = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338");
+//
+//    assertEquals("2020-11-11 00:00:00.0", updatedRfi.getExploitStart().toString());
+//    assertEquals("2020-11-15 00:00:00.0", updatedRfi.getExploitEnd().toString());
+//
+//
+//
+//  }
+
   @Test
-  public void updatesExploitDates() throws Exception {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    String[] files = {
-      "RfisNewOpen.xml",
-      "RfisClosed.xml"
-    };
-    rfiService.fetchRfisFromUris(files);
+  public void addsExploitDates() throws Exception {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
 
-    RfiExploitDatesJson update = new RfiExploitDatesJson(
-      "DGS-1-SDT-2020-00338",
-      new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020"),
-      new SimpleDateFormat("dd/MM/yyyy").parse("15/11/2020"));
+    ExploitDateJson exploitDateJson = new ExploitDateJson(
+      null,
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "DGS-1-SDT-2020-00338");
 
-    rfiController.updateExploitDates(update);
+    rfiController.changeExploitDate(exploitDateJson);
 
-    Rfi updatedRfi = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338");
+    assertEquals(1, exploitDateRepository.findAll().size());
 
-    assertEquals("2020-11-11 00:00:00.0", updatedRfi.getExploitStart().toString());
-    assertEquals("2020-11-15 00:00:00.0", updatedRfi.getExploitEnd().toString());
+    assertEquals("2020-11-11 00:00:00.0", exploitDateRepository.findAllByRfiId(1L).get(0).getExploitDate().toString());
 
+    assertEquals(1, metricChangeExploitDateRepository.findAll().size());
 
+    rfiController.changeExploitDate(exploitDateJson);
 
+    assertEquals(1, exploitDateRepository.findAll().size());
+
+    assertEquals(1, metricChangeExploitDateRepository.findAll().size());
+  }
+
+  @Test
+  public void returnsExploitDates() throws Exception {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+
+    long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
+
+    List<ExploitDate> dates = new ArrayList<>();
+    dates.add(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      rfiId
+    ));
+    dates.add(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("15/11/2020").getTime()),
+      rfiId
+    ));
+    dates.add(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("20/11/2020").getTime()),
+      rfiId + 5
+    ));
+
+    exploitDateRepository.saveAll(dates);
+
+    List<ExploitDate> returnedDates = rfiController.fetchExploitDates("DGS-1-SDT-2020-00338");
+
+    assertEquals(2, returnedDates.size());
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .body("DGS-1-SDT-2020-00338")
+      .when()
+      .post(RfiController.URI + "/dates")
+      .then()
+      .statusCode(200)
+      .body("[0].exploitDate", equalTo("2020-11-11T00:00:00.000+0000"))
+      .body("[1].exploitDate", equalTo("2020-11-15T00:00:00.000+0000"))
+      .body("[2].exploitDate", equalTo(null));
   }
 
 }
