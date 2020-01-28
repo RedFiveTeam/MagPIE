@@ -37,7 +37,6 @@ public class Rfi {
     String country,
     String description
   ) {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
     this.status = status;
@@ -66,7 +65,6 @@ public class Rfi {
     String description,
     int priority
   ) {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
     this.status = status;

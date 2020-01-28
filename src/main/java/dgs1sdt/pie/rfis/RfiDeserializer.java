@@ -7,11 +7,9 @@ import org.w3c.dom.NodeList;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class RfiDeserializer {
   public static Rfi deserialize(Node rfiNode) throws Exception {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     Element element = (Element) rfiNode;
 
     return new Rfi(

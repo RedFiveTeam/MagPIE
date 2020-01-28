@@ -17,7 +17,7 @@ public class GetsClient {
   @Value("${GETS_REQUEST_TIME_FRAME_IN_DAYS}")
   private int requestDays;
 
-  private static String calculateDateStringDaysBeforeNow(int days) {
+  public static String calculateDateStringDaysBeforeNow(int days) {
     DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
     LocalDate localDate = LocalDate.now().minusDays(days);
     return dateFormat.format(localDate);
@@ -30,11 +30,12 @@ public class GetsClient {
     if (uri.contains("xml")) {
       stream = new ClassPathResource(uri).getInputStream();
     } else {
-      if (uri.contains("&mincloseDate=")) {
+      if (uri.contains("CLOSED")) {
         uri += calculateDateStringDaysBeforeNow(requestDays);
       }
       stream = new URL(uri).openStream();
     }
+    System.out.println("Fetching from: " + uri);
     return db.parse(stream);
   }
 }

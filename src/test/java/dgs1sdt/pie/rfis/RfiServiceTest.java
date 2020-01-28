@@ -120,6 +120,70 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
     rfiService.updateAndSaveRfis(rfis);
     assertEquals(rfiUpdateCount + 1, metricChangeRfiRepository.count());
+  }
+
+  @Test
+  public void updatesRfisInRepoWithUpdatesFromGets() {
+    Date rfiltiov = new Date();
+    Rfi rfi1 = new Rfi("SDT-0321", "url", "NEW", new Date(), "1 FW", rfiltiov, "USA", "a description");
+    Rfi rfi2 = new Rfi("SDT-0322", "url", "OPEN", new Date(), "1 FW", rfiltiov, "CAN", "one description");
+
+    rfiRepository.save(rfi1);
+    rfiRepository.save(rfi2);
+
+    rfiService.fetchRfisFromUris(new String[]{"UpdatedRfis.xml"});
+
+    assertEquals("A new and improved description", rfiRepository.findByRfiNum("SDT-0321").getDescription());
+
+    assertEquals("CLOSED", rfiRepository.findByRfiNum("SDT-0322").getStatus());
+
+  }
+
+  @Test
+  public void reprioritizesBasedOnClosedRfis() {
+    String[] filePath = {"RfisNewOpen.xml"};
+    rfiService.fetchRfisFromUris(filePath);
+
+    List<Rfi> savedOpenRfis = rfiRepository.findAll().stream()
+      .filter(rfi -> rfi.getStatus().equals("OPEN"))
+      .sorted(new SortByAscendingPriority())
+      .collect(Collectors.toList());
+
+
+    Rfi rfiFirst = savedOpenRfis.get(0);
+    Rfi rfiSecond = savedOpenRfis.get(1);
+    Rfi rfiThird = savedOpenRfis.get(2);
+    Rfi rfiFourth = savedOpenRfis.get(3);
+    Rfi rfiFifth = savedOpenRfis.get(4);
+
+    assertEquals(5, savedOpenRfis.size());
+
+    assertEquals(1, rfiFirst.getPriority());
+    assertEquals(2, rfiSecond.getPriority());
+    assertEquals(3, rfiThird.getPriority());
+    assertEquals(4, rfiFourth.getPriority());
+    assertEquals(5, rfiFifth.getPriority());
+
+    filePath = new String[]{"RfisNewOpenRefreshed.xml", "RfisClosedRefreshed.xml"};
+    rfiService.fetchRfisFromUris(filePath);
+
+    savedOpenRfis = rfiRepository.findAll().stream()
+      .filter(rfi -> rfi.getStatus().equals("OPEN"))
+      .sorted(new SortByAscendingPriority())
+      .collect(Collectors.toList());
+
+    assertEquals(4, savedOpenRfis.size());
+
+    rfiFirst = savedOpenRfis.get(0);
+    rfiSecond = savedOpenRfis.get(1);
+    rfiThird = savedOpenRfis.get(2);
+    rfiFourth = savedOpenRfis.get(3);
+
+    assertEquals(1, rfiFirst.getPriority());
+    assertEquals(2, rfiSecond.getPriority());
+    assertEquals(3, rfiThird.getPriority());
+    assertEquals(4, rfiFourth.getPriority());
+
 
   }
 }

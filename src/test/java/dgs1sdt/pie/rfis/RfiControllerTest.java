@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -71,8 +70,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void getRfisDirectlyFromGETS() throws Exception{
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+  public void getRfisDirectlyFromGETS() throws Exception {
     String[] files = {
       "RfisNewOpen.xml",
       "RfisClosed.xml"
@@ -181,31 +179,6 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   }
 
-//  @Test
-//  public void updatesExploitDates() throws Exception {
-//    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-//    String[] files = {
-//      "RfisNewOpen.xml",
-//      "RfisClosed.xml"
-//    };
-//    rfiService.fetchRfisFromUris(files);
-//
-//    RfiExploitDatesJson update = new RfiExploitDatesJson(
-//      "DGS-1-SDT-2020-00338",
-//      new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020"),
-//      new SimpleDateFormat("dd/MM/yyyy").parse("15/11/2020"));
-//
-//    rfiController.updateExploitDates(update);
-//
-//    Rfi updatedRfi = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338");
-//
-//    assertEquals("2020-11-11 00:00:00.0", updatedRfi.getExploitStart().toString());
-//    assertEquals("2020-11-15 00:00:00.0", updatedRfi.getExploitEnd().toString());
-//
-//
-//
-//  }
-
   @Test
   public void addsExploitDates() throws Exception {
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
@@ -232,6 +205,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void returnsExploitDates() throws Exception {
+
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
 
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
