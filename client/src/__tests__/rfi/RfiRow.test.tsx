@@ -13,7 +13,7 @@ describe('RFIRow', () => {
     const moment = require('moment');
     subject = shallow(
       <RfiRow
-        rfi={new RfiModel('id', 'url', RfiStatus.PENDING, 'customer', moment(), 'country', 'hi', -1)}
+        rfi={new RfiModel(1, 'id', 'url', RfiStatus.PENDING, 'customer', moment(), 'country', 'hi', -1)}
         scrollRegionRef={()=>{}}
       />
     )

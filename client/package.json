@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.9.0",
     "@types/moment": "^2.13.0",
     "@types/react-beautiful-dnd": "^11.0.3",
     "@types/react-flatpickr": "^3.8.0",

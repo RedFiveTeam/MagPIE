@@ -4,14 +4,14 @@ import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import IconDnDBurger from '../../resources/icons/DnDBurgerVector';
 import * as React from 'react';
 import '../../setupEnzyme';
-import AddTgtButtonVector from '../../resources/icons/AddTgtButtonVector';
+import TgtPageButtonVector from '../../resources/icons/TgtPageButtonVector';
 
 describe('RFIRowInformationSection', () => {
   let subject: ShallowWrapper;
   const moment = require('moment');
 
   beforeEach(() => {
-    let rfi = new RfiModel('2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
+    let rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
     subject = shallow(
       <RfiRowInformationSection
         scrollRegionRef={React.createRef()}
@@ -32,7 +32,7 @@ describe('RFIRowInformationSection', () => {
 
   it('should contain the RFI LTIOV or dash', () => {
     expect(subject.find('.cell--ltiov').text()).toBe('20 NOV 19');
-    let rfi = new RfiModel('2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', undefined, 'CAN', 'hi', -1);
+    let rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', undefined, 'CAN', 'hi', -1);
     subject = shallow(
       <RfiRowInformationSection
         scrollRegionRef={React.createRef()}
@@ -50,11 +50,11 @@ describe('RFIRowInformationSection', () => {
 
   it('should have a button that navigates to the TGT page', () => {
     expect(subject.find('.cell--add-tgt-button').exists()).toBeTruthy();
-    expect(subject.find(AddTgtButtonVector).exists()).toBeTruthy();
+    expect(subject.find(TgtPageButtonVector).exists()).toBeTruthy();
   });
 
   it('should not contain an add tgt button on closed or pending rfis', () => {
-    let rfi = new RfiModel('2020-00123', 'google.com', RfiStatus.PENDING, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
+    let rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.PENDING, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
     subject = shallow(
       <RfiRowInformationSection
         scrollRegionRef={React.createRef()}
@@ -64,10 +64,10 @@ describe('RFIRowInformationSection', () => {
       />);
 
     expect(subject.find('.cell--add-tgt-button').exists()).toBeFalsy();
-    expect(subject.find(AddTgtButtonVector).exists()).toBeFalsy();
+    expect(subject.find(TgtPageButtonVector).exists()).toBeFalsy();
     expect(subject.find('.cell--add-tgt-button-disabled').exists()).toBeTruthy();
 
-    rfi = new RfiModel('2020-00123', 'google.com', RfiStatus.CLOSED, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
+    rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.CLOSED, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
     subject = shallow(
       <RfiRowInformationSection
         scrollRegionRef={React.createRef()}
@@ -77,7 +77,7 @@ describe('RFIRowInformationSection', () => {
       />);
 
     expect(subject.find('.cell--add-tgt-button').exists()).toBeFalsy();
-    expect(subject.find(AddTgtButtonVector).exists()).toBeFalsy();
+    expect(subject.find(TgtPageButtonVector).exists()).toBeFalsy();
     expect(subject.find('.cell--add-tgt-button-disabled').exists()).toBeTruthy();
   });
 
@@ -86,7 +86,7 @@ describe('RFIRowInformationSection', () => {
   });
 
   it('should have a see more button', () => {
-    let rfi = new RfiModel('2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', undefined, 'CAN',
+    let rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', undefined, 'CAN',
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore ' +
       'magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo ' +
       'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ' +
@@ -105,7 +105,7 @@ describe('RFIRowInformationSection', () => {
 
   it('should display a hamburger only when prioritizing', () => {
     expect(subject.find(IconDnDBurger).exists()).toBeFalsy();
-    let rfi = new RfiModel('2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', undefined, 'CAN', 'hi', 1);
+    let rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.OPEN, '1 FW', undefined, 'CAN', 'hi', 1);
     subject = shallow(
       <RfiRowInformationSection
         rfi={rfi}

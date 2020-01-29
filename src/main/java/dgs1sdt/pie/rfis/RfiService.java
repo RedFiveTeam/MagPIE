@@ -1,7 +1,7 @@
 package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.metrics.MetricController;
-import dgs1sdt.pie.metrics.changerfi.MetricChangeRfi;
+import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;

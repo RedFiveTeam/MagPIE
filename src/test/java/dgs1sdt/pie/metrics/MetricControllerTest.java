@@ -1,22 +1,24 @@
 package dgs1sdt.pie.metrics;
 
 import dgs1sdt.pie.BaseIntegrationTest;
-import dgs1sdt.pie.metrics.changeexploitdate.MetricChangeExploitDateRepository;
-import dgs1sdt.pie.metrics.changerfi.MetricChangeRfi;
-import dgs1sdt.pie.metrics.changerfi.MetricChangeRfiRepository;
-import dgs1sdt.pie.metrics.changerfipriority.MetricChangeRfiPriority;
-import dgs1sdt.pie.metrics.changerfipriority.MetricChangeRfiPriorityRepository;
-import dgs1sdt.pie.metrics.clickgets.MetricClickGets;
-import dgs1sdt.pie.metrics.clickgets.MetricClickGetsJson;
-import dgs1sdt.pie.metrics.clickgets.MetricClickGetsRepository;
-import dgs1sdt.pie.metrics.clickrefresh.MetricClickRefreshRepository;
-import dgs1sdt.pie.metrics.rfifetchtime.MetricRfiFetchTimeJson;
-import dgs1sdt.pie.metrics.rfifetchtime.MetricRfiFetchTimeRepository;
-import dgs1sdt.pie.metrics.sitevisit.MetricSiteVisit;
-import dgs1sdt.pie.metrics.sitevisit.MetricSiteVisitRepository;
-import dgs1sdt.pie.metrics.sortclick.MetricClickSortJson;
-import dgs1sdt.pie.metrics.sortclick.MetricClickSortRepository;
-import dgs1sdt.pie.rfis.exploitdates.ExploitDateJson;
+import dgs1sdt.pie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
+import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfi;
+import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfiRepository;
+import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriority;
+import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
+import dgs1sdt.pie.metrics.clickGets.MetricClickGets;
+import dgs1sdt.pie.metrics.clickGets.MetricClickGetsJson;
+import dgs1sdt.pie.metrics.clickGets.MetricClickGetsRepository;
+import dgs1sdt.pie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.pie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTimeJson;
+import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTimeRepository;
+import dgs1sdt.pie.metrics.siteVisit.MetricSiteVisit;
+import dgs1sdt.pie.metrics.siteVisit.MetricSiteVisitRepository;
+import dgs1sdt.pie.metrics.sortClick.MetricClickSortJson;
+import dgs1sdt.pie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
+import dgs1sdt.pie.rfis.targets.TargetJson;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricRfiFetchTimeRepository metricRfiFetchTimeRepository;
 
+  @Autowired
+  private MetricCreateTargetRepository metricCreateTargetRepository;
+
   @Before
   public void setup() {
     metricClickGetsRepository.deleteAll();
@@ -68,6 +73,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricChangeRfiRepository.deleteAll();
     metricClickRefreshRepository.deleteAll();
     metricChangeExploitDateRepository.deleteAll();
+    metricCreateTargetRepository.deleteAll();
   }
 
   @Test
@@ -209,7 +215,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void getsSiteVisitsOverLast7Days() throws Exception{
+  public void getsSiteVisitsOverLast7Days() throws Exception {
     Date sixDaysAgo = new Date(new Date().getTime() - 518400000L);
     Date fourDaysAgo = new Date(new Date().getTime() - 345600000L);
     Date oneDayAgo = new Date(new Date().getTime() - 86400000L);
@@ -255,6 +261,35 @@ public class MetricControllerTest extends BaseIntegrationTest {
       metricChangeExploitDateRepository.findAll().get(0).getNewExploitDate().toString()
     );
     assertNull(metricChangeExploitDateRepository.findAll().get(0).getOldExploitDate());
+  }
+
+  @Test
+  public void addsTargetDateCreationMetric() throws Exception {
+    TargetJson targetJson = new TargetJson(
+      "DGS-1-SDT-2020-00338",
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "SDT12-123",
+      "12ASD1231231231",
+      "",
+      ""
+    );
+
+    metricController.addCreateTarget(targetJson);
+
+    assertEquals(1, metricCreateTargetRepository.findAll().size());
+    assertEquals(
+      "SDT12-123",
+      metricCreateTargetRepository.findAll().get(0).getName()
+    );
+    assertEquals(
+      "DGS-1-SDT-2020-00338",
+      metricCreateTargetRepository.findAll().get(0).getRfiNum()
+    );
+    assertEquals(
+      "2020-11-11 00:00:00.0",
+      metricCreateTargetRepository.findAll().get(0).getExploitDate().toString()
+    );
+
   }
 
 //  @Test

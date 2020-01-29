@@ -7,8 +7,8 @@ import IconShowLess from '../../../resources/icons/ShowLessVector';
 import IconDnDBurger from '../../../resources/icons/DnDBurgerVector';
 import { connect } from 'react-redux';
 import { Field } from '../models/SortKeyModel';
-import AddTgtButtonVector from '../../../resources/icons/AddTgtButtonVector';
-import { navigateToTgtPage } from '../../../state/actions';
+import TgtPageButtonVector from '../../../resources/icons/TgtPageButtonVector';
+import { fetchRfiTargets, navigateToTgtPage } from '../../../state/actions';
 import { formatRfiNum } from '../../../utils';
 
 interface Props {
@@ -103,7 +103,7 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
       <div>
           {props.rfi.status === RfiStatus.OPEN ?
         <button onClick={addTgtToRFI} className={'cell--add-tgt-button'}>
-          <AddTgtButtonVector/>
+          <TgtPageButtonVector/>
         </button>
             :
             <div className={'cell--add-tgt-button-disabled'}>
@@ -136,7 +136,8 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = {
-  navigateToTgtPage: navigateToTgtPage
+  navigateToTgtPage: navigateToTgtPage,
+  fetchRfiTargets: fetchRfiTargets
 };
 
 export const StyledRfiRowInformationSection = styled(

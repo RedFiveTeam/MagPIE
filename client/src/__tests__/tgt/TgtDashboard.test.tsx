@@ -3,8 +3,8 @@ import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import * as React from 'react';
-import { Moment } from 'moment'
-import { StyledTgtTable } from '../../workflow/tgt-page/TgtTable';
+import { StyledTgtTable } from '../../workflow/tgt-page/table/TgtTable';
+import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
 
 describe('TgtDashboardContainer', () => {
   let subject: ShallowWrapper;
@@ -18,16 +18,17 @@ describe('TgtDashboardContainer', () => {
     exitSpy = jest.fn();
     updateSpy = jest.fn();
     setPlaceholderSpy = jest.fn();
-    rfiTest= new RfiModel("DGS-SPC-2035-02335", "www.spacejam.com", RfiStatus.OPEN, "space forse",
+    rfiTest = new RfiModel(1, "DGS-SPC-2035-02335", "www.spacejam.com", RfiStatus.OPEN, "space forse",
       moment('2019-11-20').utc(), "USLT", "Good morning starshine, the earth says hello", 42);
     subject = shallow(
       <TgtDashboard
         rfi={rfiTest}
         exitTgtPage={exitSpy}
         updateRfiDate={updateSpy}
-        dates={[]}
+        exploitDates={[]}
         setDatePlaceholder={setPlaceholderSpy}
         showDatePlaceholder={false}
+        targets={[]}
       />
     );
   });
@@ -47,47 +48,39 @@ describe('TgtDashboardContainer', () => {
   });
 
   it('should display an add date button', () => {
-      expect(subject.find('.tgt-dash-add-date-button').exists()).toBeTruthy();
+    expect(subject.find('.tgt-dash-add-date-button').exists()).toBeTruthy();
   });
 
   it('should display the date dividers or not properly', () => {
     expect(subject.find('.region-divider').exists()).toBeFalsy();
     expect(subject.find(StyledTgtTable).children().length).toBe(0);
 
-    let dates: Moment[] = [
-      moment('2019-11-20').utc(),
-      moment('2019-11-20').utc()
+    let dates: ExploitDateModel[] = [
+      new ExploitDateModel(
+        2,
+        moment('2019-11-20').utc(),
+        1
+      ),
+      new ExploitDateModel(
+        3,
+        moment('2019-11-21').utc(),
+        1
+      ),
     ];
     subject = shallow(
       <TgtDashboard
         rfi={rfiTest}
         exitTgtPage={exitSpy}
         updateRfiDate={updateSpy}
-        dates={dates}
+        exploitDates={dates}
         setDatePlaceholder={setPlaceholderSpy}
         showDatePlaceholder={false}
+        targets={[]}
       />
     );
 
-    expect(subject.find(StyledTgtTable).children().length).toBe(3);
+    expect(subject.find(StyledTgtTable).children().length).toBe(2);
 
   });
-  //
-  //   expect(subject.find('.tgt-dash-daterange-display-active').text()).toContain('20NOV19');
-  //   expect(subject.find('.tgt-dash-daterange-display-active').text().includes(' - ')).toBeFalsy();
-  //   expect(subject.find(Flatpickr).exists()).toBeFalsy();
-  //   rfiTest.exploitStart = moment('2019-11-20').utc();
-  //   rfiTest.exploitEnd = moment('2019-11-23').utc();
-  //   subject = shallow(
-  //     <TgtDashboard
-  //       rfi={rfiTest}
-  //       exitTgtPage={exitSpy}
-  //       updateRfiDate={updateSpy}
-  //     />
-  //   );
-  //   expect(subject.find('.tgt-dash-daterange-display-active').text()).toContain('20NOV19 - 23NOV19');
-  //   expect(subject.find(Flatpickr).exists()).toBeFalsy();
-  // });
-
 
 });

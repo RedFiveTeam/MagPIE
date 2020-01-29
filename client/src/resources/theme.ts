@@ -20,7 +20,9 @@ const theme = {
     buttonBackgroundActive: crayonBox.pitchBlack,
     showLessBackground: crayonBox.subtleGray,
     addButtonBackground: crayonBox.forestGreen,
-    fontAddDate: crayonBox.eggGray
+    fontAddDate: crayonBox.eggGray,
+    fontError: crayonBox.bloodRed,
+    fontInputFocus: crayonBox.skyBlue
   },
 
   font: {
@@ -35,7 +37,8 @@ const theme = {
     sizeHeaderSmall: '16px',
     familyRegion: 'Roboto',
     weightRegion: 100,
-    sizeRegion: '18px'
+    sizeRegion: '18px',
+    sizeRowSmall: '12px'
   },
 
   table: {

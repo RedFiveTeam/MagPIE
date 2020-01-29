@@ -1,10 +1,14 @@
 package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.BaseIntegrationTest;
-import dgs1sdt.pie.metrics.changeexploitdate.MetricChangeExploitDateRepository;
-import dgs1sdt.pie.rfis.exploitdates.ExploitDate;
-import dgs1sdt.pie.rfis.exploitdates.ExploitDateJson;
-import dgs1sdt.pie.rfis.exploitdates.ExploitDateRepository;
+import dgs1sdt.pie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
+import dgs1sdt.pie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.pie.rfis.exploitDates.ExploitDate;
+import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
+import dgs1sdt.pie.rfis.exploitDates.ExploitDateRepository;
+import dgs1sdt.pie.rfis.targets.Target;
+import dgs1sdt.pie.rfis.targets.TargetJson;
+import dgs1sdt.pie.rfis.targets.TargetRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +39,9 @@ public class RfiControllerTest extends BaseIntegrationTest {
   RfiService rfiService;
   RfiRepository rfiRepository;
   ExploitDateRepository exploitDateRepository;
+  TargetRepository targetRepository;
   MetricChangeExploitDateRepository metricChangeExploitDateRepository;
+  MetricCreateTargetRepository metricCreateTargetRepository;
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -57,16 +63,26 @@ public class RfiControllerTest extends BaseIntegrationTest {
     this.exploitDateRepository = exploitDateRepository;
   }
 
- @Autowired
+  @Autowired
+  public void setTargetRepository(TargetRepository targetRepository) {
+    this.targetRepository = targetRepository;
+  }
+
+  @Autowired
   public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
   }
 
+  @Autowired
+  public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
+    this.metricCreateTargetRepository = metricCreateTargetRepository;
+  }
 
   @Before
   public void clean() {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
+    metricCreateTargetRepository.deleteAll();
   }
 
   @Test
@@ -147,7 +163,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     rfiRepository.saveAll(rfis);
 
-    RfiPriorityJson [] rfiJsons = {
+    RfiPriorityJson[] rfiJsons = {
       new RfiPriorityJson("id1", 1),
       new RfiPriorityJson("id2", 2),
       new RfiPriorityJson("id3", 3)
@@ -241,6 +257,51 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[0].exploitDate", equalTo("2020-11-11T00:00:00.000+0000"))
       .body("[1].exploitDate", equalTo("2020-11-15T00:00:00.000+0000"))
       .body("[2].exploitDate", equalTo(null));
+  }
+
+  @Test
+  public void addsNewTargets() throws Exception {
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
+    exploitDateRepository.save(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      rfiId
+    ));
+
+    TargetJson targetJson = new TargetJson(
+      "SDT-123",
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "SDT20-123",
+      "12ABC1234567890",
+      "These are some EEI notes",
+      "This is a description"
+    );
+
+    rfiController.addTarget(targetJson);
+
+    Target target = targetRepository.findAll().get(0);
+
+    assertEquals(rfiRepository.findByRfiNum("SDT-123").getId(), target.getRfiId());
+    assertEquals(exploitDateRepository.findAllByRfiId(rfiId).get(0).getId(), target.getExploitDateId());
+    assertEquals("SDT20-123", target.getName());
+    assertEquals("12ABC1234567890", target.getMgrs());
+    assertEquals("These are some EEI notes", target.getNotes());
+    assertEquals("This is a description", target.getDescription());
+
+
+    targetJson = new TargetJson(
+      "SDT-123",
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "SDT20-123",
+      "12ABC1234567899",
+      "These are some different EEI notes",
+      "This is a unique description"
+    );
+
+    rfiController.addTarget(targetJson);
+    assertEquals(1, targetRepository.findAll().size());
+
+    assertEquals(1, metricCreateTargetRepository.findAll().size());
   }
 
 }

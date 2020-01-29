@@ -18,6 +18,13 @@ interface Props {
 }
 
 export const RfiTableHeader: React.FC<Props> = props => {
+  // TODO: refactor headers into a map using the similar style to target table headers for cleanliness and DRY
+  //
+  // let sortableHeaders: string[] = ['PRI', 'RFI', 'CC', 'Customer', 'LTIOV'];
+  // let unsortableHeaders: string[] = ['TGTs', 'Description'];
+
+
+
   return (
     <div className={classNames('header', props.className)}>
       <div className={'header-cell--textLabels'}>

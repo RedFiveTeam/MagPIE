@@ -1,25 +1,28 @@
 package dgs1sdt.pie.metrics;
 
-import dgs1sdt.pie.metrics.clickgets.MetricClickGets;
-import dgs1sdt.pie.metrics.clickgets.MetricClickGetsJson;
-import dgs1sdt.pie.metrics.clickgets.MetricClickGetsRepository;
-import dgs1sdt.pie.metrics.clickrefresh.MetricClickRefresh;
-import dgs1sdt.pie.metrics.clickrefresh.MetricClickRefreshRepository;
-import dgs1sdt.pie.metrics.changeexploitdate.MetricChangeExploitDate;
-import dgs1sdt.pie.metrics.changeexploitdate.MetricChangeExploitDateRepository;
-import dgs1sdt.pie.metrics.rfifetchtime.MetricRfiFetchTime;
-import dgs1sdt.pie.metrics.rfifetchtime.MetricRfiFetchTimeJson;
-import dgs1sdt.pie.metrics.rfifetchtime.MetricRfiFetchTimeRepository;
-import dgs1sdt.pie.metrics.changerfipriority.MetricChangeRfiPriority;
-import dgs1sdt.pie.metrics.changerfipriority.MetricChangeRfiPriorityRepository;
-import dgs1sdt.pie.metrics.changerfi.MetricChangeRfi;
-import dgs1sdt.pie.metrics.changerfi.MetricChangeRfiRepository;
-import dgs1sdt.pie.metrics.sitevisit.MetricSiteVisit;
-import dgs1sdt.pie.metrics.sitevisit.MetricSiteVisitRepository;
-import dgs1sdt.pie.metrics.sortclick.MetricClickSort;
-import dgs1sdt.pie.metrics.sortclick.MetricClickSortJson;
-import dgs1sdt.pie.metrics.sortclick.MetricClickSortRepository;
-import dgs1sdt.pie.rfis.exploitdates.ExploitDateJson;
+import dgs1sdt.pie.metrics.changeExploitDate.MetricChangeExploitDate;
+import dgs1sdt.pie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
+import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfi;
+import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfiRepository;
+import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriority;
+import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
+import dgs1sdt.pie.metrics.clickGets.MetricClickGets;
+import dgs1sdt.pie.metrics.clickGets.MetricClickGetsJson;
+import dgs1sdt.pie.metrics.clickGets.MetricClickGetsRepository;
+import dgs1sdt.pie.metrics.clickRefresh.MetricClickRefresh;
+import dgs1sdt.pie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.pie.metrics.createTarget.MetricCreateTarget;
+import dgs1sdt.pie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTime;
+import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTimeJson;
+import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTimeRepository;
+import dgs1sdt.pie.metrics.siteVisit.MetricSiteVisit;
+import dgs1sdt.pie.metrics.siteVisit.MetricSiteVisitRepository;
+import dgs1sdt.pie.metrics.sortClick.MetricClickSort;
+import dgs1sdt.pie.metrics.sortClick.MetricClickSortJson;
+import dgs1sdt.pie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
+import dgs1sdt.pie.rfis.targets.TargetJson;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +47,7 @@ public class MetricController {
   private MetricChangeRfiRepository metricChangeRfiRepository;
   private MetricClickRefreshRepository metricClickRefreshRepository;
   private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
+  private MetricCreateTargetRepository metricCreateTargetRepository;
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
@@ -77,6 +81,11 @@ public class MetricController {
   public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
   }
+  @Autowired
+  public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
+    this.metricCreateTargetRepository = metricCreateTargetRepository;
+  }
+
 
   @GetMapping(path = "/site-visits")
   public long getSiteVisitCount() {
@@ -199,4 +208,17 @@ public class MetricController {
     );
     return this.metricChangeExploitDateRepository.save(metricChangeExploitDate);
   }
+
+  public MetricCreateTarget addCreateTarget(TargetJson targetJson){
+    MetricCreateTarget metricCreateTarget = new MetricCreateTarget(
+      targetJson.getRfiNum(),
+      targetJson.getExploitDate(),
+      targetJson.getName(),
+      new Timestamp(new Date().getTime())
+    );
+    return this.metricCreateTargetRepository.save(metricCreateTarget);
+  }
 }
+
+
+

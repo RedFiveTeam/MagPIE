@@ -29,37 +29,37 @@ export const StyledTgtTableHeader = styled(TgtTableHeader)`
   font-weight: ${(props) => props.theme.font.weightHeader};
   font-size: ${(props) => props.theme.font.sizeHeaderSmall};
   margin-top: 21px;
-  height: 48px;
+  height: 33px;
   display: flex;
-  flex: 1 1;
   flex-direction: row;
   justify-content: space-between;
+  padding-bottom: 8px;
   
   .header-cell--name {
-    width: 123px
+    width: 123px;
   }
   
   .header-cell--mgrs {
-    width: 149px
+    width: 163px;
   }
   
   .header-cell--notes {
-    width: 397px
+    width: 397px;
   }
   
   .header-cell--description {
-    width: 270px
+    width: 270px;
   }
   
   .header-cell--status {
-    width: 148px
+    width: 128px;
   }
   
   .header-cell--delete {
-    width: 97px
+    width: 61px;
   }
   
   .header-cell--log {
-    width: 119px
+    width: 137px;
   }
 `;

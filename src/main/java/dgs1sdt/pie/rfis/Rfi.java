@@ -11,6 +11,7 @@ import java.util.*;
 @Data
 @Entity
 @NoArgsConstructor
+@Table(name = "data_rfi")
 public class Rfi {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

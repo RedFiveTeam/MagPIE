@@ -29,6 +29,7 @@ export const StyledTgtDateDivider = styled(TgtDateDivider)`
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 4px;
+  width:100%
   
   .separator-line {
     flex-grow: 1;

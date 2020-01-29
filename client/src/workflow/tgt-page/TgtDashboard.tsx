@@ -8,32 +8,45 @@ import BackButtonVector from '../../resources/icons/BackButtonVector';
 import Flatpickr from 'react-flatpickr';
 import '../../resources/flatpickr.css'
 import { formatRfiNum } from '../../utils';
-import { Moment } from 'moment';
-import { StyledTgtDateDivider } from './TgtDateDivider';
-import { StyledTgtTable } from './TgtTable';
 import moment from 'moment';
-import AddDateVector from '../../resources/icons/AddDateVector';
+import { StyledTgtDateSection } from './TgtDateSection';
+import { StyledTgtTable } from './table/TgtTable';
+import AddTgtDateVector from '../../resources/icons/AddTgtDateVector';
 import { StyledTgtTableHeader } from './header/TgtTableHeader';
+import { StyledTgtDateDivider } from './TgtDateDivider';
+import { TargetModel } from './models/TargetModel';
+import { ExploitDateModel } from './models/ExploitDateModel';
+import { useState } from 'react';
+import { Box } from '@material-ui/core';
+import { crayonBox } from '../../resources/crayonBox';
 
 interface Props {
   rfi: RfiModel;
-  dates: Moment[];
+  exploitDates: ExploitDateModel[];
   showDatePlaceholder: boolean;
   exitTgtPage: () => void;
   updateRfiDate: (rfi: RfiModel, date: Date) => void;
   setDatePlaceholder: (show: boolean) => void;
+  targets: TargetModel[];
   className?: string;
 }
 
 export const TgtDashboard: React.FC<Props> = props => {
+  const [addTgt, setAddTgt] = useState(-1); //value is the id of the exploit date that is being added to
 
-  function printDates(dates: Moment[]) {
-    return dates.map((exploitDate: Moment, index: number) =>
-      <StyledTgtDateDivider
+
+  function printDates(dates: ExploitDateModel[]) {
+    return dates.map((exploitDateModel: ExploitDateModel, index: number) =>
+      <StyledTgtDateSection
+        rfi={props.rfi}
         key={index}
         index={index}
-        exploitDate={exploitDate.utc().format("D MMM YY")}
-        className={"date-divider--" + moment(exploitDate).format("D-MMM-YY")}
+        targets={props.targets}
+        exploitDate={exploitDateModel}
+        addTgt={addTgt}
+        setAddTgt={setAddTgt}
+        exploitDateString={exploitDateModel.exploitDate.utc().format("D MMM YY")}
+        className={"date-divider--" + moment(exploitDateModel.exploitDate).format("D-MMM-YY")}
       />
     );
   }
@@ -55,20 +68,20 @@ export const TgtDashboard: React.FC<Props> = props => {
       </div>
 
       <div className={'tgt-dash-body'}>
-        <StyledTgtTable>
-          {props.dates.length > 0 || props.showDatePlaceholder ?
+          {props.exploitDates.length > 0 || props.showDatePlaceholder ?
             <StyledTgtTableHeader/>
             :
-            <></>
+            null
           }
-          {printDates(props.dates)}
+        <StyledTgtTable>
+          {printDates(props.exploitDates)}
           {props.showDatePlaceholder ?
             <StyledTgtDateDivider
               exploitDate={"DDMMMYY"}
               className={"date-divider--placeholder"}
             />
             :
-            <></>
+            null
           }
         </StyledTgtTable>
 
@@ -91,14 +104,20 @@ export const TgtDashboard: React.FC<Props> = props => {
               dateFormat: ""
             }}
           />
-          <div className={'add-date-vector'}><AddDateVector/></div>
+          <div className={'add-date-vector'}><AddTgtDateVector/></div>
         </div>
       </div>
 
       <div className={'tgt-dash--rfi-description-container'}>
-        <div className={'tgt-dash--rfi-description'}>
+        <Box
+          border={1}
+          borderRadius={8}
+          borderColor={crayonBox.eggWhite}
+          className={'tgt-dash--rfi-description'}
+          padding={1}
+        >
           <span>RFI DESCRIPTION: {props.rfi.description}</span>
-        </div>
+        </Box>
       </div>
 
     </div>
@@ -109,8 +128,8 @@ const mapStateToProps = (state: any) => ({
   rfi: state.tgtReducer.rfi,
   viewTgtPage: state.tgtReducer.viewTgtPage,
   exploitDates: state.tgtReducer.exploitDates,
-  dates: state.tgtReducer.dates,
-  showDatePlaceholder: state.tgtReducer.showDatePlaceholder
+  showDatePlaceholder: state.tgtReducer.showDatePlaceholder,
+  targets: state.tgtReducer.targets
 });
 
 const mapDispatchToProps = {
@@ -183,14 +202,14 @@ export const StyledTgtDashboard = styled(
   }
   
   .tgt-dash-body {
-    height: 100%;
+    height: calc(100vh - 270px);
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   
   .tgt-dash--rfi-description-container {
-    width:100%;
+    width: 100%;
     padding-left: 113px;
     padding-right: 103px;
     padding-bottom: 21px;
@@ -215,7 +234,7 @@ export const StyledTgtDashboard = styled(
     flex-direction: row;
     justify-content: center;
     align-items: center;
-
+    margin-top: 20px;
   }
   
   .add-date-vector {

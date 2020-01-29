@@ -13,5 +13,8 @@ export const crayonBox = {
   mediumLightGray: '#838383',
   mediumGray: '#8D8D8D',
   subtleGray: '#575757',
-  forestGreen: '#204110'
+  forestGreen: '#204110',
+  bloodRed: '#C10101',
+  skyBlue: '#82BFF9'
+
 };

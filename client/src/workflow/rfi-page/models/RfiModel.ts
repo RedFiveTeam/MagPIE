@@ -8,6 +8,7 @@ export enum RfiStatus {
 
 export default class RfiModel {
   constructor(
+    public id: number,
     public rfiNum: string,
     public getsUrl: string,
     public status: RfiStatus = RfiStatus.PENDING,

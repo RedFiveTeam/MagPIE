@@ -21,6 +21,7 @@ export class RfiDeserializer {
     if (items.map) {
       return items.map((item: any) => {
         return new RfiModel(
+          item.id,
           item.rfiNum,
           item.getsUrl,
           matchEnum(item.status),

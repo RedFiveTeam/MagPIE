@@ -3,7 +3,7 @@ package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.MetricController;
-import dgs1sdt.pie.metrics.changerfi.MetricChangeRfiRepository;
+import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfiRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

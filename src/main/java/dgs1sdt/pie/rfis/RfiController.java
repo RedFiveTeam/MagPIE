@@ -1,15 +1,21 @@
 package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.metrics.MetricController;
-import dgs1sdt.pie.metrics.changerfipriority.MetricChangeRfiPriority;
-import dgs1sdt.pie.rfis.exploitdates.ExploitDate;
-import dgs1sdt.pie.rfis.exploitdates.ExploitDateJson;
-import dgs1sdt.pie.rfis.exploitdates.ExploitDateRepository;
+import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriority;
+import dgs1sdt.pie.rfis.exploitDates.ExploitDate;
+import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
+import dgs1sdt.pie.rfis.exploitDates.ExploitDateRepository;
+import dgs1sdt.pie.rfis.targets.Target;
+import dgs1sdt.pie.rfis.targets.TargetJson;
+import dgs1sdt.pie.rfis.targets.TargetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 
 @RestController
@@ -17,11 +23,20 @@ import java.util.*;
 public class RfiController {
   public static final String URI = "/api/rfis";
 
-  private RfiRepository rfiRepository;
-  private RfiService rfiService;
   private MetricController metricController;
+  private RfiService rfiService;
+  private RfiRepository rfiRepository;
   private ExploitDateRepository exploitDateRepository;
+  private TargetRepository targetRepository;
 
+  @Autowired
+  public void setMetricController(MetricController metricController) {
+    this.metricController = metricController;
+  }
+  @Autowired
+  public void setRfiService(RfiService rfiService) {
+    this.rfiService = rfiService;
+  }
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
     this.rfiRepository = rfiRepository;
@@ -31,22 +46,21 @@ public class RfiController {
     this.exploitDateRepository = exploitDateRepository;
   }
   @Autowired
-  public void setRfiService(RfiService rfiService) {
-    this.rfiService = rfiService;
-  }
-  @Autowired
-  public void setMetricController(MetricController metricController) {
-    this.metricController = metricController;
+  public void setTargetRepository(TargetRepository targetRepository) {
+    this.targetRepository = targetRepository;
   }
 
   @Autowired
   public RfiController(RfiService rfiService,
                        RfiRepository rfiRepository,
-                       ExploitDateRepository exploitDateRepository) {
+                       ExploitDateRepository exploitDateRepository,
+                       TargetRepository targetRepository) {
     this.rfiService = rfiService;
     this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
+    this.targetRepository = targetRepository;
   }
+
 
   @GetMapping
   public List<Rfi> getAllRfis() {
@@ -132,6 +146,31 @@ public class RfiController {
     dates.sort(Comparator.comparing(ExploitDate::getExploitDate));
     return dates;
   }
+
+  @PostMapping(path = "/add-target")
+  public void addTarget(@Valid @RequestBody TargetJson targetJson){
+    long rfiId = rfiRepository.findByRfiNum(targetJson.getRfiNum()).getId();
+    long exploitDateId = exploitDateRepository.findByRfiIdAndExploitDate(rfiId, targetJson.getExploitDate()).getId();
+
+    Target target = new Target(rfiId, exploitDateId, targetJson);
+    Target duplicate = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetJson.getName());
+    if(duplicate == null){
+      targetRepository.save(target);
+      metricController.addCreateTarget(targetJson);
+    }
+  }
+
+  @GetMapping(path = "/{rfiId}/targets")
+  public List<Target> getRfiTargets(@Valid @RequestBody @PathVariable("rfiId") long rfiId) {
+    return targetRepository.findAllByRfiId(rfiId);
+  }
+
+  @GetMapping(path = "/{rfiId}/exploit-dates")
+  public List<ExploitDate> getRfiExploitDates(@Valid @RequestBody @PathVariable("rfiId") long rfiId) {
+    return exploitDateRepository.findAllByRfiId(rfiId);
+  }
+
+
 
 //  @PostMapping(path = "update-exploit-dates")
 //  public void updateExploitDates(@Valid @RequestBody RfiExploitDatesJson updatedRfiExploitDates) {

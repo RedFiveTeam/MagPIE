@@ -1,22 +1,27 @@
 import { ActionTypes } from '../actions/ActionTypes';
 import RfiModel from '../../workflow/rfi-page/models/RfiModel';
-import { Moment } from 'moment';
+import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
+import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
+import { ExploitDateSorter } from '../utils/ExploitDateSorter';
 
 const initState = {
   viewTgtPage: false,
   rfi: {} as RfiModel,
-  dates: [] as Moment[],
-  showDatePlaceholder: false
+  exploitDates: [] as ExploitDateModel[],
+  showDatePlaceholder: false,
+  targets: [] as TargetModel[]
 };
 
 const tgtReducer = (state = initState, action: any) => {
   switch (action.type) {
     case ActionTypes.NAVIGATE_TO_TGT_PAGE:
+      let sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
       return {...state,
         viewTgtPage: true,
         rfi: action.rfi,
-        dates: action.dates,
-        showDatePlaceholder: false
+        exploitDates: sortedExploitDates,
+        showDatePlaceholder: false,
+        targets: action.targets
       };
     case ActionTypes.EXIT_TGT_PAGE:
       return {...state,
