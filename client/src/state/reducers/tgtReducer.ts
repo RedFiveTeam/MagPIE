@@ -1,18 +1,20 @@
 import { ActionTypes } from '../actions/ActionTypes';
 import RfiModel from '../../workflow/rfi-page/models/RfiModel';
-import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
-import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
 import { ExploitDateSorter } from '../utils/ExploitDateSorter';
+import { Reducer } from 'redux';
+import { TgtState } from '../actions/tgt/TgtActionTypes';
+import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
+import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
 
-const initState = {
-  viewTgtPage: false,
+const initState: TgtState = {
   rfi: {} as RfiModel,
+  viewTgtPage: false,
   exploitDates: [] as ExploitDateModel[],
   showDatePlaceholder: false,
   targets: [] as TargetModel[]
 };
 
-const tgtReducer = (state = initState, action: any) => {
+const reducer: Reducer<TgtState> = (state = initState, action: any) => {
   let sortedExploitDates: ExploitDateModel[];
 
   switch (action.type) {
@@ -41,7 +43,7 @@ const tgtReducer = (state = initState, action: any) => {
     case ActionTypes.UPDATE_RFI_DATE:
       return {
         ...state,
-        rfi: action.rfi
+        exploitDates: action.exploitDates
       };
     case ActionTypes.SHOW_DATE_PLACEHOLDER:
       return {
@@ -58,4 +60,4 @@ const tgtReducer = (state = initState, action: any) => {
   }
 };
 
-export default tgtReducer;
+export { reducer as tgtReducer };

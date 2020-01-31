@@ -1,7 +1,7 @@
 import '../../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import { TgtRow } from '../../workflow/tgt-page/row/TgtRow';
+import { TgtRow } from '../../workflow/tgt-page/tgtTable/row/TgtRow';
 import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
 import { TargetPostModel } from '../../workflow/tgt-page/models/TargetPostModel';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';

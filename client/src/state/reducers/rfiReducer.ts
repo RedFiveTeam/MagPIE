@@ -4,8 +4,10 @@ import { ActionTypes } from '../actions/ActionTypes';
 import { RfiSorter } from '../utils/RfiSorter';
 import SortClickRequestModel from '../../metrics/models/SortClickRequestModel';
 import { postSortClick } from '../actions';
+import { RfiState } from '../actions/rfi/RfiActionTypes';
+import { Reducer } from 'redux';
 
-const initState = {
+const initState: RfiState = {
   rfis: [] as RfiModel[],
   sortKey: new SortKeyModel(Field.PRIORITY, true),
   pendingRfis: [] as RfiModel[],
@@ -33,7 +35,7 @@ function filterRfis(sortedRfis: RfiModel[]) {
   }
 }
 
-const rfiReducer = (state = initState, action: any) => {
+const reducer: Reducer<RfiState> = (state = initState, action: any) => {
   let sortedRfis: RfiModel[];
   let newSortKey: SortKeyModel;
 
@@ -80,4 +82,4 @@ const rfiReducer = (state = initState, action: any) => {
   }
 };
 
-export default rfiReducer;
+export {reducer as rfiReducer};

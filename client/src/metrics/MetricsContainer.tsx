@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { fetchGetsClicksMetrics, fetchSiteVisitMetrics, fetchSiteVisitsGraphWeek } from '../state/actions';
 import { Bar, defaults } from 'react-chartjs-2';
+import { ApplicationState } from '../state';
 
 interface Props {
   fetchSiteVisitMetrics: () => void;
@@ -64,10 +65,10 @@ export class MetricsContainer extends React.Component<Props, any> {
   }
 }
 
-const mapStateToProps = (state: any) => ({
-  siteVisits: state.metricsReducer.siteVisits,
-  GetsClicks: state.metricsReducer.GetsClicks,
-  siteVisitsGraphWeek: state.metricsReducer.siteVisitsGraphWeek
+const mapStateToProps = ({metrics}: ApplicationState) => ({
+  siteVisits: metrics.siteVisits,
+  GetsClicks: metrics.GetsClicks,
+  siteVisitsGraphWeek: metrics.siteVisitsGraphWeek
 });
 
 const mapDispatchToProps = {

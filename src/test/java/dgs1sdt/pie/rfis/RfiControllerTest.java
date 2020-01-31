@@ -3,6 +3,7 @@ package dgs1sdt.pie.rfis;
 import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.pie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.pie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.pie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDate;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
   TargetRepository targetRepository;
   MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   MetricCreateTargetRepository metricCreateTargetRepository;
+  MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
   MetricDeleteTargetRepository metricDeleteTargetRepository;
 
   @Autowired
@@ -64,14 +67,17 @@ public class RfiControllerTest extends BaseIntegrationTest {
   public void setExploitDateRepository(ExploitDateRepository exploitDateRepository) {
     this.exploitDateRepository = exploitDateRepository;
   }
+
   @Autowired
   public void setTargetRepository(TargetRepository targetRepository) {
     this.targetRepository = targetRepository;
   }
+
   @Autowired
   public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
   }
+
   @Autowired
   public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
     this.metricCreateTargetRepository = metricCreateTargetRepository;
@@ -79,6 +85,11 @@ public class RfiControllerTest extends BaseIntegrationTest {
   @Autowired
   public void setMetricDeleteTargetRepository(MetricDeleteTargetRepository metricDeleteTargetRepository) {
     this.metricDeleteTargetRepository = metricDeleteTargetRepository;
+  }
+
+  @Autowired
+  public void setMetricDeleteExploitDateRepository(MetricDeleteExploitDateRepository metricDeleteExploitDateRepository) {
+    this.metricDeleteExploitDateRepository = metricDeleteExploitDateRepository;
   }
 
   @Before
@@ -202,23 +213,22 @@ public class RfiControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void addsExploitDates() throws Exception {
+  public void addsExploitDatesCorrectly() throws Exception {
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
 
     ExploitDateJson exploitDateJson = new ExploitDateJson(
       null,
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
-      "DGS-1-SDT-2020-00338");
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("11/11/2020 11:22:33").getTime()),
+      rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId());
 
-    rfiController.changeExploitDate(exploitDateJson);
+    rfiController.addExploitDate(exploitDateJson);
 
     assertEquals(1, exploitDateRepository.findAll().size());
-
-    assertEquals("2020-11-11 00:00:00.0", exploitDateRepository.findAllByRfiId(1L).get(0).getExploitDate().toString());
+    assertEquals("2020-11-11 00:00:00.0", exploitDateRepository.findAll().get(0).getExploitDate().toString());
 
     assertEquals(1, metricChangeExploitDateRepository.findAll().size());
 
-    rfiController.changeExploitDate(exploitDateJson);
+    rfiController.addExploitDate(exploitDateJson);
 
     assertEquals(1, exploitDateRepository.findAll().size());
 
@@ -248,14 +258,16 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     exploitDateRepository.saveAll(dates);
 
-    List<ExploitDate> returnedDates = rfiController.fetchExploitDates("DGS-1-SDT-2020-00338");
+    List<ExploitDate> returnedDates = rfiController.fetchExploitDates(
+      rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId()
+    );
 
     assertEquals(2, returnedDates.size());
 
     given()
       .port(port)
       .header("Content-Type", "application/json")
-      .body("DGS-1-SDT-2020-00338")
+      .body(rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId())
       .when()
       .post(RfiController.URI + "/dates")
       .then()
@@ -308,6 +320,106 @@ public class RfiControllerTest extends BaseIntegrationTest {
     assertEquals(1, targetRepository.findAll().size());
 
     assertEquals(1, metricCreateTargetRepository.findAll().size());
+  }
+
+  @Test
+  public void changesExploitDates() throws Exception {
+    Timestamp oldDate = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime());
+    Timestamp newDate = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/12/2020").getTime());
+
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
+    exploitDateRepository.save(new ExploitDate(
+      oldDate,
+      rfiId
+    ));
+
+    long exploitDateId = exploitDateRepository.findByRfiIdAndExploitDate(rfiId, oldDate).getId();
+
+    ExploitDateJson changeExploitDateJson = new ExploitDateJson(
+      oldDate,
+      newDate,
+      rfiId
+    );
+
+    rfiController.changeExploitDate(exploitDateId, changeExploitDateJson);
+
+    assertEquals(1, exploitDateRepository.findAll().size());
+
+    assertEquals(newDate, exploitDateRepository.findAll().get(0).getExploitDate());
+
+
+  }
+
+  @Test
+  public void deletesExploitDates() throws Exception {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+
+    ExploitDateJson exploitDateJson = new ExploitDateJson(
+      null,
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("11/11/2020 00:00:00").getTime()),
+      rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId());
+
+    rfiController.addExploitDate(exploitDateJson);
+
+    long id = exploitDateRepository.findAll().get(0).getId();
+
+    rfiController.deleteExploitDate(id);
+
+    assertEquals(0, exploitDateRepository.findAll().size());
+
+    assertEquals(1, metricDeleteExploitDateRepository.findAll().size());
+
+    assertEquals(
+      "2020-11-11 00:00:00.0",
+      metricDeleteExploitDateRepository.findAll().get(0).getExploitDate().toString()
+    );
+
+    assertEquals(
+      "DGS-1-SDT-2020-00338",
+      metricDeleteExploitDateRepository.findAll().get(0).getRfiNum()
+    );
+  }
+
+  @Test
+  @Transactional
+  public void deletesExploitDatesWithTargets() throws Exception {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+
+    ExploitDateJson exploitDateJson = new ExploitDateJson(
+      null,
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("11/11/2020 00:00:00").getTime()),
+      rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId());
+
+    rfiController.addExploitDate(exploitDateJson);
+
+    TargetJson targetJson1 = new TargetJson(
+      "DGS-1-SDT-2020-00338",
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "SDT20-123",
+      "12ABC1234567890",
+      "These are some EEI notes",
+      "This is a description"
+    );
+    TargetJson targetJson2 = new TargetJson(
+      "DGS-1-SDT-2020-00338",
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "SDT19-123",
+      "12ABC1234567890",
+      "These are some EEI notes",
+      "This is a description"
+    );
+
+    rfiController.addTarget(targetJson1);
+    rfiController.addTarget(targetJson2);
+
+    long id = exploitDateRepository.findAll().get(0).getId();
+
+    rfiController.deleteExploitDate(id);
+
+    assertEquals(0, exploitDateRepository.findAll().size());
+
+    assertEquals(0, targetRepository.findAll().size());
   }
 
   @Test

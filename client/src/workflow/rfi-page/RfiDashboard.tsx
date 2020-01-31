@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { reorderRfis } from '../../state/actions';
 import { Field, SortKeyModel } from './models/SortKeyModel';
+import { ApplicationState } from '../../state';
 
 interface Props {
   pendingRfis: RfiModel[];
@@ -133,11 +134,11 @@ export const RfiDashboard: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  pendingRfis: state.rfiReducer.pendingRfis,
-  openRfis: state.rfiReducer.openRfis,
-  closedRfis: state.rfiReducer.closedRfis,
-  sortKey: state.rfiReducer.sortKey
+const mapStateToProps = ({rfis}: ApplicationState) => ({
+  pendingRfis: rfis.pendingRfis,
+  openRfis: rfis.openRfis,
+  closedRfis: rfis.closedRfis,
+  sortKey: rfis.sortKey
 });
 
 const mapDispatchToProps = {

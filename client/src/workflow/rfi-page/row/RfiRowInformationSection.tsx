@@ -10,6 +10,7 @@ import { Field } from '../models/SortKeyModel';
 import TgtPageButtonVector from '../../../resources/icons/TgtPageButtonVector';
 import { fetchRfiTargets, loadTgtPage } from '../../../state/actions';
 import { formatRfiNum } from '../../../utils';
+import { ApplicationState } from '../../../state';
 
 interface Props {
   rfi: RfiModel;
@@ -131,8 +132,8 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  prioritizing: state.rfiReducer.sortKey.field === Field.PRIORITY && state.rfiReducer.sortKey.defaultOrder,
+const mapStateToProps = ({rfis}: ApplicationState) => ({
+  prioritizing: rfis.sortKey.field === Field.PRIORITY && rfis.sortKey.defaultOrder,
 });
 
 const mapDispatchToProps = {

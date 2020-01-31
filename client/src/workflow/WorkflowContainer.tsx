@@ -5,6 +5,7 @@ import { StyledRfiDashboard } from './rfi-page/RfiDashboard';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledLoadingScreen } from './loading-page/LoadingScreen';
+import { ApplicationState } from '../state';
 import { StyledTgtDashboard } from './tgt-page/TgtDashboard';
 import { StyledIxnDashboard } from './ixn-page/IxnDashboard';
 import RfiModel from './rfi-page/models/RfiModel';
@@ -70,11 +71,11 @@ export class WorkflowContainer extends React.Component<Props, any> {
 
 }
 
-const mapStateToProps = (state: any) => ({
-  loading: state.rfiReducer.loading,
-  viewTgtPage: state.tgtReducer.viewTgtPage,
-  viewIxnPage: state.ixnReducer.viewIxnPage,
-  rfi: state.tgtReducer.rfi
+const mapStateToProps = ({rfis, tgts, ixns}: ApplicationState) => ({
+  loading: rfis.loading,
+  viewTgtPage: tgts.viewTgtPage,
+  viewIxnPage: ixns.viewIxnPage,
+  rfi: tgts.rfi
 });
 
 const mapDispatchToProps = {

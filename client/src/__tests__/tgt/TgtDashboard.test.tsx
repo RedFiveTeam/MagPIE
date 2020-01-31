@@ -3,8 +3,8 @@ import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import * as React from 'react';
-import { StyledTgtTable } from '../../workflow/tgt-page/table/TgtTable';
 import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
+import { StyledTgtTable } from '../../workflow/tgt-page/tgtTable/TgtTable';
 
 describe('TgtDashboardContainer', () => {
   let subject: ShallowWrapper;
@@ -33,14 +33,8 @@ describe('TgtDashboardContainer', () => {
     );
   });
 
-  it('should display rfi rfiNum header', () => {
-    expect(subject.find('.tgt-dash--header').text()).toContain('RFI: 35-335');
-  });
-
-  it('should contain a clickable back button', () => {
-    expect(subject.find('.tgt-dash--header--back-button').text()).toContain('Go Back');
-    subject.find('.tgt-dash--header--back-button').simulate('click');
-    expect(exitSpy).toHaveBeenCalled();
+  it('should display the rfi description', () => {
+    expect(subject.find('.tgt-dash--rfi-description-container').text()).toContain('Good morning starshine, the earth says hello');
   });
 
   it('should display the rfi description', () => {
@@ -48,7 +42,7 @@ describe('TgtDashboardContainer', () => {
   });
 
   it('should display an add date button', () => {
-    expect(subject.find('.tgt-dash-add-date-button').exists()).toBeTruthy();
+      expect(subject.find('.add-date-button').exists()).toBeTruthy();
   });
 
   it('should display the date dividers or not properly', () => {
@@ -74,5 +68,13 @@ describe('TgtDashboardContainer', () => {
     expect(subject.find(StyledTgtTable).children().length).toBe(2);
 
   });
+
+  it('should display a date placeholder when the add date button is clicked', () => {
+    expect(subject.find('.date-divider--placeholder').exists()).toBeFalsy();
+    subject.find('.add-date-button').simulate('click');
+    expect(subject.find('.date-divider--placeholder').exists()).toBeTruthy();
+
+  });
+
 
 });

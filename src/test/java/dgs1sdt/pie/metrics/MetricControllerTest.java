@@ -251,9 +251,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
     ExploitDateJson exploitDateJson = new ExploitDateJson(
       null,
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
-      "DGS-1-SDT-2020-00338");
+      1L);
 
-    metricController.addChangeExploitDate(exploitDateJson);
+    metricController.addChangeExploitDate(exploitDateJson, "DGS-1-SDT-2020-00338");
 
     assertEquals(1, metricChangeExploitDateRepository.findAll().size());
     assertEquals(
