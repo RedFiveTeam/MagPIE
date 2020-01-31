@@ -1,7 +1,7 @@
 package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.metrics.MetricController;
-import dgs1sdt.pie.metrics.rfiupdate.RfiUpdate;
+import dgs1sdt.pie.metrics.changerfi.MetricChangeRfi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,7 +35,6 @@ public class RfiService {
   }
 
 
-
   @Value("${GETS_URI_OPEN_PENDING}")
   String getsUriOpenPending;
 
@@ -51,8 +50,9 @@ public class RfiService {
     this.metricController = metricController;
   }
 
-  @Scheduled(fixedDelay = 60000)
+  @Scheduled(fixedDelay = 60000, initialDelay = 5000)
   public void fetchRfisFromGets() {
+    System.out.println("Fetching from GETS");
     String[] uris = {getsUriOpenPending, getsUriClosed};
     fetchRfisFromUris(uris);
   }
@@ -99,6 +99,7 @@ public class RfiService {
 
   private void updateRepoFromGets(String[] uris) throws Exception {
     for (String uri : uris) {
+      System.out.println(uri);
       updateAndSaveRfis(
         marshallDocumentToRfis(
           getsClient.rfiResponseDocument(uri)
@@ -118,8 +119,10 @@ public class RfiService {
   private void createOrUpdateRfi(Rfi newRfi, Date currDate) {
     Rfi oldRfi = rfiRepository.findByRfiNum(newRfi.getRfiNum());
     if (existsInRepo(oldRfi)) {
+      System.out.println("Received previously found RFI: " + oldRfi.getRfiNum());
       linkNewRfiToOldRfi(newRfi, oldRfi);
       if (hasChanged(newRfi, oldRfi)) {
+        System.out.println("It has updates.");
         postUpdateMetrics(newRfi, currDate, oldRfi);
       }
     }
@@ -127,15 +130,13 @@ public class RfiService {
 
   private void postUpdateMetrics(Rfi newRfi, Date currDate, Rfi oldRfi) {
     for (String field : oldRfi.compare(newRfi)) {
-      metricController.addRfiUpdate(new RfiUpdate(currDate, newRfi, oldRfi, field));
+      metricController.addChangeRfi(new MetricChangeRfi(currDate, newRfi, oldRfi, field));
     }
   }
 
   private void linkNewRfiToOldRfi(Rfi newRfi, Rfi oldRfi) {
     newRfi.setPriority(oldRfi.getPriority());
     newRfi.setId(oldRfi.getId());
-    newRfi.setExploitStart(oldRfi.getExploitStart());
-    newRfi.setExploitEnd(oldRfi.getExploitEnd());
   }
 
   private boolean hasChanged(Rfi newRfi, Rfi oldRfi) {

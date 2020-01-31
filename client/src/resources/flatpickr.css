@@ -779,15 +779,26 @@ span.flatpickr-weekday {
 .flatpickr-time .flatpickr-am-pm:focus {
     background: #eaeaea;
 }
+.flatpickr-input:hover {
+    box-shadow: 0 0 4px 1px white;
+}
+
 .flatpickr-input[readonly] {
     cursor: pointer;
     text-align: center;
     background-color: var(--background-input);
-    font-size: 18px;
+    font-size: 14px;
+    font-weight: bold;
     color: var(--text-color);
     border: none;
-    width: 100px;
+    width: 117px;
+    height: 34px;
     border-radius: 25px;
+
+}
+
+.flatpickr-input:focus{
+    outline: none;
 }
 .flatpickr-input::placeholder {
     color: var(--text-color);

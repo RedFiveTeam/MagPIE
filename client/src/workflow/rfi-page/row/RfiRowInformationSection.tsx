@@ -7,15 +7,15 @@ import IconShowLess from '../../../resources/icons/ShowLessVector';
 import IconDnDBurger from '../../../resources/icons/DnDBurgerVector';
 import { connect } from 'react-redux';
 import { Field } from '../models/SortKeyModel';
-import AddCoiButtonVector from '../../../resources/icons/AddCoiButtonVector';
-import { navigateToCoiPage } from '../../../state/actions';
+import AddTgtButtonVector from '../../../resources/icons/AddTgtButtonVector';
+import { navigateToTgtPage } from '../../../state/actions';
 import { formatRfiNum } from '../../../utils';
 
 interface Props {
   rfi: RfiModel;
   scrollRegionRef: any;
   prioritizing: boolean;
-  navigateToCoiPage: (rfi: RfiModel) => void;
+  navigateToTgtPage: (rfi: RfiModel) => void;
   className?: string;
 }
 
@@ -24,13 +24,25 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
   let descriptionRef = React.createRef<HTMLSpanElement>();
 
   function scrollFit(descriptionContainer: HTMLSpanElement) {
-    let scrollRegion = props.scrollRegionRef.current!;
-    const distanceToPageTop = descriptionContainer.getBoundingClientRect().top;
-    const expandedRowHeight = descriptionContainer.scrollHeight + 32;
-    const clientHeight = scrollRegion.clientHeight;
-    const offsetTop = descriptionContainer.offsetTop;
-    const buffer = 12;
-    const headerHeight = 98;
+    let scrollRegion;
+    let distanceToPageTop;
+    let expandedRowHeight;
+    let clientHeight;
+    let offsetTop;
+    let buffer;
+    let headerHeight;
+    try {
+      scrollRegion = props.scrollRegionRef.current!;
+      distanceToPageTop = descriptionContainer.getBoundingClientRect().top;
+      expandedRowHeight = descriptionContainer.scrollHeight + 32;
+      clientHeight = scrollRegion.clientHeight;
+      offsetTop = descriptionContainer.offsetTop;
+      buffer = 12;
+      headerHeight = 98;
+    } catch {
+      console.log('error initializing scroll parameters');
+      return;
+    }
 
     if (distanceToPageTop + expandedRowHeight > clientHeight + headerHeight) { //Bottom of row extends beyond client
       if (expandedRowHeight > clientHeight) { //row is longer than window, so scroll to top of row
@@ -54,8 +66,8 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
       setTimeout(scrollFit, 50, descriptionContainer); //slight delay to ensure we use the expanded row height
   }
 
-  function addCoiToRFI() {
-    props.navigateToCoiPage(props.rfi);
+  function addTgtToRFI() {
+    props.navigateToTgtPage(props.rfi);
   }
 
   return (
@@ -90,11 +102,11 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
       </span>
       <div>
           {props.rfi.status === RfiStatus.OPEN ?
-        <button onClick={addCoiToRFI} className={'cell--add-coi-button'}>
-          <AddCoiButtonVector/>
+        <button onClick={addTgtToRFI} className={'cell--add-tgt-button'}>
+          <AddTgtButtonVector/>
         </button>
             :
-            <div className={'cell--add-coi-button-disabled'}>
+            <div className={'cell--add-tgt-button-disabled'}>
               <span>-</span>
             </div>
           }
@@ -124,7 +136,7 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = {
-  navigateToCoiPage: navigateToCoiPage
+  navigateToTgtPage: navigateToTgtPage
 };
 
 export const StyledRfiRowInformationSection = styled(
@@ -193,7 +205,7 @@ export const StyledRfiRowInformationSection = styled(
     z-index: -100;
   }
   
-  .cell--add-coi-button {
+  .cell--add-tgt-button {
     border: none;
     cursor: pointer;
     background: none;
@@ -210,7 +222,7 @@ export const StyledRfiRowInformationSection = styled(
     }
   }
   
-  .cell--add-coi-button-disabled {
+  .cell--add-tgt-button-disabled {
     border: none;
     background: none;
     width: 59px;  
@@ -298,7 +310,7 @@ export const StyledRfiRowInformationSection = styled(
       div {
         display: flex;
         flex-direction: row;
-        flex: 0 0 57px;
+        flex: 0 0 66px;
         align-items: center;
         justify-content: center;
       }

@@ -26,8 +26,6 @@ public class Rfi {
   private Timestamp ltiov;
   private String country;
   private int priority;
-  private Timestamp exploitStart;
-  private Timestamp exploitEnd;
 
   public Rfi(
     String rfiNum,
@@ -39,7 +37,6 @@ public class Rfi {
     String country,
     String description
   ) {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
     this.status = status;
@@ -55,8 +52,6 @@ public class Rfi {
     this.country = country;
     this.description = description;
     this.priority = -1;
-    this.exploitStart = null;
-    this.exploitEnd = null;
   }
 
   public Rfi(
@@ -70,7 +65,6 @@ public class Rfi {
     String description,
     int priority
   ) {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
     this.status = status;
@@ -80,51 +74,7 @@ public class Rfi {
     this.country = country;
     this.description = description;
     this.priority = priority;
-    this.exploitStart = null;
-    this.exploitEnd = null;
   }
-
-  public Rfi(
-    String rfiNum,
-    String getsUrl,
-    String status,
-    Date lastUpdate,
-    String customer,
-    Date ltiov,
-    String country,
-    String description,
-    int priority,
-    Date exploitStart,
-    Date exploitEnd
-  ) {
-    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    this.getsUrl = getsUrl;
-    this.rfiNum = rfiNum;
-    this.status = status;
-    this.lastUpdate = new Timestamp(lastUpdate.getTime());
-    this.customer = customer;
-    this.ltiov = new Timestamp(ltiov.getTime());
-    this.country = country;
-    this.description = description;
-    this.priority = priority;
-    this.exploitStart = new Timestamp(exploitStart.getTime());
-    this.exploitEnd = new Timestamp(exploitEnd.getTime());
-  }
-
-  public Rfi(Rfi rfi){
-    this.getsUrl = rfi.getsUrl;
-    this.rfiNum = rfi.rfiNum;
-    this.status = rfi.status;
-    this.lastUpdate = rfi.lastUpdate;
-    this.customer = rfi.customer;
-    this.ltiov = rfi.ltiov;
-    this.country = rfi.country;
-    this.description = rfi.description;
-    this.priority = rfi.priority;
-    this.exploitStart = rfi.exploitStart;
-    this.exploitEnd = rfi.exploitEnd;
-  }
-
 
   public List<String> compare(Rfi otherRfi) throws NullPointerException {
     List<String> diff = new ArrayList<>();

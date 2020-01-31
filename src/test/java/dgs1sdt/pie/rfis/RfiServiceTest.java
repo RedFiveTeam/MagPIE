@@ -3,7 +3,7 @@ package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.MetricController;
-import dgs1sdt.pie.metrics.rfiupdate.RfiUpdateRepository;
+import dgs1sdt.pie.metrics.changerfi.MetricChangeRfiRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,22 +99,91 @@ public class RfiServiceTest extends BaseIntegrationTest {
   MetricController metricController;
 
   @Autowired
-  RfiUpdateRepository rfiUpdateRepository;
+  MetricChangeRfiRepository metricChangeRfiRepository;
 
   @Test
   public void sendsRfiUpdateMetricIfThereIsAChangeInAnRfi() {
-    RandomRfi randomRfi = new RandomRfi();
+    Date rfi1ltiov = new Date();
 
-    Rfi rfi1 = randomRfi.toRfi();
-    Rfi rfi1mod = new Rfi(rfi1);
-    rfi1mod.setDescription(randomRfi.get.randomDescription());
-    Rfi rfi2 = randomRfi.toRfi();
+    Rfi rfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a description");
+    Rfi updatedRfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved description");
+    Rfi rfi2 = new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description");
 
-    long rfiUpdateCount = rfiUpdateRepository.count();
+    long rfiUpdateCount = metricChangeRfiRepository.count();
+
+    rfiRepository.save(rfi);
+    rfiRepository.save(rfi2);
+
+    List<Rfi> rfis = new ArrayList<>();
+    rfis.add(updatedRfi);
+    rfis.add(rfi2);
+
+    rfiService.updateAndSaveRfis(rfis);
+    assertEquals(rfiUpdateCount + 1, metricChangeRfiRepository.count());
+  }
+
+  @Test
+  public void updatesRfisInRepoWithUpdatesFromGets() {
+    Date rfiltiov = new Date();
+    Rfi rfi1 = new Rfi("SDT-0321", "url", "NEW", new Date(), "1 FW", rfiltiov, "USA", "a description");
+    Rfi rfi2 = new Rfi("SDT-0322", "url", "OPEN", new Date(), "1 FW", rfiltiov, "CAN", "one description");
+
     rfiRepository.save(rfi1);
     rfiRepository.save(rfi2);
-    rfiService.updateAndSaveRfis(Arrays.asList(rfi1mod, rfi2));
 
-    assertEquals(rfiUpdateCount + 1, rfiUpdateRepository.count());
+    rfiService.fetchRfisFromUris(new String[]{"UpdatedRfis.xml"});
+
+    assertEquals("A new and improved description", rfiRepository.findByRfiNum("SDT-0321").getDescription());
+
+    assertEquals("CLOSED", rfiRepository.findByRfiNum("SDT-0322").getStatus());
+
+  }
+
+  @Test
+  public void reprioritizesBasedOnClosedRfis() {
+    String[] filePath = {"RfisNewOpen.xml"};
+    rfiService.fetchRfisFromUris(filePath);
+
+    List<Rfi> savedOpenRfis = rfiRepository.findAll().stream()
+      .filter(rfi -> rfi.getStatus().equals("OPEN"))
+      .sorted(new SortByAscendingPriority())
+      .collect(Collectors.toList());
+
+
+    Rfi rfiFirst = savedOpenRfis.get(0);
+    Rfi rfiSecond = savedOpenRfis.get(1);
+    Rfi rfiThird = savedOpenRfis.get(2);
+    Rfi rfiFourth = savedOpenRfis.get(3);
+    Rfi rfiFifth = savedOpenRfis.get(4);
+
+    assertEquals(5, savedOpenRfis.size());
+
+    assertEquals(1, rfiFirst.getPriority());
+    assertEquals(2, rfiSecond.getPriority());
+    assertEquals(3, rfiThird.getPriority());
+    assertEquals(4, rfiFourth.getPriority());
+    assertEquals(5, rfiFifth.getPriority());
+
+    filePath = new String[]{"RfisNewOpenRefreshed.xml", "RfisClosedRefreshed.xml"};
+    rfiService.fetchRfisFromUris(filePath);
+
+    savedOpenRfis = rfiRepository.findAll().stream()
+      .filter(rfi -> rfi.getStatus().equals("OPEN"))
+      .sorted(new SortByAscendingPriority())
+      .collect(Collectors.toList());
+
+    assertEquals(4, savedOpenRfis.size());
+
+    rfiFirst = savedOpenRfis.get(0);
+    rfiSecond = savedOpenRfis.get(1);
+    rfiThird = savedOpenRfis.get(2);
+    rfiFourth = savedOpenRfis.get(3);
+
+    assertEquals(1, rfiFirst.getPriority());
+    assertEquals(2, rfiSecond.getPriority());
+    assertEquals(3, rfiThird.getPriority());
+    assertEquals(4, rfiFourth.getPriority());
+
+
   }
 }

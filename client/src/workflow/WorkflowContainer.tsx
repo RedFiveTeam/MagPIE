@@ -5,23 +5,23 @@ import { StyledRfiDashboard } from './rfi-page/RfiDashboard';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledLoadingScreen } from './loading-page/LoadingScreen';
-import { StyledCoiDashboard } from './coi-page/CoiDashboard';
+import { StyledTgtDashboard } from './tgt-page/TgtDashboard';
 
 interface Props {
   fetchRfis: () => void;
   postSiteVisit: () => Promise<any>;
   fetchLocalUpdate: () => void;
   loading: boolean;
-  viewCoiPage: boolean;
+  viewTgtPage: boolean;
   className?: string;
 }
 
-const displayScreen = (loading: boolean, viewCoiPage: boolean, className: string | undefined): any => {
+const displayScreen = (loading: boolean, viewTgtPage: boolean, className: string | undefined): any => {
   if (loading)
-    return <StyledLoadingScreen/>;
+    return <StyledLoadingScreen />;
 
-  if (viewCoiPage) {
-    return <StyledCoiDashboard/>;
+  if (viewTgtPage) {
+    return <StyledTgtDashboard />;
   }
 
   return (
@@ -43,19 +43,19 @@ export class WorkflowContainer extends React.Component<Props, any> {
   }
 
   private refreshData() {
-    if (!this.props.loading && !this.props.viewCoiPage)
+    if (!this.props.loading && !this.props.viewTgtPage)
       this.props.fetchLocalUpdate();
   }
 
   render() {
-    return displayScreen(this.props.loading, this.props.viewCoiPage, this.props.className);
+    return displayScreen(this.props.loading, this.props.viewTgtPage, this.props.className);
   }
 
 }
 
 const mapStateToProps = (state: any) => ({
   loading: state.rfiReducer.loading,
-  viewCoiPage: state.coiReducer.viewCoiPage
+  viewTgtPage: state.tgtReducer.viewTgtPage
 });
 
 const mapDispatchToProps = {

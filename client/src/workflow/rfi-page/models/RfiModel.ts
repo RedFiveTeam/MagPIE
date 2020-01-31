@@ -15,15 +15,7 @@ export default class RfiModel {
     public ltiov: Moment | undefined,
     public country: string,
     public description: string,
-    public priority: number,
-    public exploitStart?: Moment | null,
-    public exploitEnd?: Moment | null
+    public priority: number
   ) {
-    if (!exploitStart) {
-      this.exploitStart = null;
-    }
-    if (!exploitEnd) {
-      this.exploitEnd = null;
-    }
   }
 }

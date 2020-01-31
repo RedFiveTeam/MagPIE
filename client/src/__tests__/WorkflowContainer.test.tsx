@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { StyledLoadingScreen } from '../workflow/loading-page/LoadingScreen';
-import { StyledCoiDashboard } from '../workflow/coi-page/CoiDashboard';
+import { StyledTgtDashboard } from '../workflow/tgt-page/TgtDashboard';
 import { WorkflowContainer } from '../workflow/WorkflowContainer';
 import { StyledRfiDashboard } from '../workflow/rfi-page/RfiDashboard';
 import '../setupEnzyme';
@@ -16,22 +16,22 @@ describe('WorkflowContainer', () => {
         fetchLocalUpdate={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={true}
-        viewCoiPage={false}
+        viewTgtPage={false}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeTruthy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
-    expect(subject.find(StyledCoiDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledTgtDashboard).exists()).toBeFalsy();
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
         fetchLocalUpdate={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={true}
-        viewCoiPage={true}
+        viewTgtPage={true}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeTruthy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
-    expect(subject.find(StyledCoiDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledTgtDashboard).exists()).toBeFalsy();
   });
 
   it('should display the rfi page upon loading of app', () => {
@@ -41,25 +41,25 @@ describe('WorkflowContainer', () => {
         fetchLocalUpdate={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
-        viewCoiPage={false}
+        viewTgtPage={false}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeTruthy();
-    expect(subject.find(StyledCoiDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledTgtDashboard).exists()).toBeFalsy();
   });
 
-  it('should display the coi page when user navigates through rfi', () => {
+  it('should display the tgt page when user navigates through rfi', () => {
     subject = shallow(
       <WorkflowContainer
         fetchRfis={()=>{}}
         fetchLocalUpdate={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
-        viewCoiPage={true}
+        viewTgtPage={true}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
-    expect(subject.find(StyledCoiDashboard).exists()).toBeTruthy();
+    expect(subject.find(StyledTgtDashboard).exists()).toBeTruthy();
   });
 
 
