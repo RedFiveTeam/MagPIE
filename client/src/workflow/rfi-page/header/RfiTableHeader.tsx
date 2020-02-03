@@ -90,7 +90,7 @@ export const StyledRfiTableHeader = styled(
   margin-right: 20px;
   height: 48px;
   display: flex;
-  flex: 1 1;
+  flex: 0 0;
   flex-direction: row;
   justify-content: space-between;
   

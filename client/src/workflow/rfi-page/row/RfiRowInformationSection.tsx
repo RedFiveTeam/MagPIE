@@ -255,7 +255,7 @@ export const StyledRfiRowInformationSection = styled(
      max-width: 928px;
      min-width: 224px;
      justify-content: space-between;
-     line-height: 1.3em;
+     line-height: 1.2em;
   }
   
   .cell--description-expanded {
