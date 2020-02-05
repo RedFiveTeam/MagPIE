@@ -1,67 +1,87 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { fetchLocalUpdate, fetchRfis, postSiteVisit } from '../state/actions';
+import { fetchLocalUpdate, fetchRfis, navigateToTgtPage, postSiteVisit } from '../state/actions';
 import { StyledRfiDashboard } from './rfi-page/RfiDashboard';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledLoadingScreen } from './loading-page/LoadingScreen';
 import { StyledTgtDashboard } from './tgt-page/TgtDashboard';
+import { StyledIxnDashboard } from './ixn-page/IxnDashboard';
+import RfiModel from './rfi-page/models/RfiModel';
 
 interface Props {
   fetchRfis: () => void;
   postSiteVisit: () => Promise<any>;
   fetchLocalUpdate: () => void;
+  navigateToTgtPage: (rfi: RfiModel) => void;
+  rfi: RfiModel;
   loading: boolean;
   viewTgtPage: boolean;
+  viewIxnPage: boolean;
   className?: string;
 }
-
-const displayScreen = (loading: boolean, viewTgtPage: boolean, className: string | undefined): any => {
-  if (loading)
-    return <StyledLoadingScreen />;
-
-  if (viewTgtPage) {
-    return <StyledTgtDashboard />;
-  }
-
-  return (
-    <div className={classNames('rm-dashboard', className)}>
-      <StyledRfiDashboard/>
-    </div>
-  );
-};
 
 export class WorkflowContainer extends React.Component<Props, any> {
   componentDidMount(): void {
     setInterval(() => {
-      this.refreshData();
+      this.refreshRfis();
+    }, 5000);
+
+    setInterval(() => {
+      this.refreshTgts();
     }, 5000);
 
     this.props.postSiteVisit()
-      .catch((reason => {console.log("Failed to post sort click metric: " + reason)}));
+      .catch((reason => {
+        console.log("Failed to post sort click metric: " + reason)
+      }));
     this.props.fetchRfis();
   }
 
-  private refreshData() {
+  private refreshRfis() {
     if (!this.props.loading && !this.props.viewTgtPage)
       this.props.fetchLocalUpdate();
   }
 
+  private refreshTgts() {
+    if (this.props.viewTgtPage && !this.props.viewIxnPage)
+      this.props.navigateToTgtPage(this.props.rfi);
+  }
+
   render() {
-    return displayScreen(this.props.loading, this.props.viewTgtPage, this.props.className);
+    if (this.props.loading)
+      return <StyledLoadingScreen/>;
+
+    if (this.props.viewIxnPage) {
+      return <StyledIxnDashboard/>
+    }
+
+    if (this.props.viewTgtPage) {
+      return <StyledTgtDashboard/>;
+    }
+
+    return (
+      <div className={classNames('rm-dashboard', this.props.className)}>
+        <StyledRfiDashboard/>
+      </div>
+    );
+    // return displayScreen(this.props.loading, this.props.viewTgtPage, this.props.viewIxnPage, this.props.className);
   }
 
 }
 
 const mapStateToProps = (state: any) => ({
   loading: state.rfiReducer.loading,
-  viewTgtPage: state.tgtReducer.viewTgtPage
+  viewTgtPage: state.tgtReducer.viewTgtPage,
+  viewIxnPage: state.ixnReducer.viewIxnPage,
+  rfi: state.tgtReducer.rfi
 });
 
 const mapDispatchToProps = {
   fetchRfis: fetchRfis,
   postSiteVisit: postSiteVisit,
-  fetchLocalUpdate: fetchLocalUpdate
+  fetchLocalUpdate: fetchLocalUpdate,
+  navigateToTgtPage: navigateToTgtPage
 };
 
 export const StyledWorkflowContainer = styled(

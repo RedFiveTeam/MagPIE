@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const TgtTableHeader: React.FC<Props> = props => {
-  let headers: string[] = ['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Status', 'Delete', 'Exploitation Log'];
+  let headers: string[] = ['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Status', 'Delete', 'Exploitation'];
 
   return (
     <div className={classNames('header', props.className)}>
@@ -56,10 +56,10 @@ export const StyledTgtTableHeader = styled(TgtTableHeader)`
   }
   
   .header-cell--delete {
-    width: 61px;
+    width: 70px;
   }
   
-  .header-cell--log {
-    width: 137px;
+  .header-cell--exploitation {
+    width: 128px;
   }
 `;

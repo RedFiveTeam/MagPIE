@@ -4,6 +4,7 @@ import reducer from '../state/reducers/reducer';
 import * as moment from 'moment';
 import { Field, SortKeyModel } from '../workflow/rfi-page/models/SortKeyModel';
 import 'isomorphic-fetch';
+import { TargetModel } from '../workflow/tgt-page/models/TargetModel';
 
 describe('reducer', () => {
   let singleStatusRfiList: RfiModel[];
@@ -36,11 +37,11 @@ describe('reducer', () => {
     sortedById = [openRfi1, openRfi2, pendingRfi1, pendingRfi2, closedRfi1];
     reverseById = [pendingRfi2, pendingRfi1, openRfi2, openRfi1, closedRfi1];
     sortedByCustomer = [openRfi1, openRfi2, pendingRfi2, pendingRfi1, closedRfi1];
-    reverseByCustomer =  [pendingRfi1, pendingRfi2, openRfi2, openRfi1, closedRfi1];
+    reverseByCustomer = [pendingRfi1, pendingRfi2, openRfi2, openRfi1, closedRfi1];
     sortedByCountry = [pendingRfi2, openRfi2, pendingRfi1, openRfi1, closedRfi1];
     reverseByCountry = [openRfi1, pendingRfi1, openRfi2, pendingRfi2, closedRfi1];
     sortedByLtiov = [openRfi1, pendingRfi2, openRfi2, pendingRfi1, closedRfi1];
-    reverseByLtiov =[pendingRfi1, openRfi2, pendingRfi2, openRfi1, closedRfi1];
+    reverseByLtiov = [pendingRfi1, openRfi2, pendingRfi2, openRfi1, closedRfi1];
 
     singleStatusRfiList = [
       new RfiModel(1, '19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 2),
@@ -52,8 +53,8 @@ describe('reducer', () => {
 
   afterEach(() => {
     const check = () => {
-        setTimeout(check, 2000); // check again in a second
-      };
+      setTimeout(check, 2000); // check again in a second
+    };
     check();
 
   });
@@ -286,10 +287,10 @@ describe('reducer', () => {
 
     //Priority update
     let newSingleStatusRfis = [
-        new RfiModel(1, '19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 2),
-        new RfiModel(2, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 3),
-        new RfiModel(3, '19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1)
-      ];
+      new RfiModel(1, '19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 2),
+      new RfiModel(2, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 3),
+      new RfiModel(3, '19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 1)
+    ];
 
     //Sort bt LTIOV; should stay sorted after update
     let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.LTIOV};
@@ -316,6 +317,43 @@ describe('reducer', () => {
       closedRfis: [],
       loading: false
     });
+  });
+
+  it('should handle NAVIGATE_TO_IXN_PAGE', () => {
+    let target = new TargetModel("SDT20-00123", 1, "TGT20-123", "00ABC1234567890", "", "");
+    let navToIxnPage = {
+      type: ActionTypes.NAVIGATE_TO_IXN_PAGE,
+      target: target
+    };
+
+    let state = reducer(undefined, navToIxnPage);
+
+    expect(state.ixnReducer)
+      .toEqual({
+        viewIxnPage: true,
+        target: target
+      });
+  });
+
+  it('should handle EXIT_IXN_PAGE', () => {
+    let target = new TargetModel("SDT20-00123", 1, "TGT20-123", "00ABC1234567890", "", "");
+    let navToIxnPage = {
+      type: ActionTypes.NAVIGATE_TO_IXN_PAGE,
+      target: target
+    };
+
+    let state = reducer(undefined, navToIxnPage);
+    let exitIxnPage = {
+      type: ActionTypes.EXIT_IXN_PAGE,
+    };
+
+    state = reducer(state, exitIxnPage);
+
+    expect(state.ixnReducer)
+      .toEqual({
+        viewIxnPage: false,
+        target: target
+      });
   });
 
   //TODO

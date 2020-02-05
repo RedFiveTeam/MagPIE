@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import * as React from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import RfiModel from '../rfi-page/models/RfiModel';
-import { exitTgtPage, setDatePlaceholder, updateRfiDate } from '../../state/actions';
+import { exitTgtPage, navigateToTgtPage, setDatePlaceholder, updateRfiDate } from '../../state/actions';
 import BackButtonVector from '../../resources/icons/BackButtonVector';
 import Flatpickr from 'react-flatpickr';
 import '../../resources/flatpickr.css'
@@ -16,7 +17,6 @@ import { StyledTgtTableHeader } from './header/TgtTableHeader';
 import { StyledTgtDateDivider } from './TgtDateDivider';
 import { TargetModel } from './models/TargetModel';
 import { ExploitDateModel } from './models/ExploitDateModel';
-import { useState } from 'react';
 import { Box } from '@material-ui/core';
 import { crayonBox } from '../../resources/crayonBox';
 
@@ -28,12 +28,12 @@ interface Props {
   updateRfiDate: (rfi: RfiModel, date: Date) => void;
   setDatePlaceholder: (show: boolean) => void;
   targets: TargetModel[];
+  navigateToTgtPage: (rfi: RfiModel) => void;
   className?: string;
 }
 
 export const TgtDashboard: React.FC<Props> = props => {
   const [addTgt, setAddTgt] = useState(-1); //value is the id of the exploit date that is being added to
-
 
   function printDates(dates: ExploitDateModel[]) {
     return dates.map((exploitDateModel: ExploitDateModel, index: number) =>
@@ -52,7 +52,6 @@ export const TgtDashboard: React.FC<Props> = props => {
   }
 
   return (
-
     <div className={classNames(props.className)}>
       <div className={'tgt-dash--header'}>
         <div className={'tgt-dash--header--back-button'} onClick={props.exitTgtPage}>
@@ -119,7 +118,6 @@ export const TgtDashboard: React.FC<Props> = props => {
           <span>RFI DESCRIPTION: {props.rfi.description}</span>
         </Box>
       </div>
-
     </div>
   );
 };
@@ -135,7 +133,8 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = {
   exitTgtPage: exitTgtPage,
   updateRfiDate: updateRfiDate,
-  setDatePlaceholder: setDatePlaceholder
+  setDatePlaceholder: setDatePlaceholder,
+  navigateToTgtPage: navigateToTgtPage
 };
 
 export const StyledTgtDashboard = styled(

@@ -113,3 +113,7 @@ const postTarget = (target: TargetPostModel) => {
     }
   );
 };
+
+export const fetchLocalUpdateTgts = () => {
+
+};

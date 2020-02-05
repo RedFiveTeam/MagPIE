@@ -181,7 +181,7 @@ export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchT
     height: 62px;
   }
   
-  .input-log {
+  .input-exploitation {
     border-left: 4px solid ${(props) => props.theme.color.backgroundBase};
     width: 111px;
     height: 62px;

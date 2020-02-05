@@ -12,6 +12,8 @@ import { submitNewTarget } from '../../../state/actions';
 import { connect } from 'react-redux';
 import RfiModel from '../../rfi-page/models/RfiModel';
 import { ExploitDateModel } from '../models/ExploitDateModel';
+import { navigateToIxnPage } from '../../../state/actions/ixn/IxnActions';
+import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 
 interface Props {
   target: TargetModel | null;
@@ -20,6 +22,7 @@ interface Props {
   rfi: RfiModel;
   exploitDate: ExploitDateModel;
   setAddTgt: (dateId: number) => void;
+  navigateToIxnPage: (target: TargetModel) => void;
   className?: string;
 }
 
@@ -82,7 +85,6 @@ export const TgtRow: React.FC<Props> = props => {
   }
 
   const inputName = (event: any) => {
-    console.log(strongValidateName);
     let newName = event.target.value;
     setName(newName);
     if (strongValidateName) {
@@ -170,6 +172,12 @@ export const TgtRow: React.FC<Props> = props => {
     }, 0);
   }
 
+  const handleClick = () => {
+    if(props.target !== null) {
+      props.navigateToIxnPage(props.target);
+    }
+  };
+
   return (
     <div className={props.className}>
       <form className={"add-tgt-form"}
@@ -243,7 +251,9 @@ export const TgtRow: React.FC<Props> = props => {
               <AddTgtDateButtonVector/>
             </Box>
             <div className={"delete"}>&nbsp;</div>
-            <div className={"log"}>&nbsp;</div>
+            <div className={"exploitation"} onClick={handleClick}>
+              <StyledExploitationLogButtonVector/>
+            </div>
           </ThemeProvider>
         </Box>
       </form>
@@ -262,7 +272,8 @@ export const TgtRow: React.FC<Props> = props => {
 const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = {
-  submitNewTarget: submitNewTarget
+  submitNewTarget: submitNewTarget,
+  navigateToIxnPage: navigateToIxnPage
 };
 
 export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(TgtRow))`
@@ -298,14 +309,23 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   }
   
   .delete {
-    width: 61px;
+    border-left: 4px solid ${crayonBox.softMetal};
+    border-right: 4px solid ${crayonBox.softMetal};
+    width: 90px;
     height: 62px;
   }
   
-  .log {
-    width: 137px;
+  .exploitation {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 108px;
     height: 62px;
+    cursor: pointer;
   }
+  
+  
   
   .tgt-form-box {
     height: 62px;

@@ -1,0 +1,4 @@
+export enum IxnActionTypes {
+  NAVIGATE_TO_IXN_PAGE = 'NAVIGATE_TO_IXN_PAGE',
+  EXIT_IXN_PAGE = 'EXIT_IXN_PAGE'
+}
