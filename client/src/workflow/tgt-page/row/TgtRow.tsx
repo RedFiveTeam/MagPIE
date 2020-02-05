@@ -57,28 +57,66 @@ export const TgtRow: React.FC<Props> = props => {
 
   const [nameError, setNameError] = useState(false);
   const [mgrsError, setMgrsError] = useState(false);
+  //If the user enters a name or MGRS incorectly once, always check for exact match
+  const [strongValidateName, setStrongValidateName] = useState(false);
+  const [strongValidateMgrs, setStrongValidateMgrs] = useState(false);
   const [name, setName] = useState("");
   const [mgrs, setMgrs] = useState("");
   const [notes, setNotes] = useState("");
   const [description, setDescription] = useState("");
 
+  function weakMatchNameError(name: string): boolean {
+    return name.length > 9 || (name.length === 9 && name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null)
+  }
+
+  function strongMatchNameError(name: string): boolean {
+    return name.length !== 9 || name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null
+  }
+
+  function weakMatchMgrsError(mgrs: string): boolean {
+    return mgrs.length > 15 || (mgrs.length === 15 && mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null)
+  }
+
+  function strongMatchMgrsError(mgrs: string): boolean {
+    return mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null
+  }
+
   const inputName = (event: any) => {
+    console.log(strongValidateName);
     let newName = event.target.value;
     setName(newName);
-    if (newName.length > 9 || (newName.length === 9 && newName.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null)) {
-      setNameError(true);
+    if (strongValidateName) {
+      if (strongMatchNameError(newName)) {
+        setNameError(true);
+      } else {
+        setNameError(false);
+      }
     } else {
-      setNameError(false);
+      if (weakMatchNameError(newName)) {
+        setNameError(true);
+        setStrongValidateName(true);
+      } else {
+        setNameError(false);
+      }
     }
   };
 
   const inputMgrs = (event: any) => {
     let newMgrs = event.target.value;
     setMgrs(newMgrs);
-    if (newMgrs.length > 15 || (newMgrs.length === 15 && newMgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null)) {
-      setMgrsError(true);
+    if (strongValidateMgrs) {
+      if (strongMatchMgrsError(newMgrs)) {
+        setMgrsError(true);
+      } else {
+        setMgrsError(false);
+      }
     } else {
-      setMgrsError(false);
+      if (weakMatchMgrsError(newMgrs)) {
+        setMgrsError(true);
+        setStrongValidateMgrs(true);
+      } else {
+        setMgrsError(false);
+      }
     }
   };
 
@@ -90,21 +128,24 @@ export const TgtRow: React.FC<Props> = props => {
     setDescription(event.target.value);
   };
 
-  const validate = () => {
-    let errors: boolean = false; //to avoid race condition for local state nameError and mgrsError
-    if (name.length !== 9 || name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null) {
+  const validateAllAndSubmit = () => {
+    let errors: boolean = false; // To avoid race condition for local state nameError and mgrsError
+    if (strongMatchNameError(name)) {
       setNameError(true);
+      setStrongValidateName(true);
       errors = true;
     } else {
       setNameError(false);
     }
-    if (mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null) {
+    if (strongMatchMgrsError(mgrs)) {
       setMgrsError(true);
+      setStrongValidateMgrs(true);
       errors = true;
     } else {
       setMgrsError(false);
     }
     if (!errors) {
+      props.setAddTgt(-1);
       props.submitNewTarget(
         new TargetPostModel(
           props.rfi.rfiNum,
@@ -112,13 +153,11 @@ export const TgtRow: React.FC<Props> = props => {
           name, mgrs, notes, description),
         props.rfi
       );
-      props.setAddTgt(-1);
-      setName("");
-      setMgrs("");
-      setDescription("");
-      setNotes("");
+      // setName("");
+      // setMgrs("");
+      // setDescription("");
+      // setNotes("");
     }
-    return;
   };
 
   function onBlur(event: any) {
@@ -126,7 +165,7 @@ export const TgtRow: React.FC<Props> = props => {
 
     setTimeout(function () {
       if (!currentTarget.contains(document.activeElement)) {
-        validate();
+        validateAllAndSubmit();
       }
     }, 0);
   }
@@ -137,7 +176,7 @@ export const TgtRow: React.FC<Props> = props => {
             onBlur={onBlur}
             onKeyPress={(e: any) => {
               if (e.which === 13)
-                validate();
+                validateAllAndSubmit();
             }}
       >
         <Box
@@ -158,7 +197,7 @@ export const TgtRow: React.FC<Props> = props => {
             />
             <TextField
               className={classNames("mgrs", classes.margin)}
-              value={props.target? props.target.mgrs : mgrs}
+              value={props.target ? props.target.mgrs : mgrs}
               disabled={props.target !== null}
               required
               placeholder="##XXX##########"
@@ -170,7 +209,7 @@ export const TgtRow: React.FC<Props> = props => {
               multiline
               rowsMax="2"
               className={classNames("notes", classes.margin)}
-              value={props.target? props.target.notes : notes}
+              value={props.target ? props.target.notes : notes}
               disabled={props.target !== null}
               label={props.target || notes !== "" ? "" : "EEI Notes"}
               onChange={inputNotes}
@@ -179,7 +218,7 @@ export const TgtRow: React.FC<Props> = props => {
               multiline
               rowsMax="2"
               className={classNames("description", classes.margin)}
-              value={props.target? props.target.description : description}
+              value={props.target ? props.target.description : description}
               disabled={props.target !== null}
               label={props.target || description !== "" ? "" : "TGT Description"}
               onChange={inputDescription}
@@ -220,9 +259,7 @@ export const TgtRow: React.FC<Props> = props => {
   )
 };
 
-const mapStateToProps = (state: any) => ({
-
-});
+const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = {
   submitNewTarget: submitNewTarget
@@ -304,8 +341,7 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
         -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
   }
 `;
 

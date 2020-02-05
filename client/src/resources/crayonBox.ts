@@ -16,5 +16,4 @@ export const crayonBox = {
   forestGreen: '#204110',
   bloodRed: '#C10101',
   skyBlue: '#82BFF9'
-
 };
