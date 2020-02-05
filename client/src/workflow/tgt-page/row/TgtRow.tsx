@@ -277,10 +277,6 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     width: 100%;
   }
   
-  .tgt-input {
-    width: 100%
-  }
-  
   .tgt-name {
     width: 115px;
   }
@@ -309,12 +305,6 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   .log {
     width: 137px;
     height: 62px;
-  }
-  
-  .tgt-input {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
   }
   
   .tgt-form-box {

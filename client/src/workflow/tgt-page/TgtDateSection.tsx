@@ -191,6 +191,7 @@ export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchT
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
   }
   
   .add-tgt-form-box {
