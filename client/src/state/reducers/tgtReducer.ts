@@ -13,26 +13,39 @@ const initState = {
 };
 
 const tgtReducer = (state = initState, action: any) => {
+  let sortedExploitDates: ExploitDateModel[];
+
   switch (action.type) {
     case ActionTypes.NAVIGATE_TO_TGT_PAGE:
-      let sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
-      return {...state,
+      sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
+      return {
+        ...state,
         viewTgtPage: true,
+        showDatePlaceholder: false,
         rfi: action.rfi,
         exploitDates: sortedExploitDates,
-        showDatePlaceholder: false,
+        targets: action.targets
+      };
+    case ActionTypes.RELOAD_TGT_PAGE:
+      sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
+      return {
+        ...state,
+        exploitDates: sortedExploitDates,
         targets: action.targets
       };
     case ActionTypes.EXIT_TGT_PAGE:
-      return {...state,
+      return {
+        ...state,
         viewTgtPage: false
       };
     case ActionTypes.UPDATE_RFI_DATE:
-      return {...state,
+      return {
+        ...state,
         rfi: action.rfi
       };
     case ActionTypes.SHOW_DATE_PLACEHOLDER:
-      return {...state,
+      return {
+        ...state,
         showDatePlaceholder: action.showDatePlaceholder
       };
     default:

@@ -15,7 +15,7 @@ describe('WorkflowContainer', () => {
       <WorkflowContainer
         fetchRfis={()=>{}}
         fetchLocalUpdate={()=>{}}
-        navigateToTgtPage={()=>{}}
+        loadTgtPage={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={true}
         viewTgtPage={false}
@@ -30,7 +30,7 @@ describe('WorkflowContainer', () => {
       <WorkflowContainer
         fetchRfis={()=>{}}
         fetchLocalUpdate={()=>{}}
-        navigateToTgtPage={()=>{}}
+        loadTgtPage={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={true}
         viewTgtPage={true}
@@ -48,7 +48,7 @@ describe('WorkflowContainer', () => {
       <WorkflowContainer
         fetchRfis={()=>{}}
         fetchLocalUpdate={()=>{}}
-        navigateToTgtPage={()=>{}}
+        loadTgtPage={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
         viewTgtPage={false}
@@ -66,7 +66,7 @@ describe('WorkflowContainer', () => {
       <WorkflowContainer
         fetchRfis={()=>{}}
         fetchLocalUpdate={()=>{}}
-        navigateToTgtPage={()=>{}}
+        loadTgtPage={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
         viewTgtPage={true}
@@ -84,7 +84,7 @@ describe('WorkflowContainer', () => {
       <WorkflowContainer
         fetchRfis={()=>{}}
         fetchLocalUpdate={()=>{}}
-        navigateToTgtPage={()=>{}}
+        loadTgtPage={()=>{}}
         postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
         loading={false}
         viewTgtPage={true}

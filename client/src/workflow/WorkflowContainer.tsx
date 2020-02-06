@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { fetchLocalUpdate, fetchRfis, navigateToTgtPage, postSiteVisit } from '../state/actions';
+import { fetchLocalUpdate, fetchRfis, loadTgtPage, postSiteVisit } from '../state/actions';
 import { StyledRfiDashboard } from './rfi-page/RfiDashboard';
 import styled from 'styled-components';
 import classNames from 'classnames';
@@ -13,7 +13,7 @@ interface Props {
   fetchRfis: () => void;
   postSiteVisit: () => Promise<any>;
   fetchLocalUpdate: () => void;
-  navigateToTgtPage: (rfi: RfiModel) => void;
+  loadTgtPage: (rfi: RfiModel, firstLoad: boolean) => void;
   rfi: RfiModel | undefined;
   loading: boolean;
   viewTgtPage: boolean;
@@ -45,7 +45,7 @@ export class WorkflowContainer extends React.Component<Props, any> {
 
   private refreshTgts() {
     if (this.props.viewTgtPage && !this.props.viewIxnPage && this.props.rfi)
-      this.props.navigateToTgtPage(this.props.rfi);
+      this.props.loadTgtPage(this.props.rfi, false);
   }
 
   render() {
@@ -81,7 +81,7 @@ const mapDispatchToProps = {
   fetchRfis: fetchRfis,
   postSiteVisit: postSiteVisit,
   fetchLocalUpdate: fetchLocalUpdate,
-  navigateToTgtPage: navigateToTgtPage
+  loadTgtPage: loadTgtPage
 };
 
 export const StyledWorkflowContainer = styled(

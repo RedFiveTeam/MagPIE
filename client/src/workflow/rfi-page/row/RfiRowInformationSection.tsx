@@ -8,14 +8,14 @@ import IconDnDBurger from '../../../resources/icons/DnDBurgerVector';
 import { connect } from 'react-redux';
 import { Field } from '../models/SortKeyModel';
 import TgtPageButtonVector from '../../../resources/icons/TgtPageButtonVector';
-import { fetchRfiTargets, navigateToTgtPage } from '../../../state/actions';
+import { fetchRfiTargets, loadTgtPage } from '../../../state/actions';
 import { formatRfiNum } from '../../../utils';
 
 interface Props {
   rfi: RfiModel;
   scrollRegionRef: any;
   prioritizing: boolean;
-  navigateToTgtPage: (rfi: RfiModel) => void;
+  loadTgtPage: (rfi: RfiModel, firstLoad: boolean) => void;
   className?: string;
 }
 
@@ -67,7 +67,7 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
   }
 
   function addTgtToRFI() {
-    props.navigateToTgtPage(props.rfi);
+    props.loadTgtPage(props.rfi, true);
   }
 
   return (
@@ -136,7 +136,7 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = {
-  navigateToTgtPage: navigateToTgtPage,
+  loadTgtPage: loadTgtPage,
   fetchRfiTargets: fetchRfiTargets
 };
 

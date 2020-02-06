@@ -17,7 +17,7 @@ describe('RFIRowInformationSection', () => {
         scrollRegionRef={React.createRef()}
         rfi={rfi}
         prioritizing={false}
-        navigateToTgtPage={() => {}}
+        loadTgtPage={() => {}}
       />
     )
   });
@@ -38,7 +38,7 @@ describe('RFIRowInformationSection', () => {
         scrollRegionRef={React.createRef()}
         rfi={rfi}
         prioritizing={false}
-        navigateToTgtPage={() => {}}
+        loadTgtPage={() => {}}
       />
     );
     expect(subject.find('.cell--ltiov').text()).toBe('-');
@@ -60,7 +60,7 @@ describe('RFIRowInformationSection', () => {
         scrollRegionRef={React.createRef()}
         rfi={rfi}
         prioritizing={false}
-        navigateToTgtPage={() => {}}
+        loadTgtPage={() => {}}
       />);
 
     expect(subject.find('.cell--add-tgt-button').exists()).toBeFalsy();
@@ -73,7 +73,7 @@ describe('RFIRowInformationSection', () => {
         scrollRegionRef={React.createRef()}
         rfi={rfi}
         prioritizing={false}
-        navigateToTgtPage={() => {}}
+        loadTgtPage={() => {}}
       />);
 
     expect(subject.find('.cell--add-tgt-button').exists()).toBeFalsy();
@@ -97,7 +97,7 @@ describe('RFIRowInformationSection', () => {
         scrollRegionRef={React.createRef()}
         rfi={rfi}
         prioritizing={false}
-        navigateToTgtPage={() => {}}
+        loadTgtPage={() => {}}
       />
     );
     expect(subject.find('.section--information').text().toLowerCase()).toContain('iconshowmore');
@@ -111,7 +111,7 @@ describe('RFIRowInformationSection', () => {
         rfi={rfi}
         scrollRegionRef={{}}
         prioritizing={true}
-        navigateToTgtPage={() => {}}
+        loadTgtPage={() => {}}
       />
     );
     expect(subject.find(IconDnDBurger).exists()).toBeTruthy()

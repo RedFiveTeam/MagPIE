@@ -7,12 +7,21 @@ describe("Tgt actions tests", ()=>{
   let rfi: RfiModel = new RfiModel(1, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2);
   console.log = jest.fn();
 
-  it('should return a proper NAVIGATE_TO_TGT_PAGE action object', () => {
+  it('should return a proper NAVIGATE_TO_TGT_PAGE or RELOAD_TGT_PAGE action object', () => {
+    let action: any = fetchDatesAndTargetsSuccess(rfi, [], [], true);
+    expect(action).toEqual({
+      type: ActionTypes.NAVIGATE_TO_TGT_PAGE,
+      rfi: rfi,
+      exploitDates: [],
+      targets: []
+    });
 
-    let action: any = fetchDatesAndTargetsSuccess(rfi, [], []);
-    expect(action.type).toEqual(ActionTypes.NAVIGATE_TO_TGT_PAGE);
-    expect(action.viewTgtPage).toEqual(true);
-    expect(action.rfi).toEqual(rfi);
+    action = fetchDatesAndTargetsSuccess(rfi, [], [], false);
+    expect(action).toEqual({
+      type: ActionTypes.RELOAD_TGT_PAGE,
+      exploitDates: [],
+      targets: []
+    });
   });
 
   it('should return a proper EXIT_TGT_PAGE action object', () => {
@@ -28,7 +37,7 @@ describe("Tgt actions tests", ()=>{
   //   fetch.mockResponse(JSON.stringify({exploitDate: "2020-11-18T00:00:00.000+0000", rfiId: 5})).resolves;
   //
   //   let date: Date = new Date(moment('2019-12-01').unix() * 1000);
-  //   let returnedDate: any = navigateToTgtPage(rfi);
+  //   let returnedDate: any = loadTgtPage(rfi);
   //   console.log(returnedDate);
   //   returnedDate().then(response => console.log('response is ' + response));
   //

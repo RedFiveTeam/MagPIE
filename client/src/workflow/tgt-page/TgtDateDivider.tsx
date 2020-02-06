@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 
 interface Props {
-  exploitDate: string
-  index?: number
+  exploitDate: string;
+  index?: number;
   className?: string;
 }
 
@@ -29,7 +29,7 @@ export const StyledTgtDateDivider = styled(TgtDateDivider)`
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 4px;
-  width:100%
+  width:100%;
   
   .separator-line {
     flex-grow: 1;
