@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import RfiModel from '../rfi-page/models/RfiModel';
-import { exitTgtPage, navigateToTgtPage, setDatePlaceholder, updateRfiDate } from '../../state/actions';
+import { exitTgtPage, setDatePlaceholder, updateRfiDate } from '../../state/actions';
 import BackButtonVector from '../../resources/icons/BackButtonVector';
 import Flatpickr from 'react-flatpickr';
 import '../../resources/flatpickr.css'
@@ -28,7 +28,6 @@ interface Props {
   updateRfiDate: (rfi: RfiModel, date: Date) => void;
   setDatePlaceholder: (show: boolean) => void;
   targets: TargetModel[];
-  navigateToTgtPage: (rfi: RfiModel) => void;
   className?: string;
 }
 
@@ -134,7 +133,6 @@ const mapDispatchToProps = {
   exitTgtPage: exitTgtPage,
   updateRfiDate: updateRfiDate,
   setDatePlaceholder: setDatePlaceholder,
-  navigateToTgtPage: navigateToTgtPage
 };
 
 export const StyledTgtDashboard = styled(

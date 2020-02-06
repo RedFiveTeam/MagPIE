@@ -14,7 +14,7 @@ interface Props {
   postSiteVisit: () => Promise<any>;
   fetchLocalUpdate: () => void;
   navigateToTgtPage: (rfi: RfiModel) => void;
-  rfi: RfiModel;
+  rfi: RfiModel | undefined;
   loading: boolean;
   viewTgtPage: boolean;
   viewIxnPage: boolean;
@@ -44,7 +44,7 @@ export class WorkflowContainer extends React.Component<Props, any> {
   }
 
   private refreshTgts() {
-    if (this.props.viewTgtPage && !this.props.viewIxnPage)
+    if (this.props.viewTgtPage && !this.props.viewIxnPage && this.props.rfi)
       this.props.navigateToTgtPage(this.props.rfi);
   }
 

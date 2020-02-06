@@ -34,6 +34,7 @@ describe("Target Row", () => {
         setAddTgt={(dateId: number) => {
         }}
         rfi={rfiTest}
+        navigateToIxnPage={() => {}}
       />
     );
   });
