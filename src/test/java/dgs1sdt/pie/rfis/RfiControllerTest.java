@@ -3,6 +3,7 @@ package dgs1sdt.pie.rfis;
 import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.pie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.pie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDate;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDateRepository;
@@ -42,6 +43,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
   TargetRepository targetRepository;
   MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   MetricCreateTargetRepository metricCreateTargetRepository;
+  MetricDeleteTargetRepository metricDeleteTargetRepository;
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -62,31 +64,35 @@ public class RfiControllerTest extends BaseIntegrationTest {
   public void setExploitDateRepository(ExploitDateRepository exploitDateRepository) {
     this.exploitDateRepository = exploitDateRepository;
   }
-
   @Autowired
   public void setTargetRepository(TargetRepository targetRepository) {
     this.targetRepository = targetRepository;
   }
-
   @Autowired
   public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
   }
-
   @Autowired
   public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
     this.metricCreateTargetRepository = metricCreateTargetRepository;
+  }
+  @Autowired
+  public void setMetricDeleteTargetRepository(MetricDeleteTargetRepository metricDeleteTargetRepository) {
+    this.metricDeleteTargetRepository = metricDeleteTargetRepository;
   }
 
   @Before
   public void clean() {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
+    targetRepository.deleteAll();
+    metricChangeExploitDateRepository.deleteAll();
     metricCreateTargetRepository.deleteAll();
+    metricDeleteTargetRepository.deleteAll();
   }
 
   @Test
-  public void getRfisDirectlyFromGETS() throws Exception {
+  public void getRfisDirectlyFromGETS() {
     String[] files = {
       "RfisNewOpen.xml",
       "RfisClosed.xml"
@@ -302,6 +308,75 @@ public class RfiControllerTest extends BaseIntegrationTest {
     assertEquals(1, targetRepository.findAll().size());
 
     assertEquals(1, metricCreateTargetRepository.findAll().size());
+  }
+
+  @Test
+  public void deletesTargets() throws Exception {
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
+    exploitDateRepository.save(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      rfiId
+    ));
+
+    TargetJson targetJson = new TargetJson(
+      "SDT-123",
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "SDT20-123",
+      "12ABC1234567890",
+      "These are some EEI notes",
+      "This is a description"
+    );
+
+    rfiController.addTarget(targetJson);
+    long tgtId = targetRepository.findAll().get(0).getId();
+
+    assertEquals(0, rfiController.deleteTarget(tgtId).size());
+
+    assertEquals(0, targetRepository.findAll().size());
+
+    rfiController.addTarget(targetJson);
+    tgtId = targetRepository.findAll().get(0).getId();
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .when()
+      .delete(RfiController.URI + "/delete-target/" + tgtId)
+      .then()
+      .statusCode(200);
+
+    assertEquals(0, targetRepository.findAll().size());
+  }
+
+  @Test
+  public void addsTargetDeletionMetrics() throws Exception {
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
+    exploitDateRepository.save(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      rfiId
+    ));
+
+    TargetJson targetJson = new TargetJson(
+      "SDT-123",
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      "SDT20-123",
+      "12ABC1234567890",
+      "These are some EEI notes",
+      "This is a description"
+    );
+
+    rfiController.addTarget(targetJson);
+
+    long tgtId = targetRepository.findAll().get(0).getId();
+
+    rfiController.deleteTarget(tgtId);
+
+    assertEquals(1, metricDeleteTargetRepository.findAll().size());
+    assertEquals("SDT-123", metricDeleteTargetRepository.findAll().get(0).getRfiNum());
+    assertEquals("SDT20-123", metricDeleteTargetRepository.findAll().get(0).getTargetName());
+
   }
 
 }

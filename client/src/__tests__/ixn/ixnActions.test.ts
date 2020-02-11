@@ -3,7 +3,7 @@ import { ActionTypes } from '../../state/actions/ActionTypes';
 import { exitIxnPage, navigateToIxnPage } from '../../state/actions/ixn/IxnActions';
 
 describe('IXN Actions', () => {
-  let target = new TargetModel("SDT20-00123", 1, "TGT20-123", "00ABC1234567890", "", "");
+  let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
 
   it('should return a proper navigate to ixn page object', () => {
     let action: any = navigateToIxnPage(target);

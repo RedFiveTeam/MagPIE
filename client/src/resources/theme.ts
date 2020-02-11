@@ -22,7 +22,9 @@ const theme = {
     addButtonBackground: crayonBox.forestGreen,
     fontAddDate: crayonBox.eggGray,
     fontError: crayonBox.bloodRed,
-    fontInputFocus: crayonBox.skyBlue
+    fontInputFocus: crayonBox.skyBlue,
+    deleteButton: crayonBox.straightWhite,
+    deleteButtonFocus: crayonBox.brightRed
   },
 
   font: {

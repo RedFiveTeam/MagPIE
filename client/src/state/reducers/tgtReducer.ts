@@ -48,6 +48,11 @@ const tgtReducer = (state = initState, action: any) => {
         ...state,
         showDatePlaceholder: action.showDatePlaceholder
       };
+    case ActionTypes.UPDATE_TGT_SUCCESS:
+      return {
+        ...state,
+        targets: action.targets
+      };
     default:
       return {...state};
   }

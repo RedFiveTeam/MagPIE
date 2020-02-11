@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { Field, SortKeyModel } from '../workflow/rfi-page/models/SortKeyModel';
 import 'isomorphic-fetch';
 import { TargetModel } from '../workflow/tgt-page/models/TargetModel';
+import { ExploitDateModel } from '../workflow/tgt-page/models/ExploitDateModel';
 
 describe('reducer', () => {
   let singleStatusRfiList: RfiModel[];
@@ -104,19 +105,19 @@ describe('reducer', () => {
     let rfi: RfiModel = new RfiModel(1, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 1);
     let mockAction = {
       type: ActionTypes.NAVIGATE_TO_TGT_PAGE,
-      viewTgtPage: true,
       rfi: rfi,
-      exploitDates: []
-
+      exploitDates: [],
+      targets: []
     };
 
     expect(
       reducer(undefined, mockAction).tgtReducer
     ).toEqual({
       viewTgtPage: true,
+      showDatePlaceholder: false,
       rfi: rfi,
       exploitDates: [],
-      showDatePlaceholder: false
+      targets: []
     });
   });
 
@@ -320,7 +321,7 @@ describe('reducer', () => {
   });
 
   it('should handle NAVIGATE_TO_IXN_PAGE', () => {
-    let target = new TargetModel("SDT20-00123", 1, "TGT20-123", "00ABC1234567890", "", "");
+    let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
     let navToIxnPage = {
       type: ActionTypes.NAVIGATE_TO_IXN_PAGE,
       target: target
@@ -336,7 +337,7 @@ describe('reducer', () => {
   });
 
   it('should handle EXIT_IXN_PAGE', () => {
-    let target = new TargetModel("SDT20-00123", 1, "TGT20-123", "00ABC1234567890", "", "");
+    let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
     let navToIxnPage = {
       type: ActionTypes.NAVIGATE_TO_IXN_PAGE,
       target: target
@@ -354,6 +355,39 @@ describe('reducer', () => {
         viewIxnPage: false,
         target: target
       });
+  });
+
+  it('should handle UPDATE_TGT_SUCCESS', () => {
+    let rfi: RfiModel = new RfiModel(1, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 1);
+    let exploitDate : ExploitDateModel = new ExploitDateModel(1, 1, moment.utc('2019-11-02'));
+    let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
+    let navToTgtPage = {
+      type: ActionTypes.NAVIGATE_TO_TGT_PAGE,
+      viewTgtPage: true,
+      rfi: rfi,
+      exploitDates: [exploitDate],
+      targets: [target]
+    };
+    let state = reducer(undefined, navToTgtPage);
+
+    let deleteTgt = {
+      type: ActionTypes.UPDATE_TGT_SUCCESS,
+      targets: []
+    };
+
+    state = reducer(state, deleteTgt);
+
+    expect(state.tgtReducer).toEqual(
+      {
+        viewTgtPage: true,
+        showDatePlaceholder: false,
+        rfi: rfi,
+        exploitDates: [exploitDate],
+        targets: []
+      }
+
+    )
+
   });
 
   //TODO

@@ -6,7 +6,7 @@ import { IxnDashboard } from '../../workflow/ixn-page/IxnDashboard';
 
 describe("Interactions Dashbaord", () => {
   let subject: ShallowWrapper;
-  let target = new TargetModel("SDT20-00123", 1, "TGT20-123", "00ABC1234567890", "", "");
+  let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
 
   beforeEach(() => {
 

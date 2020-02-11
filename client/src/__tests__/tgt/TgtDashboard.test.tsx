@@ -56,16 +56,8 @@ describe('TgtDashboardContainer', () => {
     expect(subject.find(StyledTgtTable).children().length).toBe(0);
 
     let dates: ExploitDateModel[] = [
-      new ExploitDateModel(
-        2,
-        moment('2019-11-20').utc(),
-        1
-      ),
-      new ExploitDateModel(
-        3,
-        moment('2019-11-21').utc(),
-        1
-      ),
+      new ExploitDateModel(2, 1, moment('2019-11-20').utc()),
+      new ExploitDateModel(3, 1, moment('2019-11-21').utc()),
     ];
     subject = shallow(
       <TgtDashboard

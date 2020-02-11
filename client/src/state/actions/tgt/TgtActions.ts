@@ -16,6 +16,13 @@ export const exitTgtPage = () => {
   }
 };
 
+export const updateTgtSuccess = (targets: TargetModel[]) => {
+  return {
+    type: ActionTypes.UPDATE_TGT_SUCCESS,
+    targets: targets
+  }
+};
+
 export const fetchDatesAndTargetsSuccess = (rfi: RfiModel, exploitDates: ExploitDateModel[], targets: TargetModel[],
                                             firstLoad: boolean) => {
   if (firstLoad)
@@ -92,6 +99,17 @@ export const submitNewTarget = (target: TargetPostModel, rfi: RfiModel) => {
   };
 };
 
+export const deleteTgt = (tgtId: number) => {
+  return (dispatch: any) => {
+    postTargetDelete(tgtId)
+      .then(response => response.json())
+      .then(tgts => dispatch(updateTgtSuccess(tgts)))
+      .catch((reason) => {
+        console.log('Error deleting target: ' + reason)
+      })
+  };
+};
+
 const postRfiExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
   return fetch(
     server + '/api/rfis/change-exploit-date',
@@ -107,7 +125,6 @@ const postRfiExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
 };
 
 const postTarget = (target: TargetPostModel) => {
-  console.log(target);
   return fetch(
     server + '/api/rfis/add-target',
     {
@@ -121,6 +138,15 @@ const postTarget = (target: TargetPostModel) => {
   );
 };
 
-export const fetchLocalUpdateTgts = () => {
-
+const postTargetDelete = (tgtId: number) => {
+  return fetch(
+    server + '/api/rfis/delete-target/' + tgtId,
+    {
+      method: 'delete',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 };

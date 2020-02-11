@@ -11,8 +11,6 @@ Scenario ('Should have a Tgt page', (I) => {
   I.waitForText('RFI DESCRIPTION: Lorem ipsum', 10);
 });
 
-//TODO: see if we can add dates with the Material UI date picker and do acceptance testing for that and adding targets
-//Does not add them--assuming this is a limitation of nightmare
 Scenario ('Should be able to select dates on the target page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
@@ -23,3 +21,10 @@ Scenario ('Should be able to select dates on the target page', (I) => {
   I.click('.flatpickr-day');
 });
 
+//Once Material UI datepicker is added:
+
+//TODO: acceptance test for adding target
+
+//TODO: acceptance test for deleting target
+
+//TODO: acceptance test for navigating to ixn page

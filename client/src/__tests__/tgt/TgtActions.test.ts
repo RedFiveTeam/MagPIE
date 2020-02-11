@@ -1,6 +1,7 @@
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import { ActionTypes } from '../../state/actions/ActionTypes';
-import { exitTgtPage, fetchDatesAndTargetsSuccess } from '../../state/actions';
+import { exitTgtPage, fetchDatesAndTargetsSuccess, updateTgtSuccess } from '../../state/actions';
+import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
 
 describe("Tgt actions tests", ()=>{
   const moment = require('moment');
@@ -28,6 +29,15 @@ describe("Tgt actions tests", ()=>{
     let action: any = exitTgtPage();
     expect(action.type).toEqual(ActionTypes.EXIT_TGT_PAGE);
     expect(action.viewTgtPage).toEqual(false);
+  });
+
+  it('should return a proper UPDATE_TGT_SUCCESS action object', () => {
+    let tgt = new TargetModel(1, 1, 1, "SDT12-123", "12QWE1231231231", "", "");
+    let action: any = updateTgtSuccess([tgt]);
+    expect(action).toEqual({
+      type: ActionTypes.UPDATE_TGT_SUCCESS,
+      targets: [tgt]
+    });
   });
 
 

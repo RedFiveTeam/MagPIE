@@ -2,6 +2,7 @@ package dgs1sdt.pie.rfis;
 
 import dgs1sdt.pie.metrics.MetricController;
 import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriority;
+import dgs1sdt.pie.metrics.deleteTarget.MetricDeleteTarget;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDate;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDateRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -170,25 +172,37 @@ public class RfiController {
     return exploitDateRepository.findAllByRfiId(rfiId);
   }
 
+  @DeleteMapping(path = "/delete-target/{tgtId}")
+  public List<Target> deleteTarget(@Valid @RequestBody @PathVariable("tgtId") long tgtId) {
+    if (targetRepository.findById(tgtId).isPresent()) {
+      long rfiId = targetRepository.findById(tgtId).get().getRfiId();
+      long exploitDateId = targetRepository.findById(tgtId).get().getExploitDateId();
+      if (rfiRepository.findById(rfiId).isPresent()) {
+        String rfiNum = rfiRepository.findById(rfiId).get().getRfiNum();
+        if (exploitDateRepository.findById(exploitDateId).isPresent()) {
+          Timestamp exploitDate = exploitDateRepository.findById(exploitDateId).get().getExploitDate();
 
+          MetricDeleteTarget metric = new MetricDeleteTarget(
+            rfiNum,
+            exploitDate,
+            targetRepository.findById(tgtId).get().getName(),
+            new Timestamp(new Date().getTime())
+          );
 
-//  @PostMapping(path = "update-exploit-dates")
-//  public void updateExploitDates(@Valid @RequestBody RfiExploitDatesJson updatedRfiExploitDates) {
-//    try {
-//      Rfi rfiToUpdate = rfiRepository.findByRfiNum(updatedRfiExploitDates.getRfiNum());
-//      RfiExploitDatesChange metric = new RfiExploitDatesChange(rfiToUpdate.getRfiNum(),
-//        rfiToUpdate.getExploitStart(),
-//        rfiToUpdate.getExploitEnd(),
-//        new Timestamp(updatedRfiExploitDates.getExploitStart().getTime()),
-//        new Timestamp(updatedRfiExploitDates.getExploitEnd().getTime()),
-//        new Timestamp(new Date().getTime())
-//      );
-//      rfiToUpdate.setExploitStart(new Timestamp(updatedRfiExploitDates.getExploitStart().getTime()));
-//      rfiToUpdate.setExploitEnd(new Timestamp(updatedRfiExploitDates.getExploitEnd().getTime()));
-//      rfiRepository.save(rfiToUpdate);
-//      metricController.addRfiExploitDatesChange(metric);
-//    } catch (Exception e) {
-//      System.err.println("Failed to update exploit dates on RFI " + updatedRfiExploitDates.getRfiNum());
-//    }
-//  }
+          metricController.addDeleteTarget(metric);
+          targetRepository.deleteById(tgtId);
+          return getRfiTargets(rfiId);
+        } else {
+
+        System.err.println("Error deleting target: Could not find exploit date by id " + exploitDateId);
+        }
+      } else {
+        System.err.println("Error deleting target: Could not find RFI by id " + rfiId);
+      }
+    } else {
+      System.err.println("Error deleting target: Could not find target by id " + tgtId);
+    }
+    return new ArrayList<>();
+  }
+
 }

@@ -13,6 +13,8 @@ import dgs1sdt.pie.metrics.clickRefresh.MetricClickRefresh;
 import dgs1sdt.pie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.pie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.pie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.pie.metrics.deleteTarget.MetricDeleteTarget;
+import dgs1sdt.pie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTime;
 import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTimeJson;
 import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTimeRepository;
@@ -48,6 +50,7 @@ public class MetricController {
   private MetricClickRefreshRepository metricClickRefreshRepository;
   private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   private MetricCreateTargetRepository metricCreateTargetRepository;
+  private MetricDeleteTargetRepository metricDeleteTargetRepository;
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
@@ -85,7 +88,10 @@ public class MetricController {
   public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
     this.metricCreateTargetRepository = metricCreateTargetRepository;
   }
-
+  @Autowired
+  public void setMetricDeleteTargetRepository(MetricDeleteTargetRepository metricDeleteTargetRepository) {
+    this.metricDeleteTargetRepository = metricDeleteTargetRepository;
+  }
 
   @GetMapping(path = "/site-visits")
   public long getSiteVisitCount() {
@@ -93,7 +99,7 @@ public class MetricController {
   }
 
   @GetMapping(path = "/site-visits-week")
-  public int[] getSiteVisitsLast7Days() throws Exception{
+  public int[] getSiteVisitsLast7Days() {
     List<MetricSiteVisit> allMetricSiteVisits = metricSiteVisitRepository.findAll();
 
 //    Array that has DATE epochs at midnight over the last 7 days
@@ -122,10 +128,10 @@ public class MetricController {
   }
 
   private Date[] setupDaysAgo(int numDays) {
-    Date daysAgo[] = new Date[numDays];
-    Long now = new Date().getTime();
-    Long millisecondsInADay = 86400000L;
-    Calendar cal[] = new Calendar[numDays];
+    Date[] daysAgo = new Date[numDays];
+    long now = new Date().getTime();
+    long millisecondsInADay = 86400000L;
+    Calendar[] cal = new Calendar[numDays];
     for(int i = 0; i < numDays ; i++) {
       cal[i] = Calendar.getInstance(); // locale-specific
       cal[i].setTime(new Date(now - i * millisecondsInADay));
@@ -217,6 +223,10 @@ public class MetricController {
       new Timestamp(new Date().getTime())
     );
     return this.metricCreateTargetRepository.save(metricCreateTarget);
+  }
+
+  public MetricDeleteTarget addDeleteTarget(MetricDeleteTarget metric) {
+    return this.metricDeleteTargetRepository.save(metric);
   }
 }
 

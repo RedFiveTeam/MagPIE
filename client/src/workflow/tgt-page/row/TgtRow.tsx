@@ -8,12 +8,13 @@ import { crayonBox } from '../../../resources/crayonBox';
 import AddTgtDateButtonVector from '../../../resources/icons/AddTgtDateButtonVector';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { TargetPostModel } from '../models/TargetPostModel';
-import { submitNewTarget } from '../../../state/actions';
+import { deleteTgt, submitNewTarget } from '../../../state/actions';
 import { connect } from 'react-redux';
 import RfiModel from '../../rfi-page/models/RfiModel';
 import { ExploitDateModel } from '../models/ExploitDateModel';
 import { navigateToIxnPage } from '../../../state/actions/ixn/IxnActions';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
+import { StyledDeleteTgtButtonVector } from '../../../resources/icons/DeleteTgtButtonVector';
 
 interface Props {
   target: TargetModel | null;
@@ -23,6 +24,7 @@ interface Props {
   exploitDate: ExploitDateModel;
   setAddTgt: (dateId: number) => void;
   navigateToIxnPage: (target: TargetModel) => void;
+  deleteTgt: (tgtId: number) => void;
   className?: string;
 }
 
@@ -172,8 +174,14 @@ export const TgtRow: React.FC<Props> = props => {
     }, 0);
   }
 
-  const handleClick = () => {
-    if(props.target !== null) {
+  const handleDeleteClick = () => {
+    if (props.target !== null) {
+      props.deleteTgt(props.target.id);
+    }
+  };
+
+  const handleIxnClick = () => {
+    if (props.target !== null) {
       props.navigateToIxnPage(props.target);
     }
   };
@@ -250,8 +258,10 @@ export const TgtRow: React.FC<Props> = props => {
               Status
               <AddTgtDateButtonVector/>
             </Box>
-            <div className={"delete"}>&nbsp;</div>
-            <div className={"exploitation"} onClick={handleClick}>
+            <div className={classNames("delete", props.target ? "" : "disabled")} onClick={handleDeleteClick}>
+              <StyledDeleteTgtButtonVector/>
+            </div>
+            <div className={classNames("exploitation", props.target ? "" : "disabled")} onClick={handleIxnClick}>
               <StyledExploitationLogButtonVector/>
             </div>
           </ThemeProvider>
@@ -273,7 +283,8 @@ const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = {
   submitNewTarget: submitNewTarget,
-  navigateToIxnPage: navigateToIxnPage
+  navigateToIxnPage: navigateToIxnPage,
+  deleteTgt: deleteTgt
 };
 
 export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(TgtRow))`
@@ -313,7 +324,13 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     border-right: 4px solid ${crayonBox.softMetal};
     width: 90px;
     height: 62px;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
   }
+  
   
   .exploitation {
     display: flex;
@@ -323,6 +340,10 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     width: 108px;
     height: 62px;
     cursor: pointer;
+  }
+  
+  .disabled {
+    pointer-events: none; !important;
   }
   
   
