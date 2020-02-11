@@ -7,6 +7,7 @@ import UpperSortButtonVector from '../../../resources/icons/UpperSortButton';
 import ActiveLowerSortButtonVector from '../../../resources/icons/ActiveLowerSortButton';
 import LowerSortButtonVector from '../../../resources/icons/LowerSortButton';
 import ActiveUpperSortButtonVector from '../../../resources/icons/ActiveUpperSortButton';
+import { ApplicationState } from '../../../state';
 
 interface Props {
   text: string;
@@ -42,8 +43,8 @@ export const RfiTableHeaderCell: React.FC<Props> = props => {
   )
 };
 
-const mapStateToProps = (state: any) => ({
-  sortKey: state.rfiReducer.sortKey
+const mapStateToProps = ({rfis}: ApplicationState) => ({
+  sortKey: rfis.sortKey
 });
 
 export const StyledHeaderCell = styled(connect(mapStateToProps)(RfiTableHeaderCell))`

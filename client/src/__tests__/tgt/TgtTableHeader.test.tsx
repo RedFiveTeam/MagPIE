@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '../../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
-import { TgtTableHeader } from '../../workflow/tgt-page/header/TgtTableHeader';
+import { TgtTableHeader } from '../../workflow/tgt-page/tgtTable/header/TgtTableHeader';
 
 describe('TgtTableHeader', () => {
   it('should display all the proper headers', () => {

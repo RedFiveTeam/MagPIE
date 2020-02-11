@@ -2,6 +2,7 @@ import { crayonBox } from './crayonBox';
 import './fonts/roboto/roboto.css';
 import './fonts/helveticaneue/helveticaneue.css';
 import './fonts/arvo/arvo.css';
+import { createMuiTheme } from '@material-ui/core';
 
 const theme = {
   color: {
@@ -12,6 +13,7 @@ const theme = {
     backgroundInactive: crayonBox.blueGrayLight,
     backgroundAction: crayonBox.safetyOrange,
     backgroundAssigned: crayonBox.notEggWhite,
+    backgroundModal: crayonBox.lightBlack,
     fontLoading: crayonBox.lightGray,
     fontInactive: crayonBox.mediumGray,
     fontBackgroundInactive: crayonBox.mediumLightGray,
@@ -20,10 +22,12 @@ const theme = {
     buttonBackgroundActive: crayonBox.pitchBlack,
     showLessBackground: crayonBox.subtleGray,
     addButtonBackground: crayonBox.forestGreen,
+    addButtonBorder: crayonBox.darkGreen,
     fontAddDate: crayonBox.eggGray,
     fontError: crayonBox.bloodRed,
     fontInputFocus: crayonBox.skyBlue,
     deleteButton: crayonBox.straightWhite,
+    borderModal: crayonBox.darkRed,
     deleteButtonFocus: crayonBox.brightRed
   },
 
@@ -54,5 +58,11 @@ const theme = {
     headerBackground: crayonBox.safetyOrange
   }
 };
+
+export const muiTheme = createMuiTheme({
+  palette: {
+    type: 'dark'
+  },
+});
 
 export default theme;

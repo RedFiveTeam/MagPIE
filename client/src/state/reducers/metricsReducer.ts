@@ -1,13 +1,15 @@
 import { ActionTypes } from '../actions/ActionTypes';
+import { MetricState } from '../actions/metrics/MetricsActionTypes';
+import { Reducer } from 'redux';
 
-const initState = {
+const initState: MetricState = {
   siteVisits: 0,
   refreshClicks: 0,
   GetsClicks: 0,
   siteVisitsGraphWeek: [] as number[]
 };
 
-const metricsReducer = (state = initState, action: any) => {
+const reducer: Reducer<MetricState> = (state = initState, action: any) => {
   switch (action.type) {
     case ActionTypes.FETCH_SITE_VISITS_SUCCESS:
       return {...state, siteVisits: action.body};
@@ -22,4 +24,4 @@ const metricsReducer = (state = initState, action: any) => {
   }
 };
 
-export default metricsReducer;
+export { reducer as metricsReducer };

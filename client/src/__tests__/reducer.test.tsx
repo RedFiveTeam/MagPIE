@@ -1,11 +1,13 @@
 import { ActionTypes } from '../state/actions/ActionTypes';
 import RfiModel, { RfiStatus } from '../workflow/rfi-page/models/RfiModel';
-import reducer from '../state/reducers/reducer';
 import * as moment from 'moment';
 import { Field, SortKeyModel } from '../workflow/rfi-page/models/SortKeyModel';
 import 'isomorphic-fetch';
+import { rfiReducer } from '../state/reducers/rfiReducer';
+import { tgtReducer } from '../state/reducers/tgtReducer';
 import { TargetModel } from '../workflow/tgt-page/models/TargetModel';
 import { ExploitDateModel } from '../workflow/tgt-page/models/ExploitDateModel';
+import { ixnReducer } from '../state/reducers/ixnReducer';
 
 describe('reducer', () => {
   let singleStatusRfiList: RfiModel[];
@@ -66,7 +68,7 @@ describe('reducer', () => {
     };
 
     expect(
-      reducer(undefined, mockAction).rfiReducer
+      rfiReducer(undefined, mockAction)
     ).toEqual({
       rfis: [],
       sortKey: new SortKeyModel(Field.PRIORITY, true),
@@ -90,7 +92,7 @@ describe('reducer', () => {
     ];
 
     expect(
-      reducer(undefined, mockAction).rfiReducer
+      rfiReducer(undefined, mockAction)
     ).toEqual({
       rfis: sortedRfis,
       sortKey: new SortKeyModel(Field.PRIORITY, true),
@@ -111,7 +113,7 @@ describe('reducer', () => {
     };
 
     expect(
-      reducer(undefined, mockAction).tgtReducer
+      tgtReducer(undefined, mockAction)
     ).toEqual({
       viewTgtPage: true,
       showDatePlaceholder: false,
@@ -126,20 +128,20 @@ describe('reducer', () => {
       type: ActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
-    let state = reducer(undefined, setupRfis);
+    let state = rfiReducer(undefined, setupRfis);
     let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.RFINUM};
 
-    state = reducer(state, sortAction);
+    state = rfiReducer(state, sortAction);
 
-    expect(state.rfiReducer.rfis).toEqual(sortedById);
-    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi1, pendingRfi2]);
-    expect(state.rfiReducer.openRfis).toEqual([openRfi1, openRfi2]);
-    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.RFINUM, true));
+    expect(state.rfis).toEqual(sortedById);
+    expect(state.pendingRfis).toEqual([pendingRfi1, pendingRfi2]);
+    expect(state.openRfis).toEqual([openRfi1, openRfi2]);
+    expect(state.closedRfis).toEqual([closedRfi1]);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.RFINUM, true));
 
-    state = reducer(state, sortAction);
-    expect(state.rfiReducer.rfis).toEqual(reverseById);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.RFINUM, false));
+    state = rfiReducer(state, sortAction);
+    expect(state.rfis).toEqual(reverseById);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.RFINUM, false));
   });
 
   it('should sort by customer and flip the sort key', () => {
@@ -147,20 +149,20 @@ describe('reducer', () => {
       type: ActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
-    let state = reducer(undefined, setupRfis);
+    let state = rfiReducer(undefined, setupRfis);
     let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.CUSTOMER};
 
-    state = reducer(state, sortAction);
+    state = rfiReducer(state, sortAction);
 
-    expect(state.rfiReducer.rfis).toEqual(sortedByCustomer);
-    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
-    expect(state.rfiReducer.openRfis).toEqual([openRfi1, openRfi2]);
-    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.CUSTOMER, true));
+    expect(state.rfis).toEqual(sortedByCustomer);
+    expect(state.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
+    expect(state.openRfis).toEqual([openRfi1, openRfi2]);
+    expect(state.closedRfis).toEqual([closedRfi1]);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.CUSTOMER, true));
 
-    state = reducer(state, sortAction);
-    expect(state.rfiReducer.rfis).toEqual(reverseByCustomer);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.CUSTOMER, false));
+    state = rfiReducer(state, sortAction);
+    expect(state.rfis).toEqual(reverseByCustomer);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.CUSTOMER, false));
   });
 
   it('should sort by country and flip the sort key', () => {
@@ -168,20 +170,20 @@ describe('reducer', () => {
       type: ActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
-    let state = reducer(undefined, setupRfis);
+    let state = rfiReducer(undefined, setupRfis);
     let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.COUNTRY};
 
-    state = reducer(state, sortAction);
+    state = rfiReducer(state, sortAction);
 
-    expect(state.rfiReducer.rfis).toEqual(sortedByCountry);
-    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
-    expect(state.rfiReducer.openRfis).toEqual([openRfi2, openRfi1]);
-    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.COUNTRY, true));
+    expect(state.rfis).toEqual(sortedByCountry);
+    expect(state.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
+    expect(state.openRfis).toEqual([openRfi2, openRfi1]);
+    expect(state.closedRfis).toEqual([closedRfi1]);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.COUNTRY, true));
 
-    state = reducer(state, sortAction);
-    expect(state.rfiReducer.rfis).toEqual(reverseByCountry);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.COUNTRY, false));
+    state = rfiReducer(state, sortAction);
+    expect(state.rfis).toEqual(reverseByCountry);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.COUNTRY, false));
   });
 
   it('should sort by ltiov and flip the sort key', () => {
@@ -190,24 +192,24 @@ describe('reducer', () => {
       rfis: multiStatusRfiList
     };
 
-    let state = reducer(undefined, setupRfis);
+    let state = rfiReducer(undefined, setupRfis);
     let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.LTIOV};
 
-    state = reducer(state, sortAction);
+    state = rfiReducer(state, sortAction);
 
-    expect(state.rfiReducer.rfis).toEqual(sortedByLtiov);
-    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
-    expect(state.rfiReducer.openRfis).toEqual([openRfi1, openRfi2]);
-    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.LTIOV, true));
+    expect(state.rfis).toEqual(sortedByLtiov);
+    expect(state.pendingRfis).toEqual([pendingRfi2, pendingRfi1]);
+    expect(state.openRfis).toEqual([openRfi1, openRfi2]);
+    expect(state.closedRfis).toEqual([closedRfi1]);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.LTIOV, true));
 
-    state = reducer(state, sortAction);
+    state = rfiReducer(state, sortAction);
 
-    expect(state.rfiReducer.rfis).toEqual(reverseByLtiov);
-    expect(state.rfiReducer.pendingRfis).toEqual([pendingRfi1, pendingRfi2]);
-    expect(state.rfiReducer.openRfis).toEqual([openRfi2, openRfi1]);
-    expect(state.rfiReducer.closedRfis).toEqual([closedRfi1]);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.LTIOV, false));
+    expect(state.rfis).toEqual(reverseByLtiov);
+    expect(state.pendingRfis).toEqual([pendingRfi1, pendingRfi2]);
+    expect(state.openRfis).toEqual([openRfi2, openRfi1]);
+    expect(state.closedRfis).toEqual([closedRfi1]);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.LTIOV, false));
   });
 
   it('should sort by priority and flip the sort key', () => {
@@ -228,16 +230,16 @@ describe('reducer', () => {
       new RfiModel(2, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 1),
     ];
 
-    let state = reducer(undefined, setupRfis);
-    expect(state.rfiReducer.rfis).toEqual(sortedRfis);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, true));
+    let state = rfiReducer(undefined, setupRfis);
+    expect(state.rfis).toEqual(sortedRfis);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, true));
 
     let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.PRIORITY};
 
-    state = reducer(state, sortAction);
+    state = rfiReducer(state, sortAction);
 
-    expect(state.rfiReducer.rfis).toEqual(reverseRfis);
-    expect(state.rfiReducer.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, false));
+    expect(state.rfis).toEqual(reverseRfis);
+    expect(state.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, false));
 
   });
 
@@ -247,7 +249,7 @@ describe('reducer', () => {
       rfis: multiStatusRfiList
     };
 
-    let pendingRfis = reducer(undefined, fetchRfisAction).rfiReducer.pendingRfis;
+    let pendingRfis = rfiReducer(undefined, fetchRfisAction).pendingRfis;
 
     expect(pendingRfis.length).toBe(2);
     expect(pendingRfis).toContain(pendingRfi1);
@@ -260,7 +262,7 @@ describe('reducer', () => {
       rfis: multiStatusRfiList
     };
 
-    let openRfis = reducer(undefined, fetchRfisAction).rfiReducer.openRfis;
+    let openRfis = rfiReducer(undefined, fetchRfisAction).openRfis;
 
     expect(openRfis.length).toBe(2);
     expect(openRfis).toContain(openRfi1);
@@ -273,7 +275,7 @@ describe('reducer', () => {
       rfis: multiStatusRfiList
     };
 
-    let closedRfis = reducer(undefined, fetchRfisAction).rfiReducer.closedRfis;
+    let closedRfis = rfiReducer(undefined, fetchRfisAction).closedRfis;
 
     expect(closedRfis.length).toBe(1);
     expect(closedRfis).toContain(closedRfi1);
@@ -284,7 +286,7 @@ describe('reducer', () => {
       type: ActionTypes.FETCH_RFI_SUCCESS,
       rfis: singleStatusRfiList
     };
-    let state = reducer(undefined, setupRfis);
+    let state = rfiReducer(undefined, setupRfis);
 
     //Priority update
     let newSingleStatusRfis = [
@@ -295,7 +297,7 @@ describe('reducer', () => {
 
     //Sort bt LTIOV; should stay sorted after update
     let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.LTIOV};
-    state = reducer(state, sortAction);
+    state = rfiReducer(state, sortAction);
 
     let refreshRfis = {
       type: ActionTypes.FETCH_RFI_UPDATE,
@@ -309,7 +311,7 @@ describe('reducer', () => {
     ];
 
     expect(
-      reducer(state, refreshRfis).rfiReducer
+      rfiReducer(state, refreshRfis)
     ).toEqual({
       rfis: sortedRfis,
       sortKey: new SortKeyModel(Field.LTIOV, true),
@@ -327,9 +329,9 @@ describe('reducer', () => {
       target: target
     };
 
-    let state = reducer(undefined, navToIxnPage);
+    let state = ixnReducer(undefined, navToIxnPage);
 
-    expect(state.ixnReducer)
+    expect(state)
       .toEqual({
         viewIxnPage: true,
         target: target
@@ -343,14 +345,14 @@ describe('reducer', () => {
       target: target
     };
 
-    let state = reducer(undefined, navToIxnPage);
+    let state = ixnReducer(undefined, navToIxnPage);
     let exitIxnPage = {
       type: ActionTypes.EXIT_IXN_PAGE,
     };
 
-    state = reducer(state, exitIxnPage);
+    state = ixnReducer(state, exitIxnPage);
 
-    expect(state.ixnReducer)
+    expect(state)
       .toEqual({
         viewIxnPage: false,
         target: target
@@ -368,16 +370,16 @@ describe('reducer', () => {
       exploitDates: [exploitDate],
       targets: [target]
     };
-    let state = reducer(undefined, navToTgtPage);
+    let state = tgtReducer(undefined, navToTgtPage);
 
     let deleteTgt = {
       type: ActionTypes.UPDATE_TGT_SUCCESS,
       targets: []
     };
 
-    state = reducer(state, deleteTgt);
+    state = tgtReducer(state, deleteTgt);
 
-    expect(state.tgtReducer).toEqual(
+    expect(state).toEqual(
       {
         viewTgtPage: true,
         showDatePlaceholder: false,

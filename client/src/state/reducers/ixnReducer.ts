@@ -1,13 +1,15 @@
 import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
 import { ActionTypes } from '../actions/ActionTypes';
+import { Reducer } from 'redux';
+import { IxnState } from '../actions/ixn/IxnActionTypes';
 
 
-const initState = {
+const initState: IxnState = {
   viewIxnPage: false,
   target: {} as TargetModel
 };
 
-const ixnReducer = (state = initState, action: any) => {
+const reducer: Reducer<IxnState> = (state = initState, action: any) => {
   switch (action.type) {
     case ActionTypes.NAVIGATE_TO_IXN_PAGE:
       return {
@@ -25,4 +27,4 @@ const ixnReducer = (state = initState, action: any) => {
   }
 };
 
-export default ixnReducer;
+export { reducer as ixnReducer };

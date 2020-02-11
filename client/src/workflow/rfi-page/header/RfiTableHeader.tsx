@@ -8,6 +8,7 @@ import { StyledButtonSection } from './RfiTableHeaderButtonSection';
 import { postRefreshClick } from '../../../state/actions';
 import { Field, SortKeyModel } from '../models/SortKeyModel';
 import { fetchLocalUpdate, sortRfis } from '../../../state/actions';
+import { ApplicationState } from '../../../state';
 
 interface Props {
   sortRfis: (field: Field) => void;
@@ -77,8 +78,8 @@ export const RfiTableHeader: React.FC<Props> = props => {
 };
 
 
-const mapStateToProps = (state: any) => ({
-  sortKey: state.rfiReducer.sortKey
+const mapStateToProps = ({rfis}: ApplicationState) => ({
+  sortKey: rfis.sortKey
 });
 
 const mapDispatchToProps = {

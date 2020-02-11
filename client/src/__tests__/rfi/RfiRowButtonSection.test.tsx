@@ -16,7 +16,6 @@ describe('RfiRowButtonSection', () => {
         status={RfiStatus.OPEN}
         url={""}
         postGetsClick={postGetsClickSpy}
-
       />
     )
   });

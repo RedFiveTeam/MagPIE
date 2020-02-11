@@ -11,20 +11,70 @@ Scenario ('Should have a Tgt page', (I) => {
   I.waitForText('RFI DESCRIPTION: Lorem ipsum', 10);
 });
 
-Scenario ('Should be able to select dates on the target page', (I) => {
+Scenario ('Should be able to set dates on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
   I.waitForText('Go Back', 10);
-  I.click('.flatpickr-input');
-  I.click('.flatpickr-day');
-  I.click('.flatpickr-day');
+  I.click('.add-date-button');
+  I.fillField('.MuiInputBase-input', '02012020');
+  I.see('TGT Name');
+  I.seeElement(locate('.MuiInputBase-input').withAttr({value: '02/01/2020'}));
 });
 
-//Once Material UI datepicker is added:
+Scenario ('Should be able to edit dates on the Tgt page', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  I.click('.cell--add-tgt-button');
+  I.see('TGT Name');
+  I.clearField('.MuiInputBase-input');
+  I.fillField('.MuiInputBase-input', '02092020');
+  I.seeElement(locate('.MuiInputBase-input').withAttr({value: '02/09/2020'}));
+  I.dontSeeElement(locate('.MuiInputBase-input').withAttr({value: '02/01/2020'}));
+});
+
+Scenario ('Should be able to delete dates on the Tgt page', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  I.click('.cell--add-tgt-button');
+  I.see('TGT Name');
+  I.seeElement(locate('.MuiInputBase-input').withAttr({value: '02/09/2020'}));
+  I.click('.delete-date');
+  I.dontSeeElement(locate('.MuiInputBase-input').withAttr({value: '02/09/2020'}));
+});
 
 //TODO: acceptance test for adding target
+Scenario ('Should be able to add targets on the Tgt page', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  I.click('.cell--add-tgt-button');
+  I.waitForText('Go Back', 10);
+  I.click('.add-date-button');
+  I.fillField('.MuiInputBase-input', '02012020');
+
+  I.click('.add-tgt-button');
+  I.fillField('.name', 'SDT20-123');
+  I.pressKey('Tab');
+  I.fillField('.mgrs', '12QWE1231231231');
+  I.pressKey('Tab');
+  I.fillField('.notes', 'These are notes');
+  I.pressKey('Tab');
+  I.fillField('.description', 'This is a description');
+  I.pressKey('Enter');
+  I.seeElement('.add-tgt-button');
+  I.dontSeeElement('.add-tgt-button-disabled');
+
+});
 
 //TODO: acceptance test for deleting target
+Scenario ('Should be able to delete targets on the Tgt page', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  I.click('.cell--add-tgt-button');
+  I.waitForText('Go Back', 10);
 
-//TODO: acceptance test for navigating to ixn page
+  I.click('.delete-tgt');
+  I.dontSeeElement('.tgt.form-box');
+  I.click('.delete-date');
+});
+

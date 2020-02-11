@@ -5,66 +5,59 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import RfiModel from '../rfi-page/models/RfiModel';
 import { exitTgtPage, setDatePlaceholder, updateRfiDate } from '../../state/actions';
-import BackButtonVector from '../../resources/icons/BackButtonVector';
-import Flatpickr from 'react-flatpickr';
-import '../../resources/flatpickr.css'
-import { formatRfiNum } from '../../utils';
-import moment from 'moment';
-import { StyledTgtDateSection } from './TgtDateSection';
-import { StyledTgtTable } from './table/TgtTable';
-import AddTgtDateVector from '../../resources/icons/AddTgtDateVector';
-import { StyledTgtTableHeader } from './header/TgtTableHeader';
-import { StyledTgtDateDivider } from './TgtDateDivider';
-import { TargetModel } from './models/TargetModel';
+import { StyledTgtTableHeader } from './tgtTable/header/TgtTableHeader';
 import { ExploitDateModel } from './models/ExploitDateModel';
+import { TargetModel } from './models/TargetModel';
+import { StyledTgtTable } from './tgtTable/TgtTable';
+import { StyledTgtDateDivider } from './TgtDateDivider';
 import { Box } from '@material-ui/core';
+import theme from '../../resources/theme';
+import AddDateVector from '../../resources/icons/AddTgtDateVector';
 import { crayonBox } from '../../resources/crayonBox';
+import { ApplicationState } from '../../state';
+import { StyledTgtDateSection } from './TgtDateRegion';
+import { StyledTgtDashboardHeader } from './header/TgtDashboardHeader';
 
 interface Props {
   rfi: RfiModel;
   exploitDates: ExploitDateModel[];
   showDatePlaceholder: boolean;
   exitTgtPage: () => void;
-  updateRfiDate: (rfi: RfiModel, date: Date) => void;
+  updateRfiDate: (rfiId: number, date: Date) => void;
   setDatePlaceholder: (show: boolean) => void;
   targets: TargetModel[];
   className?: string;
 }
 
 export const TgtDashboard: React.FC<Props> = props => {
+  const moment = require('moment');
   const [addTgt, setAddTgt] = useState(-1); //value is the id of the exploit date that is being added to
+  const [addDate, setAddDate] = useState(false);
 
   function printDates(dates: ExploitDateModel[]) {
     return dates.map((exploitDateModel: ExploitDateModel, index: number) =>
       <StyledTgtDateSection
         rfi={props.rfi}
-        key={index}
-        index={index}
-        targets={props.targets}
+        addDate={addDate}
+        setAddDate={setAddDate}
         exploitDate={exploitDateModel}
+        exploitDateDisplay={exploitDateModel.exploitDate.utc().format("D MMM YY")}
+        targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
         addTgt={addTgt}
         setAddTgt={setAddTgt}
-        exploitDateString={exploitDateModel.exploitDate.utc().format("D MMM YY")}
+        index={index}
         className={"date-divider--" + moment(exploitDateModel.exploitDate).format("D-MMM-YY")}
+        key={index}
       />
     );
   }
 
   return (
     <div className={classNames(props.className)}>
-      <div className={'tgt-dash--header'}>
-        <div className={'tgt-dash--header--back-button'} onClick={props.exitTgtPage}>
-          <BackButtonVector/>
-          <span>Go Back</span>
-        </div>
-        <div className={'tgt-dash--header--rfi-num-container'}>
-          <span className={'tgt-dash--header--rfi-num'}>RFI: {formatRfiNum(props.rfi.rfiNum)}</span>
-        </div>
-        <div className={'tgt-dash--header--filler'}>
-          &nbsp;
-        </div>
-      </div>
-
+      <StyledTgtDashboardHeader
+        exitTgtPage={props.exitTgtPage}
+        rfi={props.rfi}
+      />
       <div className={'tgt-dash-body'}>
           {props.exploitDates.length > 0 || props.showDatePlaceholder ?
             <StyledTgtTableHeader/>
@@ -73,39 +66,39 @@ export const TgtDashboard: React.FC<Props> = props => {
           }
         <StyledTgtTable>
           {printDates(props.exploitDates)}
-          {props.showDatePlaceholder ?
+          {addDate ?
             <StyledTgtDateDivider
-              exploitDate={"DDMMMYY"}
+              rfiId={props.rfi.id}
+              addDate={addDate}
+              setAddDate={setAddDate}
               className={"date-divider--placeholder"}
+              uKey={props.rfi.id}
+              hasTgts={false}
             />
             :
             null
           }
         </StyledTgtTable>
-
-        <div className={'tgt-dash-add-date-button'}>
-          <Flatpickr
-            placeholder={'Add Date       '}
-            onOpen={() => {
-              props.setDatePlaceholder(true);
-            }}
-            onClose={newDates => {
-              if (newDates[0] !== undefined) {
-                props.updateRfiDate(props.rfi, newDates[0]);
-              } else {
-                props.setDatePlaceholder(false);
-              }
-            }}
-            options={{
-              mode: "single",
-              maxDate: "today",
-              dateFormat: ""
-            }}
-          />
-          <div className={'add-date-vector'}><AddTgtDateVector/></div>
-        </div>
+        <Box
+          height={32}
+          minHeight={32}
+          width={110}
+          border={2}
+          borderRadius={16}
+          borderColor={theme.color.addButtonBorder}
+          bgcolor={theme.color.addButtonBackground}
+          onClick={() => setAddDate(true)}
+          display='flex'
+          flexDirection='row'
+          alignItems='center'
+          justifyContent='center'
+          fontSize={14}
+          className={classNames('add-date-button', 'no-select', addTgt > 0 || addDate ? 'add-date-button-disabled' : '')}
+        >
+          <span>Add Date&nbsp;&nbsp;&nbsp;</span>
+          <AddDateVector/>
+        </Box>
       </div>
-
       <div className={'tgt-dash--rfi-description-container'}>
         <Box
           border={1}
@@ -121,12 +114,11 @@ export const TgtDashboard: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  rfi: state.tgtReducer.rfi,
-  viewTgtPage: state.tgtReducer.viewTgtPage,
-  exploitDates: state.tgtReducer.exploitDates,
-  showDatePlaceholder: state.tgtReducer.showDatePlaceholder,
-  targets: state.tgtReducer.targets
+const mapStateToProps = ({tgts}: ApplicationState) => ({
+  rfi: tgts.rfi,
+  exploitDates: tgts.exploitDates,
+  showDatePlaceholder: tgts.showDatePlaceholder,
+  targets: tgts.targets
 });
 
 const mapDispatchToProps = {
@@ -145,57 +137,8 @@ export const StyledTgtDashboard = styled(
   flex-direction: column;
   justify-content: space-between;
   
-  .tgt-dash--header { 
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
-  .tgt-dash--header--back-button {
-    cursor: pointer;
-    padding-top: 28px;
-    padding-left: 45px;
-    width: 108px;
-    min-width: 108px;
-    height: 92px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    color: ${(props) => props.theme.color.backgroundAction};
-    
-    :hover {
-      color: ${(props) => props.theme.color.buttonBackgroundActive};
-      path {
-        fill: ${(props) => props.theme.color.buttonBackgroundActive};
-      }
-    }
-  }
-  
-  .tgt-dash--header--rfi-num-container {
-    text-align: center;
-    width: 500px;
-    min-width: 300px;
-    margin: auto;
-    padding-top: 46px;
-    display: flex;
-    flex-direction: column;
-    font-size: 18px;
-    font-weight: ${(props) => props.theme.font.weightBold};
-  }
-  
-  .tgt-dash--header--rfi-num {
-    font-size: 32px;
-    font-weight: ${(props) => props.theme.font.weightMedium};
-  }
-  
   .tgt-dash-daterange-display-inactive {
     color: ${(props) => props.theme.color.backgroundInformation};
-  }
-  
-  .tgt-dash--header--filler {
-    width: 108px;
   }
   
   .tgt-dash-body {
@@ -208,7 +151,7 @@ export const StyledTgtDashboard = styled(
   .tgt-dash--rfi-description-container {
     width: 100%;
     padding-left: 113px;
-    padding-right: 103px;
+    padding-right: 113px;
     padding-bottom: 21px;
     height: 136px;
   }
@@ -227,13 +170,25 @@ export const StyledTgtDashboard = styled(
   }
   
   .tgt-dash-add-date-button {
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
   }
   
+  .add-date-button {
+    cursor: pointer;
+    
+    :hover {
+      box-shadow: 0 0 6px #FFFFFF;
+    }
+  }
+  
+  .add-date-button-disabled {
+    pointer-events: none;
+  }
+
   .add-date-vector {
     margin-left: -33px;
     margin-bottom: -4px;
@@ -243,4 +198,12 @@ export const StyledTgtDashboard = styled(
   AddDateVector {
     pointer-events: none;
   }
+  
+  .no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
 `;

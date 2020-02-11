@@ -47,8 +47,7 @@ export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
 };
 
 export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestModel) => {
-  console.log(server + '/api/metrics/rfi-fetch');
-  console.log(rfiFetchRequestModel);
+
   return () => {
     return fetch(
       server + '/api/metrics/rfi-fetch',

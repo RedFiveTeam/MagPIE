@@ -1,7 +1,7 @@
 import '../../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import { TgtRow } from '../../workflow/tgt-page/row/TgtRow';
+import { TgtRow } from '../../workflow/tgt-page/tgtTable/row/TgtRow';
 import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
 import { TargetPostModel } from '../../workflow/tgt-page/models/TargetPostModel';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
@@ -47,7 +47,7 @@ describe("Target Row", () => {
   });
 
   it('should call a delete target action when delete button is clicked except in add mode', () => {
-    subject.find('.delete').simulate('click');
+    subject.find('.delete-tgt').simulate('click');
 
     subject = mount(
       <TgtRow
@@ -65,7 +65,7 @@ describe("Target Row", () => {
       />
     );
 
-    subject.find('.delete').simulate('click');
+    subject.find('.delete-tgt').simulate('click');
 
     expect(deleteSpy).toHaveBeenCalledTimes(1);
 

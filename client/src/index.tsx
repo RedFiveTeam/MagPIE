@@ -4,27 +4,24 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { Provider } from 'react-redux';
-import { applyMiddleware, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import App from './App';
 import { ThemeProvider } from 'styled-components';
-import theme from './resources/theme';
-import reducer from './state/reducers/reducer';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import theme, { muiTheme } from './resources/theme';
+import { MuiThemeProvider } from '@material-ui/core';
+import { createBrowserHistory } from 'history';
+import configureStore from './configureStore';
 
-export const store = createStore(
-  reducer,
-  composeWithDevTools(
-    applyMiddleware(thunk),
-  )
+const history = createBrowserHistory();
+const initialState = window.INITIAL_REDUX_STATE;
+export const store = configureStore(
+ history, initialState
 );
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <App/>
-      </Provider>
+    <MuiThemeProvider theme={muiTheme}>
+        <App store={store} history={history}/>
+    </MuiThemeProvider>
   </ThemeProvider>
   , document.getElementById('root'));
 

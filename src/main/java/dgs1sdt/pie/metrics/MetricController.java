@@ -13,6 +13,8 @@ import dgs1sdt.pie.metrics.clickRefresh.MetricClickRefresh;
 import dgs1sdt.pie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.pie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.pie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.pie.metrics.deleteExploitDate.MetricDeleteExploitDate;
+import dgs1sdt.pie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.pie.metrics.deleteTarget.MetricDeleteTarget;
 import dgs1sdt.pie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.pie.metrics.rfiFetchTime.MetricRfiFetchTime;
@@ -51,6 +53,7 @@ public class MetricController {
   private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   private MetricCreateTargetRepository metricCreateTargetRepository;
   private MetricDeleteTargetRepository metricDeleteTargetRepository;
+  private MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
@@ -91,6 +94,10 @@ public class MetricController {
   @Autowired
   public void setMetricDeleteTargetRepository(MetricDeleteTargetRepository metricDeleteTargetRepository) {
     this.metricDeleteTargetRepository = metricDeleteTargetRepository;
+  }
+  @Autowired
+  public void setMetricDeleteExploitDateRepository(MetricDeleteExploitDateRepository metricDeleteExploitDateRepository) {
+    this.metricDeleteExploitDateRepository = metricDeleteExploitDateRepository;
   }
 
   @GetMapping(path = "/site-visits")
@@ -205,12 +212,12 @@ public class MetricController {
     return this.metricChangeRfiRepository.save(metricChangeRfi);
   }
 
-  public MetricChangeExploitDate addChangeExploitDate(ExploitDateJson exploitDateJson) {
+  public MetricChangeExploitDate addChangeExploitDate(ExploitDateJson exploitDateJson, String rfiNum) {
     MetricChangeExploitDate metricChangeExploitDate = new MetricChangeExploitDate(
       new Timestamp(new Date().getTime()),
       exploitDateJson.getOldExploitDate(),
       exploitDateJson.getNewExploitDate(),
-      exploitDateJson.getRfiNum()
+      rfiNum
     );
     return this.metricChangeExploitDateRepository.save(metricChangeExploitDate);
   }
@@ -223,6 +230,10 @@ public class MetricController {
       new Timestamp(new Date().getTime())
     );
     return this.metricCreateTargetRepository.save(metricCreateTarget);
+  }
+
+  public MetricDeleteExploitDate addDeleteExploitDate(MetricDeleteExploitDate metricDeleteExploitDate) {
+    return metricDeleteExploitDateRepository.save(metricDeleteExploitDate);
   }
 
   public MetricDeleteTarget addDeleteTarget(MetricDeleteTarget metric) {

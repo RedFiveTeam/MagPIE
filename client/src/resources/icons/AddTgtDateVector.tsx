@@ -15,6 +15,8 @@ const AddTgtDateVector = () => {
     >
       <path
         d={pathD}
+        fillRule="evenodd"
+        clipRule="evenodd"
         fill={theme.color.fontAddDate}
       />
     </svg>
