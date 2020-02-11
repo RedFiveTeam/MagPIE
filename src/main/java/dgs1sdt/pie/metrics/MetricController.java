@@ -6,6 +6,8 @@ import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfi;
 import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
+import dgs1sdt.pie.metrics.changeTarget.MetricChangeTarget;
+import dgs1sdt.pie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.pie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.pie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.pie.metrics.clickGets.MetricClickGetsRepository;
@@ -26,6 +28,7 @@ import dgs1sdt.pie.metrics.sortClick.MetricClickSort;
 import dgs1sdt.pie.metrics.sortClick.MetricClickSortJson;
 import dgs1sdt.pie.metrics.sortClick.MetricClickSortRepository;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
+import dgs1sdt.pie.rfis.targets.Target;
 import dgs1sdt.pie.rfis.targets.TargetJson;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -53,44 +57,54 @@ public class MetricController {
   private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   private MetricCreateTargetRepository metricCreateTargetRepository;
   private MetricDeleteTargetRepository metricDeleteTargetRepository;
+  private MetricChangeTargetRepository metricChangeTargetRepository;
   private MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
     this.metricClickGetsRepository = metricClickGetsRepository;
   }
+
   @Autowired
   public void setMetricSiteVisitRepository(MetricSiteVisitRepository metricSiteVisitRepository) {
     this.metricSiteVisitRepository = metricSiteVisitRepository;
   }
+
   @Autowired
   public void setMetricClickSortRepository(MetricClickSortRepository metricClickSortRepository) {
     this.metricClickSortRepository = metricClickSortRepository;
   }
+
   @Autowired
   public void setMetricRfiFetchTimeRepository(MetricRfiFetchTimeRepository metricRfiFetchTimeRepository) {
     this.metricRfiFetchTimeRepository = metricRfiFetchTimeRepository;
   }
+
   @Autowired
   public void setMetricChangeRfiPriorityRepository(MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository) {
     this.metricChangeRfiPriorityRepository = metricChangeRfiPriorityRepository;
   }
+
   @Autowired
   public void setMetricChangeRfiRepository(MetricChangeRfiRepository metricChangeRfiRepository) {
     this.metricChangeRfiRepository = metricChangeRfiRepository;
   }
+
   @Autowired
   public void setMetricClickRefreshRepository(MetricClickRefreshRepository metricClickRefreshRepository) {
     this.metricClickRefreshRepository = metricClickRefreshRepository;
   }
+
   @Autowired
   public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
   }
+
   @Autowired
   public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
     this.metricCreateTargetRepository = metricCreateTargetRepository;
   }
+
   @Autowired
   public void setMetricDeleteTargetRepository(MetricDeleteTargetRepository metricDeleteTargetRepository) {
     this.metricDeleteTargetRepository = metricDeleteTargetRepository;
@@ -98,6 +112,11 @@ public class MetricController {
   @Autowired
   public void setMetricDeleteExploitDateRepository(MetricDeleteExploitDateRepository metricDeleteExploitDateRepository) {
     this.metricDeleteExploitDateRepository = metricDeleteExploitDateRepository;
+  }
+
+  @Autowired
+  public void setMetricChangeTargetRepository(MetricChangeTargetRepository metricChangeTargetRepository) {
+    this.metricChangeTargetRepository = metricChangeTargetRepository;
   }
 
   @GetMapping(path = "/site-visits")
@@ -119,11 +138,11 @@ public class MetricController {
   }
 
   private int[] matchSiteVisitsToDays(List<MetricSiteVisit> allMetricSiteVisits, Date[] daysAgo) {
-    int [] last7Days = {0, 0, 0, 0, 0, 0, 0};
+    int[] last7Days = {0, 0, 0, 0, 0, 0, 0};
     for (MetricSiteVisit metricSiteVisit : allMetricSiteVisits) {
       Date datetime = metricSiteVisit.getDatetime();
-      for (int i = 6; i > 0; i-- ) {
-        if(datetime.after(daysAgo[i]) && datetime.before(daysAgo[i - 1])) {
+      for (int i = 6; i > 0; i--) {
+        if (datetime.after(daysAgo[i]) && datetime.before(daysAgo[i - 1])) {
           last7Days[6 - i]++;
         }
       }
@@ -139,7 +158,7 @@ public class MetricController {
     long now = new Date().getTime();
     long millisecondsInADay = 86400000L;
     Calendar[] cal = new Calendar[numDays];
-    for(int i = 0; i < numDays ; i++) {
+    for (int i = 0; i < numDays; i++) {
       cal[i] = Calendar.getInstance(); // locale-specific
       cal[i].setTime(new Date(now - i * millisecondsInADay));
       cal[i].set(Calendar.HOUR_OF_DAY, 0);
@@ -222,10 +241,10 @@ public class MetricController {
     return this.metricChangeExploitDateRepository.save(metricChangeExploitDate);
   }
 
-  public MetricCreateTarget addCreateTarget(TargetJson targetJson){
+  public MetricCreateTarget addCreateTarget(TargetJson targetJson, String rfiNum, Timestamp exploitDate) {
     MetricCreateTarget metricCreateTarget = new MetricCreateTarget(
-      targetJson.getRfiNum(),
-      targetJson.getExploitDate(),
+      rfiNum,
+      exploitDate,
       targetJson.getName(),
       new Timestamp(new Date().getTime())
     );
@@ -238,6 +257,25 @@ public class MetricController {
 
   public MetricDeleteTarget addDeleteTarget(MetricDeleteTarget metric) {
     return this.metricDeleteTargetRepository.save(metric);
+  }
+
+  public List<MetricChangeTarget> addChangeTarget(Target oldTarget, TargetJson newTarget) {
+    List<MetricChangeTarget> metrics = new ArrayList<>();
+    Timestamp now = new Timestamp(new Date().getTime());
+    for(String field : oldTarget.Compare(newTarget)){
+      try {
+        MetricChangeTarget changeTarget = new MetricChangeTarget(
+          now,
+          field,
+          oldTarget,
+          newTarget
+        );
+        metrics.add(changeTarget);
+      } catch (Exception e) {
+        System.err.println("Error creating change target metric with unknown field: " + field);
+      }
+    }
+    return metricChangeTargetRepository.saveAll(metrics);
   }
 }
 

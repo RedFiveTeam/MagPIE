@@ -15,7 +15,7 @@ Scenario ('Should be able to navigate to and exit the target page', (I) => {
   I.waitForText('LTIOV', 10);
 });
 
-Scenario ('Should be able to set dates on the Tgt page', (I) => {
+Scenario('Should be able to set dates on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
@@ -26,7 +26,7 @@ Scenario ('Should be able to set dates on the Tgt page', (I) => {
   I.seeElement(locate('.MuiInputBase-input').withAttr({value: '02/01/2020'}));
 });
 
-Scenario ('Should be able to edit dates on the Tgt page', (I) => {
+Scenario('Should be able to edit dates on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
@@ -37,7 +37,7 @@ Scenario ('Should be able to edit dates on the Tgt page', (I) => {
   I.dontSeeElement(locate('.MuiInputBase-input').withAttr({value: '02/01/2020'}));
 });
 
-Scenario ('Should be able to delete dates on the Tgt page', (I) => {
+Scenario('Should be able to delete dates on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
@@ -47,7 +47,7 @@ Scenario ('Should be able to delete dates on the Tgt page', (I) => {
   I.dontSeeElement(locate('.MuiInputBase-input').withAttr({value: '02/09/2020'}));
 });
 
-Scenario ('Should be able to add targets on the Tgt page', (I) => {
+Scenario('Should be able to add targets on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
@@ -66,14 +66,82 @@ Scenario ('Should be able to add targets on the Tgt page', (I) => {
   I.pressKey('Enter');
   I.seeElement('.add-tgt-button');
   I.dontSeeElement('.add-tgt-button-disabled');
-
 });
 
-Scenario ('Should be able to delete targets on the Tgt page', (I) => {
+Scenario('Should be able to edit targets on the tgt page', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  // TODO: rename the cell--add-tgt-button class to something more accurate i.e. cell--nav-to-tgt-page
+  I.click('.cell--add-tgt-button');
+  I.waitForText('Go Back', 10);
+  I.doubleClick('.tgt-name');
+  for (let i = 0; i < 9; i++)
+    I.pressKey('Backspace');
+  I.fillField('.name', 'SDT20-999');
+  I.pressKey('Tab');
+  for (let i = 0; i < 15; i++)
+    I.pressKey('Backspace');
+  I.fillField('.mgrs', '12QWE1234567890');
+  I.pressKey('Enter');
+
+  //Need to leave page and come back to see changes
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--add-tgt-button');
+
+  I.dontSeeElement(locate('.Mui-disabled').withAttr({value: 'SDT20-123'}));
+  I.dontSeeElement(locate('.Mui-disabled').withAttr({value: '12QWE1231231231'}));
+  I.seeElement(locate('.Mui-disabled').withAttr({value: 'SDT20-999'}));
+  I.seeElement(locate('.Mui-disabled').withAttr({value: '12QWE1234567890'}));
+});
+
+Scenario('should not be able to add targets with conflicting names', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
   I.waitForText('Go Back', 10);
+  I.click('.add-tgt-button');
+  I.fillField('.name', 'SDT20-999');
+  I.pressKey('Tab');
+  I.fillField('.mgrs', '12QWE1111111111');
+  I.pressKey('Enter');
+
+  I.dontSeeElement(locate('.Mui-disabled').withAttr({value: '12QWE1111111111'}));
+
+  I.click('.add-tgt-button');
+  I.fillField('.name', 'SDT21-999');
+  I.pressKey('Tab');
+  I.fillField('.mgrs', '12QWE1231231231');
+  I.pressKey('Enter');
+  I.seeElement('.add-tgt-button');
+  I.dontSeeElement('.add-tgt-button-disabled');
+
+  //Need to leave page and come back to see changes if show: true
+  // I.click('.tgt-dash--header--back-button');
+  // I.click('.cell--add-tgt-button');
+
+  I.doubleClick('.tgt-name');
+  for (let i = 0; i < 9; i++)
+    I.pressKey('Backspace');
+  I.fillField('.name', 'SDT21-999');
+  I.pressKey('Enter');
+
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--add-tgt-button');
+
+  I.seeElement(locate('.Mui-disabled').withAttr({value: 'SDT20-999'}));
+});
+
+Scenario('Should be able to delete targets on the Tgt page', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  I.click('.cell--add-tgt-button');
+  I.waitForText('Go Back', 10);
+
+  I.click('.delete-tgt');
+
+  //Need to leave page and come back to see changes
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--add-tgt-button');
 
   I.click('.delete-tgt');
   I.dontSeeElement('.tgt-form-box');

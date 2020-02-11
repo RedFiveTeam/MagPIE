@@ -3,7 +3,7 @@ import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
 import { IxnDashboard } from '../../workflow/ixn-page/IxnDashboard';
-import { StyledIxnHeader } from '../../workflow/ixn-page/IxnHeader';
+import { StyledIxnDashboardHeader } from '../../workflow/ixn-page/IxnDashboardHeader';
 
 describe("Interactions Dashboard", () => {
   let subject: ShallowWrapper;
@@ -18,7 +18,7 @@ describe("Interactions Dashboard", () => {
   });
 
   it('should display the header', () => {
-    expect(subject.find(StyledIxnHeader).exists()).toBeTruthy();
+    expect(subject.find(StyledIxnDashboardHeader).exists()).toBeTruthy();
   });
 
 });

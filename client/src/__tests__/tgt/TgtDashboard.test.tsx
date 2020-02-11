@@ -42,7 +42,7 @@ describe('TgtDashboardContainer', () => {
   });
 
   it('should display an add date button', () => {
-      expect(subject.find('.add-date-button').exists()).toBeTruthy();
+    expect(subject.find('.add-date-button').exists()).toBeTruthy();
   });
 
   it('should display the date dividers or not properly', () => {
@@ -73,8 +73,34 @@ describe('TgtDashboardContainer', () => {
     expect(subject.find('.date-divider--placeholder').exists()).toBeFalsy();
     subject.find('.add-date-button').simulate('click');
     expect(subject.find('.date-divider--placeholder').exists()).toBeTruthy();
-
   });
+
+  // TODO: simultaneous rows editable test?
+  // it('should not allow multiple rows to be edited simultaneously', () => {
+  //   let dates = [
+  //     new ExploitDateModel(1, 1, moment('2019-11-21').utc()),
+  //     new ExploitDateModel(2, 1, moment('2019-11-22').utc())
+  //   ];
+  //
+  //   let targets = [
+  //     new TargetModel(1, 1, 1, 'SDT12-123', '12XCV1234567890', '', ''),
+  //     new TargetModel(2, 1, 2, 'SDT12-124', '12XCV1234567891', '', '')
+  //   ];
+  //
+  //   let wrapper = mount(
+  //     <TgtDashboard
+  //       rfi={rfiTest}
+  //       exitTgtPage={exitSpy}
+  //       updateRfiDate={updateSpy}
+  //       exploitDates={dates}
+  //       setDatePlaceholder={setPlaceholderSpy}
+  //       showDatePlaceholder={false}
+  //       targets={targets}
+  //     />
+  //   );
+  //
+  //   expect(wrapper.find(StyledTgtDateSection).at(0)).toBeFalsy();
+  // });
 
 
 });

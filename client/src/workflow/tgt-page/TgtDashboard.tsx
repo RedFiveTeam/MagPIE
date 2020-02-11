@@ -29,10 +29,35 @@ interface Props {
   className?: string;
 }
 
+export enum Status {
+  VIEW,
+  ADD,
+  EDIT
+}
+
 export const TgtDashboard: React.FC<Props> = props => {
   const moment = require('moment');
-  const [addTgt, setAddTgt] = useState(-1); //value is the id of the exploit date that is being added to
+  const [addTarget, setAddTarget] = useState(-1); //value is the id of the exploit date that is being added to
+  const [editTarget, setEditTarget] = useState(-1); // value is the id of the tgt that is being edited
   const [addDate, setAddDate] = useState(false);
+
+  const handleAddEdit = (status: Status, id?: number) => {
+    switch(status) {
+      case Status.ADD:
+        if (id && editTarget === -1) {
+          setAddTarget(id);
+        }
+        break;
+      case Status.EDIT:
+        if (id && addTarget === -1) {
+          setEditTarget(id);
+        }
+        break;
+      case Status.VIEW:
+        setAddTarget(-1);
+        setEditTarget(-1);
+    }
+  };
 
   function printDates(dates: ExploitDateModel[]) {
     return dates.map((exploitDateModel: ExploitDateModel, index: number) =>
@@ -43,8 +68,9 @@ export const TgtDashboard: React.FC<Props> = props => {
         exploitDate={exploitDateModel}
         exploitDateDisplay={exploitDateModel.exploitDate.utc().format("D MMM YY")}
         targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
-        addTgt={addTgt}
-        setAddTgt={setAddTgt}
+        editTarget={editTarget}
+        addTgt={addTarget}
+        setAddEditTarget={handleAddEdit}
         index={index}
         className={"date-divider--" + moment(exploitDateModel.exploitDate).format("D-MMM-YY")}
         key={index}
@@ -52,6 +78,7 @@ export const TgtDashboard: React.FC<Props> = props => {
     );
   }
 
+  let isDisabled = addTarget > 0 || addDate || editTarget > 0;
   return (
     <div className={classNames(props.className)}>
       <StyledTgtDashboardHeader
@@ -59,17 +86,16 @@ export const TgtDashboard: React.FC<Props> = props => {
         rfi={props.rfi}
       />
       <div className={'tgt-dash-body'}>
-          {props.exploitDates.length > 0 || props.showDatePlaceholder ?
-            <StyledTgtTableHeader/>
-            :
-            null
-          }
+        {props.exploitDates.length > 0 || props.showDatePlaceholder ?
+          <StyledTgtTableHeader/>
+          :
+          null
+        }
         <StyledTgtTable>
           {printDates(props.exploitDates)}
           {addDate ?
             <StyledTgtDateDivider
               rfiId={props.rfi.id}
-              addDate={addDate}
               setAddDate={setAddDate}
               className={"date-divider--placeholder"}
               uKey={props.rfi.id}
@@ -97,7 +123,7 @@ export const TgtDashboard: React.FC<Props> = props => {
           className={classNames(
             'add-date-button',
             'no-select',
-            addTgt > 0 || addDate ? 'add-date-button-disabled' : ''
+            isDisabled ? 'input-disabled' : null
           )}
         >
           <span>Add Date&nbsp;&nbsp;&nbsp;</span>
@@ -190,8 +216,8 @@ export const StyledTgtDashboard = styled(
     }
   }
   
-  .add-date-button-disabled {
-    pointer-events: none;
+  .input-disabled {
+    pointer-events: none; !important
   }
 
   .add-date-vector {

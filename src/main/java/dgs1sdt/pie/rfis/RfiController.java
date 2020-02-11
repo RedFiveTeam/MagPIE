@@ -184,17 +184,57 @@ public class RfiController {
     return dates;
   }
 
-  @PostMapping(path = "/add-target")
-  public void addTarget(@Valid @RequestBody TargetJson targetJson) {
-    long rfiId = rfiRepository.findByRfiNum(targetJson.getRfiNum()).getId();
-    long exploitDateId = exploitDateRepository.findByRfiIdAndExploitDate(rfiId, targetJson.getExploitDate()).getId();
+  @PostMapping(path = "/post-target")
+  public void postTarget(@Valid @RequestBody TargetJson targetJson) {
+    long rfiId = targetJson.getRfiId();
+    long targetId = targetJson.getTargetId();
+    if (targetId > 0) {
+      editTarget(targetJson, targetId);
+    } else {
+      addTarget(targetJson, rfiId);
+    }
+  }
+
+  private void addTarget(@RequestBody @Valid TargetJson targetJson, long rfiId) {
+    long exploitDateId = targetJson.getExploitDateId();
 
     Target target = new Target(rfiId, exploitDateId, targetJson);
-    Target duplicate = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetJson.getName());
+    Target duplicate = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId,
+      targetJson.getName());
     if (duplicate == null) {
       targetRepository.save(target);
-      metricController.addCreateTarget(targetJson);
+
+      if (rfiRepository.findById(rfiId).isPresent()) {
+        if (exploitDateRepository.findById(exploitDateId).isPresent()) {
+          String rfiNum = rfiRepository.findById(rfiId).get().getRfiNum();
+          Timestamp exploitDate = exploitDateRepository.findById(exploitDateId).get().getExploitDate();
+          metricController.addCreateTarget(targetJson, rfiNum, exploitDate);
+        } else {
+          System.err.println("Error finding exploit date by id: " + exploitDateId);
+        }
+      } else {
+        System.err.println("Error finding rfi by id: " + rfiId);
+      }
     }
+  }
+
+  private void editTarget(@RequestBody @Valid TargetJson targetJson, long targetId) {
+    if (targetRepository.findById(targetId).isPresent()) {
+      long exploitDateId = targetRepository.findById(targetId).get().getExploitDateId();
+      if (exploitDateRepository.findById(exploitDateId).isPresent()) {
+        Target targetWithSameNameAsJson = targetRepository.findByRfiIdAndExploitDateIdAndName(targetJson.getRfiId(), targetJson.getExploitDateId(), targetJson.getName());
+        if (targetWithSameNameAsJson != null && targetWithSameNameAsJson.getId() != targetJson.getTargetId()) {
+          return; //name conflict, do nothing
+        }
+        Target oldTarget = targetRepository.findById(targetId).get();
+        metricController.addChangeTarget(oldTarget, targetJson);
+        Target newTarget = new Target(targetJson);
+        targetRepository.save(newTarget);
+      } else
+        System.err.println("Error updating target: Could not find exploit date by id " + exploitDateId);
+
+    } else
+      System.err.println("Error updating target: Could not find target by id " + targetId);
   }
 
   @GetMapping(path = "/{rfiId}/targets")
@@ -207,11 +247,13 @@ public class RfiController {
     return exploitDateRepository.findAllByRfiId(rfiId);
   }
 
-  @Transactional
   @DeleteMapping(path = "/{exploitDateId}/delete")
   public List<ExploitDate> deleteExploitDate(@Valid @RequestBody @PathVariable("exploitDateId") long exploitDateId) {
     if (!targetRepository.findAllByExploitDateId(exploitDateId).isEmpty()) {
-      targetRepository.deleteAllByExploitDateId(exploitDateId);
+      List<Target> targetList = targetRepository.findAllByExploitDateId(exploitDateId);
+      for (Target target : targetList) {
+        deleteTarget(target.getId());
+      }
     }
     if (exploitDateRepository.findById(exploitDateId).isPresent()) {
       long rfiId = exploitDateRepository.findById(exploitDateId).get().getRfiId();
@@ -237,6 +279,7 @@ public class RfiController {
     return new ArrayList<>(exploitDateRepository.findAllByRfiId(
       exploitDateRepository.findById(exploitDateId).get().getRfiId()));
   }
+
 
   @DeleteMapping(path = "/delete-target/{tgtId}")
   public List<Target> deleteTarget(@Valid @RequestBody @PathVariable("tgtId") long tgtId) {

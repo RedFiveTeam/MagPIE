@@ -3,9 +3,10 @@ import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { TgtRow } from '../../workflow/tgt-page/tgtTable/row/TgtRow';
 import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
-import { TargetPostModel } from '../../workflow/tgt-page/models/TargetPostModel';
 import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
+import { TargetPostModel } from '../../workflow/tgt-page/models/TargetPostModel';
+import { Status } from '../../workflow/tgt-page/TgtDashboard';
 
 describe("Target Row", () => {
   let subject: ReactWrapper;
@@ -16,32 +17,31 @@ describe("Target Row", () => {
   let exploitDate = new ExploitDateModel(1, 1, moment('2019-11-20').utc());
   let deleteSpy: jest.Mock;
   let navToIxnPageSpy: jest.Mock;
+  let setAddEditTargetSpy: jest.Mock;
 
   beforeEach(() => {
     deleteSpy = jest.fn();
     navToIxnPageSpy = jest.fn();
+    setAddEditTargetSpy = jest.fn();
 
     subject = mount(
       <TgtRow
         target={target}
         key={1}
         className={'class'}
-        submitNewTarget={(target: TargetPostModel, rfi: RfiModel) => {
+        submitPostTarget={(target: TargetPostModel, rfi: RfiModel) => {
         }}
         exploitDate={exploitDate}
-        setAddTgt={(dateId: number) => {
-        }}
         rfi={rfiTest}
         navigateToIxnPage={navToIxnPageSpy}
         deleteTgt={deleteSpy}
+        editable={false}
+        setAddEditTarget={setAddEditTargetSpy}
       />
     );
   });
 
   it('should display the data it is given', () => {
-    //Jest can find the multiline text but not the single line
-    // expect(subject.find('.tgt-form-box').at(0).text()).toContain('SDT12-123');
-    // expect(subject.find('.mgrs').at(0).text()).toContain('12QWE1231231231');
     expect(subject.find('.notes').at(0).text()).toContain('These are the notes');
     expect(subject.find('.description').at(0).text()).toContain('This is a description');
   });
@@ -54,24 +54,26 @@ describe("Target Row", () => {
         target={null}
         key={1}
         className={'class'}
-        submitNewTarget={(target: TargetPostModel, rfi: RfiModel) => {
+        submitPostTarget={(target: TargetPostModel, rfi: RfiModel) => {
         }}
         exploitDate={exploitDate}
-        setAddTgt={(dateId: number) => {
-        }}
         rfi={rfiTest}
         navigateToIxnPage={navToIxnPageSpy}
         deleteTgt={deleteSpy}
+        editable={true}
+        setAddEditTarget={setAddEditTargetSpy}
       />
     );
 
     subject.find('.delete-tgt').simulate('click');
 
     expect(deleteSpy).toHaveBeenCalledTimes(1);
+    expect(setAddEditTargetSpy).toHaveBeenCalledWith(Status.VIEW);
 
   });
 
-  it('should call a navigate to interaction page test when the exploitation log button is clicked except in add mode', () => {
+  it('should call a navigate to interaction page test when the exploitation log button is clicked except in add mode',
+    () => {
     subject.find('.exploitation').simulate('click');
     expect(navToIxnPageSpy).toBeCalledWith(target, '11/20/2019');
 
@@ -80,22 +82,25 @@ describe("Target Row", () => {
         target={null}
         key={1}
         className={'class'}
-        submitNewTarget={(target: TargetPostModel, rfi: RfiModel) => {
+        submitPostTarget={(target: TargetPostModel, rfi: RfiModel) => {
         }}
         exploitDate={exploitDate}
-        setAddTgt={(dateId: number) => {
-        }}
         rfi={rfiTest}
         navigateToIxnPage={navToIxnPageSpy}
         deleteTgt={deleteSpy}
+        editable={true}
+        setAddEditTarget={setAddEditTargetSpy}
       />
     );
 
     subject.find('.exploitation').simulate('click');
 
     expect(navToIxnPageSpy).toHaveBeenCalledTimes(1);
-
   });
 
+  it('should make target row editable after double clicking them', () => {
+    subject.find('.edit-tgt-form').at(0).simulate('dblclick');
+    expect(setAddEditTargetSpy).toHaveBeenCalledWith(Status.EDIT, target.id);
+  });
 
 });

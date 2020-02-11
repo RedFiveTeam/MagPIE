@@ -6,6 +6,8 @@ import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfi;
 import dgs1sdt.pie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
+import dgs1sdt.pie.metrics.changeTarget.MetricChangeTarget;
+import dgs1sdt.pie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.pie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.pie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.pie.metrics.clickGets.MetricClickGetsRepository;
@@ -18,6 +20,7 @@ import dgs1sdt.pie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.pie.metrics.sortClick.MetricClickSortJson;
 import dgs1sdt.pie.metrics.sortClick.MetricClickSortRepository;
 import dgs1sdt.pie.rfis.exploitDates.ExploitDateJson;
+import dgs1sdt.pie.rfis.targets.Target;
 import dgs1sdt.pie.rfis.targets.TargetJson;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -64,6 +68,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricCreateTargetRepository metricCreateTargetRepository;
 
+  @Autowired
+  private MetricChangeTargetRepository metricChangeTargetRepository;
+
   @Before
   public void setup() {
     metricClickGetsRepository.deleteAll();
@@ -74,6 +81,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricClickRefreshRepository.deleteAll();
     metricChangeExploitDateRepository.deleteAll();
     metricCreateTargetRepository.deleteAll();
+    metricChangeTargetRepository.deleteAll();
   }
 
   @Test
@@ -266,15 +274,19 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Test
   public void addsTargetDateCreationMetric() throws Exception {
     TargetJson targetJson = new TargetJson(
-      "DGS-1-SDT-2020-00338",
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      1,
+      1,
       "SDT12-123",
       "12ASD1231231231",
       "",
       ""
     );
 
-    metricController.addCreateTarget(targetJson);
+    metricController.addCreateTarget(
+      targetJson,
+      "DGS-1-SDT-2020-00338",
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime())
+    );
 
     assertEquals(1, metricCreateTargetRepository.findAll().size());
     assertEquals(
@@ -291,6 +303,50 @@ public class MetricControllerTest extends BaseIntegrationTest {
     );
 
   }
+
+  @Test
+  public void addsChangeTargetMetric() throws Exception {
+    Target oldTarget = new Target(
+      1, 1, 1,
+      "SDT20-123",
+      "12ABC1234567890",
+      "These are old notes",
+      "This is an old description"
+    );
+    TargetJson newTarget = new TargetJson(
+      oldTarget.getRfiId(),
+      oldTarget.getExploitDateId(),
+      "ABC11-999",
+      "99BBB9999999999",
+      "These are new notes",
+      "And an improved description"
+    );
+
+    metricController.addChangeTarget(oldTarget, newTarget);
+    assertEquals(4, metricChangeTargetRepository.findAll().size());
+
+    MetricChangeTarget name = metricChangeTargetRepository.findAll()
+      .stream().filter((metric) -> metric.getField().equals("name")).collect(Collectors.toList()).get(0);
+    MetricChangeTarget mgrs = metricChangeTargetRepository.findAll()
+      .stream().filter((metric) -> metric.getField().equals("mgrs")).collect(Collectors.toList()).get(0);
+    MetricChangeTarget notes = metricChangeTargetRepository.findAll()
+      .stream().filter((metric) -> metric.getField().equals("notes")).collect(Collectors.toList()).get(0);
+    MetricChangeTarget description = metricChangeTargetRepository.findAll()
+      .stream().filter((metric) -> metric.getField().equals("description")).collect(Collectors.toList()).get(0);
+
+    assertEquals(oldTarget.getName(), name.getOldData());
+    assertEquals(newTarget.getName(), name.getNewData());
+
+    assertEquals(oldTarget.getMgrs(), mgrs.getOldData());
+    assertEquals(newTarget.getMgrs(), mgrs.getNewData());
+
+    assertEquals(oldTarget.getNotes(), notes.getOldData());
+    assertEquals(newTarget.getNotes(), notes.getNewData());
+
+    assertEquals(oldTarget.getDescription(), description.getOldData());
+    assertEquals(newTarget.getDescription(), description.getNewData());
+  }
+
 
 //  @Test
 //  public void createsNewExploitDatesChangeMetric() {

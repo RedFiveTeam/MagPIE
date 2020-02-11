@@ -11,6 +11,7 @@ import { StyledTgtRow } from './tgtTable/row/TgtRow';
 import { TargetModel } from './models/TargetModel';
 import { ExploitDateModel } from './models/ExploitDateModel';
 import { StyledTgtDateDivider } from './TgtDateDivider';
+import { Status } from './TgtDashboard';
 
 interface Props {
   rfi: RfiModel;
@@ -19,8 +20,9 @@ interface Props {
   exploitDate: ExploitDateModel;
   exploitDateDisplay: string;
   targets: TargetModel[];
+  setAddEditTarget: (status: Status, id?: number) => void;
+  editTarget: number;
   addTgt: number;
-  setAddTgt: (dateId: number) => void;
   index: number;
   className?: string;
 }
@@ -43,16 +45,18 @@ export const TgtDateRegion: React.FC<Props> = props => {
         key={index}
         rfi={props.rfi}
         exploitDate={props.exploitDate}
-        setAddTgt={props.setAddTgt}
+        setAddEditTarget={props.setAddEditTarget}
+        editable={props.editTarget === target.id}
       />
     )
   }
+
+  let isNotDisabled = props.addTgt === -1 && props.editTarget === -1 && !props.addDate;
 
   return (
     <div className={props.className}>
       <StyledTgtDateDivider
         rfiId={props.rfi.id}
-        addDate={props.addDate}
         setAddDate={props.setAddDate}
         exploitDate={props.exploitDate}
         exploitDateDisplay={
@@ -74,10 +78,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
             borderRadius={16}
             borderColor={crayonBox.safetyOrange}
             bgcolor={theme.palette.primary.main}
-            onClick={() => {
-              if (props.addTgt === -1)
-                props.setAddTgt(props.exploitDate.id)
-            }}
+            onClick={() => props.setAddEditTarget(Status.ADD, props.exploitDate.id)}
             display='flex'
             flexDirection='row'
             alignItems='center'
@@ -85,7 +86,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
             paddingRight={0.25}
             paddingLeft={2.8}
             fontSize={12}
-            className={classNames('add-tgt-button' + (props.addTgt === -1 && !props.addDate ? '' : '-disabled'), 'no-select')}
+            className={classNames('add-tgt-button' + (isNotDisabled ? '' : '-disabled'), 'no-select')}
           >
             Add TGT
             <AddTgtDateButtonVector/>
@@ -96,7 +97,8 @@ export const TgtDateRegion: React.FC<Props> = props => {
               key={99999}
               rfi={props.rfi}
               exploitDate={props.exploitDate}
-              setAddTgt={props.setAddTgt}
+              setAddEditTarget={props.setAddEditTarget}
+              editable={true}
             />
             :
             null}
