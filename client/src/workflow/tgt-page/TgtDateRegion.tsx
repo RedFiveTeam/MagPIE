@@ -85,7 +85,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
             paddingRight={0.25}
             paddingLeft={2.8}
             fontSize={12}
-            className={classNames('add-tgt-button' + (props.addTgt === -1 ? '' : '-disabled'), 'no-select')}
+            className={classNames('add-tgt-button' + (props.addTgt === -1 && !props.addDate ? '' : '-disabled'), 'no-select')}
           >
             Add TGT
             <AddTgtDateButtonVector/>
@@ -202,6 +202,7 @@ export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchT
   .add-tgt-button-disabled {
     margin-left: 8px;
     opacity: 0.5;
+    pointer-events: none;
   }
   
   .status-button {

@@ -22,5 +22,5 @@ export const StyledTgtTable = styled(TgtTable)`
   padding-bottom: 99px;
   padding-right: 20px;
   overflow-y: auto;
-  width: 1346px;
+  width: 1326px;
 `;

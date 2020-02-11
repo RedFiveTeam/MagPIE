@@ -14,7 +14,7 @@ import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
 describe("Tgt actions tests", ()=>{
   const moment = require('moment');
   let rfi: RfiModel = new RfiModel(1, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 2);
-  let exploitDate: ExploitDateModel = new ExploitDateModel(3, moment("Apr 4 19 00:00:00", "MMM DD YY hh:mm:ss").utc(), 1);
+  let exploitDate: ExploitDateModel = new ExploitDateModel(3, 1, moment("Apr 4 19 00:00:00", "MMM DD YY hh:mm:ss").utc());
   console.log = jest.fn();
 
   it('should return a proper NAVIGATE_TO_TGT_PAGE or RELOAD_TGT_PAGE action object', () => {

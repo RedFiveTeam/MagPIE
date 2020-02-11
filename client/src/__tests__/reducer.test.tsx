@@ -7,6 +7,7 @@ import { rfiReducer } from '../state/reducers/rfiReducer';
 import { tgtReducer } from '../state/reducers/tgtReducer';
 import { TargetModel } from '../workflow/tgt-page/models/TargetModel';
 import { ExploitDateModel } from '../workflow/tgt-page/models/ExploitDateModel';
+import { ixnReducer } from '../state/reducers/ixnReducer';
 
 describe('reducer', () => {
   let singleStatusRfiList: RfiModel[];
@@ -328,9 +329,9 @@ describe('reducer', () => {
       target: target
     };
 
-    let state = reducer(undefined, navToIxnPage);
+    let state = ixnReducer(undefined, navToIxnPage);
 
-    expect(state.ixnReducer)
+    expect(state)
       .toEqual({
         viewIxnPage: true,
         target: target
@@ -344,14 +345,14 @@ describe('reducer', () => {
       target: target
     };
 
-    let state = reducer(undefined, navToIxnPage);
+    let state = ixnReducer(undefined, navToIxnPage);
     let exitIxnPage = {
       type: ActionTypes.EXIT_IXN_PAGE,
     };
 
-    state = reducer(state, exitIxnPage);
+    state = ixnReducer(state, exitIxnPage);
 
-    expect(state.ixnReducer)
+    expect(state)
       .toEqual({
         viewIxnPage: false,
         target: target
@@ -369,16 +370,16 @@ describe('reducer', () => {
       exploitDates: [exploitDate],
       targets: [target]
     };
-    let state = reducer(undefined, navToTgtPage);
+    let state = tgtReducer(undefined, navToTgtPage);
 
     let deleteTgt = {
       type: ActionTypes.UPDATE_TGT_SUCCESS,
       targets: []
     };
 
-    state = reducer(state, deleteTgt);
+    state = tgtReducer(state, deleteTgt);
 
-    expect(state.tgtReducer).toEqual(
+    expect(state).toEqual(
       {
         viewTgtPage: true,
         showDatePlaceholder: false,

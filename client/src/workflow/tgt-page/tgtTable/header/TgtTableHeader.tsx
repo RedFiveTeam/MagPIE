@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import { StyledtgtTableHeaderCell } from './tgtTableHeaderCells';
+import { StyledTgtTableHeaderCell } from './TgtTableHeaderCells';
 
 interface Props {
   className?: string;
@@ -13,7 +13,7 @@ export const TgtTableHeader: React.FC<Props> = props => {
   return (
     <div className={classNames('header', props.className)}>
       {headers.map(value =>
-        <StyledtgtTableHeaderCell
+        <StyledTgtTableHeaderCell
           text={value}
           className={'header-cell--' + value.split(' ')[value.split(' ').length - 1].toLowerCase()}
           key={value}

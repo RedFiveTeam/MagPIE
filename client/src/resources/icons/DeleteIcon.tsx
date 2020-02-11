@@ -14,13 +14,13 @@ const pathD = "M12.0001 10.9998C12.0001 10.7347 11.8947 10.4804 11.7072 10.2928L
 
 const DeleteIcon: React.FC = () => {
   return (
-    <Wrapper className={"delete-button"}>
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="8" cy="8" r="8" fill="white"/>
-      <path
-        d={pathD}
-        fill="black"/>
-     </svg>
+    <Wrapper className={"delete-date"}>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="8" fill="white"/>
+        <path
+          d={pathD}
+          fill="black"/>
+      </svg>
     </Wrapper>
   );
 };

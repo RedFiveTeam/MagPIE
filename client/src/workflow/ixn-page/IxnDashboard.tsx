@@ -4,7 +4,8 @@ import { TargetModel } from '../tgt-page/models/TargetModel';
 import classNames from 'classnames';
 import BackButtonVector from '../../resources/icons/BackButtonVector';
 import { connect } from 'react-redux';
-import { exitIxnPage } from '../../state/actions/ixn/IxnActions';
+import { exitIxnPage } from '../../state/actions';
+import { ApplicationState } from '../../state';
 
 interface Props {
   target: TargetModel
@@ -31,8 +32,8 @@ export const IxnDashboard: React.FC<Props> = props => {
   )
 };
 
-const mapStateToProps = (state: any) => ({
-  target: state.ixnReducer.target
+const mapStateToProps = ({ixns}: ApplicationState) => ({
+  target: ixns.target
 });
 
 const mapDispatchToProps = {

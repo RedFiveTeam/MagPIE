@@ -93,7 +93,7 @@ export const TgtDashboard: React.FC<Props> = props => {
           alignItems='center'
           justifyContent='center'
           fontSize={14}
-          className={'add-date-button'}
+          className={classNames('add-date-button', 'no-select', addTgt > 0 || addDate ? 'add-date-button-disabled' : '')}
         >
           <span>Add Date&nbsp;&nbsp;&nbsp;</span>
           <AddDateVector/>
@@ -184,8 +184,11 @@ export const StyledTgtDashboard = styled(
       box-shadow: 0 0 6px #FFFFFF;
     }
   }
-
   
+  .add-date-button-disabled {
+    pointer-events: none;
+  }
+
   .add-date-vector {
     margin-left: -33px;
     margin-bottom: -4px;
@@ -195,4 +198,12 @@ export const StyledTgtDashboard = styled(
   AddDateVector {
     pointer-events: none;
   }
+  
+  .no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
 `;

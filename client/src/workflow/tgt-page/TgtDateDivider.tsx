@@ -224,6 +224,7 @@ export const StyledTgtDateDivider = styled(connect(mapStateToProps, mapDispatchT
   font-weight: ${(props) => props.theme.font.weightBold};
   font-size: ${(props) => props.theme.font.sizeRegion};
   color: ${(props) => props.theme.color.fontPrimary};
+  width: 100%
  
   .separator-line {
     background: ${(props) => props.theme.color.fontPrimary};

@@ -276,7 +276,7 @@ export const TgtRow: React.FC<Props> = props => {
               Status
               <AddTgtDateButtonVector/>
             </Box>
-            <div className={"delete"} id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")} onClick={handleDeleteClick}>
+            <div className={"delete-tgt"} id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")} onClick={handleDeleteClick}>
               <StyledDeleteTgtButtonVector/>
             </div>
             <div className={classNames("exploitation", props.target ? "" : "disabled")} onClick={handleIxnClick}>
@@ -337,7 +337,7 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     width: 120px;
   }
   
-  .delete {
+  .delete-tgt {
     border-left: 4px solid ${crayonBox.softMetal};
     border-right: 4px solid ${crayonBox.softMetal};
     width: 90px;

@@ -17,7 +17,7 @@ describe('TgtDateDivider', () => {
   beforeEach(() => {
     updateRfiDateSpy = jest.fn();
     let exploitDateMoment = moment(new Date);
-    exploitDate = new ExploitDateModel(1, exploitDateMoment, 1);
+    exploitDate = new ExploitDateModel(1, 1, exploitDateMoment);
     setAddDateSpy = jest.fn();
     deleteExploitDateSpy = jest.fn();
     subject = mount(
@@ -46,7 +46,7 @@ describe('TgtDateDivider', () => {
   });
 
   it('should show a delete button that is clickable', () => {
-    subject.find(".delete-button").at(0).simulate('click');
+    subject.find(".delete-date").at(0).simulate('click');
     expect(deleteExploitDateSpy).toHaveBeenCalled();
   });
 
@@ -65,14 +65,14 @@ describe('TgtDateDivider', () => {
       />
     );
 
-    subject.find(".delete-button").at(0).simulate('click');
+    subject.find(".delete-date").at(0).simulate('click');
     expect(subject.find(Modal).get(1).props.open).toBeTruthy();
     expect(subject.find(".delete-modal").at(0).text()).toContain("This will delete all TGTs and interactions associated with it.");
 
     subject.find(".modal-no").at(0).simulate('click');
     expect(subject.find(".delete-modal").at(0).text()).not.toContain("This will delete all TGTs and interactions associated with it.");
 
-    subject.find(".delete-button").at(0).simulate('click');
+    subject.find(".delete-date").at(0).simulate('click');
     subject.find(".modal-yes").at(0).simulate('click');
     expect(deleteExploitDateSpy).toHaveBeenCalled();
     expect(subject.find(Modal).get(1).props.open).toBeFalsy();
@@ -93,7 +93,7 @@ describe('TgtDateDivider', () => {
       />
     );
 
-    subject.find(".delete-button").at(0).simulate('click');
+    subject.find(".delete-date").at(0).simulate('click');
     expect(subject.find(Modal).get(1).props.open).toBeFalsy();
     expect(deleteExploitDateSpy).toHaveBeenCalled();
   });
