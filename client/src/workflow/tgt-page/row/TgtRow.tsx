@@ -207,7 +207,7 @@ export const TgtRow: React.FC<Props> = props => {
   return (
     <div className={props.className}>
       <form className={"add-tgt-form"}
-            onBlur={onBlur}
+            onBlur={() => onBlur}
             onKeyPress={(e: any) => {
               if (e.which === 13)
                 validateAllAndSubmit();
