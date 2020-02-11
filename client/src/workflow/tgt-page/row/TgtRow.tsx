@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TargetModel } from '../models/TargetModel';
 import classNames from 'classnames';
@@ -26,6 +26,12 @@ interface Props {
   navigateToIxnPage: (target: TargetModel) => void;
   deleteTgt: (tgtId: number) => void;
   className?: string;
+}
+
+enum Status {
+  ENTERING,
+  SUBMITTING,
+  DELETING
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -69,6 +75,24 @@ export const TgtRow: React.FC<Props> = props => {
   const [mgrs, setMgrs] = useState("");
   const [notes, setNotes] = useState("");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState(Status.ENTERING);
+
+  const handleStatusChange = () => {
+    if (status === Status.DELETING) {
+      if (props.target !== null) {
+        props.deleteTgt(props.target.id);
+      } else {
+        props.setAddTgt(-1);
+      }
+    } else if (status === Status.SUBMITTING) {
+      validateAllAndSubmit();
+    }
+  };
+
+  useEffect(
+    handleStatusChange,
+    [status]
+  );
 
   function weakMatchNameError(name: string): boolean {
     return name.length > 9 || (name.length === 9 && name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null)
@@ -157,10 +181,6 @@ export const TgtRow: React.FC<Props> = props => {
           name, mgrs, notes, description),
         props.rfi
       );
-      // setName("");
-      // setMgrs("");
-      // setDescription("");
-      // setNotes("");
     }
   };
 
@@ -168,16 +188,14 @@ export const TgtRow: React.FC<Props> = props => {
     let currentTarget: any = event.currentTarget;
 
     setTimeout(function () {
-      if (!currentTarget.contains(document.activeElement)) {
-        validateAllAndSubmit();
+      if (!currentTarget.contains(document.activeElement) && status !== Status.DELETING) {
+        setStatus(Status.SUBMITTING);
       }
-    }, 0);
+    }, 500);
   }
 
   const handleDeleteClick = () => {
-    if (props.target !== null) {
-      props.deleteTgt(props.target.id);
-    }
+    setStatus(Status.DELETING);
   };
 
   const handleIxnClick = () => {
@@ -189,7 +207,7 @@ export const TgtRow: React.FC<Props> = props => {
   return (
     <div className={props.className}>
       <form className={"add-tgt-form"}
-            onBlur={onBlur}
+            onBlur={() => onBlur}
             onKeyPress={(e: any) => {
               if (e.which === 13)
                 validateAllAndSubmit();
@@ -258,7 +276,7 @@ export const TgtRow: React.FC<Props> = props => {
               Status
               <AddTgtDateButtonVector/>
             </Box>
-            <div className={classNames("delete", props.target ? "" : "disabled")} onClick={handleDeleteClick}>
+            <div className={"delete"} id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")} onClick={handleDeleteClick}>
               <StyledDeleteTgtButtonVector/>
             </div>
             <div className={classNames("exploitation", props.target ? "" : "disabled")} onClick={handleIxnClick}>
