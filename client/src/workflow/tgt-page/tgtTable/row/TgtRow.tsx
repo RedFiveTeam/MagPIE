@@ -79,7 +79,7 @@ export const TgtRow: React.FC<Props> = props => {
 
   const handleStatusChange = () => {
     if (status === Status.DELETING) {
-      if (props.target !== null) {
+      if (props.target) {
         props.deleteTgt(props.target.id);
       } else {
         props.setAddTgt(-1);
@@ -114,18 +114,10 @@ export const TgtRow: React.FC<Props> = props => {
     let newName = event.target.value;
     setName(newName);
     if (strongValidateName) {
-      if (strongMatchNameError(newName)) {
-        setNameError(true);
-      } else {
-        setNameError(false);
-      }
+      setNameError(strongMatchNameError(newName));
     } else {
-      if (weakMatchNameError(newName)) {
-        setNameError(true);
-        setStrongValidateName(true);
-      } else {
-        setNameError(false);
-      }
+      setNameError(weakMatchNameError(newName));
+      setStrongValidateName(weakMatchNameError(newName));
     }
   };
 
@@ -133,18 +125,10 @@ export const TgtRow: React.FC<Props> = props => {
     let newMgrs = event.target.value;
     setMgrs(newMgrs);
     if (strongValidateMgrs) {
-      if (strongMatchMgrsError(newMgrs)) {
-        setMgrsError(true);
-      } else {
-        setMgrsError(false);
-      }
+      setMgrsError(strongMatchMgrsError(newMgrs));
     } else {
-      if (weakMatchMgrsError(newMgrs)) {
-        setMgrsError(true);
-        setStrongValidateMgrs(true);
-      } else {
-        setMgrsError(false);
-      }
+      setMgrsError(weakMatchMgrsError(newMgrs));
+      setStrongValidateMgrs(weakMatchMgrsError(newMgrs));
     }
   };
 
@@ -158,20 +142,13 @@ export const TgtRow: React.FC<Props> = props => {
 
   const validateAllAndSubmit = () => {
     let errors: boolean = false; // To avoid race condition for local state nameError and mgrsError
-    if (strongMatchNameError(name)) {
-      setNameError(true);
-      setStrongValidateName(true);
-      errors = true;
-    } else {
-      setNameError(false);
-    }
-    if (strongMatchMgrsError(mgrs)) {
-      setMgrsError(true);
-      setStrongValidateMgrs(true);
-      errors = true;
-    } else {
-      setMgrsError(false);
-    }
+    setNameError(false);
+    setMgrsError(false);
+    setNameError(strongMatchNameError(name));
+    setStrongValidateName(strongMatchNameError(name));
+    setMgrsError(strongMatchMgrsError(mgrs));
+    setStrongValidateMgrs(strongMatchMgrsError(mgrs));
+    errors = (strongMatchMgrsError(mgrs) || strongMatchNameError(name));
     if (!errors) {
       props.setAddTgt(-1);
       props.submitNewTarget(
@@ -186,12 +163,11 @@ export const TgtRow: React.FC<Props> = props => {
 
   function onBlur(event: any) {
     let currentTarget: any = event.currentTarget;
-
     setTimeout(function () {
       if (!currentTarget.contains(document.activeElement) && status !== Status.DELETING) {
         setStatus(Status.SUBMITTING);
       }
-    }, 500);
+    }, 50);
   }
 
   const handleDeleteClick = () => {
@@ -209,8 +185,9 @@ export const TgtRow: React.FC<Props> = props => {
       <form className={"add-tgt-form"}
             onBlur={onBlur}
             onKeyPress={(e: any) => {
-              if (e.which === 13)
+              if (e.which === 13  ) {
                 validateAllAndSubmit();
+              }
             }}
       >
         <Box
@@ -224,9 +201,9 @@ export const TgtRow: React.FC<Props> = props => {
               value={props.target ? props.target.name : name}
               disabled={props.target !== null}
               required
-              error={nameError}
-              label={props.target ? "" : (nameError ? "Error" : "Required")}
               placeholder="OPRYY-###"
+              label={props.target ? "" : (nameError ? "Error" : "Required")}
+              error={nameError}
               onChange={inputName}
             />
             <TextField
@@ -256,6 +233,11 @@ export const TgtRow: React.FC<Props> = props => {
               disabled={props.target !== null}
               label={props.target || description !== "" ? "" : "TGT Description"}
               onChange={inputDescription}
+              onKeyDown={(e: any) => {
+                if(e.keyCode === 9) {
+                  validateAllAndSubmit();
+                }
+              }}
             />
             <Box
               height={32}
@@ -276,7 +258,9 @@ export const TgtRow: React.FC<Props> = props => {
               Status
               <AddTgtDateButtonVector/>
             </Box>
-            <div className={"delete-tgt"} id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")} onClick={handleDeleteClick}>
+            <div className={"delete-tgt"}
+                 id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")}
+                 onClick={handleDeleteClick}>
               <StyledDeleteTgtButtonVector/>
             </div>
             <div className={classNames("exploitation", props.target ? "" : "disabled")} onClick={handleIxnClick}>

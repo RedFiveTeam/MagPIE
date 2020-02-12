@@ -120,7 +120,10 @@ export const TgtDateDivider: React.FC<Props> = props => {
     if (date !== null && isValidDate(date)) {
       props.updateRfiDate(props.rfiId, date, (props.exploitDate ? props.exploitDate : undefined));
       props.setAddDate(false);
-      document.getElementById("date-picker-dialog" + (props.exploitDate ? props.exploitDate.exploitDate : ""))!.blur();
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+      // document.getElementById("date-picker-dialog" + (props.exploitDate ? props.exploitDate.exploitDate : ""))!.blur();
     }
   }
 

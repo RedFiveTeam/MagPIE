@@ -16,9 +16,9 @@ Scenario ('Should be able to navigate to Ixn page', (I) => {
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Tab');
-  I.fillField('.notes', 'These are notes');
+  I.fillField('.notes', 'notes');
   I.pressKey('Tab');
-  I.fillField('.description', 'This is a description');
+  I.fillField('.description', 'desc');
   I.pressKey('Enter');
   I.seeElement('.add-tgt-button');
   I.dontSeeElement('.add-tgt-button-disabled');

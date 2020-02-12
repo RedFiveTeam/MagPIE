@@ -93,7 +93,12 @@ export const TgtDashboard: React.FC<Props> = props => {
           alignItems='center'
           justifyContent='center'
           fontSize={14}
-          className={classNames('add-date-button', 'no-select', addTgt > 0 || addDate ? 'add-date-button-disabled' : '')}
+          id={'add-date-button'}
+          className={classNames(
+            'add-date-button',
+            'no-select',
+            addTgt > 0 || addDate ? 'add-date-button-disabled' : ''
+          )}
         >
           <span>Add Date&nbsp;&nbsp;&nbsp;</span>
           <AddDateVector/>

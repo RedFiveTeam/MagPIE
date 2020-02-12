@@ -43,7 +43,6 @@ Scenario ('Should be able to delete dates on the Tgt page', (I) => {
   I.dontSeeElement(locate('.MuiInputBase-input').withAttr({value: '02/09/2020'}));
 });
 
-//TODO: acceptance test for adding target
 Scenario ('Should be able to add targets on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
@@ -57,16 +56,15 @@ Scenario ('Should be able to add targets on the Tgt page', (I) => {
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Tab');
-  I.fillField('.notes', 'These are notes');
+  I.fillField('.notes', 'notes');
   I.pressKey('Tab');
-  I.fillField('.description', 'This is a description');
+  I.fillField('.description', 'desc');
   I.pressKey('Enter');
   I.seeElement('.add-tgt-button');
   I.dontSeeElement('.add-tgt-button-disabled');
 
 });
 
-//TODO: acceptance test for deleting target
 Scenario ('Should be able to delete targets on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
@@ -74,7 +72,7 @@ Scenario ('Should be able to delete targets on the Tgt page', (I) => {
   I.waitForText('Go Back', 10);
 
   I.click('.delete-tgt');
-  I.dontSeeElement('.tgt.form-box');
+  I.dontSeeElement('.tgt-form-box');
   I.click('.delete-date');
 });
 
