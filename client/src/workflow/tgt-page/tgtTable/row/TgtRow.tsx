@@ -86,6 +86,7 @@ export const TgtRow: React.FC<Props> = props => {
       }
     } else if (status === Status.SUBMITTING) {
       validateAllAndSubmit();
+      setStatus(Status.ENTERING);
     }
   };
 
@@ -163,6 +164,10 @@ export const TgtRow: React.FC<Props> = props => {
 
   function onBlur(event: any) {
     let currentTarget: any = event.currentTarget;
+    console.log("this ran");
+    console.log("this is the current target" + currentTarget);
+    console.log("this is the active element" + document.activeElement);
+    console.log("this is the status" + status);
     setTimeout(function () {
       if (!currentTarget.contains(document.activeElement) && status !== Status.DELETING) {
         setStatus(Status.SUBMITTING);
