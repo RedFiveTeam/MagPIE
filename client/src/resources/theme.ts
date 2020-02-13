@@ -28,7 +28,9 @@ const theme = {
     fontInputFocus: crayonBox.skyBlue,
     deleteButton: crayonBox.straightWhite,
     borderModal: crayonBox.darkRed,
-    deleteButtonFocus: crayonBox.brightRed
+    deleteButtonFocus: crayonBox.brightRed,
+    backgroundIxnHeader: crayonBox.pitchBlack,
+    buttonOnBlack: crayonBox.straightWhite
   },
 
   font: {

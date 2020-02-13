@@ -2,13 +2,17 @@
 
 Feature('Tgt Page');
 
-Scenario ('Should have a Tgt page', (I) => {
+Scenario ('Should be able to navigate to and exit the target page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
   I.waitForText('Go Back', 10);
   I.waitForText('RFI: 20-325', 10);
   I.waitForText('RFI DESCRIPTION: Lorem ipsum', 10);
+  I.click('.tgt-dash--header--back-button');
+  I.waitForText('PRI', 10);
+  I.waitForText('Customer', 10);
+  I.waitForText('LTIOV', 10);
 });
 
 Scenario ('Should be able to set dates on the Tgt page', (I) => {
@@ -75,4 +79,3 @@ Scenario ('Should be able to delete targets on the Tgt page', (I) => {
   I.dontSeeElement('.tgt-form-box');
   I.click('.delete-date');
 });
-

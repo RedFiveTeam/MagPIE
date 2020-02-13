@@ -73,6 +73,7 @@ describe("Target Row", () => {
 
   it('should call a navigate to interaction page test when the exploitation log button is clicked except in add mode', () => {
     subject.find('.exploitation').simulate('click');
+    expect(navToIxnPageSpy).toBeCalledWith(target, '11/20/2019');
 
     subject = mount(
       <TgtRow

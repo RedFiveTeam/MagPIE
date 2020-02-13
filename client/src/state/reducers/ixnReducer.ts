@@ -6,7 +6,8 @@ import { IxnState } from '../actions/ixn/IxnActionTypes';
 
 const initState: IxnState = {
   viewIxnPage: false,
-  target: {} as TargetModel
+  target: {} as TargetModel,
+  dateString: ''
 };
 
 const reducer: Reducer<IxnState> = (state = initState, action: any) => {
@@ -15,7 +16,8 @@ const reducer: Reducer<IxnState> = (state = initState, action: any) => {
       return {
         ...state,
         viewIxnPage: true,
-        target: action.target
+        target: action.target,
+        dateString: action.dateString
       };
     case ActionTypes.EXIT_IXN_PAGE:
       return {

@@ -11,7 +11,7 @@ import { TargetPostModel } from '../../models/TargetPostModel';
 import { StyledDeleteTgtButtonVector } from '../../../../resources/icons/DeleteTgtButtonVector';
 import { StyledExploitationLogButtonVector } from '../../../../resources/icons/ExploitationLogButtonVector';
 import { deleteTgt, submitNewTarget } from '../../../../state/actions';
-import { navigateToIxnPage } from '../../../../state/actions/ixn/IxnActions';
+import { navigateToIxnPage } from '../../../../state/actions';
 import RfiModel from '../../../rfi-page/models/RfiModel';
 import { ExploitDateModel } from '../../models/ExploitDateModel';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ interface Props {
   rfi: RfiModel;
   exploitDate: ExploitDateModel;
   setAddTgt: (dateId: number) => void;
-  navigateToIxnPage: (target: TargetModel) => void;
+  navigateToIxnPage: (target: TargetModel, dateString: string) => void;
   deleteTgt: (tgtId: number) => void;
   className?: string;
 }
@@ -181,7 +181,7 @@ export const TgtRow: React.FC<Props> = props => {
 
   const handleIxnClick = () => {
     if (props.target !== null) {
-      props.navigateToIxnPage(props.target);
+      props.navigateToIxnPage(props.target, props.exploitDate.exploitDate.format("MM/DD/YYYY"));
     }
   };
 

@@ -3,27 +3,22 @@ import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
 import { IxnDashboard } from '../../workflow/ixn-page/IxnDashboard';
+import { StyledIxnHeader } from '../../workflow/ixn-page/IxnHeader';
 
-describe("Interactions Dashbaord", () => {
+describe("Interactions Dashboard", () => {
   let subject: ShallowWrapper;
-  let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
+  let target = new TargetModel(1, 1, 1, "SDT20-123", "00ABC1234567890", "These are some EEI Notes to be displayed.", "");
 
   beforeEach(() => {
-
     subject = shallow(
       <IxnDashboard
         target={target}
-        exitIxnPage={() => {}}
       />
     );
   });
 
-  it('should display the TGT number', () => {
-    expect(subject.text()).toContain("TGT20-123");
-  });
-
-  it('should display a back button', () => {
-    expect(subject.find('.ixn-dash--header--back-button').exists()).toBeTruthy();
+  it('should display the header', () => {
+    expect(subject.find(StyledIxnHeader).exists()).toBeTruthy();
   });
 
 });

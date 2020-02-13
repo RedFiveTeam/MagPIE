@@ -8,4 +8,5 @@ export enum IxnActionTypes {
 export interface IxnState {
   readonly  viewIxnPage: boolean;
   readonly  target: TargetModel;
+  readonly dateString: string;
 }

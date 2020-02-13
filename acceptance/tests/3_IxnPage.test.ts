@@ -3,7 +3,7 @@
 Feature('Ixn Page');
 
 //TODO: acceptance test for navigating to ixn page
-Scenario ('Should be able to navigate to Ixn page', (I) => {
+Scenario ('Should be able to navigate to and exit the interactions page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
@@ -25,5 +25,10 @@ Scenario ('Should be able to navigate to Ixn page', (I) => {
 
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
-  I.waitForText('Go Back', 10);
+  I.waitForText('MGRS: 12QWE1231231231', 10);
+  I.waitForText('EEI Notes: notes', 10);
+  I.waitForText('Date: 02/01/2020', 10);
+
+  I.click('.ixn-dash--header--back-button');
+  I.waitForText('RFI: 20-325', 10);
 });
