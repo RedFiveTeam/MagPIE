@@ -1,15 +1,14 @@
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-import { ActionTypes } from '../../state/actions/ActionTypes';
+import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
+import { TargetModel } from '../../store/tgt/TargetModel';
 import {
   exitTgtPage,
   fetchDatesAndTargetsSuccess,
-  setDatePlaceholder,
-  truncateAndConvertDateToUtc,
-  updateRfiDateSuccess,
+  setDatePlaceholder, TgtActionTypes, truncateAndConvertDateToUtc,
+  updateExploitDateSuccess,
   updateTgtSuccess
-} from '../../state/actions';
-import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
-import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
+} from '../../store/tgt';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+
 
 describe("Tgt actions tests", ()=>{
   const moment = require('moment');
@@ -20,7 +19,7 @@ describe("Tgt actions tests", ()=>{
   it('should return a proper NAVIGATE_TO_TGT_PAGE or RELOAD_TGT_PAGE action object', () => {
     let action: any = fetchDatesAndTargetsSuccess(rfi, [], [], true);
     expect(action).toEqual({
-      type: ActionTypes.NAVIGATE_TO_TGT_PAGE,
+      type: TgtActionTypes.NAVIGATE_TO_TGT_PAGE,
       rfi: rfi,
       exploitDates: [],
       targets: []
@@ -28,7 +27,7 @@ describe("Tgt actions tests", ()=>{
 
     action = fetchDatesAndTargetsSuccess(rfi, [], [], false);
     expect(action).toEqual({
-      type: ActionTypes.RELOAD_TGT_PAGE,
+      type: TgtActionTypes.RELOAD_TGT_PAGE,
       exploitDates: [],
       targets: []
     });
@@ -36,19 +35,19 @@ describe("Tgt actions tests", ()=>{
 
   it('should return a proper EXIT_TGT_PAGE action object', () => {
     let action: any = exitTgtPage();
-    expect(action.type).toEqual(ActionTypes.EXIT_TGT_PAGE);
+    expect(action.type).toEqual(TgtActionTypes.EXIT_TGT_PAGE);
     expect(action.viewTgtPage).toEqual(false);
   });
 
   it('should return a proper UPDATE_RFI_DATE object', () => {
-    let action: any = updateRfiDateSuccess([exploitDate]);
-    expect(action.type).toEqual(ActionTypes.UPDATE_RFI_DATE);
+    let action: any = updateExploitDateSuccess([exploitDate]);
+    expect(action.type).toEqual(TgtActionTypes.UPDATE_EXPLOIT_DATE);
     expect(action.exploitDates).toEqual([exploitDate]);
   });
 
   it('should return a proper SHOW_DATE_PLACEHOLDER object', () => {
     let action: any = setDatePlaceholder(true);
-    expect(action.type).toEqual(ActionTypes.SHOW_DATE_PLACEHOLDER);
+    expect(action.type).toEqual(TgtActionTypes.SHOW_DATE_PLACEHOLDER);
     expect(action.showDatePlaceholder).toEqual(true);
   });
 
@@ -61,7 +60,7 @@ describe("Tgt actions tests", ()=>{
     let tgt = new TargetModel(1, 1, 1, "SDT12-123", "12QWE1231231231", "", "");
     let action: any = updateTgtSuccess([tgt]);
     expect(action).toEqual({
-      type: ActionTypes.UPDATE_TGT_SUCCESS,
+      type: TgtActionTypes.UPDATE_TGT_SUCCESS,
       targets: [tgt]
     });
   });

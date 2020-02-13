@@ -1,8 +1,8 @@
 import '../../setupEnzyme';
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
-import { IxnDashboardHeader } from '../../workflow/ixn-page/IxnDashboardHeader';
+import { IxnDashboardHeader } from '../../dashboard/ixn/IxnDashboardHeader';
+import { TargetModel } from '../../store/tgt/TargetModel';
 
 describe("Interactions Header", () => {
   let subject: ShallowWrapper;
@@ -10,7 +10,7 @@ describe("Interactions Header", () => {
   let exitSpy: jest.Mock;
 
   beforeEach(() => {
-  exitSpy = jest.fn();
+   exitSpy = jest.fn();
     subject = shallow(
       <IxnDashboardHeader
         target={target}

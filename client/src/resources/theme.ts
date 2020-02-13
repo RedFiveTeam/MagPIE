@@ -30,7 +30,8 @@ const theme = {
     borderModal: crayonBox.darkRed,
     deleteButtonFocus: crayonBox.brightRed,
     backgroundIxnHeader: crayonBox.pitchBlack,
-    buttonOnBlack: crayonBox.straightWhite
+    buttonOnBlack: crayonBox.straightWhite,
+    segmentDivider: crayonBox.mediumMediumLightGray
   },
 
   font: {

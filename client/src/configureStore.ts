@@ -9,7 +9,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { History } from 'history';
 
 // Import the state interface and our combined reducers/sagas.
-import { ApplicationState, createRootReducer } from './state';
+import { ApplicationState, createRootReducer } from './store';
 import thunk from 'redux-thunk';
 
 export default function configureStore(history: History, initialState: ApplicationState): Store<ApplicationState> {
@@ -18,7 +18,6 @@ export default function configureStore(history: History, initialState: Applicati
     applyMiddleware(routerMiddleware(history), thunk),
 
   );
-  // create the redux-saga middleware
 
   // We'll create our store with the combined reducers/sagas, and the initial Redux state that
   // we'll be passing from our entry point.

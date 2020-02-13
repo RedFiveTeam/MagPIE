@@ -1,7 +1,8 @@
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import * as moment from 'moment';
-import { RfiSorter } from '../../state/utils/RfiSorter';
-import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
+import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { RfiSorter } from '../../store/rfi/RfiSorter';
+
 
 describe('RFISorter', () => {
   let rfiList: RfiModel[];

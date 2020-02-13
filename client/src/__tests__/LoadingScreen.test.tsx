@@ -1,7 +1,7 @@
 import '../setupEnzyme';
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { LoadingScreen } from '../workflow/loading-page/LoadingScreen';
+import { LoadingScreen } from '../dashboard/components/loading/LoadingScreen';
 
 describe('LoadingScreen', () => {
   let subject: ShallowWrapper;

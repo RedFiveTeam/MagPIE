@@ -1,12 +1,12 @@
 import '../../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import { TgtRow } from '../../workflow/tgt-page/tgtTable/row/TgtRow';
-import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
-import { TargetPostModel } from '../../workflow/tgt-page/models/TargetPostModel';
-import { Status } from '../../workflow/tgt-page/TgtDashboard';
+import { TgtRow } from '../../dashboard/tgt/tgtTable/row/TgtRow';
+import { TargetModel } from '../../store/tgt/TargetModel';
+import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { TargetPostModel } from '../../store/tgt/TargetPostModel';
+import { Status } from '../../dashboard/tgt/TgtDashboard';
 
 describe("Target Row", () => {
   let subject: ReactWrapper;

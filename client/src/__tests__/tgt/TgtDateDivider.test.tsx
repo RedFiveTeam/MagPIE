@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import '../../setupEnzyme';
-import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
-import { TgtDateDivider } from '../../workflow/tgt-page/TgtDateDivider';
+import { TgtDateDivider } from '../../dashboard/tgt/TgtDateDivider';
 import { Modal } from '@material-ui/core';
+import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 
 //material ui content may be internally tested
 describe('TgtDateDivider', () => {

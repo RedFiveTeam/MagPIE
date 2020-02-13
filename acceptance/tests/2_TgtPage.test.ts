@@ -79,8 +79,6 @@ Scenario('Should be able to edit targets on the tgt page', (I) => {
     I.pressKey('Backspace');
   I.fillField('.name', 'SDT20-999');
   I.pressKey('Tab');
-  for (let i = 0; i < 15; i++)
-    I.pressKey('Backspace');
   I.fillField('.mgrs', '12QWE1234567890');
   I.pressKey('Enter');
 

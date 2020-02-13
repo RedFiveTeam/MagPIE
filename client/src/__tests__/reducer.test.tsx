@@ -1,13 +1,16 @@
-import { ActionTypes } from '../state/actions/ActionTypes';
-import RfiModel, { RfiStatus } from '../workflow/rfi-page/models/RfiModel';
-import * as moment from 'moment';
-import { Field, SortKeyModel } from '../workflow/rfi-page/models/SortKeyModel';
 import 'isomorphic-fetch';
-import { rfiReducer } from '../state/reducers/rfiReducer';
-import { tgtReducer } from '../state/reducers/tgtReducer';
-import { TargetModel } from '../workflow/tgt-page/models/TargetModel';
-import { ExploitDateModel } from '../workflow/tgt-page/models/ExploitDateModel';
-import { ixnReducer } from '../state/reducers/ixnReducer';
+import { Field, SortKeyModel } from '../store/sort/SortKeyModel';
+import { TargetModel } from '../store/tgt/TargetModel';
+import { ExploitDateModel } from '../store/tgt/ExploitDateModel';
+import RfiModel, { RfiStatus } from '../store/rfi/RfiModel';
+import { RfiActionTypes, rfiReducer } from '../store/rfi';
+import { TgtActionTypes, tgtReducer } from '../store/tgt';
+import { ixnReducer } from '../store/ixn/Reducer';
+import { IxnActionTypes } from '../store/ixn';
+import { SegmentModel } from '../store/tgtSegment/SegmentModel';
+
+const moment = require('moment');
+
 
 describe('reducer', () => {
   let singleStatusRfiList: RfiModel[];
@@ -64,7 +67,7 @@ describe('reducer', () => {
 
   it('should handle FETCH_PENDING', () => {
     let mockAction = {
-      type: ActionTypes.FETCH_RFI_PENDING
+      type: RfiActionTypes.FETCH_RFI_PENDING
     };
 
     expect(
@@ -81,7 +84,7 @@ describe('reducer', () => {
 
   it('should handle FETCH_SUCCESS', () => {
     let mockAction = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: singleStatusRfiList,
     };
 
@@ -106,7 +109,7 @@ describe('reducer', () => {
   it('should handle NAVIGATE_TO_TGT_PAGE', () => {
     let rfi: RfiModel = new RfiModel(1, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 1);
     let mockAction = {
-      type: ActionTypes.NAVIGATE_TO_TGT_PAGE,
+      type: TgtActionTypes.NAVIGATE_TO_TGT_PAGE,
       rfi: rfi,
       exploitDates: [],
       targets: []
@@ -125,11 +128,11 @@ describe('reducer', () => {
 
   it('should sort by rfiNum and flip the sort key', () => {
     let setupRfis = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
     let state = rfiReducer(undefined, setupRfis);
-    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.RFINUM};
+    let sortAction = {type: RfiActionTypes.SORT_RFIS, field: Field.RFINUM};
 
     state = rfiReducer(state, sortAction);
 
@@ -146,11 +149,11 @@ describe('reducer', () => {
 
   it('should sort by customer and flip the sort key', () => {
     let setupRfis = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
     let state = rfiReducer(undefined, setupRfis);
-    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.CUSTOMER};
+    let sortAction = {type: RfiActionTypes.SORT_RFIS, field: Field.CUSTOMER};
 
     state = rfiReducer(state, sortAction);
 
@@ -167,11 +170,11 @@ describe('reducer', () => {
 
   it('should sort by country and flip the sort key', () => {
     let setupRfis = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
     let state = rfiReducer(undefined, setupRfis);
-    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.COUNTRY};
+    let sortAction = {type: RfiActionTypes.SORT_RFIS, field: Field.COUNTRY};
 
     state = rfiReducer(state, sortAction);
 
@@ -188,12 +191,12 @@ describe('reducer', () => {
 
   it('should sort by ltiov and flip the sort key', () => {
     let setupRfis = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
 
     let state = rfiReducer(undefined, setupRfis);
-    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.LTIOV};
+    let sortAction = {type: RfiActionTypes.SORT_RFIS, field: Field.LTIOV};
 
     state = rfiReducer(state, sortAction);
 
@@ -214,7 +217,7 @@ describe('reducer', () => {
 
   it('should sort by priority and flip the sort key', () => {
     let setupRfis = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: singleStatusRfiList
     };
 
@@ -234,7 +237,7 @@ describe('reducer', () => {
     expect(state.rfis).toEqual(sortedRfis);
     expect(state.sortKey).toEqual(new SortKeyModel(Field.PRIORITY, true));
 
-    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.PRIORITY};
+    let sortAction = {type: RfiActionTypes.SORT_RFIS, field: Field.PRIORITY};
 
     state = rfiReducer(state, sortAction);
 
@@ -245,7 +248,7 @@ describe('reducer', () => {
 
   it('should filter pending RFIs from total RFI list', () => {
     let fetchRfisAction = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
 
@@ -258,7 +261,7 @@ describe('reducer', () => {
 
   it('should filter open RFIs from total RFI list', () => {
     let fetchRfisAction = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
 
@@ -271,7 +274,7 @@ describe('reducer', () => {
 
   it('should filter closed RFIs from total RFI list', () => {
     let fetchRfisAction = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: multiStatusRfiList
     };
 
@@ -283,7 +286,7 @@ describe('reducer', () => {
 
   it('should handle FETCH_UPDATE', () => {
     let setupRfis = {
-      type: ActionTypes.FETCH_RFI_SUCCESS,
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
       rfis: singleStatusRfiList
     };
     let state = rfiReducer(undefined, setupRfis);
@@ -296,11 +299,11 @@ describe('reducer', () => {
     ];
 
     //Sort bt LTIOV; should stay sorted after update
-    let sortAction = {type: ActionTypes.SORT_RFIS, field: Field.LTIOV};
+    let sortAction = {type: RfiActionTypes.SORT_RFIS, field: Field.LTIOV};
     state = rfiReducer(state, sortAction);
 
     let refreshRfis = {
-      type: ActionTypes.FETCH_RFI_UPDATE,
+      type: RfiActionTypes.FETCH_RFI_UPDATE,
       rfis: newSingleStatusRfis,
     };
 
@@ -322,11 +325,17 @@ describe('reducer', () => {
     });
   });
 
-  it('should handle NAVIGATE_TO_IXN_PAGE', () => {
+  it('should handle loadIxnPage', () => {
     let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
+    let segments = [
+      new SegmentModel(1, 1, 1, 1, moment(123), moment(456)),
+      new SegmentModel(2, 1, 1, 1, moment(567), moment(678))
+    ];
+
     let navToIxnPage = {
-      type: ActionTypes.NAVIGATE_TO_IXN_PAGE,
+      type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
       target: target,
+      segments: segments,
       dateString: '11/14/2020'
     };
 
@@ -336,6 +345,27 @@ describe('reducer', () => {
       .toEqual({
         viewIxnPage: true,
         target: target,
+        segments: segments,
+        dateString: '11/14/2020'
+      });
+
+    let newSegments = [
+      new SegmentModel(1, 1, 1, 1, moment(123), moment(456)),
+      new SegmentModel(2, 1, 1, 1, moment(678), moment(789))
+    ];
+
+    let reloadIxnPage = {
+      type: IxnActionTypes.RELOAD_IXN_PAGE,
+      segments: newSegments
+    };
+
+    state = ixnReducer(state, reloadIxnPage);
+
+    expect(state)
+      .toEqual({
+        viewIxnPage: true,
+        target: target,
+        segments: newSegments,
         dateString: '11/14/2020'
       });
   });
@@ -343,13 +373,15 @@ describe('reducer', () => {
   it('should handle EXIT_IXN_PAGE', () => {
     let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
     let navToIxnPage = {
-      type: ActionTypes.NAVIGATE_TO_IXN_PAGE,
-      target: target
+      type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
+      target: target,
+      dateString: '11/11/2011',
+      segments: []
     };
 
     let state = ixnReducer(undefined, navToIxnPage);
     let exitIxnPage = {
-      type: ActionTypes.EXIT_IXN_PAGE,
+      type: IxnActionTypes.EXIT_IXN_PAGE,
     };
 
     state = ixnReducer(state, exitIxnPage);
@@ -357,7 +389,9 @@ describe('reducer', () => {
     expect(state)
       .toEqual({
         viewIxnPage: false,
-        target: target
+        target: target,
+        dateString: '11/11/2011',
+        segments: [],
       });
   });
 
@@ -366,7 +400,7 @@ describe('reducer', () => {
     let exploitDate : ExploitDateModel = new ExploitDateModel(1, 1, moment.utc('2019-11-02'));
     let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
     let navToTgtPage = {
-      type: ActionTypes.NAVIGATE_TO_TGT_PAGE,
+      type: TgtActionTypes.NAVIGATE_TO_TGT_PAGE,
       viewTgtPage: true,
       rfi: rfi,
       exploitDates: [exploitDate],
@@ -375,7 +409,7 @@ describe('reducer', () => {
     let state = tgtReducer(undefined, navToTgtPage);
 
     let deleteTgt = {
-      type: ActionTypes.UPDATE_TGT_SUCCESS,
+      type: TgtActionTypes.UPDATE_TGT_SUCCESS,
       targets: []
     };
 
@@ -389,9 +423,7 @@ describe('reducer', () => {
         exploitDates: [exploitDate],
         targets: []
       }
-
     )
-
   });
 
   //TODO

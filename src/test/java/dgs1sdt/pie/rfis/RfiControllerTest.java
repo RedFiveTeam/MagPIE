@@ -1,5 +1,4 @@
 package dgs1sdt.pie.rfis;
-
 import dgs1sdt.pie.BaseIntegrationTest;
 import dgs1sdt.pie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.pie.metrics.changeTarget.MetricChangeTargetRepository;
@@ -16,14 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
-
-import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -640,6 +636,4 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals("SDT20-123", targetRepository.findById(targetId).get().getName());
   }
-
 }
-

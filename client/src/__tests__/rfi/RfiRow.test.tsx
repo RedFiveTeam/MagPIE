@@ -1,10 +1,10 @@
 import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { RfiRow } from '../../workflow/rfi-page/row/RfiRow';
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import * as React from 'react';
-import { StyledRfiRowInformationSection } from '../../workflow/rfi-page/row/RfiRowInformationSection';
-import { StyledRfiRowButtonSection } from '../../workflow/rfi-page/row/RfiRowButtonSection';
+import { StyledRfiRowInformationSection } from '../../dashboard/rfi/region/row/RfiRowInformationSection';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { RfiRow } from '../../dashboard/rfi/region/row/RfiRow';
+import { StyledRfiRowButtonSection } from '../../dashboard/rfi/region/row/RfiRowButtonSection';
 
 describe('RFIRow', () => {
   let subject: ShallowWrapper;

@@ -34,3 +34,20 @@ Scenario ('Should be able to navigate to and exit the interactions page', (I) =>
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI: 20-325', 10);
 });
+
+Scenario('Should be able to add segments', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  I.click('.cell--add-tgt-button');
+  I.waitForText('Go Back', 10);
+  I.click('.exploitation');
+  I.waitForText('TGT: SDT20-123', 10);
+  I.click('.add-segment-button');
+  I.fillField('.segment-start', '12:00:00');
+  I.pressKey('Tab');
+  I.fillField('.segment-end', '12:30:45');
+  I.pressKey('Enter');
+  I.waitForText('12:00:00Z');
+  I.waitForText('12:30:45Z');
+  I.dontSee('.segment-input-container');
+});

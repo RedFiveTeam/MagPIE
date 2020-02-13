@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { MetricsContainer } from '../../metrics/MetricsContainer';
 import '../../setupEnzyme';
+import { MetricsContainer } from '../../dashboard/metric/MetricsContainer';
 
 describe('MetricsContainer', () => {
   let subject: ShallowWrapper;

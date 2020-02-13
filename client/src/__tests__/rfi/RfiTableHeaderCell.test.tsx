@@ -1,12 +1,12 @@
 import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { RfiTableHeaderCell } from '../../workflow/rfi-page/header/RfiTableHeaderCell';
 import * as React from 'react';
-import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
 import ActiveUpperSortButtonVector from '../../resources/icons/ActiveUpperSortButton';
 import LowerSortButtonVector from '../../resources/icons/LowerSortButton';
 import UpperSortButtonVector from '../../resources/icons/UpperSortButton';
 import ActiveLowerSortButtonVector from '../../resources/icons/ActiveLowerSortButton';
+import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
+import { RfiTableHeaderCell } from '../../dashboard/rfi/rfiDashboardTableHeader/RfiTableHeaderCell';
 
 describe('HeaderCell', () => {
   let subject: ShallowWrapper;

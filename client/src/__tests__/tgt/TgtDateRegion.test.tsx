@@ -1,12 +1,13 @@
 import '../../setupEnzyme';
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { TgtDateRegion } from '../../workflow/tgt-page/TgtDateRegion';
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
-import { TargetModel } from '../../workflow/tgt-page/models/TargetModel';
-import { Status } from '../../workflow/tgt-page/TgtDashboard';
-import { StyledTgtRow } from '../../workflow/tgt-page/tgtTable/row/TgtRow';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { TgtDateRegion } from '../../dashboard/tgt/TgtDateRegion';
+import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
+import { TargetModel } from '../../store/tgt/TargetModel';
+import { StyledTgtRow } from '../../dashboard/tgt/tgtTable/row/TgtRow';
+import { Status } from '../../dashboard/tgt/TgtDashboard';
+
 
 describe("Target Date Region", () => {
   const moment = require('moment');

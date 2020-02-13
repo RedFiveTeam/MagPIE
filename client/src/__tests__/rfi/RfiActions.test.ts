@@ -1,13 +1,12 @@
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-import { reorderRfis } from '../../state/actions';
-// @ts-ignore
-import fetch from 'jest-fetch-mock';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
-import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
-import { RfiSorter } from '../../state/utils/RfiSorter';
 import * as moment from 'moment';
+import { reorderRfis } from '../../store/rfi/Thunks';
+import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { RfiSorter } from '../../store/rfi/RfiSorter';
 
+const fetch = require('jest-fetch-mock');
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 

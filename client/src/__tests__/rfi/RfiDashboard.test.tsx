@@ -1,10 +1,10 @@
 import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import { StyledRfiTableHeader } from '../../workflow/rfi-page/header/RfiTableHeader';
-import { RfiDashboard } from '../../workflow/rfi-page/RfiDashboard';
+import { RfiDashboard } from '../../dashboard/rfi/RfiDashboard';
 import { Droppable } from 'react-beautiful-dnd';
-import { Field, SortKeyModel } from '../../workflow/rfi-page/models/SortKeyModel';
+import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
+import { StyledRfiTableHeader } from '../../dashboard/rfi/rfiDashboardTableHeader/RfiTableHeader';
 
 describe('RFITable', () => {
   let subject: ShallowWrapper;

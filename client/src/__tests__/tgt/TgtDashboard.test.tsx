@@ -1,10 +1,10 @@
-import { TgtDashboard } from '../../workflow/tgt-page/TgtDashboard';
+import { TgtDashboard } from '../../dashboard/tgt/TgtDashboard';
 import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import * as React from 'react';
-import { ExploitDateModel } from '../../workflow/tgt-page/models/ExploitDateModel';
-import { StyledTgtTable } from '../../workflow/tgt-page/tgtTable/TgtTable';
+import { StyledTgtTable } from '../../dashboard/tgt/tgtTable/TgtTable';
+import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 
 describe('TgtDashboardContainer', () => {
   let subject: ShallowWrapper;
@@ -31,10 +31,6 @@ describe('TgtDashboardContainer', () => {
         targets={[]}
       />
     );
-  });
-
-  it('should display the rfi description', () => {
-    expect(subject.find('.tgt-dash--rfi-description-container').text()).toContain('Good morning starshine, the earth says hello');
   });
 
   it('should display the rfi description', () => {

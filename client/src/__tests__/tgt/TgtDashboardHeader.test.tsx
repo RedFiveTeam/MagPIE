@@ -1,8 +1,8 @@
 import '../../setupEnzyme';
 import { shallow } from 'enzyme';
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
-import { TgtDashboardHeader } from '../../workflow/tgt-page/header/TgtDashboardHeader';
+import { TgtDashboardHeader } from '../../dashboard/tgt/navHeader/TgtDashboardHeader';
 import * as React from 'react';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 
 describe('TgtDashboardHeader', () => {
   const moment = require('moment');

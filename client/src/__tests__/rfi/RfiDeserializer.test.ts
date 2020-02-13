@@ -1,6 +1,6 @@
 import * as moment from 'moment';
-import { RfiDeserializer } from '../../state/utils/RfiDeserializer';
-import { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
+import { RfiDeserializer } from '../../store/rfi/RfiDeserializer';
+import { RfiStatus } from '../../store/rfi/RfiModel';
 
 describe('RFIDeserializer', () => {
   it('should turn backend response into RfiModel', () => {

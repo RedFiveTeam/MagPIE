@@ -1,8 +1,8 @@
-import { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import { RfiRowButtonSection } from '../../workflow/rfi-page/row/RfiRowButtonSection';
 import '../../setupEnzyme';
+import { RfiStatus } from '../../store/rfi/RfiModel';
+import { RfiRowButtonSection } from '../../dashboard/rfi/region/row/RfiRowButtonSection';
 
 describe('RfiRowButtonSection', () => {
   let subject: ShallowWrapper;

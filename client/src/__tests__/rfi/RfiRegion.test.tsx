@@ -1,10 +1,10 @@
-import { RfiRow } from '../../workflow/rfi-page/row/RfiRow';
-import RfiModel, { RfiStatus } from '../../workflow/rfi-page/models/RfiModel';
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { RfiRegion } from '../../workflow/rfi-page/RfiRegion';
-import { StyledRfiRegionDivider } from '../../workflow/rfi-page/RfiRegionDivider';
 import '../../setupEnzyme';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { RfiRegion } from '../../dashboard/rfi/region/RfiRegion';
+import { StyledRfiRegionDivider } from '../../dashboard/rfi/region/RfiRegionDivider';
+import { RfiRow } from '../../dashboard/rfi/region/row/RfiRow';
 
 describe('Region', () => {
   let rows: any[];
