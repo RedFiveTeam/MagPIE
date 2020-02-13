@@ -219,7 +219,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
     ExploitDateJson exploitDateJson = new ExploitDateJson(
       null,
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("11/11/2020 11:22:33").getTime()),
-      rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId());
+    rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId());
 
     rfiController.addExploitDate(exploitDateJson);
 

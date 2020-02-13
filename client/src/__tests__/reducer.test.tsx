@@ -326,7 +326,8 @@ describe('reducer', () => {
     let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
     let navToIxnPage = {
       type: ActionTypes.NAVIGATE_TO_IXN_PAGE,
-      target: target
+      target: target,
+      dateString: '11/14/2020'
     };
 
     let state = ixnReducer(undefined, navToIxnPage);
@@ -334,7 +335,8 @@ describe('reducer', () => {
     expect(state)
       .toEqual({
         viewIxnPage: true,
-        target: target
+        target: target,
+        dateString: '11/14/2020'
       });
   });
 

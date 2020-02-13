@@ -1,5 +1,5 @@
 import * as React from 'react';
-import BackButtonVector from '../../../resources/icons/BackButtonVector';
+import TgtBackButtonVector from '../../../resources/icons/TgtBackButtonVector';
 import { formatRfiNum } from '../../../utils';
 import RfiModel from '../../rfi-page/models/RfiModel';
 import styled from 'styled-components';
@@ -15,7 +15,7 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
     <div className={props.className}>
       <div className={'tgt-dash--header'}>
         <div className={'tgt-dash--header--back-button'} onClick={props.exitTgtPage}>
-          <BackButtonVector/>
+          <TgtBackButtonVector/>
           <span>Go Back</span>
         </div>
         <div className={'tgt-dash--header--rfi-num-container'}>
@@ -85,5 +85,4 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
   .tgt-dash--header--filler {
     width: 108px;
   }
-`
-;
+`;
