@@ -23,7 +23,6 @@ describe('TgtDateDivider', () => {
     subject = mount(
       <TgtDateDivider
         rfiId={1}
-        addDate={false}
         updateRfiDate={updateRfiDateSpy}
         setAddDate={setAddDateSpy}
         exploitDate={exploitDate}
@@ -54,7 +53,6 @@ describe('TgtDateDivider', () => {
     subject = mount(
       <TgtDateDivider
         rfiId={1}
-        addDate={false}
         updateRfiDate={updateRfiDateSpy}
         setAddDate={setAddDateSpy}
         exploitDate={exploitDate}
@@ -82,7 +80,6 @@ describe('TgtDateDivider', () => {
     subject = mount(
       <TgtDateDivider
         rfiId={1}
-        addDate={false}
         updateRfiDate={updateRfiDateSpy}
         setAddDate={setAddDateSpy}
         exploitDate={exploitDate}

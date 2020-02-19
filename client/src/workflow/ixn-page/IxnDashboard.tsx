@@ -4,7 +4,7 @@ import { TargetModel } from '../tgt-page/models/TargetModel';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../state';
-import { StyledIxnHeader } from './IxnHeader';
+import { StyledIxnDashboardHeader } from './IxnDashboardHeader';
 
 interface Props {
   target: TargetModel
@@ -14,7 +14,7 @@ interface Props {
 export const IxnDashboard: React.FC<Props> = props => {
   return(
     <div className={classNames(props.className)}>
-      <StyledIxnHeader
+      <StyledIxnDashboardHeader
         target={props.target}
       />
     </div>

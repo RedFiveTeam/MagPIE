@@ -5,10 +5,11 @@ import { server } from '../../../config';
 import { ExploitDatePostModel } from '../../../workflow/tgt-page/models/ExploitDatePostModel';
 import 'isomorphic-fetch';
 import { ExploitDateDeserializer } from '../../utils/ExploitDateDeserializer';
-import { TargetPostModel } from '../../../workflow/tgt-page/models/TargetPostModel';
+
 import { TargetModel } from '../../../workflow/tgt-page/models/TargetModel';
 import { ExploitDateModel } from '../../../workflow/tgt-page/models/ExploitDateModel';
 import { ExploitDateSorter } from '../../utils/ExploitDateSorter';
+import { TargetPostModel } from '../../../workflow/tgt-page/models/TargetPostModel';
 
 export const truncateAndConvertDateToUtc = (date: Date): Date => {
   let newDate = new Date(moment(date).utc(true).unix() * 1000); //convert date to UTC
@@ -88,30 +89,6 @@ export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstL
   }
 };
 
-export const deleteExploitDate = (exploitDateId: number) => {
-  return (dispatch: any) => {
-    postExploitDateDelete(exploitDateId)
-      .then(response => response.json())
-      .then(dates => dispatch(updateRfiDateSuccess(ExploitDateDeserializer.deserialize(dates))))
-      .catch((reason) => {
-        console.log(reason)
-      })
-  }
-};
-
-export const deleteTargetsByExploitDateId = (exploitDateId: number) => {
-  return (dispatch: any) => {
-    postTargetsDelete(exploitDateId)
-      .then(response => response.json())
-      .then(dates => dispatch(updateRfiDateSuccess(ExploitDateDeserializer.deserialize(dates))))
-      .catch((reason) => {
-        console.log(reason)
-      })
-  }
-};
-
-
-
 export const updateRfiDate = (rfiId: number, date: Date, oldDate?: ExploitDateModel) => {
   let newDate = truncateAndConvertDateToUtc(date); //convert date to UTC
   let exploitDate: ExploitDatePostModel = new ExploitDatePostModel(
@@ -129,10 +106,21 @@ export const updateRfiDate = (rfiId: number, date: Date, oldDate?: ExploitDateMo
   };
 };
 
-export const submitNewTarget = (target: TargetPostModel, rfi: RfiModel) => {
+export const deleteExploitDate = (exploitDateId: number) => {
+  return (dispatch: any) => {
+    postExploitDateDelete(exploitDateId)
+      .then(response => response.json())
+      .then(dates => dispatch(updateRfiDateSuccess(ExploitDateDeserializer.deserialize(dates))))
+      .catch((reason) => {
+        console.log(reason)
+      })
+  }
+};
+
+export const submitPostTarget = (target: TargetPostModel, rfi: RfiModel) => {
   return (dispatch: any) => {
     postTarget(target)
-      .then(response => dispatch(loadTgtPage(rfi, true)))
+      .then(response => dispatch(loadTgtPage(rfi, false)))
       .catch((reason) => {
         console.log(reason)
       })
@@ -163,19 +151,6 @@ const postExploitDateDelete = (exploitDateId: number) => {
   );
 };
 
-const postTargetsDelete = (exploitDateId: number) => {
-  return fetch(
-    server + '/api/rfis/' + exploitDateId + '/targets/delete',
-    {
-      method: 'delete',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }
-  );
-};
-
 const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel, oldId?: number) => {
   return fetch(
     server + '/api/rfis/change-exploit-date/' + (oldId ? oldId : ''),
@@ -190,6 +165,20 @@ const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel, oldId?: numbe
   );
 };
 
+const postTarget = (target: TargetPostModel) => {
+  return fetch(
+    server + '/api/rfis/post-target',
+    {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(target),
+    }
+  );
+};
+
 const postTargetDelete = (tgtId: number) => {
   return fetch(
     server + '/api/rfis/delete-target/' + tgtId,
@@ -199,20 +188,6 @@ const postTargetDelete = (tgtId: number) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-    }
-  );
-};
-
-const postTarget = (target: TargetPostModel) => {
-  return fetch(
-    server + '/api/rfis/add-target',
-    {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(target),
     }
   );
 };

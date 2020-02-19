@@ -14,7 +14,6 @@ import globalTheme from '../../resources/theme';
 
 interface Props {
   rfiId: number;
-  addDate: boolean;
   updateRfiDate: (rfiId: number, date: Date, oldDate?: ExploitDateModel) => void;
   setAddDate: (addDate: boolean) => void;
   uKey: number

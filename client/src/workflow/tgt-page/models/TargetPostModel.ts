@@ -1,7 +1,8 @@
 export class TargetPostModel {
   constructor(
-    public rfiNum: string,
-    public exploitDate: Date,
+    public targetId: number | null,
+    public rfiId: number,
+    public exploitDateId: number,
     public name: string,
     public mgrs: string,
     public notes: string | null,

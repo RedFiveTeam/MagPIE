@@ -7,31 +7,26 @@ import { Box, createMuiTheme, createStyles, TextField, Theme } from '@material-u
 import { crayonBox } from '../../../../resources/crayonBox';
 import AddTgtDateButtonVector from '../../../../resources/icons/AddTgtDateButtonVector';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { TargetPostModel } from '../../models/TargetPostModel';
 import { StyledDeleteTgtButtonVector } from '../../../../resources/icons/DeleteTgtButtonVector';
 import { StyledExploitationLogButtonVector } from '../../../../resources/icons/ExploitationLogButtonVector';
-import { deleteTgt, submitNewTarget } from '../../../../state/actions';
-import { navigateToIxnPage } from '../../../../state/actions';
 import RfiModel from '../../../rfi-page/models/RfiModel';
 import { ExploitDateModel } from '../../models/ExploitDateModel';
 import { connect } from 'react-redux';
+import { TargetPostModel } from '../../models/TargetPostModel';
+import { deleteTgt, navigateToIxnPage, submitPostTarget } from '../../../../state/actions';
+import { Status } from '../../TgtDashboard';
 
 interface Props {
   target: TargetModel | null;
-  key: number;
-  submitNewTarget: (target: TargetPostModel, rfi: RfiModel) => void;
-  rfi: RfiModel;
   exploitDate: ExploitDateModel;
-  setAddTgt: (dateId: number) => void;
+  rfi: RfiModel;
+  editable: boolean;
+  setAddEditTarget: (status: Status, id?: number) => void;
+  submitPostTarget: (target: TargetPostModel, rfi: RfiModel) => void;
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
   deleteTgt: (tgtId: number) => void;
+  key: number;
   className?: string;
-}
-
-enum Status {
-  ENTERING,
-  SUBMITTING,
-  DELETING
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -66,6 +61,12 @@ export const TgtRow: React.FC<Props> = props => {
     }
   });
 
+  enum Action {
+    NONE,
+    DELETING,
+    SUBMITTING
+  }
+
   const [nameError, setNameError] = useState(false);
   const [mgrsError, setMgrsError] = useState(false);
   //If the user enters a name or MGRS incorectly once, always check for exact match
@@ -75,24 +76,29 @@ export const TgtRow: React.FC<Props> = props => {
   const [mgrs, setMgrs] = useState("");
   const [notes, setNotes] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState(Status.ENTERING);
+  const [action, setAction] = useState(Action.NONE);
 
-  const handleStatusChange = () => {
-    if (status === Status.DELETING) {
-      if (props.target) {
-        props.deleteTgt(props.target.id);
-      } else {
-        props.setAddTgt(-1);
-      }
-    } else if (status === Status.SUBMITTING) {
-      validateAllAndSubmit();
-      setStatus(Status.ENTERING);
+
+
+
+  const handleAction = () => {
+    switch (action) {
+      case Action.DELETING:
+        if (props.target) {
+          props.deleteTgt(props.target.id);
+        } else {
+          props.setAddEditTarget(Status.VIEW);
+        }
+        break;
+      case Action.SUBMITTING:
+        validateAllAndSubmit();
+        break;
     }
   };
 
   useEffect(
-    handleStatusChange,
-    [status]
+    handleAction,
+    [action]
   );
 
   function weakMatchNameError(name: string): boolean {
@@ -146,54 +152,86 @@ export const TgtRow: React.FC<Props> = props => {
     setNameError(false);
     setMgrsError(false);
     setNameError(strongMatchNameError(name));
-    setStrongValidateName(strongMatchNameError(name));
     setMgrsError(strongMatchMgrsError(mgrs));
-    setStrongValidateMgrs(strongMatchMgrsError(mgrs));
+    if (!strongValidateName) {
+      setStrongValidateName(strongMatchNameError(name));
+    }
+    if (!strongValidateMgrs) {
+      setStrongValidateMgrs(strongMatchMgrsError(mgrs));
+    }
     errors = (strongMatchMgrsError(mgrs) || strongMatchNameError(name));
     if (!errors) {
-      props.setAddTgt(-1);
-      props.submitNewTarget(
+      props.setAddEditTarget(Status.VIEW);
+      props.submitPostTarget(
         new TargetPostModel(
-          props.rfi.rfiNum,
-          new Date(props.exploitDate.exploitDate.unix() * 1000), //convert date to UTC from moment
+          (props.target ? props.target.id : null),
+          props.rfi.id,
+          props.exploitDate.id,
           name, mgrs, notes, description),
         props.rfi
       );
+      setTimeout(() => {
+          setName('');
+          setMgrs('');
+          setNotes('');
+          setDescription('');
+        }, 500)
     }
   };
 
   function onBlur(event: any) {
     let currentTarget: any = event.currentTarget;
-    console.log("this ran");
-    console.log("this is the current target" + currentTarget);
-    console.log("this is the active element" + document.activeElement);
-    console.log("this is the status" + status);
-    setTimeout(function () {
-      if (!currentTarget.contains(document.activeElement) && status !== Status.DELETING) {
-        setStatus(Status.SUBMITTING);
+    setTimeout(() => {
+      if (!currentTarget.contains(document.activeElement) && action !== Action.DELETING) {
+        setAction(Action.SUBMITTING);
       }
     }, 50);
   }
 
   const handleDeleteClick = () => {
-    setStatus(Status.DELETING);
+    setAction(Action.DELETING);
   };
 
   const handleIxnClick = () => {
     if (props.target !== null) {
-      props.navigateToIxnPage(props.target, props.exploitDate.exploitDate.format("MM/DD/YYYY"));
+      props.navigateToIxnPage(props.target, props.exploitDate.exploitDate.format('MM/DD/YYYY'));
     }
+  };
+
+  const handleDoubleClick = () => {
+    if (props.target) {
+      props.setAddEditTarget(Status.EDIT, props.target.id);
+      setName(props.target.name);
+      setMgrs(props.target.mgrs);
+      setNotes(props.target.notes ? props.target.notes : '');
+      setDescription(props.target.description? props.target.description : '');
+      setTimeout(() => {
+        if (props.target)
+          document.getElementById('tgt-name-input-' + props.target.id)!.focus();
+      }, 50);
+    }
+  };
+
+  let disabled = !props.editable;
+
+  const inputProps = {
+    id: 'tgt-name-input-' + (props.target ? props.target.id.toString() : 'new'),
+  };
+
+  const InputProps = {
+    onDoubleClick: handleDoubleClick
   };
 
   return (
     <div className={props.className}>
-      <form className={"add-tgt-form"}
+      <form className={classNames("tgt-form", props.target ? "edit-tgt-form" : "add-tgt-form")}
             onBlur={onBlur}
-            onKeyPress={(e: any) => {
-              if (e.which === 13  ) {
+            onKeyPress={(e) => {
+              if (e.which === 13) {
                 validateAllAndSubmit();
               }
             }}
+            onDoubleClick={handleDoubleClick}
       >
         <Box
           borderRadius={8}
@@ -201,20 +239,24 @@ export const TgtRow: React.FC<Props> = props => {
         >
           <ThemeProvider theme={theme}>
             <TextField
-              autoFocus={props.target === null}
-              className={classNames("tgt-name", classes.margin)}
-              value={props.target ? props.target.name : name}
-              disabled={props.target !== null}
+              autoFocus={true}
+              className={classNames("tgt-name", props.editable ? null : 'input-disabled', classes.margin, 'tgt-name-input-' + (props.target ? props.target.id : 'new'))}
+              value={name !== "" ? name : (props.target && !props.editable ? props.target.name : name)}
+              disabled={disabled}
               required
               placeholder="OPRYY-###"
               label={props.target ? "" : (nameError ? "Error" : "Required")}
               error={nameError}
               onChange={inputName}
+              inputProps={inputProps}
+              InputProps={InputProps}
+              onDoubleClick={handleDoubleClick}
+              // id={'tgt-name-input-' + (props.target ? props.target.id : 'new')}
             />
             <TextField
-              className={classNames("mgrs", classes.margin)}
-              value={props.target ? props.target.mgrs : mgrs}
-              disabled={props.target !== null}
+              className={classNames("mgrs", props.editable ? null : 'input-disabled', classes.margin)}
+              value={mgrs !== "" ? mgrs : (props.target && !props.editable ? props.target.mgrs : mgrs)}
+              disabled={disabled}
               required
               placeholder="##XXX##########"
               label={props.target ? "" : (mgrsError ? "Error" : "Required")}
@@ -224,22 +266,22 @@ export const TgtRow: React.FC<Props> = props => {
             <TextField
               multiline
               rowsMax="2"
-              className={classNames("notes", classes.margin)}
-              value={props.target ? props.target.notes : notes}
-              disabled={props.target !== null}
+              className={classNames("notes", props.editable ? null : 'input-disabled', classes.margin)}
+              value={notes !== "" ? notes : (props.target && !props.editable ? props.target.notes : notes)}
+              disabled={disabled}
               label={props.target || notes !== "" ? "" : "EEI Notes"}
               onChange={inputNotes}
             />
             <TextField
               multiline
               rowsMax="2"
-              className={classNames("description", classes.margin)}
-              value={props.target ? props.target.description : description}
-              disabled={props.target !== null}
+              className={classNames("description", props.editable ? null : 'input-disabled', classes.margin)}
+              value={description !== "" ? description : (props.target && !props.editable ? props.target.description : description)}
+              disabled={disabled}
               label={props.target || description !== "" ? "" : "TGT Description"}
               onChange={inputDescription}
               onKeyDown={(e: any) => {
-                if(e.keyCode === 9) {
+                if (e.keyCode === 9) {
                   validateAllAndSubmit();
                 }
               }}
@@ -268,7 +310,7 @@ export const TgtRow: React.FC<Props> = props => {
                  onClick={handleDeleteClick}>
               <StyledDeleteTgtButtonVector/>
             </div>
-            <div className={classNames("exploitation", props.target ? "" : "disabled")} onClick={handleIxnClick}>
+            <div className={classNames("exploitation", props.target ? "" : "input-disabled")} onClick={handleIxnClick}>
               <StyledExploitationLogButtonVector/>
             </div>
           </ThemeProvider>
@@ -289,7 +331,7 @@ export const TgtRow: React.FC<Props> = props => {
 const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = {
-  submitNewTarget: submitNewTarget,
+  submitPostTarget: submitPostTarget,
   navigateToIxnPage: navigateToIxnPage,
   deleteTgt: deleteTgt
 };
@@ -302,7 +344,7 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   margin-bottom: 4px;
   width: 100%;
   
-  .add-tgt-form {
+  .tgt-form {
     width: 100%;
   }
   
@@ -348,10 +390,6 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     cursor: pointer;
   }
   
-  .disabled {
-    pointer-events: none; !important;
-  }
-
   .tgt-form-box {
     height: 62px;
     width: 100%;

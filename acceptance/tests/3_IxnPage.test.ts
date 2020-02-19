@@ -2,7 +2,6 @@
 
 Feature('Ixn Page');
 
-//TODO: acceptance test for navigating to ixn page
 Scenario ('Should be able to navigate to and exit the interactions page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
@@ -22,6 +21,9 @@ Scenario ('Should be able to navigate to and exit the interactions page', (I) =>
   I.pressKey('Enter');
   I.seeElement('.add-tgt-button');
   I.dontSeeElement('.add-tgt-button-disabled');
+
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--add-tgt-button');
 
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
