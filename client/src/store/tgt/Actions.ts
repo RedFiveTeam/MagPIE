@@ -60,7 +60,7 @@ export const setDatePlaceholder = (show: boolean) => {
 
 export const postExploitDateDelete = (exploitDateId: number) => {
   return fetch(
-    '/api/rfi/' + exploitDateId + '/delete',
+    '/api/targets/dates/delete?exploitDateId=' + exploitDateId,
     {
       method: 'delete',
       headers: {
@@ -71,22 +71,9 @@ export const postExploitDateDelete = (exploitDateId: number) => {
   );
 };
 
-export const postTargetsDelete = (exploitDateId: number) => {
+export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
   return fetch(
-    '/api/rfi/' + exploitDateId + '/targets/delete',
-    {
-      method: 'delete',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }
-  );
-};
-
-export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel, oldId?: number) => {
-  return fetch(
-    '/api/rfi/change-exploit-date/' + (oldId ? oldId : ''),
+    '/api/targets/dates/post',
     {
       method: 'post',
       headers: {
@@ -100,7 +87,7 @@ export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel, oldId?
 
 export const postTargetDelete = (tgtId: number) => {
   return fetch(
-    '/api/rfi/delete-target/' + tgtId,
+    '/api/targets/delete?targetId=' + tgtId,
     {
       method: 'delete',
       headers: {
@@ -113,7 +100,7 @@ export const postTargetDelete = (tgtId: number) => {
 
 export const postTarget = (target: TargetPostModel) => {
   return fetch(
-    '/api/rfi/post-target',
+    '/api/targets/post',
     {
       method: 'post',
       headers: {

@@ -1,14 +1,10 @@
 package dgs1sdt.magpie.ixns;
 
+import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
-import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
-import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
-import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
-import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
-import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxnRepository;
 import dgs1sdt.magpie.rfis.RfiRepository;
-import dgs1sdt.magpie.rfis.exploitDates.ExploitDateRepository;
-import dgs1sdt.magpie.rfis.targets.TargetRepository;
+import dgs1sdt.magpie.tgts.TargetRepository;
+import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,35 +19,32 @@ import java.util.List;
 public class IxnController {
   public static final String URI = "/api/ixn";
 
+  private MetricsService metricsService;
   private RfiRepository rfiRepository;
   private ExploitDateRepository exploitDateRepository;
   private TargetRepository targetRepository;
   private SegmentRepository segmentRepository;
   private IxnRepository ixnRepository;
-  private MetricCreateSegmentRepository metricCreateSegmentRepository;
-  private MetricCreateIxnRepository metricCreateIxnRepository;
-  private MetricDeleteIxnRepository metricDeleteIxnRepository;
-
 
   @Autowired
-  public IxnController(RfiRepository rfiRepository,
+  public IxnController(MetricsService metricsService,
+                       RfiRepository rfiRepository,
                        ExploitDateRepository exploitDateRepository,
                        TargetRepository targetRepository,
                        SegmentRepository segmentRepository,
-                       IxnRepository ixnRepository,
-                       MetricCreateSegmentRepository metricCreateSegmentRepository,
-                       MetricCreateIxnRepository metricCreateIxnRepository,
-                       MetricDeleteIxnRepository metricDeleteIxnRepository) {
+                       IxnRepository ixnRepository) {
+    this.metricsService = metricsService;
     this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
     this.targetRepository = targetRepository;
     this.segmentRepository = segmentRepository;
     this.ixnRepository = ixnRepository;
-    this.metricCreateSegmentRepository = metricCreateSegmentRepository;
-    this.metricCreateIxnRepository = metricCreateIxnRepository;
-    this.metricDeleteIxnRepository = metricDeleteIxnRepository;
   }
 
+  @Autowired
+  public void setMetricsService(MetricsService metricsService) {
+    this.metricsService = metricsService;
+  }
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -78,19 +71,11 @@ public class IxnController {
     this.ixnRepository = ixnRepository;
   }
 
-  @Autowired
-  public void setMetricCreateSegmentRepository(MetricCreateSegmentRepository metricCreateSegmentRepository) {
-    this.metricCreateSegmentRepository = metricCreateSegmentRepository;
-  }
-
-  @Autowired
-  public void setMetricCreateIxnRepository(MetricCreateIxnRepository metricCreateIxnRepository) {
-    this.metricCreateIxnRepository = metricCreateIxnRepository;
-  }
-
-  @Autowired
-  public void setMetricDeleteIxnRepository(MetricDeleteIxnRepository metricDeleteIxnRepository) {
-    this.metricDeleteIxnRepository = metricDeleteIxnRepository;
+  @GetMapping(path = "/segment/{targetId}")
+  public List<Segment> getSegments(@PathVariable("targetId") long targetId ) {
+    List<Segment> segments = segmentRepository.findAllByTargetId(targetId);
+    segments.sort(Comparator.comparing(Segment::getStartTime));
+    return segments;
   }
 
   @GetMapping(path = "/{targetId}")
@@ -100,12 +85,6 @@ public class IxnController {
     return interactions;
   }
 
-  @GetMapping(path = "/segment/{targetId}")
-  public List<Segment> getSegments(@PathVariable("targetId") long targetId ) {
-    List<Segment> segments = segmentRepository.findAllByTargetId(targetId);
-    segments.sort(Comparator.comparing(Segment::getStartTime));
-    return segments;
-  }
 
   @PostMapping(path = "/segment/post")
   public void postSegment(@Valid @RequestBody SegmentJson segmentJson) {
@@ -133,22 +112,43 @@ public class IxnController {
             if (segmentRepository.findById(ixn.getSegmentId()).isPresent()) {
               Segment segment = segmentRepository.findById(ixn.getSegmentId()).get();
 
-              MetricDeleteIxn metricDeleteIxn = new MetricDeleteIxn(
+              metricsService.addDeleteIxn(
                 rfiNum,
                 exploitDate,
                 targetName,
                 segment.getStartTime(),
-                segment.getEndTime(),
-                new Timestamp(new Date().getTime())
+                segment.getEndTime()
               );
-
-              metricDeleteIxnRepository.save(metricDeleteIxn);
             }
           }
         }
       }
     } else {
       System.err.println("Could not find ixn to delete with id " + ixnId);
+    }
+  }
+
+
+  private void addSegment(SegmentJson segmentJson) {
+    Segment segment = new Segment(segmentJson);
+    segmentRepository.save(segment);
+    if (rfiRepository.findById(segmentJson.getRfiId()).isPresent()) {
+      String rfiNum = rfiRepository.findRfiById(segmentJson.getRfiId()).getRfiNum();
+      if (exploitDateRepository.findById(segmentJson.getExploitDateId()).isPresent()) {
+        Timestamp exploitDate = exploitDateRepository.findById(segmentJson.getExploitDateId()).get().getExploitDate();
+        if (targetRepository.findById(segmentJson.getTargetId()).isPresent()) {
+          String targetName = targetRepository.findById(segmentJson.getTargetId()).get().getName();
+
+          this.metricsService.addCreateSegment(rfiNum, exploitDate, targetName, segmentJson);
+
+        } else {
+          System.err.println("Error adding segment: could not find target with id " + segmentJson.getTargetId());
+        }
+      } else {
+        System.err.println("Error adding segment: could not find exploit date with id " + segmentJson.getExploitDateId());
+      }
+    } else {
+      System.err.println("Error adding segment: could not find rfi with id " + segmentJson.getRfiId());
     }
   }
 
@@ -166,45 +166,18 @@ public class IxnController {
           if (segmentRepository.findById(ixnJson.getSegmentId()).isPresent()) {
             Segment segment = segmentRepository.findById(ixnJson.getSegmentId()).get();
 
-            MetricCreateIxn metricCreateIxn = new MetricCreateIxn(
+            metricsService.addCreateIxn(
               rfiNum,
               exploitDate,
               targetName,
               segment.getStartTime(),
               segment.getEndTime(),
-              ixnId,
-              new Timestamp(new Date().getTime())
+              ixnId
             );
-
-            metricCreateIxnRepository.save(metricCreateIxn);
           }
         }
       }
     }
   }
 
-  private void addSegment(SegmentJson segmentJson) {
-    Segment segment = new Segment(segmentJson);
-    segmentRepository.save(segment);
-    if (rfiRepository.findById(segmentJson.getRfiId()).isPresent()) {
-      String rfiNum = rfiRepository.findRfiById(segmentJson.getRfiId()).getRfiNum();
-      if (exploitDateRepository.findById(segmentJson.getExploitDateId()).isPresent()) {
-        Timestamp exploitDate = exploitDateRepository.findById(segmentJson.getExploitDateId()).get().getExploitDate();
-        if (targetRepository.findById(segmentJson.getTargetId()).isPresent()) {
-          String targetName = targetRepository.findById(segmentJson.getTargetId()).get().getName();
-
-          MetricCreateSegment metricCreateSegment = new MetricCreateSegment(
-            rfiNum,
-            exploitDate,
-            targetName,
-            segmentJson.getStartTime(),
-            segmentJson.getEndTime(),
-            new Timestamp(new Date().getTime())
-          );
-
-          metricCreateSegmentRepository.save(metricCreateSegment);
-        }
-      }
-    }
-  }
 }

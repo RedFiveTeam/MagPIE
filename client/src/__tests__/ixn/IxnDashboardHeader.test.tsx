@@ -6,7 +6,7 @@ import { TargetModel } from '../../store/tgt/TargetModel';
 
 describe("Interactions Header", () => {
   let subject: ShallowWrapper;
-  let target = new TargetModel(1, 1, 1, "SDT20-123", "00ABC1234567890", "These are some EEI Notes to be displayed.", "");
+  let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '');
   let exitSpy: jest.Mock;
 
   beforeEach(() => {

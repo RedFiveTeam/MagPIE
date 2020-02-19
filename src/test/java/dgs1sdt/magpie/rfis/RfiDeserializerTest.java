@@ -1,6 +1,6 @@
 package dgs1sdt.magpie.rfis;
 
-import dgs1sdt.magpie.Utils;
+import dgs1sdt.magpie.Utilities;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -28,9 +28,9 @@ public class RfiDeserializerTest {
         "DGS-1-SDT-2020-00321",
         "http://www.google.com",
         "NEW",
-        Utils.parseDate("2019-11-05T14:21:21Z"),
+        Utilities.parseDate("2019-11-05T14:21:21Z"),
         "633d ABW",
-        Utils.parseDate("2020-11-05T14:21:21Z"),
+        Utilities.parseDate("2020-11-05T14:21:21Z"),
         "USA",
         "hello rfi"
       ),

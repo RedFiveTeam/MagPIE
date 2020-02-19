@@ -6,17 +6,18 @@ import { ExploitDatePostModel } from './ExploitDatePostModel';
 import { TargetPostModel } from './TargetPostModel';
 import {
   fetchDatesAndTargetsSuccess,
-   postExploitDateDelete, postExploitDatesUpdate, postTarget, postTargetDelete, postTargetsDelete,
+  postExploitDateDelete,
+  postExploitDatesUpdate,
+  postTarget,
+  postTargetDelete,
   truncateAndConvertDateToUtc,
   updateExploitDateSuccess,
   updateTgtSuccess
 } from './Actions';
 
-const moment = require('moment');
-
 export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstLoad: boolean) => {
   return (dispatch: any) => {
-    return fetch('/api/rfi/' + rfi.id + '/targets')
+    return fetch('/api/targets?rfiId=' + rfi.id)
       .then(response => response.json())
       .then(targets => dispatch(fetchDatesAndTargetsSuccess(rfi, dates, targets, firstLoad)))
       .catch((reason => {
@@ -36,26 +37,15 @@ export const deleteExploitDate = (exploitDateId: number) => {
   }
 };
 
-export const deleteTargetsByExploitDateId = (exploitDateId: number) => {
-  return (dispatch: any) => {
-    postTargetsDelete(exploitDateId)
-      .then(response => response.json())
-      .then(dates => dispatch(updateExploitDateSuccess(ExploitDateDeserializer.deserialize(dates))))
-      .catch((reason) => {
-        console.log(reason)
-      })
-  }
-};
-
 export const updateRfiDate = (rfiId: number, date: Date, oldDate?: ExploitDateModel) => {
   let newDate = truncateAndConvertDateToUtc(date); //convert date to UTC
   let exploitDate: ExploitDatePostModel = new ExploitDatePostModel(
-    (oldDate ? new Date(moment(oldDate.exploitDate).utc(true).unix() * 1000) : null),
-    newDate,
-    rfiId
+    oldDate ? oldDate.id : null,
+    rfiId,
+    newDate
   );
   return (dispatch: any) => {
-    postExploitDatesUpdate(exploitDate, oldDate ? oldDate.id : undefined)
+    postExploitDatesUpdate(exploitDate)
       .then(response => response.json())
       .then(dates => dispatch(updateExploitDateSuccess(ExploitDateDeserializer.deserialize(dates))))
       .catch((reason) => {
@@ -87,7 +77,7 @@ export const deleteTgt = (tgtId: number) => {
 
 export const loadTgtPage = (rfi: RfiModel, firstLoad: boolean) => {
   return (dispatch: any) => {
-    return fetch('/api/rfi/' + rfi.id + '/exploit-dates')
+    return fetch('/api/targets/dates?rfiId=' + rfi.id)
       .then(response => response.json())
       .then(exploitDates => dispatch(
         fetchRfiTargets(

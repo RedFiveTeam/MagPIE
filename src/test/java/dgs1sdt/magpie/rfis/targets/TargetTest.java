@@ -1,5 +1,8 @@
 package dgs1sdt.magpie.rfis.targets;
 
+import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetJson;
+import dgs1sdt.magpie.tgts.TargetStatus;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -13,7 +16,8 @@ public class TargetTest {
       "SDT20-123",
       "12QWE1231231231",
       "Notes",
-      "Description"
+      "Description",
+      TargetStatus.NOT_STARTED
     );
 
     TargetJson target2 = new TargetJson(

@@ -39,7 +39,7 @@ describe('TgtDateDivider', () => {
   });
 
   it('should display a date input with the exploitation date if it exists', () => {
-    expect(subject.find(".exploitDate-input").exists()).toBeTruthy();
+    expect(subject.find(".newExploitDate-input").exists()).toBeTruthy();
     expect(subject.find(".MuiInputBase-input").props().value)
       .toContain(exploitDate.exploitDate.format('MM/DD/YYYY'));
   });

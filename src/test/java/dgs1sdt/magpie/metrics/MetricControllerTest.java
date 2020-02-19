@@ -1,11 +1,9 @@
 package dgs1sdt.magpie.metrics;
+
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
-import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
-import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
-import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
@@ -18,26 +16,17 @@ import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
-import dgs1sdt.magpie.rfis.exploitDates.ExploitDateJson;
-import dgs1sdt.magpie.rfis.targets.Target;
-import dgs1sdt.magpie.rfis.targets.TargetJson;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class MetricControllerTest extends BaseIntegrationTest {
-  @Autowired
-  private MetricController metricController;
-
   @Autowired
   private MetricClickGetsRepository metricClickGetsRepository;
 
@@ -192,154 +181,14 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   }
 
-  @Test
-  public void createsNewPriorityChangeMetric() {
-    MetricChangeRfiPriority metricChangeRfiPriority1 = new MetricChangeRfiPriority("20-001", 1, 2, new Date());
-    MetricChangeRfiPriority metricChangeRfiPriority2 = new MetricChangeRfiPriority("20-002", 2, 1, new Date());
-
-    List<MetricChangeRfiPriority> priChanges = new ArrayList<>();
-    priChanges.add(metricChangeRfiPriority1);
-    priChanges.add(metricChangeRfiPriority2);
-
-    metricController.addChangeRfiPriority(priChanges);
-
-    assertEquals(2, metricChangeRfiPriorityRepository.count());
-  }
-
-  @Test
-  public void createsNewRfiUpdateMetric() {
-    MetricChangeRfi metricChangeRfi1 = new MetricChangeRfi("20-005", new Date(), "field", "old", "new");
-    MetricChangeRfi metricChangeRfi2 = new MetricChangeRfi("20-005", new Date(), "field", "old", "new");
-
-    long rfiUpdateCount = metricChangeRfiRepository.count();
-
-    metricController.addChangeRfi(metricChangeRfi1);
-    metricController.addChangeRfi(metricChangeRfi2);
-
-    assertEquals(rfiUpdateCount + 2, metricChangeRfiRepository.count());
-  }
-
-  @Test
-  public void getsSiteVisitsOverLast7Days() throws Exception {
-    Date sixDaysAgo = new Date(new Date().getTime() - 518400000L);
-    Date fourDaysAgo = new Date(new Date().getTime() - 345600000L);
-    Date oneDayAgo = new Date(new Date().getTime() - 86400000L);
-
-    List<MetricSiteVisit> metricSiteVisits = new ArrayList<>();
-    for (int i = 0; i < 356; i++) {
-      metricSiteVisits.add(new MetricSiteVisit(sixDaysAgo));
-    }
-
-    for (int i = 0; i < 23; i++) {
-      metricSiteVisits.add(new MetricSiteVisit(fourDaysAgo));
-    }
-
-    for (int i = 0; i < 1; i++) {
-      metricSiteVisits.add(new MetricSiteVisit(oneDayAgo));
-    }
-
-    for (int i = 0; i < 65; i++) {
-      metricSiteVisits.add(new MetricSiteVisit(new Date()));
-    }
-
-    metricSiteVisitRepository.saveAll(metricSiteVisits);
-
-    int[] last7DaysActual = metricController.getSiteVisitsLast7Days();
-    int[] last7DaysExpected = {356, 0, 23, 0, 0, 1, 65};
-
-    assertArrayEquals(last7DaysExpected, last7DaysActual);
-
-  }
-
-  @Test
-  public void addsExploitDateChangeMetric() throws Exception {
-    ExploitDateJson exploitDateJson = new ExploitDateJson(
-      null,
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
-      1L);
-
-    metricController.addChangeExploitDate(exploitDateJson, "DGS-1-SDT-2020-00338");
-
-    assertEquals(1, metricChangeExploitDateRepository.findAll().size());
-    assertEquals(
-      "2020-11-11 00:00:00.0",
-      metricChangeExploitDateRepository.findAll().get(0).getNewExploitDate().toString()
-    );
-    assertNull(metricChangeExploitDateRepository.findAll().get(0).getOldExploitDate());
-  }
-
-  @Test
-  public void addsTargetDateCreationMetric() throws Exception {
-    TargetJson targetJson = new TargetJson(
-      1,
-      1,
-      "SDT12-123",
-      "12ASD1231231231",
-      "",
-      ""
-    );
-
-    metricController.addCreateTarget(
-      targetJson,
-      "DGS-1-SDT-2020-00338",
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime())
-    );
-
-    assertEquals(1, metricCreateTargetRepository.findAll().size());
-    assertEquals(
-      "SDT12-123",
-      metricCreateTargetRepository.findAll().get(0).getName()
-    );
-    assertEquals(
-      "DGS-1-SDT-2020-00338",
-      metricCreateTargetRepository.findAll().get(0).getRfiNum()
-    );
-    assertEquals(
-      "2020-11-11 00:00:00.0",
-      metricCreateTargetRepository.findAll().get(0).getExploitDate().toString()
-    );
-  }
-
-  @Test
-  public void addsChangeTargetMetric() throws Exception {
-    Target oldTarget = new Target(
-      1, 1, 1,
-      "SDT20-123",
-      "12ABC1234567890",
-      "These are old notes",
-      "This is an old description"
-    );
-    TargetJson newTarget = new TargetJson(
-      oldTarget.getRfiId(),
-      oldTarget.getExploitDateId(),
-      "ABC11-999",
-      "99BBB9999999999",
-      "These are new notes",
-      "And an improved description"
-    );
-
-    metricController.addChangeTarget(oldTarget, newTarget);
-    assertEquals(4, metricChangeTargetRepository.findAll().size());
-
-    MetricChangeTarget name = metricChangeTargetRepository.findAll()
-      .stream().filter((metric) -> metric.getField().equals("name")).collect(Collectors.toList()).get(0);
-    MetricChangeTarget mgrs = metricChangeTargetRepository.findAll()
-      .stream().filter((metric) -> metric.getField().equals("mgrs")).collect(Collectors.toList()).get(0);
-    MetricChangeTarget notes = metricChangeTargetRepository.findAll()
-      .stream().filter((metric) -> metric.getField().equals("notes")).collect(Collectors.toList()).get(0);
-    MetricChangeTarget description = metricChangeTargetRepository.findAll()
-      .stream().filter((metric) -> metric.getField().equals("description")).collect(Collectors.toList()).get(0);
-
-    assertEquals(oldTarget.getName(), name.getOldData());
-    assertEquals(newTarget.getName(), name.getNewData());
-
-    assertEquals(oldTarget.getMgrs(), mgrs.getOldData());
-    assertEquals(newTarget.getMgrs(), mgrs.getNewData());
-
-    assertEquals(oldTarget.getNotes(), notes.getOldData());
-    assertEquals(newTarget.getNotes(), notes.getNewData());
-
-    assertEquals(oldTarget.getDescription(), description.getOldData());
-    assertEquals(newTarget.getDescription(), description.getNewData());
-  }
+//  @Test
+//  public void createsNewExploitDatesChangeMetric() {
+//    MetricChangeExploitDate metricChangeExploitDate1 = new MetricChangeExploitDate("20-001", null, null, new Timestamp(1), new Timestamp(2), new Timestamp(100));
+//    MetricChangeExploitDate metricChangeExploitDate2 = new MetricChangeExploitDate("20-002", null, null, new Timestamp(3), new Timestamp(4), new Timestamp(100));
+//
+//    metricController.addRfiExploitDatesChange(metricChangeExploitDate1);
+//    metricController.addRfiExploitDatesChange(metricChangeExploitDate2);
+//
+//    assertEquals(2, metricChangeExploitDateRepository.count());
+//  }
 }

@@ -1,7 +1,8 @@
 package dgs1sdt.magpie.metrics.changeTarget;
 
-import dgs1sdt.magpie.rfis.targets.Target;
-import dgs1sdt.magpie.rfis.targets.TargetJson;
+import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetJson;
+import dgs1sdt.magpie.tgts.TargetStatus;
 import org.junit.Test;
 
 import java.sql.Timestamp;
@@ -17,7 +18,8 @@ public class MetricChangeTargetTest {
       "SDT20-123",
       "12QWE1231231231",
       "Notes",
-      "Description"
+      "Description",
+      TargetStatus.NOT_STARTED
     );
 
     TargetJson target2 = new TargetJson(
@@ -50,5 +52,7 @@ public class MetricChangeTargetTest {
     assertEquals("description", metric4.getField());
     assertEquals("Description", metric4.getOldData());
     assertEquals("New Description", metric4.getNewData());
+
   }
+
 }

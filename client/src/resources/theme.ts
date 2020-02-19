@@ -15,6 +15,7 @@ const theme = {
     backgroundAction: crayonBox.safetyOrange,
     backgroundAssigned: crayonBox.notEggWhite,
     backgroundModal: crayonBox.lightBlack,
+    backgroundStatus: crayonBox.darkGray,
     fontLoading: crayonBox.lightGray,
     fontInactive: crayonBox.mediumGray,
     fontBackgroundInactive: crayonBox.mediumLightGray,
@@ -35,6 +36,8 @@ const theme = {
     segmentDivider: crayonBox.mediumMediumLightGray,
     fontToolTip: crayonBox.softMetal,
     backgroundToolTip: crayonBox.lightGray,
+    inProgress: crayonBox.stoplightYellow,
+    complete: crayonBox.stoplightGreen,
     buttonAddDate: crayonBox.brightBlue,
   },
 
@@ -51,19 +54,15 @@ const theme = {
     familyRegion: 'Roboto',
     weightRegion: 500,
     sizeRegion: '18px',
-    sizeRowSmall: '12px'
+    sizeRowSmall: '12px',
   },
 
   table: {
     rowHeight: '64px',
     tableWidth: '607px',
     rowWidth: '576px',
-    leftWidth: '408px'
+    leftWidth: '408px',
   },
-
-  flatpickr: {
-    headerBackground: crayonBox.safetyOrange
-  }
 };
 
 const muiPalette = createPalette({
@@ -74,7 +73,9 @@ const muiPalette = createPalette({
 });
 
 export const muiTheme = createMuiTheme({
-  palette: muiPalette
+  palette: {
+    type: 'dark',
+  },
 });
 
 export default theme;

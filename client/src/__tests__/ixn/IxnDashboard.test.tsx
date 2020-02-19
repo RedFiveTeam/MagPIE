@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import { StyledTableHeader } from '../../dashboard/components/header/TableHeader';
 import { StyledIxnRow } from '../../dashboard/ixn/table/IxnRow';
 
-let target = new TargetModel(1, 1, 1, "SDT20-123", "00ABC1234567890", "These are some EEI Notes to be displayed.", "");
+let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '');
 
 const initState = {
   ...initStore,

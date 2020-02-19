@@ -9,11 +9,11 @@ import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
 import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxnRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
-import dgs1sdt.magpie.rfis.exploitDates.ExploitDate;
-import dgs1sdt.magpie.rfis.exploitDates.ExploitDateRepository;
-import dgs1sdt.magpie.rfis.targets.Target;
-import dgs1sdt.magpie.rfis.targets.TargetJson;
-import dgs1sdt.magpie.rfis.targets.TargetRepository;
+import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetJson;
+import dgs1sdt.magpie.tgts.TargetRepository;
+import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
+import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +42,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
   MetricCreateIxnRepository metricCreateIxnRepository;
   @Autowired
   MetricDeleteIxnRepository metricDeleteIxnRepository;
+
 
   @Before
   public void clean() {
@@ -153,6 +154,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       .body("[1].endTime", equalTo("1970-01-01T15:45:30.000+0000"));
   }
 
+
   @Test
   public void addsInteractions() {
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
@@ -167,14 +169,14 @@ public class IxnControllerTest extends BaseIntegrationTest {
         (12 * 3600 + //HH
           10 * 60 + // MM
           10 // SS
-          ) * 1000 // Milliseconds
+        ) * 1000 // Milliseconds
 
       ),
-    new Timestamp(
+      new Timestamp(
         (12 * 3600 + //HH
           30 * 60 + // MM
           45 // SS
-          ) * 1000 // Milliseconds
+        ) * 1000 // Milliseconds
       )
     )));
     long segmentId = segmentRepository.findAll().get(0).getId();

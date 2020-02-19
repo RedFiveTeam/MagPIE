@@ -16,9 +16,9 @@ describe("Target Date Region", () => {
   let exploitDate = new ExploitDateModel(1, 1, moment(new Date));
   let targets: TargetModel[] =
     [
-      new TargetModel(1, 1, 1, "ASD12-123", "12QWE1231231231", "", ""),
-      new TargetModel(1, 1, 1, "ASD12-124", "12QWE1231231232", "", ""),
-      new TargetModel(1, 1, 1, "ASD12-125", "12QWE1231231233", "", ""),
+      new TargetModel(1, 1, 1, 'ASD12-123', '12QWE1231231231', '', ''),
+      new TargetModel(1, 1, 1, 'ASD12-124', '12QWE1231231232', '', ''),
+      new TargetModel(1, 1, 1, 'ASD12-125', '12QWE1231231233', '', ''),
     ];
   let addEditSpy: jest.Mock;
 
@@ -37,6 +37,7 @@ describe("Target Date Region", () => {
         addTgt={-1}
         setAddEditTarget={addEditSpy}
         index={1}
+        addingOrEditing={false}
       />
     );
   });
@@ -60,6 +61,7 @@ describe("Target Date Region", () => {
         addTgt={exploitDate.id} //adding target to this date region
         setAddEditTarget={addEditSpy}
         index={1}
+        addingOrEditing={true}
       />
     );
     expect(subject.find(StyledTgtRow).length).toBe(4);
@@ -86,6 +88,7 @@ describe("Target Date Region", () => {
         addTgt={exploitDate.id} //adding target to this date region
         setAddEditTarget={addEditSpy}
         index={1}
+        addingOrEditing={true}
       />
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();
@@ -105,6 +108,7 @@ describe("Target Date Region", () => {
         addTgt={-1}
         setAddEditTarget={addEditSpy}
         index={1}
+        addingOrEditing={true}
       />
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();

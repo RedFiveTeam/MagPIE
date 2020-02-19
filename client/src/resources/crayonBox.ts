@@ -6,6 +6,7 @@ export const crayonBox = {
   notEggWhite: '#FEFEFE',
   eggGray: '#E2E2E2',
   softMetal: '#202020',
+  darkGray: '#323232',
   pitchBlack: '#000000',
   tarBlack: '#010102',
   lightBlack: '#040404',

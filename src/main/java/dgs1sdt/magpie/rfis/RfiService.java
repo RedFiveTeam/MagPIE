@@ -1,6 +1,6 @@
 package dgs1sdt.magpie.rfis;
 
-import dgs1sdt.magpie.metrics.MetricController;
+import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public class RfiService {
   private RfiRepository rfiRepository;
   private GetsClient getsClient;
-  private MetricController metricController;
+  private MetricsService metricsService;
 
   @Autowired
-  public void setMetricController(MetricController metricController) {
-    this.metricController = metricController;
+  public void setMetricsService(MetricsService metricsService) {
+    this.metricsService = metricsService;
   }
 
   @Autowired
@@ -34,6 +34,7 @@ public class RfiService {
     this.rfiRepository = rfiRepository;
   }
 
+
   @Value("${GETS_URI_OPEN_PENDING}")
   String getsUriOpenPending;
 
@@ -43,10 +44,10 @@ public class RfiService {
   @Autowired
   public RfiService(RfiRepository rfiRepository,
                     GetsClient getsClient,
-                    MetricController metricController) {
+                    MetricsService metricsService) {
     this.rfiRepository = rfiRepository;
     this.getsClient = getsClient;
-    this.metricController = metricController;
+    this.metricsService = metricsService;
   }
 
   @Scheduled(fixedDelay = 60000, initialDelay = 5000)
@@ -129,7 +130,7 @@ public class RfiService {
 
   private void postUpdateMetrics(Rfi newRfi, Date currDate, Rfi oldRfi) {
     for (String field : oldRfi.compare(newRfi)) {
-      metricController.addChangeRfi(new MetricChangeRfi(currDate, newRfi, oldRfi, field));
+      metricsService.addChangeRfi(new MetricChangeRfi(currDate, newRfi, oldRfi, field));
     }
   }
 
@@ -172,4 +173,5 @@ public class RfiService {
 
     return rfiList;
   }
+
 }

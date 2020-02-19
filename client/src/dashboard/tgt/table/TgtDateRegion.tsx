@@ -24,6 +24,7 @@ interface Props {
   editTarget: number;
   addTgt: number;
   index: number;
+  addingOrEditing: boolean;
   className?: string;
 }
 
@@ -47,6 +48,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
         exploitDate={props.exploitDate}
         setAddEditTarget={props.setAddEditTarget}
         editable={props.editTarget === target.id}
+        addingOrEditing={props.addingOrEditing}
       />
     )
   }
@@ -99,6 +101,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
               exploitDate={props.exploitDate}
               setAddEditTarget={props.setAddEditTarget}
               editable={true}
+              addingOrEditing={props.addingOrEditing}
             />
             :
             null}
@@ -205,12 +208,6 @@ export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchT
     margin-left: 8px;
     opacity: 0.5;
     pointer-events: none;
-  }
-  
-  .status-button {
-    font-weight: bold;
-    cursor: default;
-    margin-right: 25px;
   }
   
   .no-select {

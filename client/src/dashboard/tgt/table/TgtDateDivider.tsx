@@ -152,7 +152,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
         <MuiPickersUtilsProvider
           utils={DateFnsUtils}>
           <KeyboardDatePicker
-            className={classNames(classes.dateInput, 'exploitDate-input')}
+            className={classNames(classes.dateInput, 'newExploitDate-input')}
             InputProps={{
               startAdornment: (
                 <InputAdornment onClick={handleDeleteClick} position="start">

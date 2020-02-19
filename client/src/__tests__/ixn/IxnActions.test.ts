@@ -6,7 +6,7 @@ import IxnModel from '../../store/ixn/IxnModel';
 
 describe('IXN Actions', () => {
   const moment = require('moment');
-  let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
+  let target = new TargetModel(1, 1, 1, 'TGT20-123', '00ABC1234567890', '', '');
   let segments = [
     new SegmentModel(1, 1, 1, 1, moment(123), moment(456)),
     new SegmentModel(2, 1, 1, 1, moment(567), moment(678))

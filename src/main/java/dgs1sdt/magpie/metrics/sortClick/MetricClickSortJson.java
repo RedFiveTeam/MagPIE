@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.metrics.sortClick;
 
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -327,7 +327,7 @@ describe('reducer', () => {
   });
 
   it('should handle loadIxnPage', () => {
-    let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
+    let target = new TargetModel(1, 1, 1, 'TGT20-123', '00ABC1234567890', '', '');
     let segments = [
       new SegmentModel(1, 1, 1, 1, moment(123), moment(456)),
       new SegmentModel(2, 1, 1, 1, moment(567), moment(678))
@@ -386,7 +386,7 @@ describe('reducer', () => {
   });
 
   it('should handle EXIT_IXN_PAGE', () => {
-    let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
+    let target = new TargetModel(1, 1, 1, 'TGT20-123', '00ABC1234567890', '', '');
     let navToIxnPage = {
       type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
       target: target,
@@ -415,7 +415,7 @@ describe('reducer', () => {
   it('should handle UPDATE_TGT_SUCCESS', () => {
     let rfi: RfiModel = new RfiModel(1, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 1);
     let exploitDate : ExploitDateModel = new ExploitDateModel(1, 1, moment.utc('2019-11-02'));
-    let target = new TargetModel(1, 1, 1, "TGT20-123", "00ABC1234567890", "", "");
+    let target = new TargetModel(1, 1, 1, 'TGT20-123', '00ABC1234567890', '', '');
     let navToTgtPage = {
       type: TgtActionTypes.NAVIGATE_TO_TGT_PAGE,
       viewTgtPage: true,

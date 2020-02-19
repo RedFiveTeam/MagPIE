@@ -1,7 +1,7 @@
 package dgs1sdt.magpie.metrics.changeTarget;
 
-import dgs1sdt.magpie.rfis.targets.Target;
-import dgs1sdt.magpie.rfis.targets.TargetJson;
+import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetJson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -52,8 +52,13 @@ public class MetricChangeTarget {
         oldData = oldTarget.getDescription();
         newData = newTarget.getDescription();
         break;
+      case "status":
+        oldData = oldTarget.getStatus();
+        newData = newTarget.getStatus();
+        break;
       default:
         throw new Exception();
     }
   }
+
 }

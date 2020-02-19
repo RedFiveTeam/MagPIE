@@ -75,6 +75,7 @@ export const TgtDashboard: React.FC<Props> = props => {
         index={index}
         className={"date-divider--" + moment(exploitDateModel.exploitDate).format("D-MMM-YY")}
         key={index}
+        addingOrEditing={!(addTarget === -1 && editTarget === -1 && !addDate)}
       />
     );
   }

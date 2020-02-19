@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.rfis;
 
+
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.metrics.MetricController;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
@@ -182,5 +183,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
     assertEquals(2, rfiSecond.getPriority());
     assertEquals(3, rfiThird.getPriority());
     assertEquals(4, rfiFourth.getPriority());
+
+
   }
 }

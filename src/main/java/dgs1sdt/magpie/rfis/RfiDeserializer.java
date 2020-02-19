@@ -1,6 +1,6 @@
 package dgs1sdt.magpie.rfis;
 
-import dgs1sdt.magpie.Utils;
+import dgs1sdt.magpie.Utilities;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,9 +50,9 @@ public class RfiDeserializer {
   private static Timestamp getLastUpdate(Element element) throws Exception {
     Date lastUpdate;
     try {
-      lastUpdate = Utils.parseDate(getStringFromElement(element, "gets:lastUpdate"));
+      lastUpdate = Utilities.parseDate(getStringFromElement(element, "gets:lastUpdate"));
     } catch (Exception e) {
-      lastUpdate = Utils.parseDate(getStringFromElement(element, "getsrfi:receiveDate"));
+      lastUpdate = Utilities.parseDate(getStringFromElement(element, "getsrfi:receiveDate"));
     }
     return new Timestamp(lastUpdate.getTime());
   }
@@ -60,7 +60,7 @@ public class RfiDeserializer {
   private static Timestamp getLtiov(Element element) {
     Timestamp ltiov;
     try {
-      Date date = Utils.parseDate(getStringFromElement(element, "gets:ltiov"));
+      Date date = Utilities.parseDate(getStringFromElement(element, "gets:ltiov"));
       ltiov = new Timestamp(date.getTime());
     } catch (Exception e) {
       ltiov = null;
@@ -74,4 +74,5 @@ public class RfiDeserializer {
     }
     return "N/A";
   }
+
 }
