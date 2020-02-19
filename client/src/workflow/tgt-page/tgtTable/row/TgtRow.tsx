@@ -79,8 +79,6 @@ export const TgtRow: React.FC<Props> = props => {
   const [action, setAction] = useState(Action.NONE);
 
 
-
-
   const handleAction = () => {
     switch (action) {
       case Action.DELETING:
@@ -171,11 +169,11 @@ export const TgtRow: React.FC<Props> = props => {
         props.rfi
       );
       setTimeout(() => {
-          setName('');
-          setMgrs('');
-          setNotes('');
-          setDescription('');
-        }, 500)
+        setName('');
+        setMgrs('');
+        setNotes('');
+        setDescription('');
+      }, 500)
     }
   };
 
@@ -199,12 +197,12 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   const handleDoubleClick = () => {
-    if (props.target) {
+    if (props.target && !props.editable) {
       props.setAddEditTarget(Status.EDIT, props.target.id);
       setName(props.target.name);
       setMgrs(props.target.mgrs);
       setNotes(props.target.notes ? props.target.notes : '');
-      setDescription(props.target.description? props.target.description : '');
+      setDescription(props.target.description ? props.target.description : '');
       setTimeout(() => {
         if (props.target)
           document.getElementById('tgt-name-input-' + props.target.id)!.focus();
@@ -216,10 +214,6 @@ export const TgtRow: React.FC<Props> = props => {
 
   const inputProps = {
     id: 'tgt-name-input-' + (props.target ? props.target.id.toString() : 'new'),
-  };
-
-  const InputProps = {
-    onDoubleClick: handleDoubleClick
   };
 
   return (
@@ -241,6 +235,9 @@ export const TgtRow: React.FC<Props> = props => {
             <TextField
               autoFocus={true}
               className={classNames("tgt-name", props.editable ? null : 'input-disabled', classes.margin, 'tgt-name-input-' + (props.target ? props.target.id : 'new'))}
+              // Display local hook if editing, otherwise, if local hook is not empty display it, otherwise display props.
+              // Local hook is on a setTimeout to be cleared  in order to update the display if the user submits a
+              // conflicting target name without there being a cut back to the old data for a split second on update
               value={name !== "" ? name : (props.target && !props.editable ? props.target.name : name)}
               disabled={disabled}
               required
@@ -249,9 +246,6 @@ export const TgtRow: React.FC<Props> = props => {
               error={nameError}
               onChange={inputName}
               inputProps={inputProps}
-              InputProps={InputProps}
-              onDoubleClick={handleDoubleClick}
-              // id={'tgt-name-input-' + (props.target ? props.target.id : 'new')}
             />
             <TextField
               className={classNames("mgrs", props.editable ? null : 'input-disabled', classes.margin)}

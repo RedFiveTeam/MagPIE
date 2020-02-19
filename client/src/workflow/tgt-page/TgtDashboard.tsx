@@ -44,12 +44,12 @@ export const TgtDashboard: React.FC<Props> = props => {
   const handleAddEdit = (status: Status, id?: number) => {
     switch(status) {
       case Status.ADD:
-        if (id && editTarget === -1) {
+        if (id && addTarget === -1 && editTarget === -1) {
           setAddTarget(id);
         }
         break;
       case Status.EDIT:
-        if (id && addTarget === -1) {
+        if (id && addTarget === -1 && editTarget === -1) {
           setEditTarget(id);
         }
         break;
