@@ -14,7 +14,7 @@ describe('TgtTableHeader', () => {
     expect(subject.find('.header--mgrs').text()).toContain('MGRS');
     expect(subject.find('.header--notes').text()).toContain('EEI Notes');
     expect(subject.find('.header--description').text()).toContain('TGT Description');
-    expect(subject.find('.header--status').text()).toContain('Status');
+    // expect(subject.find('.header--status').text()).toContain('Status');
     expect(subject.find('.header--delete').text()).toContain('Delete');
     expect(subject.find('.header--exploitation').text()).toContain('Exploitation');
 

@@ -5,7 +5,6 @@ import { TargetModel } from '../../models/TargetModel';
 import classNames from 'classnames';
 import { Box, createMuiTheme, createStyles, TextField, Theme } from '@material-ui/core';
 import { crayonBox } from '../../../../resources/crayonBox';
-import AddTgtDateButtonVector from '../../../../resources/icons/AddTgtDateButtonVector';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { StyledDeleteTgtButtonVector } from '../../../../resources/icons/DeleteTgtButtonVector';
 import { StyledExploitationLogButtonVector } from '../../../../resources/icons/ExploitationLogButtonVector';
@@ -146,19 +145,18 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   const validateAllAndSubmit = () => {
-    let errors: boolean = false; // To avoid race condition for local state nameError and mgrsError
-    setNameError(false);
-    setMgrsError(false);
-    setNameError(strongMatchNameError(name));
-    setMgrsError(strongMatchMgrsError(mgrs));
+    let nameErrorLocal = strongMatchNameError(name);
+    let mgrsErrorLocal = strongMatchMgrsError(mgrs);
+
+    setNameError(nameErrorLocal);
+    setMgrsError(mgrsErrorLocal);
     if (!strongValidateName) {
-      setStrongValidateName(strongMatchNameError(name));
+      setStrongValidateName(nameErrorLocal);
     }
     if (!strongValidateMgrs) {
-      setStrongValidateMgrs(strongMatchMgrsError(mgrs));
+      setStrongValidateMgrs(mgrsErrorLocal);
     }
-    errors = (strongMatchMgrsError(mgrs) || strongMatchNameError(name));
-    if (!errors) {
+    if (!(nameErrorLocal || mgrsErrorLocal)) {
       props.setAddEditTarget(Status.VIEW);
       props.submitPostTarget(
         new TargetPostModel(
@@ -175,6 +173,8 @@ export const TgtRow: React.FC<Props> = props => {
         setDescription('');
       }, 500)
     }
+
+    setAction(Action.NONE);
   };
 
   function onBlur(event: any) {
@@ -280,25 +280,25 @@ export const TgtRow: React.FC<Props> = props => {
                 }
               }}
             />
-            <Box
-              height={32}
-              width={110}
-              border={2}
-              borderRadius={16}
-              borderColor={crayonBox.eggWhite}
-              bgcolor={theme.palette.secondary.main}
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-              paddingRight={0.25}
-              paddingLeft={2.8}
-              fontSize={12}
-              className={classNames("status-button", "no-select")}
-            >
-              Status
-              <AddTgtDateButtonVector/>
-            </Box>
+            {/*<Box*/}
+            {/*  height={32}*/}
+            {/*  width={110}*/}
+            {/*  border={2}*/}
+            {/*  borderRadius={16}*/}
+            {/*  borderColor={crayonBox.eggWhite}*/}
+            {/*  bgcolor={theme.palette.secondary.main}*/}
+            {/*  display="flex"*/}
+            {/*  flexDirection="row"*/}
+            {/*  alignItems="center"*/}
+            {/*  justifyContent="space-between"*/}
+            {/*  paddingRight={0.25}*/}
+            {/*  paddingLeft={2.8}*/}
+            {/*  fontSize={12}*/}
+            {/*  className={classNames("status-button", "no-select")}*/}
+            {/*>*/}
+            {/*  Status*/}
+            {/*  <AddTgtDateButtonVector/>*/}
+            {/*</Box>*/}
             <div className={"delete-tgt"}
                  id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")}
                  onClick={handleDeleteClick}>
@@ -355,7 +355,7 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   }
   
   .description {
-    width: 262px;
+    width: 382px;
   }
   
   .status {
