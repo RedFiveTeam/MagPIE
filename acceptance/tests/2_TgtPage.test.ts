@@ -2,7 +2,7 @@
 
 Feature('Tgt Page');
 
-Scenario ('Should be able to navigate to and exit the target page', (I) => {
+Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
@@ -47,7 +47,7 @@ Scenario('Should be able to delete dates on the Tgt page', (I) => {
   I.dontSeeElement(locate('.MuiInputBase-input').withAttr({value: '02/09/2020'}));
 });
 
-Scenario('Should be able to add targets on the Tgt page', (I) => {
+Scenario('Should be able to add tgts on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
@@ -68,7 +68,7 @@ Scenario('Should be able to add targets on the Tgt page', (I) => {
   I.dontSeeElement('.add-tgt-button-disabled');
 });
 
-Scenario('Should be able to edit targets on the tgt page', (I) => {
+Scenario('Should be able to edit tgts on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   // TODO: rename the cell--add-tgt-button class to something more accurate i.e. cell--nav-to-tgt-page
@@ -92,7 +92,7 @@ Scenario('Should be able to edit targets on the tgt page', (I) => {
   I.seeElement(locate('.Mui-disabled').withAttr({value: '12QWE1234567890'}));
 });
 
-Scenario('should not be able to add targets with conflicting names', (I) => {
+Scenario('should not be able to add tgts with conflicting names', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');
@@ -129,7 +129,7 @@ Scenario('should not be able to add targets with conflicting names', (I) => {
   I.seeElement(locate('.Mui-disabled').withAttr({value: 'SDT20-999'}));
 });
 
-Scenario('Should be able to delete targets on the Tgt page', (I) => {
+Scenario('Should be able to delete tgts on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--add-tgt-button');

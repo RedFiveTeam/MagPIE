@@ -49,13 +49,13 @@ function SegmentTextMask(props: TextMaskCustomProps) {
       }}
       mask={[/\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/]}
       // The placeholder character is a Mongolian zero so that you can overwrite them with '0'.
-      placeholderChar={'\u1810'}
+      placeholderChar={'0'}
       showMask
     />
   );
 }
 
-const initZero = '\u1810\u1810:\u1810\u1810:\u1810\u1810';
+const initZero = '00:00:00';
 
 export const SegmentDivider: React.FC<Props> = props => {
   const classes = useStyles();
@@ -66,7 +66,7 @@ export const SegmentDivider: React.FC<Props> = props => {
   const [segmentEndError, setSegmentEndError] = React.useState(false);
 
   const segmentError = (segment: string): boolean => {
-    segment = segment.replace(/\u1810/g, '0');
+    // segment = segment.replace(/\u1810/g, '0');
     return segment.match(/([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/) === null;
   };
 
@@ -85,7 +85,7 @@ export const SegmentDivider: React.FC<Props> = props => {
   };
 
   const convertSegmentStringToMoment = (segment: string): Moment => {
-    segment = segment.replace(/\u1810/g, '0');
+    // segment = segment.replace(/\u1810/g, '0');
 
     let hours: number = +segment.substr(0, 2);
     let minutes: number = +segment.substr(3, 2);

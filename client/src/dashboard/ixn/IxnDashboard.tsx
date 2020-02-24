@@ -86,7 +86,7 @@ export const IxnDashboard: React.FC<Props> = props => {
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
-            paddingRight={0.4}
+            paddingRight={0.45}
             paddingLeft={1.8}
             fontSize={12}
             onClick={() => {

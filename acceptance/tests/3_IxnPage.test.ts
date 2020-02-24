@@ -14,10 +14,6 @@ Scenario ('Should be able to navigate to and exit the interactions page', (I) =>
   I.fillField('.name', 'SDT20-123');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
-  I.pressKey('Tab');
-  I.fillField('.notes', 'notes');
-  I.pressKey('Tab');
-  I.fillField('.description', 'desc');
   I.pressKey('Enter');
   I.seeElement('.add-tgt-button');
   I.dontSeeElement('.add-tgt-button-disabled');
@@ -28,8 +24,6 @@ Scenario ('Should be able to navigate to and exit the interactions page', (I) =>
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
   I.waitForText('MGRS: 12QWE1231231231', 10);
-  I.waitForText('EEI Notes: notes', 10);
-  I.waitForText('Date: 02/01/2020', 10);
 
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI: 20-325', 10);
@@ -43,11 +37,11 @@ Scenario('Should be able to add segments', (I) => {
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
   I.click('.add-segment-button');
-  I.fillField('.segment-start', '12:00:00');
+  I.fillField('.segment-start', '12');
   I.pressKey('Tab');
-  I.fillField('.segment-end', '12:30:45');
+  I.fillField('.segment-end', '12345');
   I.pressKey('Enter');
   I.waitForText('12:00:00Z');
-  I.waitForText('12:30:45Z');
+  I.waitForText('12:34:50Z');
   I.dontSee('.segment-input-container');
 });
