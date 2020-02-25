@@ -39,9 +39,9 @@ Scenario('Should be able to add segments', (I) => {
   I.click('.add-segment-button');
   I.fillField('.segment-start', '12');
   I.pressKey('Tab');
-  I.fillField('.segment-end', '123045');
+  I.fillField('.segment-end', '12304');
   I.pressKey('Enter');
   I.waitForText('12:00:00Z');
-  I.waitForText('12:30:45Z');
+  I.waitForText('12:30:40Z');
   I.dontSee('.segment-input-container');
 });

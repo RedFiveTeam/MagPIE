@@ -126,7 +126,7 @@ export const StyledIxnDashboard = styled(
   display: flex;
   height: 100vh;
   flex-direction: column;
-  justify-content: space-between;
+  //justify-content: space-between;
   align-items: center;
   
   .add-segment-button-container {
@@ -171,7 +171,7 @@ export const StyledIxnDashboard = styled(
   }
   
   .ixn-dash-body {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 141px);
     display: flex;
     flex-direction: column;
     align-items: center;
