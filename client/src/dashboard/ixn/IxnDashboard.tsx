@@ -3,18 +3,20 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import classNames from 'classnames';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from '../../store';
 import { StyledIxnDashboardHeader } from './IxnDashboardHeader';
 import { Box, createMuiTheme } from '@material-ui/core';
 import { crayonBox } from '../../resources/crayonBox';
 import { ExploitationLogButtonVectorSmall } from '../../resources/icons/ExploitationLogButtonVector';
-import { StyledIxnTable } from './IxnTable';
-import { StyledSegmentDivider } from './SegmentDivider';
+import { StyledIxnTable } from './table/IxnTable';
+import { StyledSegmentDivider } from './table/SegmentDivider';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
-import { updateSegment } from '../../store/ixn';
+import { updateIxn, updateSegment } from '../../store/ixn';
 import theme from '../../resources/theme';
-
+import { StyledTableHeader } from '../components/header/TableHeader';
+import { StyledSegmentRegion } from './table/SegmentRegion';
+import IxnModel from '../../store/ixn/IxnModel';
 
 interface Props {
   className?: string
@@ -23,8 +25,9 @@ interface Props {
 export const IxnDashboard: React.FC<Props> = props => {
   const [addSegment, setAddSegment] = useState(false);
 
-  const target: TargetModel = useSelector(({ixns}: ApplicationState) => ixns.target);
-  const segments: SegmentModel[] = useSelector(({ixns}: ApplicationState) => ixns.segments);
+  const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
+  const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
+  const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
 
   const theme = createMuiTheme({
     palette: {
@@ -43,14 +46,20 @@ export const IxnDashboard: React.FC<Props> = props => {
     dispatch(updateSegment(segment));
   };
 
-  function printSegments(segmentList: SegmentModel[]) {
+  const handlePostIxn = (ixn: IxnModel) => {
+    dispatch(updateIxn(ixn))
+  };
+
+  function printSegmentRegions(segmentList: SegmentModel[]) {
     return segmentList.map((segment: SegmentModel, index: number) =>
-      <StyledSegmentDivider
+      <StyledSegmentRegion
         target={target}
         segment={segment}
+        ixns={ixns.filter((ixn) => ixn.segmentId === segment.id)}
         key={index}
         postSegment={handlePostSegment}
-      />
+        postIxn={handlePostIxn}
+        />
     );
   }
 
@@ -60,20 +69,27 @@ export const IxnDashboard: React.FC<Props> = props => {
         target={target}
       />
       <div className={'ixn-dash-body'}>
+        {segments.length > 0 ?
+          <StyledTableHeader
+            headers={['Exploit Analyst', 'Time', 'Activity', 'Track ID']}
+          />
+          :
+          null
+        }
         <StyledIxnTable>
-          {printSegments(segments)}
+          {printSegmentRegions(segments)}
           {addSegment ?
             <StyledSegmentDivider
               className={'segment-divider-placeholder'}
               target={target}
               segment={null}
               postSegment={handlePostSegment}
+              postIxn={handlePostIxn}
             />
             :
             null
           }
         </StyledIxnTable>
-
         <div className={'add-segment-button-container'}>
           <Box
             height={42}
@@ -105,28 +121,21 @@ export const IxnDashboard: React.FC<Props> = props => {
             Add Segment
             <ExploitationLogButtonVectorSmall/>
           </Box>
+          {/*Prevents user from tabbing out of page to address bar*/}
+          <input className={'hidden-input'}/>
         </div>
       </div>
     </div>
   )
 };
 
-
-const mapStateToProps = ({ixns}: ApplicationState) => ({
-  target: ixns.target,
-});
-
-const mapDispatchToProps = {};
-
-export const StyledIxnDashboard = styled(
-  connect(mapStateToProps, mapDispatchToProps)(IxnDashboard))`
+export const StyledIxnDashboard = styled(IxnDashboard)`
   font-size: ${theme.font.sizeRow};
   font-family: ${theme.font.familyRow};
   color: ${theme.color.fontPrimary};
   display: flex;
   height: 100vh;
   flex-direction: column;
-  //justify-content: space-between;
   align-items: center;
   
   .add-segment-button-container {
@@ -221,5 +230,31 @@ export const StyledIxnDashboard = styled(
     justify-content: center;
     align-items: center;
     font-size: 16px;
+  }
+  
+  .header {
+    margin-top: -25px;
+  }
+  
+  .header-cell--analyst {
+    width: 154px;
+  }
+  
+  .header-cell--time {
+    width: 106px;
+  }
+  
+  .header-cell--activity {
+    width: 414px;
+  }
+  
+  .header-cell--id {
+    width: 83px;
+  }
+  
+  .hidden-input {
+    opacity: 0;
+    z-index: -1;
+    position: absolute;
   }
 `;

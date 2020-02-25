@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import '../../setupEnzyme';
-import { TgtDateDivider } from '../../dashboard/tgt/TgtDateDivider';
+import { TgtDateDivider } from '../../dashboard/tgt/table/TgtDateDivider';
 import { Modal } from '@material-ui/core';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 

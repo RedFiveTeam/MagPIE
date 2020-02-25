@@ -8,6 +8,7 @@ import { TgtActionTypes, tgtReducer } from '../store/tgt';
 import { ixnReducer } from '../store/ixn/Reducer';
 import { IxnActionTypes } from '../store/ixn';
 import { SegmentModel } from '../store/tgtSegment/SegmentModel';
+import IxnModel from '../store/ixn/IxnModel';
 
 const moment = require('moment');
 
@@ -331,12 +332,17 @@ describe('reducer', () => {
       new SegmentModel(1, 1, 1, 1, moment(123), moment(456)),
       new SegmentModel(2, 1, 1, 1, moment(567), moment(678))
     ];
+    let ixns = [
+      new IxnModel(1, 1, 1, 1, 1, "Billy Bob", moment(124), "People have done a thing", "123-234"),
+      new IxnModel(1, 1, 1, 1, 2, "Billy Bob", moment(568), "People have done another thing", "123-456"),
+    ];
 
     let navToIxnPage = {
       type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
       target: target,
       segments: segments,
-      dateString: '11/14/2020'
+      dateString: '11/14/2020',
+      ixns: ixns
     };
 
     let state = ixnReducer(undefined, navToIxnPage);
@@ -346,7 +352,8 @@ describe('reducer', () => {
         viewIxnPage: true,
         target: target,
         segments: segments,
-        dateString: '11/14/2020'
+        dateString: '11/14/2020',
+        ixns: ixns,
       });
 
     let newSegments = [
@@ -354,9 +361,16 @@ describe('reducer', () => {
       new SegmentModel(2, 1, 1, 1, moment(678), moment(789))
     ];
 
+    let newIxns = [
+      new IxnModel(1, 1, 1, 1, 1, "Billy Bob", moment(124), "People have done a thing", "123-234"),
+      new IxnModel(1, 1, 1, 1, 2, "Billy Bob", moment(568), "People have done another thing", "123-456"),
+      new IxnModel(1, 1, 1, 1, 2, "Billy Bob", moment(569), "People have done a different thing", "123-456"),
+    ];
+
     let reloadIxnPage = {
       type: IxnActionTypes.RELOAD_IXN_PAGE,
-      segments: newSegments
+      segments: newSegments,
+      ixns: newIxns
     };
 
     state = ixnReducer(state, reloadIxnPage);
@@ -366,7 +380,8 @@ describe('reducer', () => {
         viewIxnPage: true,
         target: target,
         segments: newSegments,
-        dateString: '11/14/2020'
+        dateString: '11/14/2020',
+        ixns: newIxns,
       });
   });
 
@@ -376,7 +391,8 @@ describe('reducer', () => {
       type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
       target: target,
       dateString: '11/11/2011',
-      segments: []
+      segments: [],
+      ixns: []
     };
 
     let state = ixnReducer(undefined, navToIxnPage);
@@ -392,6 +408,7 @@ describe('reducer', () => {
         target: target,
         dateString: '11/11/2011',
         segments: [],
+        ixns: [],
       });
   });
 
@@ -427,7 +444,7 @@ describe('reducer', () => {
   });
 
   //TODO
-  // it('should post sort click metrics', () => {
+  // it('should post sort click metric', () => {
   //
   //   jest.mock('');
   //   let postSortClickSpy: jest.Mock = jest.fn();
@@ -435,7 +452,7 @@ describe('reducer', () => {
   //
   //   let setupRfis = {
   //     type: ActionTypes.FETCH_RFI_SUCCESS,
-  //     rfis: multiStatusRfiList
+  //     rfi: multiStatusRfiList
   //   };
   //   let state = reducer(undefined, setupRfis);
   //

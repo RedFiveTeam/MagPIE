@@ -26,8 +26,6 @@ export const RfiTableHeader: React.FC<Props> = props => {
   // let sortableHeaders: string[] = ['PRI', 'RFI', 'CC', 'Customer', 'LTIOV'];
   // let unsortableHeaders: string[] = ['TGTs', 'Description'];
 
-
-
   return (
     <div className={classNames('header', props.className)}>
       <div className={'header-cell--textLabels'}>
@@ -79,9 +77,8 @@ export const RfiTableHeader: React.FC<Props> = props => {
   );
 };
 
-
-const mapStateToProps = ({rfis}: ApplicationState) => ({
-  sortKey: rfis.sortKey
+const mapStateToProps = ({rfiState}: ApplicationState) => ({
+  sortKey: rfiState.sortKey
 });
 
 const mapDispatchToProps = {

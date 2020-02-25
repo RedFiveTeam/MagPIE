@@ -6,7 +6,6 @@ import RfiFetchRequestModel from '../metrics/RfiFetchRequestModel';
 import RfiPriorityPostModel from './RfiPriorityPostModel';
 import { postRfiFetchTimeMetric } from '../metrics';
 
-
 export const sortRfis = (field: Field) => {
   return {type: RfiActionTypes.SORT_RFIS, field: field}
 };
@@ -20,7 +19,7 @@ export const reprioritizeRfis = (reprioritizedList: RfiModel[]) => {
 
 export const postRfiPriorityUpdate = (rfis: RfiPriorityPostModel[]) => {
   return fetch(
-    '/api/rfis/update-priority',
+    '/api/rfi/update-priority',
     {
       method: 'post',
       headers: {
@@ -47,7 +46,6 @@ export const fetchRfiSuccess = (rfis: any, startTime: number) => {
   }
 };
 
-
 export const fetchRfiUpdating = (rfis: any) => {
   let rfiList = RfiDeserializer.deserialize(rfis);
   return {
@@ -55,5 +53,3 @@ export const fetchRfiUpdating = (rfis: any) => {
     rfis: rfiList
   }
 };
-
-

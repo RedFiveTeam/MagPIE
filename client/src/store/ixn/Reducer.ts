@@ -2,13 +2,15 @@ import { TargetModel } from '../tgt/TargetModel';
 import { Reducer } from 'redux';
 import { IxnActionTypes, IxnState } from './Types';
 import { SegmentModel } from '../tgtSegment/SegmentModel';
+import IxnModel from './IxnModel';
 
 
 const initState: IxnState = {
   viewIxnPage: false,
   target: {} as TargetModel,
   dateString: '',
-  segments: [] as SegmentModel[]
+  segments: [] as SegmentModel[],
+  ixns: [] as IxnModel[]
 };
 
 const reducer: Reducer<IxnState> = (state = initState, action: any) => {
@@ -19,12 +21,14 @@ const reducer: Reducer<IxnState> = (state = initState, action: any) => {
         viewIxnPage: true,
         target: action.target,
         dateString: action.dateString,
-        segments: action.segments
+        segments: action.segments,
+        ixns: action.ixns,
       };
     case IxnActionTypes.RELOAD_IXN_PAGE:
       return {
         ...state,
-        segments: action.segments
+        segments: action.segments,
+        ixns: action.ixns,
       };
     case IxnActionTypes.EXIT_IXN_PAGE:
       return {

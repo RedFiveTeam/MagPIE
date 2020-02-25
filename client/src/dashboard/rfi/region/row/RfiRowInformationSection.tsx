@@ -103,11 +103,11 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
       </span>
       <div>
           {props.rfi.status === RfiStatus.OPEN ?
-        <button onClick={addTgtToRFI} className={'cell--add-tgt-button'}>
+        <button onClick={addTgtToRFI} className={'cell--navigate-to-tgt-button'}>
           <TgtPageButtonVector/>
         </button>
             :
-            <div className={'cell--add-tgt-button-disabled'}>
+            <div className={'cell--navigate-to-tgt-button-disabled'}>
               <span>-</span>
             </div>
           }
@@ -132,8 +132,8 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = ({rfis}: ApplicationState) => ({
-  prioritizing: rfis.sortKey.field === Field.PRIORITY && rfis.sortKey.defaultOrder,
+const mapStateToProps = ({rfiState}: ApplicationState) => ({
+  prioritizing: rfiState.sortKey.field === Field.PRIORITY && rfiState.sortKey.defaultOrder,
 });
 
 const mapDispatchToProps = {
@@ -207,7 +207,7 @@ export const StyledRfiRowInformationSection = styled(
     z-index: -100;
   }
   
-  .cell--add-tgt-button {
+  .cell--navigate-to-tgt-button {
     border: none;
     cursor: pointer;
     background: none;
@@ -224,7 +224,7 @@ export const StyledRfiRowInformationSection = styled(
     }
   }
   
-  .cell--add-tgt-button-disabled {
+  .cell--navigate-to-tgt-button-disabled {
     border: none;
     background: none;
     width: 59px;  
@@ -326,5 +326,4 @@ export const StyledRfiRowInformationSection = styled(
       }
     }
   }
-  
 `;

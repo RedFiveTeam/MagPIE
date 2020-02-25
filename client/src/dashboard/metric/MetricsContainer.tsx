@@ -6,8 +6,6 @@ import { Bar, defaults } from 'react-chartjs-2';
 import { ApplicationState } from '../../store';
 import { fetchGetsClicksMetrics, fetchSiteVisitMetrics, fetchSiteVisitsGraphWeek } from '../../store/metrics/Thunks';
 
-
-
 interface Props {
   fetchSiteVisitMetrics: () => void;
   fetchGetsClicksMetrics: () => void;
@@ -67,10 +65,10 @@ export class MetricsContainer extends React.Component<Props, any> {
   }
 }
 
-const mapStateToProps = ({metrics}: ApplicationState) => ({
-  siteVisits: metrics.siteVisits,
-  GetsClicks: metrics.GetsClicks,
-  siteVisitsGraphWeek: metrics.siteVisitsGraphWeek
+const mapStateToProps = ({metricState}: ApplicationState) => ({
+  siteVisits: metricState.siteVisits,
+  GetsClicks: metricState.GetsClicks,
+  siteVisitsGraphWeek: metricState.siteVisitsGraphWeek
 });
 
 const mapDispatchToProps = {

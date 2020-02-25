@@ -44,8 +44,8 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
   )
 };
 
-const mapStateToProps = ({ixns}: ApplicationState) => ({
-  dateString: ixns.dateString
+const mapStateToProps = ({ixnState}: ApplicationState) => ({
+  dateString: ixnState.dateString
 });
 
 const mapDispatchToProps = {

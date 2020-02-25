@@ -7,16 +7,12 @@ import GetsClickRequestModel from '../../../../store/metrics/GetsClickRequestMod
 import ExternalLinkVector from '../../../../resources/icons/ExternalLinkVector';
 import { postGetsClick } from '../../../../store/metrics';
 
-
 interface Props {
   status: RfiStatus;
   url: string;
   postGetsClick: (getsClickRequestModel: GetsClickRequestModel) => void;
   className?: string;
 }
-
-//TODO: tests
-// test that RfiRowButtonSection renders is in RfiRow.test.tsx
 
 export const RfiRowButtonSection: React.FC<Props> = props => {
 
@@ -49,7 +45,6 @@ const mapStateToProps = () => ({});
 const mapDispatchToProps = {
   postGetsClick: postGetsClick,
 };
-
 
 export const StyledRfiRowButtonSection = styled(connect(mapStateToProps, mapDispatchToProps)(RfiRowButtonSection))`
   width: 164px;

@@ -2,12 +2,11 @@ import '../../setupEnzyme';
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
-import { TgtDateRegion } from '../../dashboard/tgt/TgtDateRegion';
+import { TgtDateRegion } from '../../dashboard/tgt/table/TgtDateRegion';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
-import { StyledTgtRow } from '../../dashboard/tgt/tgtTable/row/TgtRow';
+import { StyledTgtRow } from '../../dashboard/tgt/table/TgtRow';
 import { Status } from '../../dashboard/tgt/TgtDashboard';
-
 
 describe("Target Date Region", () => {
   const moment = require('moment');
@@ -41,7 +40,6 @@ describe("Target Date Region", () => {
       />
     );
   });
-
 
   it('should render the targets that are given to it', () => {
     expect(subject.find(StyledTgtRow).length).toBe(3);
@@ -114,8 +112,5 @@ describe("Target Date Region", () => {
     subject.find('.add-tgt-button-disabled').simulate('.click');
 
     expect(addEditSpy).not.toHaveBeenCalled()
-
   });
-
-
 });

@@ -9,7 +9,8 @@ import { RouterState } from 'connected-react-router';
 
 configure({adapter: new EnzymeAdapter()});
 
-const initRouter: RouterState = {
+const initRouter: RouterState =
+  {
     location: {
       pathname: 'Pathname',
       search: 'Search',
@@ -17,13 +18,12 @@ const initRouter: RouterState = {
       hash: 'Hash',
     },
     action: 'PUSH'
-  }
-;
+  };
 
 export const initStore: ApplicationState = {
-  rfis: rfiInitState,
-  tgts: tgtInitState,
-  ixns: ixnInitState,
-  metrics: metricsInitState,
+  rfiState: rfiInitState,
+  tgtState: tgtInitState,
+  ixnState: ixnInitState,
+  metricState: metricsInitState,
   router: initRouter,
 };

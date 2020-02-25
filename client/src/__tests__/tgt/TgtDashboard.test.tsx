@@ -2,7 +2,7 @@ import { TgtDashboard } from '../../dashboard/tgt/TgtDashboard';
 import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import { StyledTgtTable } from '../../dashboard/tgt/tgtTable/TgtTable';
+import { StyledTgtTable } from '../../dashboard/tgt/table/TgtTable';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 

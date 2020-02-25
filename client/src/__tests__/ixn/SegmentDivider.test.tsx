@@ -2,8 +2,9 @@ import '../../setupEnzyme';
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { TargetModel } from '../../store/tgt/TargetModel';
-import { SegmentDivider } from '../../dashboard/ixn/SegmentDivider';
+import { SegmentDivider } from '../../dashboard/ixn/table/SegmentDivider';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import IxnModel from '../../store/ixn/IxnModel';
 
 describe("Segment Divider", () => {
   const moment = require('moment');
@@ -30,6 +31,7 @@ describe("Segment Divider", () => {
         target={target}
         segment={segment}
         postSegment={submitSegmentSpy}
+        postIxn={(ixn: IxnModel) => {}}
       />
     );
   });

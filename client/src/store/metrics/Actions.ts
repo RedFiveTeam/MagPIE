@@ -38,7 +38,7 @@ export const postSiteVisit = () => {
       {
         method: 'post'
       }
-    ).catch((reason => {console.log("Failed to post sort click metric: " + reason)}));
+    ).catch((reason => {console.log("Failed to post sort click metrics: " + reason)}));
   }
 };
 
@@ -54,7 +54,7 @@ export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
         },
         body: JSON.stringify(getsClickRequestModel),
       }
-    ).catch((reason => {console.log("Failed to post GETS click metric: " + reason)}));
+    ).catch((reason => {console.log("Failed to post GETS click metrics: " + reason)}));
   }
 };
 
@@ -70,12 +70,11 @@ export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
         },
         body: JSON.stringify(sortClickRequestModel),
       }
-    ).catch((reason => {console.log("Failed to post sort click metric: " + reason)}));
+    ).catch((reason => {console.log("Failed to post sort click metrics: " + reason)}));
   }
 };
 
 export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestModel) => {
-
   return () => {
     return fetch(
       '/api/metrics/rfi-fetch',
@@ -87,7 +86,7 @@ export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestMode
         },
         body: JSON.stringify(rfiFetchRequestModel),
       }
-    ).catch((reason => {console.log("Failed to post RFI fetch time metric: " + reason)}));
+    ).catch((reason => {console.log("Failed to post RFI fetch time metrics: " + reason)}));
   }
 };
 
@@ -98,9 +97,6 @@ export const postRefreshClick = () => {
       {
         method: 'post'
       }
-    ).catch((reason => {console.log("Failed to post refresh click metric: " + reason)}));
+    ).catch((reason => {console.log("Failed to post refresh click metrics: " + reason)}));
   }
 };
-
-
-
