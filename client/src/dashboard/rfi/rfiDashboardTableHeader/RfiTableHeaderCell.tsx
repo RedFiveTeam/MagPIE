@@ -43,8 +43,8 @@ export const RfiTableHeaderCell: React.FC<Props> = props => {
   )
 };
 
-const mapStateToProps = ({rfis}: ApplicationState) => ({
-  sortKey: rfis.sortKey
+const mapStateToProps = ({rfiState}: ApplicationState) => ({
+  sortKey: rfiState.sortKey
 });
 
 export const StyledHeaderCell = styled(connect(mapStateToProps)(RfiTableHeaderCell))`
@@ -69,5 +69,4 @@ export const StyledHeaderCell = styled(connect(mapStateToProps)(RfiTableHeaderCe
     height: 10px;
     width: 10px;
   }
-
 `;

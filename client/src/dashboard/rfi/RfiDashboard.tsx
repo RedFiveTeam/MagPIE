@@ -56,7 +56,6 @@ function openRfis(rfis: RfiModel[], scrollRegionRef: any, sortKey: SortKeyModel)
   }
 }
 
-
 function closedRfis(rfis: RfiModel[], scrollRegionRef: any) {
   return rfis.map((rfi: RfiModel, index: number) =>
     <ClosedRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}/>
@@ -89,7 +88,6 @@ export const RfiDashboard: React.FC<Props> = props => {
             }}
             shadowSize={10}
           >
-
             <Droppable droppableId={`region--droppable--open`}>
               {(provided, snapshot) => {
                 return (
@@ -136,11 +134,11 @@ export const RfiDashboard: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = ({rfis}: ApplicationState) => ({
-  pendingRfis: rfis.pendingRfis,
-  openRfis: rfis.openRfis,
-  closedRfis: rfis.closedRfis,
-  sortKey: rfis.sortKey
+const mapStateToProps = ({rfiState}: ApplicationState) => ({
+  pendingRfis: rfiState.pendingRfis,
+  openRfis: rfiState.openRfis,
+  closedRfis: rfiState.closedRfis,
+  sortKey: rfiState.sortKey
 });
 
 const mapDispatchToProps = {
@@ -153,7 +151,7 @@ export const StyledRfiDashboard = styled(
   flex-direction: column;
   margin-left: 20px;
   
-  .rfi-table--body{
+  .rfiState-table--body{
     overflow-y: auto; 
     display: flex;
     margin-bottom: 48px;

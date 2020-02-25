@@ -16,7 +16,7 @@ const moment = require('moment');
 
 export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstLoad: boolean) => {
   return (dispatch: any) => {
-    return fetch('/api/rfis/' + rfi.id + '/targets')
+    return fetch('/api/rfi/' + rfi.id + '/targets')
       .then(response => response.json())
       .then(targets => dispatch(fetchDatesAndTargetsSuccess(rfi, dates, targets, firstLoad)))
       .catch((reason => {
@@ -46,8 +46,6 @@ export const deleteTargetsByExploitDateId = (exploitDateId: number) => {
       })
   }
 };
-
-
 
 export const updateRfiDate = (rfiId: number, date: Date, oldDate?: ExploitDateModel) => {
   let newDate = truncateAndConvertDateToUtc(date); //convert date to UTC
@@ -89,7 +87,7 @@ export const deleteTgt = (tgtId: number) => {
 
 export const loadTgtPage = (rfi: RfiModel, firstLoad: boolean) => {
   return (dispatch: any) => {
-    return fetch('/api/rfis/' + rfi.id + '/exploit-dates')
+    return fetch('/api/rfi/' + rfi.id + '/exploit-dates')
       .then(response => response.json())
       .then(exploitDates => dispatch(
         fetchRfiTargets(

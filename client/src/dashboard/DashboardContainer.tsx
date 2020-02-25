@@ -68,16 +68,14 @@ export class DashboardContainer extends React.Component<Props, any> {
         <StyledRfiDashboard/>
       </div>
     );
-    // return displayScreen(this.props.loading, this.props.viewTgtPage, this.props.viewIxnPage, this.props.className);
   }
-
 }
 
-const mapStateToProps = ({rfis, tgts, ixns}: ApplicationState) => ({
-  loading: rfis.loading,
-  viewTgtPage: tgts.viewTgtPage,
-  viewIxnPage: ixns.viewIxnPage,
-  rfi: tgts.rfi
+const mapStateToProps = ({rfiState, tgtState, ixnState}: ApplicationState) => ({
+  loading: rfiState.loading,
+  viewTgtPage: tgtState.viewTgtPage,
+  viewIxnPage: ixnState.viewIxnPage,
+  rfi: tgtState.rfi
 });
 
 const mapDispatchToProps = {
@@ -94,4 +92,3 @@ export const StyledWorkflowContainer = styled(
   justify-content: center;
   height: inherit;
 `;
-

@@ -1,6 +1,6 @@
 import '../../setupEnzyme';
 import { shallow } from 'enzyme';
-import { TgtDashboardHeader } from '../../dashboard/tgt/navHeader/TgtDashboardHeader';
+import { TgtDashboardHeader } from '../../dashboard/tgt/TgtDashboardHeader';
 import * as React from 'react';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 

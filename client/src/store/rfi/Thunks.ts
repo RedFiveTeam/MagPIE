@@ -7,7 +7,7 @@ import { fetchRfiPending, fetchRfiSuccess, fetchRfiUpdating, postRfiPriorityUpda
 export const fetchRfis = () => {
   let startTime: number = new Date().getTime();
   return (dispatch: any) => {
-    return fetch('/api/rfis')
+    return fetch('/api/rfi')
       .then(dispatch(fetchRfiPending()))
       .then(response => response.json())
       .then(rfis => dispatch(fetchRfiSuccess(rfis, startTime)))
@@ -15,10 +15,9 @@ export const fetchRfis = () => {
   }
 };
 
-
 export const fetchLocalUpdate = () => {
   return (dispatch: any) => {
-    return fetch('/api/rfis')
+    return fetch('/api/rfi')
       .then(response => response.json())
       .then(rfis => dispatch(fetchRfiUpdating(rfis)))
       .catch((reason => {console.log("Failed to fetch RFIs: " + reason)}));
@@ -57,7 +56,6 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
   //resort by new priority
   reprioritizedList = RfiSorter.sort(reprioritizedList, new SortKeyModel(Field.PRIORITY, true));
 
-
   //Try to post updates; if they are invalid, reload page instead
   return (dispatch: any) => {
     dispatch(reprioritizeRfis(reprioritizedList));
@@ -70,5 +68,4 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
           dispatch(fetchLocalUpdate());
       });
   };
-
 };

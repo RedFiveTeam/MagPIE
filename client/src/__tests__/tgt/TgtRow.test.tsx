@@ -1,7 +1,7 @@
 import '../../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import { TgtRow } from '../../dashboard/tgt/tgtTable/row/TgtRow';
+import { TgtRow } from '../../dashboard/tgt/table/TgtRow';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
@@ -102,5 +102,4 @@ describe("Target Row", () => {
     subject.find('.edit-tgt-form').at(0).simulate('dblclick');
     expect(setAddEditTargetSpy).toHaveBeenCalledWith(Status.EDIT, target.id);
   });
-
 });

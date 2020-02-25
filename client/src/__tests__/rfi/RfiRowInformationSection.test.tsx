@@ -49,11 +49,11 @@ describe('RFIRowInformationSection', () => {
   });
 
   it('should have a button that navigates to the TGT page', () => {
-    expect(subject.find('.cell--add-tgt-button').exists()).toBeTruthy();
+    expect(subject.find('.cell--navigate-to-tgt-button').exists()).toBeTruthy();
     expect(subject.find(TgtPageButtonVector).exists()).toBeTruthy();
   });
 
-  it('should not contain an add tgt button on closed or pending rfis', () => {
+  it('should not contain an add tgt button on closed or pending rfi', () => {
     let rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.PENDING, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
     subject = shallow(
       <RfiRowInformationSection
@@ -63,9 +63,9 @@ describe('RFIRowInformationSection', () => {
         loadTgtPage={() => {}}
       />);
 
-    expect(subject.find('.cell--add-tgt-button').exists()).toBeFalsy();
+    expect(subject.find('.cell--navigate-to-tgt-button').exists()).toBeFalsy();
     expect(subject.find(TgtPageButtonVector).exists()).toBeFalsy();
-    expect(subject.find('.cell--add-tgt-button-disabled').exists()).toBeTruthy();
+    expect(subject.find('.cell--navigate-to-tgt-button-disabled').exists()).toBeTruthy();
 
     rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.CLOSED, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
     subject = shallow(
@@ -76,9 +76,9 @@ describe('RFIRowInformationSection', () => {
         loadTgtPage={() => {}}
       />);
 
-    expect(subject.find('.cell--add-tgt-button').exists()).toBeFalsy();
+    expect(subject.find('.cell--navigate-to-tgt-button').exists()).toBeFalsy();
     expect(subject.find(TgtPageButtonVector).exists()).toBeFalsy();
-    expect(subject.find('.cell--add-tgt-button-disabled').exists()).toBeTruthy();
+    expect(subject.find('.cell--navigate-to-tgt-button-disabled').exists()).toBeTruthy();
   });
 
   it('should contain the RFI request text', () => {

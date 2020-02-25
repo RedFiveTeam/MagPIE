@@ -3,17 +3,16 @@ import * as React from 'react';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-
-import { StyledTgtTableHeader } from './tgtTable/header/TgtTableHeader';
-import { StyledTgtTable } from './tgtTable/TgtTable';
-import { StyledTgtDateDivider } from './TgtDateDivider';
+import { StyledTableHeader } from '../components/header/TableHeader';
+import { StyledTgtTable } from './table/TgtTable';
+import { StyledTgtDateDivider } from './table/TgtDateDivider';
 import { Box } from '@material-ui/core';
 import theme from '../../resources/theme';
 import AddDateVector from '../../resources/icons/AddTgtDateVector';
 import { crayonBox } from '../../resources/crayonBox';
 import { ApplicationState } from '../../store';
-import { StyledTgtDateSection } from './TgtDateRegion';
-import { StyledTgtDashboardHeader } from './navHeader/TgtDashboardHeader';
+import { StyledTgtDateSection } from './table/TgtDateRegion';
+import { StyledTgtDashboardHeader } from './TgtDashboardHeader';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel from '../../store/rfi/RfiModel';
@@ -44,7 +43,7 @@ export const TgtDashboard: React.FC<Props> = props => {
   const [addDate, setAddDate] = useState(false);
 
   const handleAddEdit = (status: Status, id?: number) => {
-    switch(status) {
+    switch (status) {
       case Status.ADD:
         if (id && addTarget === -1 && editTarget === -1) {
           setAddTarget(id);
@@ -89,7 +88,9 @@ export const TgtDashboard: React.FC<Props> = props => {
       />
       <div className={'tgt-dash-body'}>
         {props.exploitDates.length > 0 || props.showDatePlaceholder ?
-          <StyledTgtTableHeader/>
+          <StyledTableHeader
+            headers={['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Delete', 'Exploitation']}
+          />
           :
           null
         }
@@ -147,11 +148,11 @@ export const TgtDashboard: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = ({tgts}: ApplicationState) => ({
-  rfi: tgts.rfi,
-  exploitDates: tgts.exploitDates,
-  showDatePlaceholder: tgts.showDatePlaceholder,
-  targets: tgts.targets
+const mapStateToProps = ({tgtState}: ApplicationState) => ({
+  rfi: tgtState.rfi,
+  exploitDates: tgtState.exploitDates,
+  showDatePlaceholder: tgtState.showDatePlaceholder,
+  targets: tgtState.targets
 });
 
 const mapDispatchToProps = {
@@ -238,5 +239,33 @@ export const StyledTgtDashboard = styled(
     -webkit-user-select: none; /* Safari */
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+  }
+  
+  .header-cell--name {
+    width: 123px;
+  }
+  
+  .header-cell--mgrs {
+    width: 163px;
+  }
+  
+  .header-cell--notes {
+    width: 397px;
+  }
+  
+  .header-cell--description {
+    width: 398px;
+  }
+  
+  .header-cell--status {
+    width: 128px;
+  }
+  
+  .header-cell--delete {
+    width: 70px;
+  }
+  
+  .header-cell--exploitation {
+    width: 128px;
   }
 `;
