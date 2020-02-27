@@ -73,7 +73,7 @@ public class IxnController {
   }
 
   @PostMapping(path = "/segment/post")
-  public void postIxn(@Valid @RequestBody SegmentJson segmentJson) {
+  public void postSegment(@Valid @RequestBody SegmentJson segmentJson) {
     addSegment(segmentJson);
   }
 

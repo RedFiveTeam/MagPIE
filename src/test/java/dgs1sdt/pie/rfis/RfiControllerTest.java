@@ -1,5 +1,9 @@
 package dgs1sdt.pie.rfis;
+
 import dgs1sdt.pie.BaseIntegrationTest;
+import dgs1sdt.pie.ixns.IxnController;
+import dgs1sdt.pie.ixns.SegmentJson;
+import dgs1sdt.pie.ixns.SegmentRepository;
 import dgs1sdt.pie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.pie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.pie.metrics.createTarget.MetricCreateTargetRepository;
@@ -15,11 +19,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -36,10 +42,12 @@ import static org.junit.Assert.*;
 public class RfiControllerTest extends BaseIntegrationTest {
 
   RfiController rfiController;
+  IxnController ixnController;
   RfiService rfiService;
   RfiRepository rfiRepository;
   ExploitDateRepository exploitDateRepository;
   TargetRepository targetRepository;
+  SegmentRepository segmentRepository;
   MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   MetricCreateTargetRepository metricCreateTargetRepository;
   MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
@@ -96,11 +104,22 @@ public class RfiControllerTest extends BaseIntegrationTest {
     this.metricChangeTargetRepository = metricChangeTargetRepository;
   }
 
+  @Autowired
+  public void setIxnController(IxnController ixnController) {
+    this.ixnController = ixnController;
+  }
+
+  @Autowired
+  public void setSegmentRepository(SegmentRepository segmentRepository) {
+    this.segmentRepository = segmentRepository;
+  }
+
   @Before
   public void clean() {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
+    segmentRepository.deleteAll();
     metricChangeExploitDateRepository.deleteAll();
     metricCreateTargetRepository.deleteAll();
     metricDeleteTargetRepository.deleteAll();
@@ -452,6 +471,12 @@ public class RfiControllerTest extends BaseIntegrationTest {
     rfiController.postTarget(targetJson);
     long targetId = targetRepository.findAll().get(0).getId();
 
+    SegmentJson segmentJson1 = new SegmentJson(rfiId, exploitDateId, targetId, new Timestamp(123), new Timestamp(234));
+    SegmentJson segmentJson2 = new SegmentJson(rfiId, exploitDateId, targetId, new Timestamp(345), new Timestamp(456));
+
+    ixnController.postSegment(segmentJson1);
+    ixnController.postSegment(segmentJson2);
+
     assertEquals(0, rfiController.deleteTarget(targetId).size());
 
     assertEquals(0, targetRepository.findAll().size());
@@ -468,6 +493,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .statusCode(200);
 
     assertEquals(0, targetRepository.findAll().size());
+    assertEquals(0, segmentRepository.findAll().size());
   }
 
   @Test

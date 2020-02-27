@@ -1,5 +1,7 @@
 package dgs1sdt.pie.rfis;
 
+import dgs1sdt.pie.ixns.Segment;
+import dgs1sdt.pie.ixns.SegmentRepository;
 import dgs1sdt.pie.metrics.MetricController;
 import dgs1sdt.pie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.pie.metrics.deleteExploitDate.MetricDeleteExploitDate;
@@ -13,7 +15,6 @@ import dgs1sdt.pie.rfis.targets.TargetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -32,16 +33,19 @@ public class RfiController {
   private RfiRepository rfiRepository;
   private ExploitDateRepository exploitDateRepository;
   private TargetRepository targetRepository;
+  private SegmentRepository segmentRepository;
 
   @Autowired
   public RfiController(RfiService rfiService,
                        RfiRepository rfiRepository,
                        ExploitDateRepository exploitDateRepository,
-                       TargetRepository targetRepository) {
+                       TargetRepository targetRepository,
+                       SegmentRepository segmentRepository) {
     this.rfiService = rfiService;
     this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
     this.targetRepository = targetRepository;
+    this.segmentRepository = segmentRepository;
   }
 
   @Autowired
@@ -67,6 +71,11 @@ public class RfiController {
   @Autowired
   public void setTargetRepository(TargetRepository targetRepository) {
     this.targetRepository = targetRepository;
+  }
+
+  @Autowired
+  public void setSegmentRepository(SegmentRepository segmentRepository) {
+    this.segmentRepository = segmentRepository;
   }
 
   @GetMapping
@@ -299,6 +308,14 @@ public class RfiController {
           );
 
           metricController.addDeleteTarget(metric);
+
+          List<Segment> segments = segmentRepository.findAllByTargetId(tgtId);
+
+          System.out.println(segments);
+
+          //TODO: call ixn service delete when implemented
+          segmentRepository.deleteAll(segments);
+
           targetRepository.deleteById(tgtId);
           return getRfiTargets(rfiId);
         } else {
