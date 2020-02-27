@@ -26,6 +26,7 @@ describe("Segment Region", () => {
         ixns={ixns}
         postSegment={(segment: SegmentModel) => {}}
         postIxn={(ixn: IxnModel) => {}}
+        deleteIxn={(ixn: IxnModel) => {}}
       />
     );
   });

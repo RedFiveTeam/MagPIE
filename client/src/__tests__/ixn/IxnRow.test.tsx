@@ -34,6 +34,7 @@ describe('IxnRow', () => {
         ixn={ixn}
         segment={segment}
         postIxn={(ixn: IxnModel) => {}}
+        deleteIxn={(ixn: IxnModel) => {}}
       />
     );
 

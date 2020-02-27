@@ -80,6 +80,30 @@ export const fetchIxns = (targetId: number, target: TargetModel | null, dateStri
   }
 };
 
+export const deleteIxn = (ixn: IxnModel) => {
+  return (dispatch: any) => {
+    return postIxnDelete(ixn.id!)
+      .then(response => fetchSegments(ixn.targetId))
+      .then(segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments))))
+      .catch((reason) => {
+        console.log(reason);
+      })
+  }
+};
+
+export const postIxnDelete = (ixnId: number) => {
+  return fetch(
+    '/api/ixn/' + ixnId,
+    {
+      method: 'delete',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+};
+
 export const postSegment = (segment: SegmentModel) => {
   return fetch(
     '/api/ixn/segment/post',

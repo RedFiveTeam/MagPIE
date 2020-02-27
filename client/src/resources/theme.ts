@@ -31,7 +31,9 @@ const theme = {
     deleteButtonFocus: crayonBox.brightRed,
     backgroundIxnHeader: crayonBox.pitchBlack,
     buttonOnBlack: crayonBox.straightWhite,
-    segmentDivider: crayonBox.mediumMediumLightGray
+    segmentDivider: crayonBox.mediumMediumLightGray,
+    fontToolTip: crayonBox.softMetal,
+    backgroundToolTip: crayonBox.lightGray
   },
 
   font: {

@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import IxnModel from '../../../store/ixn/IxnModel';
-import { Box, createMuiTheme, createStyles, TextField, Theme } from '@material-ui/core';
+import { Box, createMuiTheme, createStyles, TextField, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
@@ -10,6 +11,7 @@ import { Moment } from 'moment';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import classNames from 'classnames';
 import theme from '../../../resources/theme';
+import { StyledDeleteButtonVector } from '../../../resources/icons/DeleteButtonVector';
 
 const moment = require('moment');
 
@@ -17,6 +19,7 @@ interface MyProps {
   ixn: IxnModel | null;
   segment: SegmentModel;
   postIxn: (ixn: IxnModel) => void;
+  deleteIxn: (ixn: IxnModel) => void;
   className?: string;
 }
 
@@ -72,6 +75,12 @@ export const IxnRow: React.FC<MyProps> = props => {
     }
   });
 
+  enum Action {
+    NONE,
+    DELETING,
+    SUBMITTING
+  }
+
   let disabled = props.ixn !== null;
   const [exploitAnalyst, setExploitAnalyst] = React.useState('');
   const [time, setTime] = React.useState('');
@@ -79,6 +88,38 @@ export const IxnRow: React.FC<MyProps> = props => {
   const [track, setTrack] = React.useState('');
   const [timeInvalidError, setTimeInvalidError] = React.useState(false);
   const [timeOutOfBoundsError, setTimeOutOfBoundsError] = React.useState(false);
+  const [action, setAction] = useState(Action.NONE);
+
+  const resetAction = () => {
+    setTimeout(() => {
+      setAction(Action.NONE);
+    }, 500);
+  };
+
+  const handleAction = () => {
+    switch (action) {
+      case Action.DELETING:
+        if (props.ixn) {
+          props.deleteIxn(props.ixn);
+          resetAction();
+        } else {
+          setExploitAnalyst('');
+          setTime('');
+          setActivity('');
+          setTrack('');
+          resetAction();
+        }
+        break;
+      case Action.SUBMITTING:
+        validateAndSubmit();
+        break;
+    }
+  };
+
+  useEffect(
+    handleAction,
+    [action]
+  );
 
   const bringElementIntoView = (elementId: string) => {
     setTimeout(() => {
@@ -129,8 +170,8 @@ export const IxnRow: React.FC<MyProps> = props => {
     let timeInvalidErrorLocal = checkTimeInvalid(newTime);
     setTimeInvalidError(timeInvalidErrorLocal);
 
-    if(timeInvalidErrorLocal)
-    bringElementIntoView('time-invalid-error-' + props.segment.id);
+    if (timeInvalidErrorLocal)
+      bringElementIntoView('time-invalid-error-' + props.segment.id);
   };
 
   const inputActivity = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,17 +192,17 @@ export const IxnRow: React.FC<MyProps> = props => {
 
     setTimeOutOfBoundsError(timeOutOfBoundsErrorLocal);
 
-    if(timeOutOfBoundsErrorLocal)
-    bringElementIntoView('time-oob-error-' + props.segment.id);
+    if (timeOutOfBoundsErrorLocal)
+      bringElementIntoView('time-oob-error-' + props.segment.id);
   };
 
   function formBlur(event: any) {
     let currentTarget: any = event.currentTarget;
     setTimeout(() => {
-      if (!currentTarget.contains(document.activeElement)) {
-        validateAndSubmit();
+      if (!currentTarget.contains(document.activeElement) && action === Action.NONE) {
+        setAction(Action.SUBMITTING);
       }
-    }, 1000);
+    }, 200);
   }
 
   const validateAndSubmit = () => {
@@ -188,10 +229,49 @@ export const IxnRow: React.FC<MyProps> = props => {
         }, 150);
       }
     }
+
+    resetAction();
+  };
+
+  const handleDeleteClick = () => {
+    setAction(Action.DELETING);
   };
 
   const inputProps = {
     id: 'ixn-time-' + (props.segment.id) + '-' + (props.ixn !== null ? props.ixn.id!.toString() : 'new'),
+  };
+
+  interface DeleteButtonProps {
+    className?: string;
+  }
+
+  const DeleteButton: React.FC<DeleteButtonProps> = props => {
+    //@ts-ignore
+    const DeleteTooltip = withStyles((localTheme: Theme) => ({
+      tooltip: {
+        backgroundColor: theme.color.backgroundToolTip,
+        color: theme.color.fontToolTip,
+        width: 120,
+        height: 22,
+        borderRadius: 11,
+        fontSize: '12px',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+    }))(Tooltip);
+
+    return (
+      <div className={props.className}>
+        <DeleteTooltip title={'Delete Interaction'}>
+          <div className={"delete-ixn-button"}
+            // id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")}
+               onClick={handleDeleteClick}
+          >
+            <StyledDeleteButtonVector/>
+          </div>
+        </DeleteTooltip>
+      </div>
+    )
   };
 
   return (
@@ -213,13 +293,14 @@ export const IxnRow: React.FC<MyProps> = props => {
           <div className={classNames('ixn-data-cell', 'track')}>
             {props.ixn!.track}
           </div>
+          <DeleteButton className={'delete-ixn-button-container'} />
         </Box>
         :
         <>
           <form className={classNames("ixn-form", disabled ? "add-ixn-form" : "edit-ixn-form")}
                 onKeyPress={(e) => {
                   if (e.which === 13) {
-                    validateAndSubmit();
+                    setAction(Action.SUBMITTING);
                   }
                 }}
                 onBlur={formBlur}
@@ -264,10 +345,11 @@ export const IxnRow: React.FC<MyProps> = props => {
                   placeholder={"###-###"}
                   onKeyDown={(e) => {
                     if (e.which === 9 && !e.shiftKey) {
-                      validateAndSubmit();
+                      setAction(Action.SUBMITTING);
                     }
                   }}
                 />
+                <DeleteButton className={'delete-ixn-button-container'}/>
               </ThemeProvider>
             </Box>
           </form>
@@ -332,5 +414,22 @@ export const StyledIxnRow = styled(IxnRow)`
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightRow};
     line-height: 19px;
+  }
+  
+  .delete-ixn-button-container {
+    display: flex;
+    align-self: stretch;
+  }
+  
+  .delete-ixn-button {
+    border-left: 4px solid ${crayonBox.softMetal};
+    width: 90px;
+    height: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex: 1 1 auto;
   }
 `;

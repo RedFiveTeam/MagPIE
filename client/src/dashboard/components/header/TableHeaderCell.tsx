@@ -12,9 +12,13 @@ export const TableHeaderCell: React.FC<Props> = props => {
     <div
       className={classNames('header-cell', props.className)}
     >
+    {props.text === 'delete-spacer' ?
+      <>&nbsp;</>
+    :
       <span className={'header--' + props.text.split(' ')[props.text.split(' ').length - 1].toLowerCase()}>
         {props.text}
       </span>
+    }
     </div>
   )
 };

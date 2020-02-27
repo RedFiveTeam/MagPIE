@@ -5,6 +5,8 @@ import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
+import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
+import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxnRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.rfis.exploitDates.ExploitDate;
@@ -38,7 +40,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
   MetricCreateSegmentRepository metricCreateSegmentRepository;
   @Autowired
   MetricCreateIxnRepository metricCreateIxnRepository;
-
+  @Autowired
+  MetricDeleteIxnRepository metricDeleteIxnRepository;
 
   @Before
   public void clean() {
@@ -49,6 +52,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     ixnRepository.deleteAll();
     metricCreateSegmentRepository.deleteAll();
     metricCreateIxnRepository.deleteAll();
+    metricDeleteIxnRepository.deleteAll();
   }
 
   @Test
@@ -279,5 +283,77 @@ public class IxnControllerTest extends BaseIntegrationTest {
       .body("[1].time", equalTo("1970-01-01T12:15:55.000+0000"))
       .body("[1].activity", equalTo(""))
       .body("[1].track", equalTo(""));
+  }
+
+  @Test
+  public void deletesIxns() {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
+    Date exploitDate = new Date(0);
+    exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
+    long exploitDateId = exploitDateRepository.findAll().get(0).getId();
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDateId, "SDT12-123", "12WQE1231231231", "", "")));
+    long targetId = targetRepository.findAll().get(0).getId();
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDateId, targetId,
+      new Timestamp(
+        (12 * 3600 + //HH
+          10 * 60 + // MM
+          10 // SS
+        ) * 1000 // Milliseconds
+      ),
+      new Timestamp(
+        (12 * 3600 + //HH
+          30 * 60 + // MM
+          45 // SS
+        ) * 1000 // Milliseconds
+      )
+    )));
+    long segmentId = segmentRepository.findAll().get(0).getId();
+
+    ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
+      "Billy Bob",
+      new Timestamp(
+        (12 * 3600 + //HH
+          15 * 60 + // MM
+          55 // SS
+        ) * 1000 // Milliseconds
+      ),
+      "",
+      ""
+    ));
+
+    ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
+      "",
+      new Timestamp(
+        (12 * 3600 + //HH
+          15 * 60 + // MM
+          10 // SS
+        ) * 1000 // Milliseconds
+      ),
+      "Person entered vehicle",
+      "123-234"
+    ));
+
+    long ixnId = ixnRepository.findAll().get(0).getId();
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .when()
+      .delete(IxnController.URI + "/" + ixnId)
+      .then()
+      .statusCode(200);
+
+    assertEquals(1, ixnRepository.findAll().size());
+
+    assertEquals(1, metricDeleteIxnRepository.findAll().size());
+
+    MetricDeleteIxn metric = metricDeleteIxnRepository.findAll().get(0);
+
+    assertEquals("DGS-1-SDT-2020-00338", metric.getRfiNum());
+    assertEquals("1970-01-01 00:00:00.0", metric.getExploitDate().toString());
+    assertEquals("SDT12-123", metric.getTargetName());
+    assertEquals("1970-01-01 12:10:10.0", metric.getSegmentStart().toString());
+    assertEquals("1970-01-01 12:30:45.0", metric.getSegmentEnd().toString());
   }
 }

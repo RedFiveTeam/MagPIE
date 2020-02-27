@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Box, createMuiTheme, createStyles, TextField, Theme } from '@material-ui/core';
 import { crayonBox } from '../../../resources/crayonBox';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { StyledDeleteTgtButtonVector } from '../../../resources/icons/DeleteTgtButtonVector';
+import { StyledDeleteButtonVector } from '../../../resources/icons/DeleteButtonVector';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import { connect } from 'react-redux';
 import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
@@ -300,10 +300,10 @@ export const TgtRow: React.FC<Props> = props => {
             {/*  Status*/}
             {/*  <AddTgtDateButtonVector/>*/}
             {/*</Box>*/}
-            <div className={"delete-tgt"}
+            <div className={"delete-tgt-button"}
                  id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")}
                  onClick={handleDeleteClick}>
-              <StyledDeleteTgtButtonVector/>
+              <StyledDeleteButtonVector/>
             </div>
             <div className={classNames("exploitation", props.target ? "" : "input-disabled")} onClick={handleIxnClick}>
               <StyledExploitationLogButtonVector/>
@@ -363,7 +363,7 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     width: 120px;
   }
   
-  .delete-tgt {
+  .delete-tgt-button {
     border-left: 4px solid ${crayonBox.softMetal};
     border-right: 4px solid ${crayonBox.softMetal};
     width: 90px;

@@ -4,6 +4,8 @@ import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
+import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
+import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxnRepository;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.rfis.exploitDates.ExploitDateRepository;
 import dgs1sdt.magpie.rfis.targets.TargetRepository;
@@ -28,6 +30,7 @@ public class IxnController {
   private IxnRepository ixnRepository;
   private MetricCreateSegmentRepository metricCreateSegmentRepository;
   private MetricCreateIxnRepository metricCreateIxnRepository;
+  private MetricDeleteIxnRepository metricDeleteIxnRepository;
 
 
   @Autowired
@@ -37,7 +40,8 @@ public class IxnController {
                        SegmentRepository segmentRepository,
                        IxnRepository ixnRepository,
                        MetricCreateSegmentRepository metricCreateSegmentRepository,
-                       MetricCreateIxnRepository metricCreateIxnRepository) {
+                       MetricCreateIxnRepository metricCreateIxnRepository,
+                       MetricDeleteIxnRepository metricDeleteIxnRepository) {
     this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
     this.targetRepository = targetRepository;
@@ -45,6 +49,7 @@ public class IxnController {
     this.ixnRepository = ixnRepository;
     this.metricCreateSegmentRepository = metricCreateSegmentRepository;
     this.metricCreateIxnRepository = metricCreateIxnRepository;
+    this.metricDeleteIxnRepository = metricDeleteIxnRepository;
   }
 
 
@@ -83,6 +88,11 @@ public class IxnController {
     this.metricCreateIxnRepository = metricCreateIxnRepository;
   }
 
+  @Autowired
+  public void setMetricDeleteIxnRepository(MetricDeleteIxnRepository metricDeleteIxnRepository) {
+    this.metricDeleteIxnRepository = metricDeleteIxnRepository;
+  }
+
   @GetMapping(path = "/{targetId}")
   public List<Ixn> getIxns(@PathVariable("targetId") long targetId) {
     List<Ixn> interactions = ixnRepository.findAllByTargetId(targetId);
@@ -105,6 +115,41 @@ public class IxnController {
   @PostMapping(path = "/post")
   public void postIxn(@Valid @RequestBody IxnJson ixnJson) {
     addIxn(ixnJson);
+  }
+
+  @DeleteMapping(path = "/{ixnId}")
+  public void deleteIxn(@PathVariable("ixnId") long ixnId) {
+    if(ixnRepository.findById(ixnId).isPresent()) {
+      Ixn ixn = ixnRepository.findById(ixnId).get();
+
+      ixnRepository.deleteById(ixnId);
+
+      if (rfiRepository.findById(ixn.getRfiId()).isPresent()) {
+        String rfiNum = rfiRepository.findRfiById(ixn.getRfiId()).getRfiNum();
+        if (exploitDateRepository.findById(ixn.getExploitDateId()).isPresent()) {
+          Timestamp exploitDate = exploitDateRepository.findById(ixn.getExploitDateId()).get().getExploitDate();
+          if (targetRepository.findById(ixn.getTargetId()).isPresent()) {
+            String targetName = targetRepository.findById(ixn.getTargetId()).get().getName();
+            if (segmentRepository.findById(ixn.getSegmentId()).isPresent()) {
+              Segment segment = segmentRepository.findById(ixn.getSegmentId()).get();
+
+              MetricDeleteIxn metricDeleteIxn = new MetricDeleteIxn(
+                rfiNum,
+                exploitDate,
+                targetName,
+                segment.getStartTime(),
+                segment.getEndTime(),
+                new Timestamp(new Date().getTime())
+              );
+
+              metricDeleteIxnRepository.save(metricDeleteIxn);
+            }
+          }
+        }
+      }
+    } else {
+      System.err.println("Could not find ixn to delete with id " + ixnId);
+    }
   }
 
   private void addIxn(IxnJson ixnJson) {

@@ -77,3 +77,34 @@ Scenario('Should be able to add ixns', (I) => {
   I.pressKey('Tab');
   I.waitForText('The time you entered does not fall within the segment timeline');
 });
+
+Scenario('Should be able to delete ixns', (I) => {
+  I.amOnPage('/');
+  I.waitForText('RFI', 10);
+  I.click('.cell--navigate-to-tgt-button');
+  I.waitForText('Go Back', 10);
+  I.click('.exploitation');
+  I.waitForText('TGT: SDT20-123', 10);
+
+  I.click('.delete-ixn-button');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+
+  I.dontSee('Person entered tgt from right side');
+  I.click('.delete-ixn-button');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+
+  I.dontSee('123-234');
+
+  I.pressKey('Tab');
+  I.fillField('.exploit-analyst', 'Billy Bob Joe');
+  I.pressKey('Tab');
+  I.click('.delete-ixn-button');
+
+  I.wait(1);
+
+  I.dontSee('Billy Bob Joe');
+});

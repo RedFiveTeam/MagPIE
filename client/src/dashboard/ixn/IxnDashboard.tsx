@@ -12,7 +12,7 @@ import { ExploitationLogButtonVectorSmall } from '../../resources/icons/Exploita
 import { StyledIxnTable } from './table/IxnTable';
 import { StyledSegmentDivider } from './table/SegmentDivider';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
-import { updateIxn, updateSegment } from '../../store/ixn';
+import { deleteIxn, updateIxn, updateSegment } from '../../store/ixn';
 import theme from '../../resources/theme';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledSegmentRegion } from './table/SegmentRegion';
@@ -50,6 +50,10 @@ export const IxnDashboard: React.FC<Props> = props => {
     dispatch(updateIxn(ixn))
   };
 
+  const handleDeleteIxn = (ixn: IxnModel) => {
+    dispatch(deleteIxn(ixn));
+  };
+
   function printSegmentRegions(segmentList: SegmentModel[]) {
     return segmentList.map((segment: SegmentModel, index: number) =>
       <StyledSegmentRegion
@@ -59,6 +63,7 @@ export const IxnDashboard: React.FC<Props> = props => {
         key={index}
         postSegment={handlePostSegment}
         postIxn={handlePostIxn}
+        deleteIxn={handleDeleteIxn}
         />
     );
   }
@@ -71,7 +76,7 @@ export const IxnDashboard: React.FC<Props> = props => {
       <div className={'ixn-dash-body'}>
         {segments.length > 0 ?
           <StyledTableHeader
-            headers={['Exploit Analyst', 'Time', 'Activity', 'Track ID']}
+            headers={['Exploit Analyst', 'Time', 'Activity', 'Track ID', 'delete-spacer']}
           />
           :
           null
@@ -250,6 +255,10 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   
   .header-cell--id {
     width: 83px;
+  }
+  
+  .header-cell--delete-spacer {
+    width: 90px;
   }
   
   .hidden-input {

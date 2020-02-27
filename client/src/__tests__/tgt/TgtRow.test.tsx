@@ -47,7 +47,7 @@ describe("Target Row", () => {
   });
 
   it('should call a delete target action when delete button is clicked except in add mode', () => {
-    subject.find('.delete-tgt').simulate('click');
+    subject.find('.delete-tgt-button').simulate('click');
 
     subject = mount(
       <TgtRow
@@ -65,7 +65,7 @@ describe("Target Row", () => {
       />
     );
 
-    subject.find('.delete-tgt').simulate('click');
+    subject.find('.delete-tgt-button').simulate('click');
 
     expect(deleteSpy).toHaveBeenCalledTimes(1);
     expect(setAddEditTargetSpy).toHaveBeenCalledWith(Status.VIEW);

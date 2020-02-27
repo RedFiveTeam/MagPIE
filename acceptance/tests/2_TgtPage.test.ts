@@ -130,13 +130,13 @@ Scenario('Should be able to delete tgt on the Tgt page', (I) => {
   I.click('.cell--navigate-to-tgt-button');
   I.waitForText('Go Back', 10);
 
-  I.click('.delete-tgt');
+  I.click('.delete-tgt-button');
 
   //Need to leave page and come back to see changes
   I.click('.tgt-dash--header--back-button');
   I.click('.cell--navigate-to-tgt-button');
 
-  I.click('.delete-tgt');
+  I.click('.delete-tgt-button');
   I.dontSeeElement('.tgt-form-box');
   I.click('.delete-date');
 });

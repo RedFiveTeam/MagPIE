@@ -1,11 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-
 import theme from '../../resources/theme';
 import { connect } from 'react-redux';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-
 import { ApplicationState } from '../../store';
 import RfiModel from '../../store/rfi/RfiModel';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
@@ -151,7 +149,7 @@ export const StyledRfiDashboard = styled(
   flex-direction: column;
   margin-left: 20px;
   
-  .rfiState-table--body{
+  .rfi-table--body{
     overflow-y: auto; 
     display: flex;
     margin-bottom: 48px;

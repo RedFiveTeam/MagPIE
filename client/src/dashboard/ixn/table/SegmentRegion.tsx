@@ -12,6 +12,7 @@ interface MyProps {
   ixns: IxnModel[];
   postSegment: (segment: SegmentModel) => void;
   postIxn: (ixn: IxnModel) => void;
+  deleteIxn: (ixn: IxnModel) => void;
   className?: string;
 }
 
@@ -24,6 +25,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
         key={index}
         segment={props.segment}
         postIxn={props.postIxn}
+        deleteIxn={props.deleteIxn}
       />
     )
   };
@@ -41,6 +43,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
         ixn={null}
         segment={props.segment}
         postIxn={props.postIxn}
+        deleteIxn={props.deleteIxn}
       />
     </div>
   );
