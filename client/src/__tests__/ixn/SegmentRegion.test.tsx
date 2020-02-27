@@ -13,23 +13,20 @@ describe("Segment Region", () => {
   let subject: ShallowWrapper;
   let target: TargetModel = new TargetModel(1, 1, 1, "WER19-123", "19XCV1234567890", "", "");
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1, moment(0), moment(1));
-  let ixns: IxnModel[] = [
-    new IxnModel(1,1,1,1,1,"Bob", moment(0), "Bob did stuff", "123-123"),
-    new IxnModel(2,1,1,1,1,"Bob", moment(0), "Bob did stuff", "123-123"),
+  let interactions: IxnModel[] = [
+    new IxnModel(1, 1, 1, 1, 1, "Bob", moment(0), "Bob did stuff", "123-123"),
+    new IxnModel(2, 1, 1, 1, 1, "Bob", moment(0), "Bob did stuff", "123-123"),
   ];
-
-  beforeEach(() => {
-    subject = shallow(
-      <SegmentRegion
-        target={target}
-        segment={segment}
-        ixns={ixns}
-        postSegment={(segment: SegmentModel) => {}}
-        postIxn={(ixn: IxnModel) => {}}
-        deleteIxn={(ixn: IxnModel) => {}}
-      />
-    );
-  });
+  subject = shallow(
+    <SegmentRegion
+      target={target}
+      segment={segment}
+      ixns={interactions}
+      postSegment={(segment: SegmentModel) => {}}
+      postIxn={(ixn: IxnModel) => {}}
+      deleteIxn={(ixn: IxnModel) => {}}
+    />
+  );
 
   it('should display the segment divider', () => {
     expect(subject.find(StyledSegmentDivider).exists()).toBeTruthy();

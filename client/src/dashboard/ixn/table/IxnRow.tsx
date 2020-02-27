@@ -20,6 +20,8 @@ interface MyProps {
   segment: SegmentModel;
   postIxn: (ixn: IxnModel) => void;
   deleteIxn: (ixn: IxnModel) => void;
+  segmentAnalyst: string;
+  setSegmentAnalyst: (segmentAnalyst: string) => void;
   className?: string;
 }
 
@@ -82,7 +84,7 @@ export const IxnRow: React.FC<MyProps> = props => {
   }
 
   let disabled = props.ixn !== null;
-  const [exploitAnalyst, setExploitAnalyst] = React.useState('');
+  const [exploitAnalyst, setExploitAnalyst] = React.useState(props.segmentAnalyst);
   const [time, setTime] = React.useState('');
   const [activity, setActivity] = React.useState('');
   const [track, setTrack] = React.useState('');
@@ -111,6 +113,7 @@ export const IxnRow: React.FC<MyProps> = props => {
         }
         break;
       case Action.SUBMITTING:
+        props.setSegmentAnalyst(exploitAnalyst);
         validateAndSubmit();
         break;
     }
@@ -215,9 +218,6 @@ export const IxnRow: React.FC<MyProps> = props => {
       if (props.segment.id) {
         props.postIxn(new IxnModel(null, props.segment.rfiId, props.segment.exploitDateId, props.segment.targetId, props.segment.id,
           exploitAnalyst, convertTimeStringToMoment(time), activity, track));
-        setTime('');
-        setActivity('');
-        setTrack('');
         bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
         setTimeout(() => {
           //Focus on time input field
