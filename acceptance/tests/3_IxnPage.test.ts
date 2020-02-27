@@ -54,6 +54,7 @@ Scenario('Should be able to add ixns', (I) => {
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
 
+  I.pressKey('Tab');
   I.fillField('.exploit-analyst', 'Billy Bob Joe');
   I.pressKey('Tab');
   I.fillField('.time', '121');
