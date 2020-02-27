@@ -85,7 +85,7 @@ export const IxnRow: React.FC<MyProps> = props => {
       let element = document.getElementById(elementId);
       if (element)
         element.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-    }, 50);
+    }, 200);
   };
 
   const convertTimeStringToMoment = (time: string): Moment => {
@@ -185,7 +185,7 @@ export const IxnRow: React.FC<MyProps> = props => {
           //Put cursor at beginning of time input field
           if (element instanceof HTMLInputElement)
             element.setSelectionRange(0, 0);
-        }, 50);
+        }, 150);
       }
     }
   };
@@ -263,7 +263,7 @@ export const IxnRow: React.FC<MyProps> = props => {
                   onChange={inputTrack}
                   placeholder={"###-###"}
                   onKeyDown={(e) => {
-                    if (e.which === 9) {
+                    if (e.which === 9 && !e.shiftKey) {
                       validateAndSubmit();
                     }
                   }}
@@ -311,6 +311,7 @@ export const StyledIxnRow = styled(IxnRow)`
   }
   .ixn-data-cell {
     margin: 8px 8px 8px 8px;
+    overflow-wrap: break-word;
   }
 
   .ixn-row-box {
