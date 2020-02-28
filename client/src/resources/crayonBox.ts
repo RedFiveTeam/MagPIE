@@ -21,5 +21,6 @@ export const crayonBox = {
   bloodRed: '#C10101',
   skyBlue: '#82BFF9',
   straightWhite: '#FFFFFF',
-  brightRed: '#FF0000'
+  brightRed: '#FF0000',
+  brightBlue: '#1E98E5',
 };

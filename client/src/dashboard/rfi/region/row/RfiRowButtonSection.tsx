@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { RfiStatus } from '../../../../store/rfi/RfiModel';
 import GetsClickRequestModel from '../../../../store/metrics/GetsClickRequestModel';
-import ExternalLinkVector from '../../../../resources/icons/ExternalLinkVector';
+import { StyledExternalLinkVector } from '../../../../resources/icons/ExternalLinkVector';
 import { postGetsClick } from '../../../../store/metrics';
 
 interface Props {
@@ -35,7 +35,7 @@ export const RfiRowButtonSection: React.FC<Props> = props => {
       onClick={() => handleClick(props.postGetsClick)}
     >
       {buttonText()}
-      <ExternalLinkVector/>
+      <StyledExternalLinkVector/>
     </div>
   )
 };
@@ -58,9 +58,9 @@ export const StyledRfiRowButtonSection = styled(connect(mapStateToProps, mapDisp
   flex: 1;
     
   :hover {
-    color: ${(props) => props.theme.color.buttonActive};
-    path {
-      fill: ${(props) => props.theme.color.buttonActive};
+    text-shadow: 0 0 4px #FFFFFF;
+    svg {
+      filter: drop-shadow(0 0 4px #FFFFFF);
     }
   }
   

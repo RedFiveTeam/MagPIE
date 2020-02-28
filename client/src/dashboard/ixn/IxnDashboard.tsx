@@ -108,8 +108,9 @@ export const IxnDashboard: React.FC<Props> = props => {
             onClick={() => {
               setAddSegment(true);
               setTimeout(() => {
-                if (document.getElementById('ixn-table-scrollable-region') !== null)
-                  document.getElementById('ixn-table-scrollable-region')!.scrollTo(0, document.getElementById('ixn-table-scrollable-region')!.scrollHeight);
+                let scrollToLocation = document.getElementById('ixn-table-scrollable-region');
+                if (scrollToLocation !== null)
+                  scrollToLocation!.scrollTo(0, scrollToLocation!.scrollHeight);
               }, 50);
             }}
             className={classNames(

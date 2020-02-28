@@ -1,6 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
+import theme from '../../../resources/theme';
 
 interface Props {
   regionTitle: string
@@ -19,10 +20,10 @@ export const RfiRegionDivider: React.FC<Props> = props => {
 
 export const StyledRfiRegionDivider = styled(RfiRegionDivider)`
   height: 32px;
-  font-family: ${(props) => props.theme.font.familyRegion};
-  font-weight: ${(props) => props.theme.font.weightRegion};
-  font-size: ${(props) => props.theme.font.sizeRegion};
-  color: ${(props) => props.theme.color.fontPrimary};
+  font-family: ${theme.font.familyRegion};
+  font-weight: ${theme.font.weightRegion};
+  font-size: ${theme.font.sizeRegion};
+  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -33,13 +34,14 @@ export const StyledRfiRegionDivider = styled(RfiRegionDivider)`
     flex-grow: 1;
     height: 2px;
     border-radius: 4px;
-    background: ${(props) => props.theme.color.fontPrimary};
+    background: ${theme.color.fontPrimary};
     margin-top: 22px;
     margin-bottom: 8px;
   }
   
   .separator-title {
-    width: 108px;
+    margin-left: 2px;
+    margin-right: 2px;
     text-align: center;
   }
 `;

@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { StyledRfiRegionDivider } from './RfiRegionDivider';
 import classNames from 'classnames';
+import theme from '../../../resources/theme';
 
 interface Props {
   title: string;
@@ -35,10 +36,10 @@ export const StyledRfiRegion = styled(RfiRegion)`
   padding-right: 20px;
   
   .empty-message {
-    color: ${(props) => props.theme.color.fontPrimary};
-    font-family: ${(props) => props.theme.font.familyRegion};
-    font-weight: ${(props) => props.theme.font.weightRegion};
-    font-size: ${(props) => props.theme.font.sizeRegion};
+    color: ${theme.color.fontPrimary};
+    font-family: ${theme.font.familyRegion};
+    font-weight: ${theme.font.weightRegion};
+    font-size: ${theme.font.sizeRegion};
     margin-top: 16px;
     text-align: center;
     opacity: 50%;

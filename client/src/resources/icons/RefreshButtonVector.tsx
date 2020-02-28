@@ -1,5 +1,6 @@
 import * as React from 'react';
 import theme from '../theme';
+import styled from 'styled-components';
 
 const pathD = 'M7.5 0C3.85925 0 0.825112 2.59444 0.143737 6.03515H2.22565C2.86713 3.72195 4.98254 2.02149 7.5 ' +
   '2.02149C9.01336 2.02149 10.3809 2.63643 11.3709 3.62915L8.96485 6.03515H15V0L12.8027 2.19726C11.4457 0.839763 ' +
@@ -7,20 +8,35 @@ const pathD = 'M7.5 0C3.85925 0 0.825112 2.59444 0.143737 6.03515H2.22565C2.8671
   '14.8563 8.96485H12.7744C12.1329 11.278 10.0175 12.9785 7.5 12.9785C5.98664 12.9785 4.61908 12.3636 3.62915 ' +
   '11.3709L6.03515 8.96485H0Z';
 
-const RefreshButtonVector = () => {
+interface MyProps {
+  className?: string;
+}
+
+const RefreshButtonVector = (props: MyProps) => {
   return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 15 15"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
-      <path
-        d={pathD}
-        fill={theme.color.buttonInactive}
-      />
-    </svg>
+    <div className={props.className}>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 15 15"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d={pathD}
+          fill={theme.color.buttonInactive}
+        />
+      </svg>
+    </div>
   );
 };
+
+export const StyledRefreshButtonVector = styled(RefreshButtonVector)`
+ svg {
+  
+    :hover {
+      filter: drop-shadow(0 0px 4px #FFFFFF);
+    }
+  }
+`;
 
 export default RefreshButtonVector;

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
-import { StyledIxnBackButtonVector } from '../../resources/icons/IxnBackButtonVector';
+import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import { exitIxnPage } from '../../store/ixn';
 import theme from '../../resources/theme';
@@ -20,7 +20,7 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
     <div className={classNames(props.className)}>
       <div className={'ixn-dash--header'}>
         <div className={'ixn-dash--header--back-button'} onClick={props.exitIxnPage}>
-          <StyledIxnBackButtonVector/>
+          <StyledBackButtonVector/>
         </div>
         <div className={'ixn-dash--header--mgrs-date-container'}>
           <div className={'ixn-dash--header--mgrs'}>
@@ -31,7 +31,9 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
           </div>
         </div>
         <div className={'ixn-dash--header--tgt-name-container'}>
-          <span className={'ixn-dash--header--tgt-name'}>TGT: {props.target.name}</span>
+          <span className={'ixn-dash--header--tgt-name'}>
+            TGT: {props.target.name}
+          </span>
         </div>
         <div className={'ixn-dash--header--notes'}>
           <span><b>EEI Notes:</b> {props.target.notes}</span>

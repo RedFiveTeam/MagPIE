@@ -6,7 +6,7 @@ Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
   I.waitForText('RFI: 20-325', 10);
   I.waitForText('RFI DESCRIPTION: Lorem ipsum', 10);
   I.click('.tgt-dash--header--back-button');
@@ -19,7 +19,7 @@ Scenario('Should be able to set dates on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
   I.click('.add-date-button');
   I.fillField('.MuiInputBase-input', '02012020');
   I.see('TGT Name');
@@ -51,7 +51,7 @@ Scenario('Should be able to add tgt on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
   I.click('.add-date-button');
   I.fillField('.MuiInputBase-input', '02012020');
 
@@ -72,7 +72,7 @@ Scenario('Should be able to edit tgt on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
   I.doubleClick('.tgt-name');
   for (let i = 0; i < 9; i++)
     I.pressKey('Backspace');
@@ -95,7 +95,7 @@ Scenario('should not be able to add tgt with conflicting names', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
   I.click('.add-tgt-button');
   I.fillField('.name', 'SDT20-999');
   I.pressKey('Tab');
@@ -128,7 +128,7 @@ Scenario('Should be able to delete tgt on the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
 
   I.click('.delete-tgt');
 

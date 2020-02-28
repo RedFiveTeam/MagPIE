@@ -8,7 +8,7 @@ interface Props {
 
 export const TgtTable: React.FC<Props> = props => {
   return (
-    <div className={classNames('tgt-table-wrapper', props.className)}>
+    <div className={classNames('tgt-table-wrapper', props.className)} id={'tgt-table-scrollable-region'}>
       <div className={'tgt-table'}>
         {props.children}
       </div>
@@ -19,7 +19,7 @@ export const TgtTable: React.FC<Props> = props => {
 export const StyledTgtTable = styled(TgtTable)`
   display: flex;
   flex-direction: column;
-  padding-bottom: 99px;
+  padding-bottom: 38px;
   padding-right: 20px;
   overflow-y: auto;
   width: 1326px;

@@ -21,7 +21,6 @@ describe('TgtDashboardHeader', () => {
   });
 
   it('should contain a clickable back button', () => {
-    expect(subject.find('.tgt-dash--header--back-button').text()).toContain('Go Back');
     subject.find('.tgt-dash--header--back-button').simulate('click');
     expect(exitSpy).toHaveBeenCalled();
   });

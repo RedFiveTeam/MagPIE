@@ -6,7 +6,7 @@ Scenario ('Should be able to navigate to and exit the interactions page', (I) =>
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
   I.click('.add-date-button');
   I.fillField('.MuiInputBase-input', '02012020');
 
@@ -33,7 +33,7 @@ Scenario('Should be able to add segments', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
   I.click('.add-segment-button');
@@ -50,7 +50,7 @@ Scenario('Should be able to add ixns', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('Go Back', 10);
+  I.waitForText('RFI', 10);
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
 

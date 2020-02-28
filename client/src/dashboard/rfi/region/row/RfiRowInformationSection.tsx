@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import RfiModel, { RfiStatus } from '../../../../store/rfi/RfiModel';
 import IconDnDBurger from '../../../../resources/icons/DnDBurgerVector';
 import { formatRfiNum } from '../../../../utils';
-import TgtPageButtonVector from '../../../../resources/icons/TgtPageButtonVector';
-import IconShowLess from '../../../../resources/icons/ShowLessVector';
-import IconShowMore from '../../../../resources/icons/ShowMoreVector';
+import { StyledTgtPageButtonVector } from '../../../../resources/icons/TgtPageButtonVector';
 import { ApplicationState } from '../../../../store';
 import { Field } from '../../../../store/sort/SortKeyModel';
 import { fetchRfiTargets, loadTgtPage } from '../../../../store/tgt/Thunks';
+import theme from '../../../../resources/theme';
+import { StyledIconShowMore } from '../../../../resources/icons/ShowMoreVector';
+import { StyledIconShowLess } from '../../../../resources/icons/ShowLessVector';
 
 interface Props {
   rfi: RfiModel;
@@ -102,15 +103,15 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
             {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format("D MMM YY").toUpperCase()}
       </span>
       <div>
-          {props.rfi.status === RfiStatus.OPEN ?
-        <button onClick={addTgtToRFI} className={'cell--navigate-to-tgt-button'}>
-          <TgtPageButtonVector/>
-        </button>
-            :
-            <div className={'cell--navigate-to-tgt-button-disabled'}>
-              <span>-</span>
-            </div>
-          }
+        {props.rfi.status === RfiStatus.OPEN ?
+          <button onClick={addTgtToRFI} className={'cell--navigate-to-tgt-button'}>
+            <StyledTgtPageButtonVector/>
+          </button>
+          :
+          <div className={'cell--navigate-to-tgt-button-disabled'}>
+            <span>-</span>
+          </div>
+        }
       </div>
       <div className={'description-container'}>
         <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}
@@ -118,15 +119,11 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
             {props.rfi.description}
         </span>
       </div>
-      <div className={classNames(expanded ? 'see-less' : 'see-more',
+      <div className={classNames('see-more-or-less',
         props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {
         handleClick()
       }}>
-        <div>
-          <div>{expanded ? <IconShowLess/> : ''}</div>
-          <div>{expanded ? 'See less' : ''}</div>
-          <div>{expanded ? <IconShowLess/> : <IconShowMore/>}</div>
-        </div>
+        {expanded ? <StyledIconShowLess/> : <StyledIconShowMore/>}
       </div>
     </div>
   );
@@ -150,7 +147,7 @@ export const StyledRfiRowInformationSection = styled(
   max-width: 1336px;
   justify-content: space-around;
   border-top-left-radius: 8px;
-  font-size: ${(props) => props.theme.font.sizeRow};
+  font-size: ${theme.font.sizeRow};
   text-align: left;
   align-items: start;
   flex-wrap: wrap;
@@ -216,12 +213,6 @@ export const StyledRfiRowInformationSection = styled(
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    :hover {
-      path {
-        fill: ${(props) => props.theme.color.buttonActive};
-      }
-    }
   }
   
   .cell--navigate-to-tgt-button-disabled {
@@ -262,68 +253,25 @@ export const StyledRfiRowInformationSection = styled(
   
   .cell--description-expanded {
      padding-top: 7px;
-     padding-right: 7px;
      display: flex;
      flex: 1 1;
      max-width: 928px;
      min-width: 224px;
      justify-content: space-between;
-     line-height: 1.3em;
+     line-height: 1.2em;
   }
   
-  .see-more {
+  .see-more-or-less {
     display:flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
     flex: 0 0 62px;
-    height:52px;
+    height: 100%;
     align-self: start;
     padding-right: 7px;
     padding-left: 5px;
+    padding-bottom: 6px;
     cursor: pointer;
-    
-    :hover {
-      path {
-        fill: ${(props) => props.theme.color.buttonActive};
-      }
-    }
-  }
-   
-  .see-less {
-    cursor: pointer;
-    display: flex;
-    flex-basis: 100%;
-    text-align: center;
-    line-height: 32px;
-    justify-content: space-between;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    padding: 4px 4px 4px 4px;
-    
-    div {
-      display: flex;
-      flex-basis: 100%;
-      justify-content: space-between;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      background: ${(props) => props.theme.color.showLessBackground}
-      
-      div {
-        display: flex;
-        flex-direction: row;
-        flex: 0 0 66px;
-        align-items: center;
-        justify-content: center;
-      }
-      
-    }
-    
-    :hover {
-      color: ${(props) => props.theme.color.buttonActive};
-      path {
-        fill: ${(props) => props.theme.color.buttonActive};
-      }
-    }
   }
 `;
