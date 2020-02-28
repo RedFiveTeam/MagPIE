@@ -1,5 +1,6 @@
 import * as React from 'react';
 import theme from '../theme';
+import styled from 'styled-components';
 
 const pathD = 'M14.4444 18V14.4H6.66667V9.6H14.4444V6L20 12L14.4444 ' +
   '18ZM12.2222 0C12.8116 0 13.3768 0.252856 13.7936 0.702944C14.2103 ' +
@@ -9,8 +10,13 @@ const pathD = 'M14.4444 18V14.4H6.66667V9.6H14.4444V6L20 12L14.4444 ' +
   '23.7471 0.650874 23.2971C0.234126 22.847 0 22.2365 0 21.6V2.4C0 1.76348 ' +
   '0.234126 1.15303 0.650874 0.702944C1.06762 0.252856 1.63285 0 2.22222 0H12.2222Z';
 
-const ExternalLinkVector = () => {
+interface MyProps {
+  className?: string;
+}
+
+const ExternalLinkVector = (props: MyProps) => {
   return (
+    <div className={props.className}>
       <svg
         className="icon"
         width="20"
@@ -24,7 +30,14 @@ const ExternalLinkVector = () => {
           fill={theme.color.buttonInactive}
         />
       </svg>
+    </div>
   );
 };
+
+export const StyledExternalLinkVector = styled(ExternalLinkVector)`
+svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+`;
 
 export default ExternalLinkVector;

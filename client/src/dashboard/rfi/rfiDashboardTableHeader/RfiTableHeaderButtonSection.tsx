@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import RefreshButtonVector from '../../../resources/icons/RefreshButtonVector';
+import { StyledRefreshButtonVector } from '../../../resources/icons/RefreshButtonVector';
 import styled from 'styled-components';
 
 interface Props {
@@ -18,7 +18,7 @@ export const RfiTableHeaderButtonSection: React.FC<Props> = props => {
   return (
     <div className={classNames('header-cell', props.className)}>
       <button onClick={refreshPage} id={'refresh'} className={'refresh'}>
-        <RefreshButtonVector />
+        <StyledRefreshButtonVector />
       </button>
     </div>
   )

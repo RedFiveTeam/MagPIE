@@ -1,8 +1,9 @@
 import * as React from 'react';
-import TgtBackButtonVector from '../../resources/icons/TgtBackButtonVector';
 import { formatRfiNum } from '../../utils';
 import styled from 'styled-components';
 import RfiModel from '../../store/rfi/RfiModel';
+import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
+import theme from '../../resources/theme';
 
 interface OwnProps {
   exitTgtPage: () => void;
@@ -15,8 +16,7 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
     <div className={props.className}>
       <div className={'tgt-dash--header'}>
         <div className={'tgt-dash--header--back-button'} onClick={props.exitTgtPage}>
-          <TgtBackButtonVector/>
-          <span>Go Back</span>
+          <StyledBackButtonVector/>
         </div>
         <div className={'tgt-dash--header--rfi-num-container'}>
           <span className={'tgt-dash--header--rfi-num'}>RFI: {formatRfiNum(props.rfi.rfiNum)}</span>
@@ -30,9 +30,9 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
 };
 
 export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
-  font-size: ${(props) => props.theme.font.sizeRow};
-  font-family: ${(props) => props.theme.font.familyRow};
-  color: ${(props) => props.theme.color.fontPrimary};
+  font-size: ${theme.font.sizeRow};
+  font-family: ${theme.font.familyRow};
+  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -42,44 +42,36 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    height: 63px;
+    background: ${theme.color.backgroundIxnHeader};
   }
   
   .tgt-dash--header--back-button {
     cursor: pointer;
-    padding-top: 28px;
-    padding-left: 45px;
-    width: 108px;
-    min-width: 108px;
-    height: 92px;
+    padding-left: 18px;
+    width: 60px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    color: ${(props) => props.theme.color.backgroundAction};
-    
-    :hover {
-      color: ${(props) => props.theme.color.buttonBackgroundActive};
-      path {
-        fill: ${(props) => props.theme.color.buttonBackgroundActive};
-      }
-    }
+    color: ${theme.color.backgroundAction};
   }
   
   .tgt-dash--header--rfi-num-container {
     text-align: center;
-    width: 500px;
+    width: 400px;
     min-width: 300px;
     margin: auto;
-    padding-top: 46px;
     display: flex;
     flex-direction: column;
     font-size: 18px;
-    font-weight: ${(props) => props.theme.font.weightBold};
+    font-weight: ${theme.font.weightBold};
   }
   
   .tgt-dash--header--rfi-num {
     font-size: 32px;
-    font-weight: ${(props) => props.theme.font.weightMedium};
+    font-weight: ${theme.font.weightMedium};
   }
   
   .tgt-dash--header--filler {

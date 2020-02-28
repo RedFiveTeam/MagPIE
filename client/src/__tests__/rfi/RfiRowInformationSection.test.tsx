@@ -2,9 +2,10 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import IconDnDBurger from '../../resources/icons/DnDBurgerVector';
 import * as React from 'react';
 import '../../setupEnzyme';
-import TgtPageButtonVector from '../../resources/icons/TgtPageButtonVector';
+import { StyledTgtPageButtonVector } from '../../resources/icons/TgtPageButtonVector';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { RfiRowInformationSection } from '../../dashboard/rfi/region/row/RfiRowInformationSection';
+import { StyledIconShowMore } from '../../resources/icons/ShowMoreVector';
 
 describe('RFIRowInformationSection', () => {
   let subject: ShallowWrapper;
@@ -50,7 +51,7 @@ describe('RFIRowInformationSection', () => {
 
   it('should have a button that navigates to the TGT page', () => {
     expect(subject.find('.cell--navigate-to-tgt-button').exists()).toBeTruthy();
-    expect(subject.find(TgtPageButtonVector).exists()).toBeTruthy();
+    expect(subject.find(StyledTgtPageButtonVector).exists()).toBeTruthy();
   });
 
   it('should not contain an add tgt button on closed or pending rfi', () => {
@@ -64,7 +65,7 @@ describe('RFIRowInformationSection', () => {
       />);
 
     expect(subject.find('.cell--navigate-to-tgt-button').exists()).toBeFalsy();
-    expect(subject.find(TgtPageButtonVector).exists()).toBeFalsy();
+    expect(subject.find(StyledTgtPageButtonVector).exists()).toBeFalsy();
     expect(subject.find('.cell--navigate-to-tgt-button-disabled').exists()).toBeTruthy();
 
     rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.CLOSED, '1 FW', moment('2019-11-20').utc(), 'CAN', 'hi', -1);
@@ -77,7 +78,7 @@ describe('RFIRowInformationSection', () => {
       />);
 
     expect(subject.find('.cell--navigate-to-tgt-button').exists()).toBeFalsy();
-    expect(subject.find(TgtPageButtonVector).exists()).toBeFalsy();
+    expect(subject.find(StyledTgtPageButtonVector).exists()).toBeFalsy();
     expect(subject.find('.cell--navigate-to-tgt-button-disabled').exists()).toBeTruthy();
   });
 
@@ -100,7 +101,7 @@ describe('RFIRowInformationSection', () => {
         loadTgtPage={() => {}}
       />
     );
-    expect(subject.find('.section--information').text().toLowerCase()).toContain('iconshowmore');
+    expect(subject.find(StyledIconShowMore).exists()).toBeTruthy();
   });
 
   it('should display a hamburger only when prioritizing', () => {

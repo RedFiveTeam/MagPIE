@@ -69,7 +69,6 @@ export const TgtDateRegion: React.FC<Props> = props => {
         hasTgts={props.targets.length > 0}
       />
       <ThemeProvider theme={theme}>
-        {printTargets()}
         <div className={'tgt-input'}>
           <Box
             height={32}
@@ -91,6 +90,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
             Add TGT
             <AddTgtDateButtonVector/>
           </Box>
+          {printTargets()}
           {props.addTgt === props.exploitDate.id ?
             <StyledTgtRow
               target={null}

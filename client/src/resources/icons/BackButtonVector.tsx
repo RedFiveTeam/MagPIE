@@ -18,7 +18,7 @@ interface Props {
   className?: string
 }
 
-const IxnBackButtonVector = (props: Props) => {
+const BackButtonVector = (props: Props) => {
   return (
     <div className={props.className}>
       <svg
@@ -41,8 +41,10 @@ const IxnBackButtonVector = (props: Props) => {
   );
 };
 
-export const StyledIxnBackButtonVector = styled(IxnBackButtonVector)`
+export const StyledBackButtonVector = styled(BackButtonVector)`
   svg {
+  padding-top: 3px;
+  
     :hover {
       filter: drop-shadow(0 0px 6px #FFFFFF);
     }

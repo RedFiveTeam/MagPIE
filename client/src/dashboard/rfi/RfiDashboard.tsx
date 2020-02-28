@@ -90,7 +90,7 @@ export const RfiDashboard: React.FC<Props> = props => {
               {(provided, snapshot) => {
                 return (
                   <StyledRfiRegion
-                    title={'open'}
+                    title={'prioritized'}
                     emptyMessage={'No Open found'}
                     provided={provided}
                   >
@@ -103,7 +103,7 @@ export const RfiDashboard: React.FC<Props> = props => {
             {(provided, snapshot) => {
               return (
                 <StyledRfiRegion
-                  title={'pending'}
+                  title={'new'}
                   emptyMessage={'Congratulations! Your team opened all the new RFIs in GETS.'}
                   provided={provided}
                 >

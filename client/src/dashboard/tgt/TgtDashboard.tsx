@@ -108,30 +108,38 @@ export const TgtDashboard: React.FC<Props> = props => {
             null
           }
         </StyledTgtTable>
-        <Box
-          height={32}
-          minHeight={32}
-          width={110}
-          border={2}
-          borderRadius={16}
-          borderColor={theme.color.addButtonBorder}
-          bgcolor={theme.color.addButtonBackground}
-          onClick={() => setAddDate(true)}
-          display='flex'
-          flexDirection='row'
-          alignItems='center'
-          justifyContent='center'
-          fontSize={14}
-          id={'add-date-button'}
-          className={classNames(
-            'add-date-button',
-            'no-select',
-            isDisabled ? 'input-disabled' : null
-          )}
-        >
-          <span>Add Date&nbsp;&nbsp;&nbsp;</span>
-          <AddDateVector/>
-        </Box>
+        <div className={'add-date-container'}>
+          <Box
+            height={34}
+            minHeight={34}
+            width={174}
+            borderRadius={17}
+            onClick={() => {
+              setAddDate(true);
+              setTimeout(() => {
+                let scrollToLocation = document.getElementById('tgt-table-scrollable-region');
+                if (scrollToLocation !== null)
+                  scrollToLocation!.scrollTo(0, scrollToLocation!.scrollHeight);
+              }, 50);
+            }}
+            display='flex'
+            flexDirection='row'
+            alignItems='center'
+            justifyContent='center'
+            fontSize={14}
+            fontWeight={'bold'}
+            id={'add-date-button'}
+            className={classNames(
+              'add-date-button' + (isDisabled ? '-disabled' : ''),
+              'no-select',
+            )}
+          >
+            <span>Add Coverage Date&nbsp;&nbsp;&nbsp;</span>
+            <AddDateVector/>
+          </Box>
+          {/*Prevents user from tabbing out of page to address bar*/}
+          <input className={'hidden-input'}/>
+        </div>
       </div>
       <div className={'tgt-dash--rfi-description-container'}>
         <Box
@@ -163,20 +171,20 @@ const mapDispatchToProps = {
 
 export const StyledTgtDashboard = styled(
   connect(mapStateToProps, mapDispatchToProps)(TgtDashboard))`
-  font-size: ${(props) => props.theme.font.sizeRow};
-  font-family: ${(props) => props.theme.font.familyRow};
-  color: ${(props) => props.theme.color.fontPrimary};
+  font-size: ${theme.font.sizeRow};
+  font-family: ${theme.font.familyRow};
+  color: ${theme.color.fontPrimary};
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   
   .tgt-dash-daterange-display-inactive {
-    color: ${(props) => props.theme.color.backgroundInformation};
+    color: ${theme.color.backgroundInformation};
   }
   
   .tgt-dash-body {
-    height: calc(100vh - 270px);
+    height: calc(100vh - 150px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -199,7 +207,7 @@ export const StyledTgtDashboard = styled(
   
   .date-divider--placeholder {
     width: 100%;
-    color: ${(props) => props.theme.color.fontBackgroundInactive};
+    color: ${theme.color.fontBackgroundInactive};
     margin-bottom: -32px;
   }
   
@@ -211,9 +219,28 @@ export const StyledTgtDashboard = styled(
     margin-top: 20px;
   }
   
+  .add-date-container {
+    width: 224px;
+    height: 34px;    
+    margin-bottom: 7px;
+  }
+  
   .add-date-button {
     cursor: pointer;
-    margin-top: 20px;
+    background-color: ${theme.color.buttonAddDate};
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    
+    :hover {
+      box-shadow: 0 0 6px #FFFFFF;
+    }
+  }
+  
+  .add-date-button-disabled {
+    pointer-events: none; !important;
+    background-color: ${theme.color.buttonAddDate};
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+    opacity: 0.5;
     
     :hover {
       box-shadow: 0 0 6px #FFFFFF;
@@ -222,11 +249,10 @@ export const StyledTgtDashboard = styled(
   
   .input-disabled {
     pointer-events: none; !important
+    opacity: 0.5; !important
   }
 
   .add-date-vector {
-    margin-left: -33px;
-    margin-bottom: -4px;
     pointer-events: none;
   }
   
@@ -267,5 +293,11 @@ export const StyledTgtDashboard = styled(
   
   .header-cell--exploitation {
     width: 128px;
+  }
+  
+  .hidden-input {
+    opacity: 0;
+    z-index: -1;
+    position: absolute;
   }
 `;

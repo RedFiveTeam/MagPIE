@@ -235,8 +235,13 @@ export const TgtRow: React.FC<Props> = props => {
           <ThemeProvider theme={localTheme}>
             <TextField
               autoFocus={true}
-              className={classNames("tgt-name", props.editable ? null : 'input-disabled', classes.margin, 'tgt-name-input-' + (props.target ? props.target.id : 'new'))}
-              // Display local hook if editing, otherwise, if local hook is not empty display it, otherwise display props.
+              className={classNames(
+                classes.margin,
+                'tgt-name',
+                'tgt-name-input-' + (props.target ? props.target.id : 'new'),
+                props.editable ? null : 'input-disabled',
+              )}
+              // Display local hook if editing, if local hook is not empty display it, otherwise display props.
               // Local hook is on a setTimeout to be cleared  in order to update the display if the user submits a
               // conflicting target name without there being a cut back to the old data for a split second on update
               value={name !== "" ? name : (props.target && !props.editable ? props.target.name : name)}
@@ -271,7 +276,16 @@ export const TgtRow: React.FC<Props> = props => {
               multiline
               rowsMax="2"
               className={classNames("description", props.editable ? null : 'input-disabled', classes.margin)}
-              value={description !== "" ? description : (props.target && !props.editable ? props.target.description : description)}
+              value={description !== ""
+                ?
+                description
+                :
+                (props.target && !props.editable
+                  ?
+                  props.target.description
+                  :
+                  description)
+              }
               disabled={disabled}
               label={props.target || description !== "" ? "" : "TGT Description"}
               onChange={inputDescription}
