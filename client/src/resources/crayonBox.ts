@@ -24,4 +24,6 @@ export const crayonBox = {
   straightWhite: '#FFFFFF',
   brightRed: '#FF0000',
   brightBlue: '#1E98E5',
+  stoplightYellow: '#D2A60A',
+  stoplightGreen: '#01734F',
 };

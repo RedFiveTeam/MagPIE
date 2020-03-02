@@ -3,7 +3,6 @@ import './fonts/roboto/roboto.css';
 import './fonts/helveticaneue/helveticaneue.css';
 import './fonts/arvo/arvo.css';
 import { createMuiTheme } from '@material-ui/core';
-import createPalette from '@material-ui/core/styles/createPalette';
 
 const theme = {
   color: {
@@ -65,12 +64,12 @@ const theme = {
   },
 };
 
-const muiPalette = createPalette({
-  type: 'dark',
-  primary: {
-    main: crayonBox.brightBlue
-  }
-});
+// const muiPalette = createPalette({
+//   type: 'dark',
+//   primary: {
+//     main: crayonBox.brightBlue
+//   }
+// });
 
 export const muiTheme = createMuiTheme({
   palette: {
