@@ -221,12 +221,16 @@ export const IxnRow: React.FC<MyProps> = props => {
         bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
         setTimeout(() => {
           //Focus on time input field
-          document.getElementById('ixn-time-' + (props.segment.id) + '-new')!.focus();
-          let element: any = document.getElementById('ixn-time-' + (props.segment.id) + '-new')!;
-          //Put cursor at beginning of time input field
-          if (element instanceof HTMLInputElement)
-            element.setSelectionRange(0, 0);
-        }, 150);
+          let element: any = document.getElementById('ixn-time-' + (props.segment.id) + '-new');
+          if (element) {
+            element.focus();
+            //Put cursor at beginning of time input field
+            if (element instanceof HTMLInputElement)
+              element.setSelectionRange(0, 0);
+          } else {
+            console.log('New interaction row not found')
+          }
+        }, 500);
       }
     }
 
