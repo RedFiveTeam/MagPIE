@@ -14,7 +14,6 @@ import { Moment } from 'moment';
 import IxnModel from '../../../store/ixn/IxnModel';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import EditButton from '../../../resources/icons/EditButton';
-import { useEffect } from 'react';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
 
 const moment = require('moment');
@@ -27,6 +26,8 @@ interface Props {
   deleteSegment: (segment: SegmentModel) => void;
   setAddSegment: (addSegment: boolean) => void;
   hasIxns: boolean;
+  editing: boolean;
+  setEdit: (segmentId: number) => void;
   className?: string;
 }
 
@@ -57,7 +58,6 @@ function SegmentTextMask(props: TextMaskCustomProps) {
         inputRef(ref ? ref.inputElement : null);
       }}
       mask={[/\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/]}
-      // The placeholder character is a Mongolian zero so that you can overwrite them with '0'.
       placeholderChar={'_'}
       showMask
     />
@@ -67,16 +67,13 @@ function SegmentTextMask(props: TextMaskCustomProps) {
 export const SegmentDivider: React.FC<Props> = props => {
   const classes = useStyles();
 
-  const [segmentStartString, setSegmentStartString] = React.useState(props.segment ? props.segment.startTime.format('HH:mm:ss') : '');
-  const [segmentEndString, setSegmentEndString] = React.useState(props.segment ? props.segment.endTime.format('HH:mm:ss') : '');
+  const [segmentStartString, setSegmentStartString] = React.useState(props.segment ?
+    props.segment.startTime.format('HH:mm:ss') : '__:__:__');
+  const [segmentEndString, setSegmentEndString] = React.useState(props.segment ?
+    props.segment.endTime.format('HH:mm:ss') : '__:__:__');
   const [segmentStartError, setSegmentStartError] = React.useState(false);
   const [segmentEndError, setSegmentEndError] = React.useState(false);
-  const [editing, setEditing] = React.useState(props.segment === null);
   const [displayModal, setDisplayModal] = React.useState(false);
-
-  useEffect(() => {
-    setEditing(props.segment === null);
-  }, [props.segment]);
 
   const segmentError = (segment: string): boolean => {
     segment = segment.replace(/_/g, '0');
@@ -115,9 +112,13 @@ export const SegmentDivider: React.FC<Props> = props => {
   const validateAndSubmit = () => {
     setSegmentStartString(segmentStartString.replace(/_/g, '0'));
     setSegmentEndString(segmentEndString.replace(/_/g, '0'));
-    if (segmentError(segmentEndString)) {
-      setSegmentEndError(true);
-    } else if (!segmentStartError) {
+    let segmentStartErrorLocal = segmentError(segmentStartString.replace(/_/g, '0'));
+    let segmentEndErrorLocal = segmentError(segmentEndString.replace(/_/g, '0'));
+
+    setSegmentStartError(segmentStartErrorLocal);
+    setSegmentEndError(segmentEndErrorLocal);
+
+    if (!segmentStartErrorLocal && !segmentEndErrorLocal) {
       let segmentStart = convertSegmentStringToMoment(segmentStartString);
       let segmentEnd = convertSegmentStringToMoment(segmentEndString);
       if (segmentStart.isBefore(segmentEnd)) {
@@ -131,7 +132,7 @@ export const SegmentDivider: React.FC<Props> = props => {
         );
         props.postSegment(segment);
       } else {
-        setSegmentEndError(true);
+        setSegmentStartError(true);
       }
     }
   };
@@ -153,7 +154,17 @@ export const SegmentDivider: React.FC<Props> = props => {
   };
 
   const handleEditClick = () => {
-    setEditing(true);
+    if (props.segment && props.segment.id)
+      props.setEdit(props.segment.id);
+  };
+
+  const handleBlur = (event: any) => {
+    let currentTarget: any = event.currentTarget;
+    setTimeout(() => {
+      if (!currentTarget.contains(document.activeElement)) {
+        validateAndSubmit();
+      }
+    }, 50);
   };
 
   return (
@@ -161,13 +172,13 @@ export const SegmentDivider: React.FC<Props> = props => {
       <div className={'segment-divider-placeholder'}>
         <div className={'segment-divider--bar'}/>
         <div className={'segment-divider--box'}>
-          <div
-            className={'delete-segment'}
-            onClick={handleDeleteClick}>
-            <DeleteButtonX className={'delete-segment'}/>
-          </div>
-          {!editing ?
+          {!props.editing ?
             <div className={'add-segment-form'}>
+              <div
+                className={classNames('delete-segment', 'delete-segment-wrapper')}
+                onClick={handleDeleteClick}>
+                <DeleteButtonX className={'delete-segment'}/>
+              </div>
               <div className={classNames('segment-value', 'segment-start')}>
                 {props.segment!.startTime.format('HH:mm:ss') + 'Z'}
               </div>
@@ -177,9 +188,17 @@ export const SegmentDivider: React.FC<Props> = props => {
               <div className={classNames('segment-value', 'segment-end')}>
                 {props.segment!.endTime.format('HH:mm:ss') + 'Z'}
               </div>
+              <div
+                className={'edit-segment'}
+                onClick={handleEditClick}
+              >
+                <EditButton/>
+              </div>
             </div>
             :
-            <div className={'add-segment-form'}>
+            <div className={'add-segment-form'}
+                 onBlur={handleBlur}
+            >
               <div className={'segment-value'}>
                 <FormControl>
                   <div className={'segment-input-container'}>
@@ -229,24 +248,18 @@ export const SegmentDivider: React.FC<Props> = props => {
                         </InputAdornment>
                       }
                       error={segmentEndError}
-                      onBlur={validateAndSubmit}
                       onKeyPress={(e) => {
                         if (e.which === 13) {
                           validateAndSubmit();
                         }
                       }}
+                      onBlur={() => setSegmentEndString(segmentEndString.replace(/_/g, '0'))}
                     />
                   </div>
                 </FormControl>
               </div>
             </div>
           }
-          <div
-            className={'edit-segment'}
-            onClick={handleEditClick}
-          >
-            <EditButton/>
-          </div>
         </div>
       </div>
       {segmentStartError || segmentEndError ?
@@ -311,7 +324,7 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     border: 4px solid;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding-left: 36px;
     padding-right: 36px;
@@ -351,10 +364,15 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     align-items: center;
   }
   
+  .delete-segment-wrapper {
+    margin-right: 24px;
+  }
+  
   .edit-segment {
     display:flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-left: 24px;
   }
 `;

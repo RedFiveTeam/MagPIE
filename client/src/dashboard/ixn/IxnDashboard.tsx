@@ -24,11 +24,17 @@ interface Props {
 
 export const IxnDashboard: React.FC<Props> = props => {
   const [addSegment, setAddSegment] = useState(false);
+  const [editSegment, setEditSegment] = useState(-1);
   const [tgtAnalyst, setTgtAnalyst] = React.useState('');
 
   const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
   const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
+
+  const handleEditSegment = (segmentId: number) => {
+    if (!addSegment && editSegment < 0)
+      setEditSegment(segmentId);
+  };
 
   const theme = createMuiTheme({
     palette: {
@@ -36,19 +42,22 @@ export const IxnDashboard: React.FC<Props> = props => {
         main: crayonBox.skyBlue,
       },
       secondary: {
-        main: "#323232"
-      }
+        main: '#323232',
+      },
     },
   });
   const dispatch = useDispatch();
 
   const handlePostSegment = (segment: SegmentModel) => {
     setAddSegment(false);
+    setTimeout(() => {
+      setEditSegment(-1);
+    }, 100);
     dispatch(updateSegment(segment));
   };
 
   const handlePostIxn = (ixn: IxnModel) => {
-    dispatch(updateIxn(ixn))
+    dispatch(updateIxn(ixn));
   };
 
   const handleDeleteIxn = (ixn: IxnModel) => {
@@ -56,7 +65,7 @@ export const IxnDashboard: React.FC<Props> = props => {
   };
 
   const handleDeleteSegment = (segment: SegmentModel) => {
-    dispatch(deleteSegment(segment))
+    dispatch(deleteSegment(segment));
   };
 
   function printSegmentRegions(segmentList: SegmentModel[]) {
@@ -73,7 +82,9 @@ export const IxnDashboard: React.FC<Props> = props => {
         setTgtAnalyst={setTgtAnalyst}
         setAddSegment={setAddSegment}
         deleteSegment={handleDeleteSegment}
-        />
+        editSegment={editSegment}
+        setEditSegment={handleEditSegment}
+      />,
     );
   }
 
@@ -102,6 +113,8 @@ export const IxnDashboard: React.FC<Props> = props => {
               deleteSegment={handleDeleteSegment}
               setAddSegment={setAddSegment}
               hasIxns={false}
+              setEdit={handleEditSegment}
+              editing={true}
             />
             :
             null
@@ -131,9 +144,9 @@ export const IxnDashboard: React.FC<Props> = props => {
               }, 50);
             }}
             className={classNames(
-              "add-segment-button",
-              "no-select",
-              addSegment ? 'add-segment-button-disabled' : null
+              'add-segment-button',
+              'no-select',
+              addSegment && editSegment < 0 ? 'add-segment-button-disabled' : null,
             )}
           >
             Add Segment
@@ -144,7 +157,7 @@ export const IxnDashboard: React.FC<Props> = props => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export const StyledIxnDashboard = styled(IxnDashboard)`

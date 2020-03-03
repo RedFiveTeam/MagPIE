@@ -17,6 +17,8 @@ interface MyProps {
   tgtAnalyst: string;
   setTgtAnalyst: (tgtAnalyst: string) => void;
   setAddSegment: (addSegment: boolean) => void;
+  editSegment: number;
+  setEditSegment: (segmentId: number) => void;
   className?: string;
 }
 
@@ -50,6 +52,8 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
         deleteSegment={props.deleteSegment}
         setAddSegment={props.setAddSegment}
         hasIxns={props.ixns.length > 0}
+        editing={props.editSegment === props.segment.id}
+        setEdit={props.setEditSegment}
       />
       {printRows()}
     </div>

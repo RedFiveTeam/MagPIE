@@ -35,6 +35,8 @@ describe("Segment Divider", () => {
         deleteSegment={deleteSegmentSpy}
         setAddSegment={(addSegment: boolean) => {}}
         hasIxns={false}
+        editing={false}
+        setEdit={(segmentId: number) => {}}
       />
     );
   });

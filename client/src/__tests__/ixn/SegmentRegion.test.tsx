@@ -29,6 +29,8 @@ describe("Segment Region", () => {
       setTgtAnalyst={(tgtAnalyst) => {}}
       deleteSegment={(segment: SegmentModel) => {}}
       setAddSegment={(addSegment: boolean) => {}}
+      editSegment={-1}
+      setEditSegment={(segmentId: number) => {}}
     />
   );
 

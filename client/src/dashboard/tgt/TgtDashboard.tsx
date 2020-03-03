@@ -19,7 +19,7 @@ import RfiModel from '../../store/rfi/RfiModel';
 import { updateRfiDate } from '../../store/tgt/Thunks';
 import { exitTgtPage, setDatePlaceholder } from '../../store/tgt';
 
-interface Props {
+interface MyProps {
   rfi: RfiModel;
   exploitDates: ExploitDateModel[];
   showDatePlaceholder: boolean;
@@ -36,7 +36,7 @@ export enum Status {
   EDIT
 }
 
-export const TgtDashboard: React.FC<Props> = props => {
+export const TgtDashboard: React.FC<MyProps> = props => {
   const moment = require('moment');
   const [addTarget, setAddTarget] = useState(-1); //value is the id of the exploit date that is being added to
   const [editTarget, setEditTarget] = useState(-1); // value is the id of the tgt that is being edited
