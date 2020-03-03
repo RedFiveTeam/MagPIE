@@ -20,8 +20,8 @@ interface MyProps {
   segment: SegmentModel;
   postIxn: (ixn: IxnModel) => void;
   deleteIxn: (ixn: IxnModel) => void;
-  segmentAnalyst: string;
-  setSegmentAnalyst: (segmentAnalyst: string) => void;
+  tgtAnalyst: string;
+  setTgtAnalyst: (tgtAnalyst: string) => void;
   className?: string;
 }
 
@@ -62,19 +62,19 @@ export const IxnRow: React.FC<MyProps> = props => {
         main: crayonBox.skyBlue,
       },
       secondary: {
-        main: "#323232"
-      }
+        main: '#323232',
+      },
     },
     overrides: {
       MuiInput: {
         input: {
-          "&::placeholder": {
-            color: "#838383"
+          '&::placeholder': {
+            color: '#838383',
           },
-          color: "white", // if you also want to change the color of the input, this is the prop you'd use
-        }
-      }
-    }
+          color: 'white', // if you also want to change the color of the input, this is the prop you'd use
+        },
+      },
+    },
   });
 
   enum Action {
@@ -84,13 +84,23 @@ export const IxnRow: React.FC<MyProps> = props => {
   }
 
   let disabled = props.ixn !== null;
-  const [exploitAnalyst, setExploitAnalyst] = React.useState(props.segmentAnalyst);
+  const [exploitAnalyst, setExploitAnalyst] = React.useState(props.tgtAnalyst);
   const [time, setTime] = React.useState('');
   const [activity, setActivity] = React.useState('');
   const [track, setTrack] = React.useState('');
   const [timeInvalidError, setTimeInvalidError] = React.useState(false);
   const [timeOutOfBoundsError, setTimeOutOfBoundsError] = React.useState(false);
   const [action, setAction] = useState(Action.NONE);
+
+  useEffect(() => {
+    setExploitAnalyst(props.tgtAnalyst);
+    setTime('');
+    setActivity('');
+    setTrack('');
+    setTimeInvalidError(false);
+    setTimeOutOfBoundsError(false);
+    setAction(Action.NONE);
+  }, [props.ixn]);
 
   const resetAction = () => {
     setTimeout(() => {
@@ -113,7 +123,7 @@ export const IxnRow: React.FC<MyProps> = props => {
         }
         break;
       case Action.SUBMITTING:
-        props.setSegmentAnalyst(exploitAnalyst);
+        props.setTgtAnalyst(exploitAnalyst);
         validateAndSubmit();
         break;
     }
@@ -121,7 +131,7 @@ export const IxnRow: React.FC<MyProps> = props => {
 
   useEffect(
     handleAction,
-    [action]
+    [action],
   );
 
   const bringElementIntoView = (elementId: string) => {
@@ -129,7 +139,7 @@ export const IxnRow: React.FC<MyProps> = props => {
       let element = document.getElementById(elementId);
       if (element)
         element.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-    }, 200);
+    }, 400);
   };
 
   const convertTimeStringToMoment = (time: string): Moment => {
@@ -143,7 +153,7 @@ export const IxnRow: React.FC<MyProps> = props => {
       (hours * 3600 +
         minutes * 60 +
         seconds)
-      * 1000
+      * 1000,
     );
     return moment(timeDate).utc();
   };
@@ -219,18 +229,6 @@ export const IxnRow: React.FC<MyProps> = props => {
         props.postIxn(new IxnModel(null, props.segment.rfiId, props.segment.exploitDateId, props.segment.targetId, props.segment.id,
           exploitAnalyst, convertTimeStringToMoment(time), activity, track));
         bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
-        setTimeout(() => {
-          //Focus on time input field
-          let element: any = document.getElementById('ixn-time-' + (props.segment.id) + '-new');
-          if (element) {
-            element.focus();
-            //Put cursor at beginning of time input field
-            if (element instanceof HTMLInputElement)
-              element.setSelectionRange(0, 0);
-          } else {
-            console.log('New interaction row not found')
-          }
-        }, 500);
       }
     }
 
@@ -267,7 +265,7 @@ export const IxnRow: React.FC<MyProps> = props => {
     return (
       <div className={props.className}>
         <DeleteTooltip title={'Delete Interaction'}>
-          <div className={"delete-ixn-button"}
+          <div className={'delete-ixn-button'}
             // id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")}
                onClick={handleDeleteClick}
           >
@@ -283,13 +281,13 @@ export const IxnRow: React.FC<MyProps> = props => {
       {disabled ?
         <Box
           borderRadius={8}
-          className={"ixn-row-box"}
+          className={'ixn-row-box'}
         >
           <div className={classNames('ixn-data-cell', 'exploit-analyst')}>
             {props.ixn!.exploitAnalyst}
           </div>
           <div className={classNames('ixn-data-cell', 'time')}>
-            {props.ixn!.time.utc().format("HH:mm:ss") + "Z"}
+            {props.ixn!.time.utc().format('HH:mm:ss') + 'Z'}
           </div>
           <div className={classNames('ixn-data-cell', 'activity')}>
             {props.ixn!.activity}
@@ -297,11 +295,11 @@ export const IxnRow: React.FC<MyProps> = props => {
           <div className={classNames('ixn-data-cell', 'track')}>
             {props.ixn!.track}
           </div>
-          <DeleteButton className={'delete-ixn-button-container'} />
+          <DeleteButton className={'delete-ixn-button-container'}/>
         </Box>
         :
         <>
-          <form className={classNames("ixn-form", disabled ? "add-ixn-form" : "edit-ixn-form")}
+          <form className={classNames('ixn-form', disabled ? 'add-ixn-form' : 'edit-ixn-form')}
                 onKeyPress={(e) => {
                   if (e.which === 13) {
                     setAction(Action.SUBMITTING);
@@ -311,42 +309,43 @@ export const IxnRow: React.FC<MyProps> = props => {
           >
             <Box
               borderRadius={8}
-              className={"ixn-row-box"}
+              className={'ixn-row-box'}
             >
               <ThemeProvider theme={localTheme}>
                 <TextField
-                  className={classNames("exploit-analyst", disabled ? null : 'input-disabled', classes.margin)}
+                  className={classNames('exploit-analyst', disabled ? null : 'input-disabled', classes.margin)}
                   value={exploitAnalyst}
                   disabled={disabled}
-                  required
                   placeholder="Name"
                   onChange={inputExploitAnalyst}
+                  autoFocus={props.tgtAnalyst === ''}
                 />
                 <Input
                   className={classNames('time', disabled ? null : 'input-disabled', classes.margin)}
                   value={time}
                   onChange={inputTime}
                   inputComponent={IxnTimeTextMask as any}
-                  error={(timeInvalidError && time !== "") || timeOutOfBoundsError}
+                  error={(timeInvalidError && time !== '') || timeOutOfBoundsError}
                   disabled={disabled}
                   onBlur={timeBlur}
                   required
                   inputProps={inputProps}
+                  autoFocus={props.tgtAnalyst !== ''}
                 />
                 <TextField
                   multiline
-                  className={classNames("activity", disabled ? null : 'input-disabled', classes.margin)}
+                  className={classNames('activity', disabled ? null : 'input-disabled', classes.margin)}
                   value={activity}
                   disabled={disabled}
                   onChange={inputActivity}
-                  placeholder={"Activity"}
+                  placeholder={'Activity'}
                 />
                 <TextField
-                  className={classNames("track", disabled ? null : 'input-disabled', classes.margin)}
+                  className={classNames('track', disabled ? null : 'input-disabled', classes.margin)}
                   value={track}
                   disabled={disabled}
                   onChange={inputTrack}
-                  placeholder={"###-###"}
+                  placeholder={'###-###'}
                   onKeyDown={(e) => {
                     if (e.which === 9 && !e.shiftKey) {
                       setAction(Action.SUBMITTING);
@@ -358,15 +357,15 @@ export const IxnRow: React.FC<MyProps> = props => {
             </Box>
           </form>
           {timeOutOfBoundsError ?
-            <div className={"input-error-msg"}
+            <div className={'input-error-msg'}
                  id={('time-oob-error-' + props.segment.id)}
             >
               The time you entered does not fall within the segment timeline
             </div>
             : null
           }
-          {timeInvalidError && time !== "" ?
-            <div className={"input-error-msg"}
+          {timeInvalidError && time !== '' ?
+            <div className={'input-error-msg'}
                  id={('time-invalid-error-' + props.segment.id)}
             >
               Invalid time.

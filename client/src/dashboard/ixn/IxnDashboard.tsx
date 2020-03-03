@@ -24,6 +24,7 @@ interface Props {
 
 export const IxnDashboard: React.FC<Props> = props => {
   const [addSegment, setAddSegment] = useState(false);
+  const [tgtAnalyst, setTgtAnalyst] = React.useState('');
 
   const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
@@ -64,6 +65,8 @@ export const IxnDashboard: React.FC<Props> = props => {
         postSegment={handlePostSegment}
         postIxn={handlePostIxn}
         deleteIxn={handleDeleteIxn}
+        tgtAnalyst={tgtAnalyst}
+        setTgtAnalyst={setTgtAnalyst}
         />
     );
   }

@@ -25,6 +25,8 @@ describe("Segment Region", () => {
       postSegment={(segment: SegmentModel) => {}}
       postIxn={(ixn: IxnModel) => {}}
       deleteIxn={(ixn: IxnModel) => {}}
+      tgtAnalyst={''}
+      setTgtAnalyst={(tgtAnalyst) => {}}
     />
   );
 

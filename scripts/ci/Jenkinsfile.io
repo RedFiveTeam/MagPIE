@@ -35,7 +35,7 @@ stage ('Test & Build') {
               stage ('SonarQube') {
                    def sonarXmx = '512m'
                    def sonarHost = 'https://sonar.geointservices.io'
-                   def scannerHome = tool 'SonarQube Runner 2.8';
+                   def scannerHome = tool 'SonarQube Runner';
                    withSonarQubeEnv('DevOps Sonar') {
                        // update env var JOB_NAME to replace all non word chars to underscores
                        def jobname = JOB_NAME.replaceAll(/[^a-zA-Z0-9\_]/, "_")

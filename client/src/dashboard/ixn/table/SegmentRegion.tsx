@@ -13,15 +13,17 @@ interface MyProps {
   postSegment: (segment: SegmentModel) => void;
   postIxn: (ixn: IxnModel) => void;
   deleteIxn: (ixn: IxnModel) => void;
+  tgtAnalyst: string;
+  setTgtAnalyst: (tgtAnalyst: string) => void;
   className?: string;
 }
 
 export const SegmentRegion: React.FC<MyProps> = (props) => {
-  const [segmentAnalyst, setSegmentAnalyst] = React.useState('');
 
   const printRows = () => {
     let ixns: (IxnModel | null)[] = props.ixns;
-    ixns.push(null); //input row--mapped to force a re-render
+    if (!ixns.includes(null))
+      ixns.push(null); //input row--mapped to force a re-render
 
     return ixns.map((ixn: IxnModel | null, index: number) =>
       <StyledIxnRow
@@ -30,9 +32,9 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
         segment={props.segment}
         postIxn={props.postIxn}
         deleteIxn={props.deleteIxn}
-        segmentAnalyst={segmentAnalyst}
-        setSegmentAnalyst={setSegmentAnalyst}
-      />
+        tgtAnalyst={props.tgtAnalyst}
+        setTgtAnalyst={props.setTgtAnalyst}
+      />,
     )
   };
 

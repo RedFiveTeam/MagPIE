@@ -35,8 +35,8 @@ describe('IxnRow', () => {
         segment={segment}
         postIxn={(ixn: IxnModel) => {}}
         deleteIxn={(ixn: IxnModel) => {}}
-        segmentAnalyst={''}
-        setSegmentAnalyst={(segmentAnalyst: string) => {}}
+        tgtAnalyst={''}
+        setTgtAnalyst={(tgtAnalyst: string) => {}}
       />
     );
 
