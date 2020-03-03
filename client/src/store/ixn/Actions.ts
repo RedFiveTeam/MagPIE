@@ -91,9 +91,33 @@ export const deleteIxn = (ixn: IxnModel) => {
   }
 };
 
+export const deleteSegment = (segment: SegmentModel) => {
+  return (dispatch: any) => {
+    return postSegmentDelete(segment.id!)
+      .then(response => fetchSegments(segment.targetId))
+      .then(segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments))))
+      .catch((reason) => {
+        console.log(reason);
+      })
+  }
+};
+
 export const postIxnDelete = (ixnId: number) => {
   return fetch(
     '/api/ixn/' + ixnId,
+    {
+      method: 'delete',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+};
+
+export const postSegmentDelete = (segmentId: number) => {
+  return fetch(
+    '/api/ixn/segment/' + segmentId,
     {
       method: 'delete',
       headers: {

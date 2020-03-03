@@ -1,12 +1,16 @@
 package dgs1sdt.magpie.ixns;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
+import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegment;
+import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegmentRepository;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
 import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
 import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxnRepository;
+import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegment;
+import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegmentRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
@@ -23,7 +27,7 @@ import java.util.Date;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class IxnControllerTest extends BaseIntegrationTest {
   @Autowired
@@ -42,7 +46,10 @@ public class IxnControllerTest extends BaseIntegrationTest {
   MetricCreateIxnRepository metricCreateIxnRepository;
   @Autowired
   MetricDeleteIxnRepository metricDeleteIxnRepository;
-
+  @Autowired
+  MetricDeleteSegmentRepository metricDeleteSegmentRepository;
+  @Autowired
+  MetricChangeSegmentRepository metricChangeSegmentRepository;
 
   @Before
   public void clean() {
@@ -54,6 +61,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
     metricCreateSegmentRepository.deleteAll();
     metricCreateIxnRepository.deleteAll();
     metricDeleteIxnRepository.deleteAll();
+    metricDeleteSegmentRepository.deleteAll();
+    metricChangeSegmentRepository.deleteAll();
   }
 
   @Test
@@ -153,7 +162,6 @@ public class IxnControllerTest extends BaseIntegrationTest {
       .body("[1].startTime", equalTo("1970-01-01T12:30:10.000+0000"))
       .body("[1].endTime", equalTo("1970-01-01T15:45:30.000+0000"));
   }
-
 
   @Test
   public void addsInteractions() {
@@ -357,5 +365,200 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("SDT12-123", metric.getTargetName());
     assertEquals("1970-01-01 12:10:10.0", metric.getSegmentStart().toString());
     assertEquals("1970-01-01 12:30:45.0", metric.getSegmentEnd().toString());
+  }
+
+  @Test
+  public void deletesSegmentinos() {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
+    Date exploitDate = new Date(0);
+    exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
+    long exploitDateId = exploitDateRepository.findAll().get(0).getId();
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDateId, "SDT12-123", "12WQE1231231231", "", "")));
+    long targetId = targetRepository.findAll().get(0).getId();
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDateId, targetId,
+      new Timestamp(
+        (12 * 3600 + //HH
+          10 * 60 + // MM
+          10 // SS
+        ) * 1000 // Milliseconds
+      ),
+      new Timestamp(
+        (12 * 3600 + //HH
+          30 * 60 + // MM
+          45 // SS
+        ) * 1000 // Milliseconds
+      )
+    )));
+    long segmentId = segmentRepository.findAll().get(0).getId();
+
+    ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
+      "Billy Bob",
+      new Timestamp(
+        (12 * 3600 + //HH
+          15 * 60 + // MM
+          55 // SS
+        ) * 1000 // Milliseconds
+      ),
+      "",
+      ""
+    ));
+
+    ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
+      "",
+      new Timestamp(
+        (12 * 3600 + //HH
+          15 * 60 + // MM
+          10 // SS
+        ) * 1000 // Milliseconds
+      ),
+      "Person entered vehicle",
+      "123-234"
+    ));
+
+    assertEquals(1, segmentRepository.findAll().size());
+    assertEquals(2, ixnRepository.findAll().size());
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .when()
+      .delete(IxnController.URI + "/segment/" + segmentId)
+      .then()
+      .statusCode(200);
+
+    assertEquals(0, segmentRepository.findAll().size());
+    assertEquals(0, ixnRepository.findAll().size());
+
+    assertEquals(1, metricDeleteSegmentRepository.findAll().size());
+
+    MetricDeleteSegment metric = metricDeleteSegmentRepository.findAll().get(0);
+
+    assertEquals("DGS-1-SDT-2020-00338", metric.getRfiNum());
+    assertEquals("1970-01-01 00:00:00.0", metric.getExploitDate().toString());
+    assertEquals("SDT12-123", metric.getTargetName());
+    assertEquals("1970-01-01 12:10:10.0", metric.getSegmentStart().toString());
+    assertEquals("1970-01-01 12:30:45.0", metric.getSegmentEnd().toString());
+    assertTrue(metric.isHadIxns());
+
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDateId, targetId,
+      new Timestamp(
+        (12 * 3600 + //HH
+          10 * 60 + // MM
+          10 // SS
+        ) * 1000 // Milliseconds
+      ),
+      new Timestamp(
+        (12 * 3600 + //HH
+          30 * 60 + // MM
+          45 // SS
+        ) * 1000 // Milliseconds
+      )
+    )));
+
+    segmentId = segmentRepository.findAll().get(0).getId();
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .when()
+      .delete(IxnController.URI + "/segment/" + segmentId)
+      .then()
+      .statusCode(200);
+
+    assertEquals(2, metricDeleteSegmentRepository.findAll().size());
+
+    metric = metricDeleteSegmentRepository.findAll().get(1);
+
+    assertFalse(metric.isHadIxns());
+  }
+
+  @Test
+  public void editsSegments() {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
+    Date exploitDate = new Date(0);
+    exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
+    long exploitDateId = exploitDateRepository.findAll().get(0).getId();
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDateId, "SDT12-123", "12WQE1231231231", "", "")));
+    long targetId = targetRepository.findAll().get(0).getId();
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDateId, targetId,
+      new Timestamp(
+        (12 * 3600 + //HH
+          10 * 60 + // MM
+          10 // SS
+        ) * 1000 // Milliseconds
+      ),
+      new Timestamp(
+        (12 * 3600 + //HH
+          30 * 60 + // MM
+          45 // SS
+        ) * 1000 // Milliseconds
+      )
+    )));
+    long segmentId = segmentRepository.findAll().get(0).getId();
+
+    ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
+      "Billy Bob",
+      new Timestamp(
+        (12 * 3600 + //HH
+          15 * 60 + // MM
+          55 // SS
+        ) * 1000 // Milliseconds
+      ),
+      "",
+      ""
+    ));
+
+    ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
+      "",
+      new Timestamp(
+        (12 * 3600 + //HH
+          15 * 60 + // MM
+          10 // SS
+        ) * 1000 // Milliseconds
+      ),
+      "Person entered vehicle",
+      "123-234"
+    ));
+
+    String segmentJsonString = "{" +
+      "\"id\":" + segmentId +
+      ",\"rfiId\":" + rfiId +
+      ",\"exploitDateId\":" + exploitDateId +
+      ",\"targetId\":" + targetId +
+      ",\"startTime\":\"1970-01-01T12:30:00.000Z\"" +
+      ",\"endTime\":\"1970-01-01T15:15:30.000Z\"" +
+      "}";
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .body(segmentJsonString)
+      .when()
+      .post(IxnController.URI + "/segment/post")
+      .then()
+      .statusCode(200);
+
+    assertEquals(1, segmentRepository.findAll().size());
+    assertEquals(1, metricChangeSegmentRepository.findAll().size());
+
+    Segment segment = segmentRepository.findAll().get(0);
+
+    assertEquals(rfiId, segment.getRfiId());
+    assertEquals(exploitDateId, segment.getExploitDateId());
+    assertEquals(targetId, segment.getTargetId());
+    assertEquals("1970-01-01 12:30:00.0", segment.getStartTime().toString());
+    assertEquals("1970-01-01 15:15:30.0", segment.getEndTime().toString());
+
+    MetricChangeSegment metric = metricChangeSegmentRepository.findAll().get(0);
+
+    assertEquals("DGS-1-SDT-2020-00338", metric.getRfiNum());
+    assertEquals("1970-01-01 00:00:00.0", metric.getExploitDate().toString());
+    assertEquals("SDT12-123", metric.getTargetName());
+    assertEquals("1970-01-01 12:10:10.0", metric.getOldSegmentStart().toString());
+    assertEquals("1970-01-01 12:30:45.0", metric.getOldSegmentEnd().toString());
+    assertEquals("1970-01-01 12:30:00.0", metric.getNewSegmentStart().toString());
+    assertEquals("1970-01-01 15:15:30.0", metric.getNewSegmentEnd().toString());
   }
 }

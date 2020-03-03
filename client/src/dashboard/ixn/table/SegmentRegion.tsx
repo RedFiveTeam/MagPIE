@@ -10,11 +10,13 @@ interface MyProps {
   target: TargetModel;
   segment: SegmentModel;
   ixns: IxnModel[];
-  postSegment: (segment: SegmentModel) => void;
   postIxn: (ixn: IxnModel) => void;
   deleteIxn: (ixn: IxnModel) => void;
+  postSegment: (segment: SegmentModel) => void;
+  deleteSegment: (segment: SegmentModel) => void;
   tgtAnalyst: string;
   setTgtAnalyst: (tgtAnalyst: string) => void;
+  setAddSegment: (addSegment: boolean) => void;
   className?: string;
 }
 
@@ -45,6 +47,9 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
         segment={props.segment}
         postSegment={props.postSegment}
         postIxn={props.postIxn}
+        deleteSegment={props.deleteSegment}
+        setAddSegment={props.setAddSegment}
+        hasIxns={props.ixns.length > 0}
       />
       {printRows()}
     </div>

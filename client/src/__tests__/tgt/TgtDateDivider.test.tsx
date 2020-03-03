@@ -30,22 +30,22 @@ describe('TgtDateDivider', () => {
         deleteExploitDate={deleteExploitDateSpy}
         hasTgts={false}
         uKey={1}
-      />
+      />,
     );
   });
 
   it('should display a dividing line', () => {
-    expect(subject.find(".separator-line").exists()).toBeTruthy();
+    expect(subject.find('.separator-line').exists()).toBeTruthy();
   });
 
   it('should display a date input with the exploitation date if it exists', () => {
-    expect(subject.find(".newExploitDate-input").exists()).toBeTruthy();
-    expect(subject.find(".MuiInputBase-input").props().value)
+    expect(subject.find('.newExploitDate-input').exists()).toBeTruthy();
+    expect(subject.find('.MuiInputBase-input').props().value)
       .toContain(exploitDate.exploitDate.format('MM/DD/YYYY'));
   });
 
   it('should show a delete button that is clickable', () => {
-    subject.find(".delete-date").at(0).simulate('click');
+    subject.find('.delete-date').at(0).simulate('click');
     expect(deleteExploitDateSpy).toHaveBeenCalled();
   });
 
@@ -60,18 +60,18 @@ describe('TgtDateDivider', () => {
         deleteExploitDate={deleteExploitDateSpy}
         hasTgts={true}
         uKey={1}
-      />
+      />,
     );
 
-    subject.find(".delete-date").at(0).simulate('click');
+    subject.find('.delete-date').at(0).simulate('click');
     expect(subject.find(Modal).get(1).props.open).toBeTruthy();
-    expect(subject.find(".delete-modal").at(0).text()).toContain("This will delete all TGTs and interactions associated with it.");
+    expect(subject.find('.delete-modal').at(0).text()).toContain('All associated data will be erased.');
 
-    subject.find(".modal-no").at(0).simulate('click');
-    expect(subject.find(".delete-modal").at(0).text()).not.toContain("This will delete all TGTs and interactions associated with it.");
+    subject.find('.modal-no').at(0).simulate('click');
+    expect(subject.find('.delete-modal').at(0).text()).not.toContain('All associated data will be erased.');
 
-    subject.find(".delete-date").at(0).simulate('click');
-    subject.find(".modal-yes").at(0).simulate('click');
+    subject.find('.delete-date').at(0).simulate('click');
+    subject.find('.modal-yes').at(0).simulate('click');
     expect(deleteExploitDateSpy).toHaveBeenCalled();
     expect(subject.find(Modal).get(1).props.open).toBeFalsy();
   });
@@ -87,12 +87,11 @@ describe('TgtDateDivider', () => {
         deleteExploitDate={deleteExploitDateSpy}
         hasTgts={false}
         uKey={1}
-      />
+      />,
     );
 
-    subject.find(".delete-date").at(0).simulate('click');
+    subject.find('.delete-date').at(0).simulate('click');
     expect(subject.find(Modal).get(1).props.open).toBeFalsy();
     expect(deleteExploitDateSpy).toHaveBeenCalled();
   });
 });
-

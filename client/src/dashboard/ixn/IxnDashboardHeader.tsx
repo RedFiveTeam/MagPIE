@@ -70,7 +70,7 @@ export const StyledIxnDashboardHeader = styled(
     justify-content: space-between;
     align-items: center;
     height: 63px;
-    background: ${theme.color.backgroundIxnHeader};
+    background: ${theme.color.backgroundHeader};
   }
   
   .ixn-dash--header--back-button {

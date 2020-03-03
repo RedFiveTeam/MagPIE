@@ -12,7 +12,7 @@ import { ExploitationLogButtonVectorSmall } from '../../resources/icons/Exploita
 import { StyledIxnTable } from './table/IxnTable';
 import { StyledSegmentDivider } from './table/SegmentDivider';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
-import { deleteIxn, updateIxn, updateSegment } from '../../store/ixn';
+import { deleteIxn, deleteSegment, updateIxn, updateSegment } from '../../store/ixn';
 import theme from '../../resources/theme';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledSegmentRegion } from './table/SegmentRegion';
@@ -55,6 +55,10 @@ export const IxnDashboard: React.FC<Props> = props => {
     dispatch(deleteIxn(ixn));
   };
 
+  const handleDeleteSegment = (segment: SegmentModel) => {
+    dispatch(deleteSegment(segment))
+  };
+
   function printSegmentRegions(segmentList: SegmentModel[]) {
     return segmentList.map((segment: SegmentModel, index: number) =>
       <StyledSegmentRegion
@@ -67,6 +71,8 @@ export const IxnDashboard: React.FC<Props> = props => {
         deleteIxn={handleDeleteIxn}
         tgtAnalyst={tgtAnalyst}
         setTgtAnalyst={setTgtAnalyst}
+        setAddSegment={setAddSegment}
+        deleteSegment={handleDeleteSegment}
         />
     );
   }
@@ -93,6 +99,9 @@ export const IxnDashboard: React.FC<Props> = props => {
               segment={null}
               postSegment={handlePostSegment}
               postIxn={handlePostIxn}
+              deleteSegment={handleDeleteSegment}
+              setAddSegment={setAddSegment}
+              hasIxns={false}
             />
             :
             null
@@ -194,53 +203,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     flex-direction: column;
     align-items: center;
   }
-  
-  .segment-divider-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 27px;
-  }
-  
-  .segment-divider--bar {
-    margin-bottom: -4px;
-    width: 1430px;
-    height: 4px;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border: ${theme.color.segmentDivider};
-    border: 2px solid;
-  }
-  
-  .segment-spacer {
-    width: 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .segment-divider--box {
-    width: 306px;
-    height: 30px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    border: ${theme.color.segmentDivider};
-    border: 4px solid;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .add-segment-form {
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-size: 16px;
-  }
-  
+
   .header {
     margin-top: -25px;
   }

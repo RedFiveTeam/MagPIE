@@ -12,6 +12,10 @@ import { TargetModel } from '../../../store/tgt/TargetModel';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import { Moment } from 'moment';
 import IxnModel from '../../../store/ixn/IxnModel';
+import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
+import EditButton from '../../../resources/icons/EditButton';
+import { useEffect } from 'react';
+import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
 
 const moment = require('moment');
 
@@ -20,6 +24,9 @@ interface Props {
   segment: SegmentModel | null;
   postSegment: (segment: SegmentModel) => void;
   postIxn: (ixn: IxnModel) => void;
+  deleteSegment: (segment: SegmentModel) => void;
+  setAddSegment: (addSegment: boolean) => void;
+  hasIxns: boolean;
   className?: string;
 }
 
@@ -60,10 +67,16 @@ function SegmentTextMask(props: TextMaskCustomProps) {
 export const SegmentDivider: React.FC<Props> = props => {
   const classes = useStyles();
 
-  const [segmentStartString, setSegmentStartString] = React.useState('');
-  const [segmentEndString, setSegmentEndString] = React.useState('');
+  const [segmentStartString, setSegmentStartString] = React.useState(props.segment ? props.segment.startTime.format('HH:mm:ss') : '');
+  const [segmentEndString, setSegmentEndString] = React.useState(props.segment ? props.segment.endTime.format('HH:mm:ss') : '');
   const [segmentStartError, setSegmentStartError] = React.useState(false);
   const [segmentEndError, setSegmentEndError] = React.useState(false);
+  const [editing, setEditing] = React.useState(props.segment === null);
+  const [displayModal, setDisplayModal] = React.useState(false);
+
+  useEffect(() => {
+    setEditing(props.segment === null);
+  }, [props.segment]);
 
   const segmentError = (segment: string): boolean => {
     segment = segment.replace(/_/g, '0');
@@ -94,7 +107,7 @@ export const SegmentDivider: React.FC<Props> = props => {
       (hours * 3600 +
         minutes * 60 +
         seconds)
-      * 1000
+      * 1000,
     );
     return moment(segmentDate).utc();
   };
@@ -114,7 +127,7 @@ export const SegmentDivider: React.FC<Props> = props => {
           props.target.exploitDateId,
           props.target.id,
           segmentStart,
-          segmentEnd
+          segmentEnd,
         );
         props.postSegment(segment);
       } else {
@@ -123,21 +136,46 @@ export const SegmentDivider: React.FC<Props> = props => {
     }
   };
 
+  const handleDeleteClick = () => {
+    if (props.hasIxns)
+      setDisplayModal(true);
+    else
+      handleDelete();
+  };
+
+  const handleDelete = () => {
+    if (props.segment !== null) {
+      props.deleteSegment(props.segment);
+    } else {
+      props.setAddSegment(false);
+      setDisplayModal(false);
+    }
+  };
+
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+
   return (
     <div className={classNames(props.className)}>
       <div className={'segment-divider-placeholder'}>
         <div className={'segment-divider--bar'}/>
         <div className={'segment-divider--box'}>
-          {props.segment !== null ?
+          <div
+            className={'delete-segment'}
+            onClick={handleDeleteClick}>
+            <DeleteButtonX className={'delete-segment'}/>
+          </div>
+          {!editing ?
             <div className={'add-segment-form'}>
               <div className={classNames('segment-value', 'segment-start')}>
-                {props.segment.startTime.format("HH:mm:ss") + "Z"}
+                {props.segment!.startTime.format('HH:mm:ss') + 'Z'}
               </div>
               <div className={'segment-spacer'}>
                 <span>-</span>
               </div>
               <div className={classNames('segment-value', 'segment-end')}>
-                {props.segment.endTime.format("HH:mm:ss") + "Z"}
+                {props.segment!.endTime.format('HH:mm:ss') + 'Z'}
               </div>
             </div>
             :
@@ -161,7 +199,6 @@ export const SegmentDivider: React.FC<Props> = props => {
                       }
                       autoFocus={true}
                       error={segmentStartError}
-                      disabled={props.segment !== null}
                       onKeyPress={(e) => {
                         if (e.which === 13) {
                           validateAndSubmit();
@@ -192,7 +229,6 @@ export const SegmentDivider: React.FC<Props> = props => {
                         </InputAdornment>
                       }
                       error={segmentEndError}
-                      disabled={props.segment !== null}
                       onBlur={validateAndSubmit}
                       onKeyPress={(e) => {
                         if (e.which === 13) {
@@ -205,11 +241,24 @@ export const SegmentDivider: React.FC<Props> = props => {
               </div>
             </div>
           }
+          <div
+            className={'edit-segment'}
+            onClick={handleEditClick}
+          >
+            <EditButton/>
+          </div>
         </div>
       </div>
       {segmentStartError || segmentEndError ?
         <div className={'segment-error'}>Error: invalid time.</div> :
         null}
+      <DeleteConfirmationModal
+        deletingItem={props.segment ?
+          props.segment.startTime.format('HH:mm:ss') + 'Z - ' + props.segment.endTime.format('HH:mm:ss') + 'Z' : ''}
+        display={displayModal}
+        setDisplay={setDisplayModal}
+        handleYes={handleDelete}
+      />
     </div>
   );
 };
@@ -255,14 +304,17 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
   .segment-divider--box {
     width: 306px;
     height: 30px;
+    background: ${theme.color.backgroundHeader};
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
     border: ${theme.color.segmentDivider};
     border: 4px solid;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding-left: 36px;
+    padding-right: 36px;
   }
   
   .add-segment-form {
@@ -284,10 +336,25 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
   
   .zulu {
     color: ${theme.color.fontBackgroundInactive};
-    margin-top: -2px;
+    margin-top: -1px;
   }
   
   .segment-input-container {
     width: 72px;
+    padding-top: 1px;
+  }
+  
+  .delete-segment {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .edit-segment {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 `;

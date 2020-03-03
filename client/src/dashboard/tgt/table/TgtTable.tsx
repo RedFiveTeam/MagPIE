@@ -19,7 +19,7 @@ export const TgtTable: React.FC<Props> = props => {
 export const StyledTgtTable = styled(TgtTable)`
   display: flex;
   flex-direction: column;
-  padding-bottom: 38px;
+  padding-bottom: 42px;
   padding-right: 20px;
   overflow-y: auto;
   width: 1326px;

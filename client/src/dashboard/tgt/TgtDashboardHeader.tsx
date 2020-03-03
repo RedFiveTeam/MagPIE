@@ -44,7 +44,7 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     justify-content: space-between;
     align-items: center;
     height: 63px;
-    background: ${theme.color.backgroundIxnHeader};
+    background: ${theme.color.backgroundHeader};
   }
   
   .tgt-dash--header--back-button {

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Box, createMuiTheme, createStyles, TextField, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { crayonBox } from '../../../resources/crayonBox';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { StyledDeleteButtonVector } from '../../../resources/icons/DeleteButtonVector';
+import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import { connect } from 'react-redux';
 import theme from '../../../resources/theme';
@@ -449,7 +449,7 @@ export const TgtRow: React.FC<Props> = props => {
             <div className={'delete-tgt-button'}
                  id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}
                  onClick={handleDeleteClick}>
-              <StyledDeleteButtonVector/>
+              <StyledDeleteButtonTrashcan/>
             </div>
             <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
               <StyledExploitationLogButtonVector/>

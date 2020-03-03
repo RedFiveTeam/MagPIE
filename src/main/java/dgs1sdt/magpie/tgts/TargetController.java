@@ -169,9 +169,7 @@ public class TargetController {
 
           List<Segment> segments = segmentRepository.findAllByTargetId(targetId);
 
-          //TODO: call ixn service delete when implemented
           segmentRepository.deleteAll(segments);
-
 
           targetRepository.deleteById(targetId);
           return getTargets(rfiId);
@@ -263,5 +261,4 @@ public class TargetController {
     } else
       System.err.println("Error updating target: Could not find target by id " + targetId);
   }
-
 }

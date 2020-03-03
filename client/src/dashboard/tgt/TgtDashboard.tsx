@@ -67,16 +67,16 @@ export const TgtDashboard: React.FC<Props> = props => {
         addDate={addDate}
         setAddDate={setAddDate}
         exploitDate={exploitDateModel}
-        exploitDateDisplay={exploitDateModel.exploitDate.utc().format("D MMM YY")}
+        exploitDateDisplay={exploitDateModel.exploitDate.utc().format('D MMM YY')}
         targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
         editTarget={editTarget}
         addTgt={addTarget}
         setAddEditTarget={handleAddEdit}
         index={index}
-        className={"date-divider--" + moment(exploitDateModel.exploitDate).format("D-MMM-YY")}
+        className={'date-divider--' + moment(exploitDateModel.exploitDate).format('D-MMM-YY')}
         key={index}
         addingOrEditing={!(addTarget === -1 && editTarget === -1 && !addDate)}
-      />
+      />,
     );
   }
 
@@ -101,7 +101,7 @@ export const TgtDashboard: React.FC<Props> = props => {
             <StyledTgtDateDivider
               rfiId={props.rfi.id}
               setAddDate={setAddDate}
-              className={"date-divider--placeholder"}
+              className={'date-divider--placeholder'}
               uKey={props.rfi.id}
               hasTgts={false}
             />
@@ -161,7 +161,7 @@ const mapStateToProps = ({tgtState}: ApplicationState) => ({
   rfi: tgtState.rfi,
   exploitDates: tgtState.exploitDates,
   showDatePlaceholder: tgtState.showDatePlaceholder,
-  targets: tgtState.targets
+  targets: tgtState.targets,
 });
 
 const mapDispatchToProps = {
@@ -184,8 +184,12 @@ export const StyledTgtDashboard = styled(
     color: ${theme.color.backgroundInformation};
   }
   
+  .tgt-table {
+    height: 100%;
+  }
+  
   .tgt-dash-body {
-    height: calc(100vh - 150px);
+    height: calc(100vh - 199px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -224,6 +228,7 @@ export const StyledTgtDashboard = styled(
     width: 224px;
     height: 34px;    
     margin-bottom: 7px;
+    margin-top: 7px;
   }
   
   .add-date-button {

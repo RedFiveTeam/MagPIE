@@ -11,7 +11,7 @@ import { Moment } from 'moment';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import classNames from 'classnames';
 import theme from '../../../resources/theme';
-import { StyledDeleteButtonVector } from '../../../resources/icons/DeleteButtonVector';
+import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 
 const moment = require('moment');
 
@@ -269,7 +269,7 @@ export const IxnRow: React.FC<MyProps> = props => {
             // id={"delete" + (props.target !== null ? ("" + props.target.id) : "-add-tgt-row")}
                onClick={handleDeleteClick}
           >
-            <StyledDeleteButtonVector/>
+            <StyledDeleteButtonTrashcan/>
           </div>
         </DeleteTooltip>
       </div>
@@ -401,7 +401,6 @@ export const StyledIxnRow = styled(IxnRow)`
 
   .ixn-row-box {
     min-height: 62px;
-    //width: 100%;
     margin-top: 8px;
     background-color: #464646;
     display: flex;

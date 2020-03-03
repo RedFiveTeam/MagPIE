@@ -3,14 +3,15 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { Box, createStyles, InputAdornment, Modal, Theme } from '@material-ui/core';
+import { Box, createStyles, InputAdornment, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import DeleteIcon from '../../../resources/icons/DeleteIcon';
-import globalTheme from '../../../resources/theme';
+import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
 import { deleteExploitDate, updateRfiDate } from '../../../store/tgt/Thunks';
+import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
+import theme from '../../../resources/theme';
 
 interface Props {
   rfiId: number;
@@ -27,8 +28,8 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) => createStyles({
   '@global': {
     '.MuiPickersToolbar-toolbar': {
-      backgroundColor: '#000000'
-    }
+      backgroundColor: '#000000',
+    },
   },
   root: {
     height: 60,
@@ -37,10 +38,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: 1306,
-    maxWidth: 1306
+    maxWidth: 1306,
   },
   dateInput: {
-    width: "200px",
+    width: '200px',
     textAlign: 'center',
   },
   separator: {
@@ -57,50 +58,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     position: 'relative',
     bottom: 0,
   },
-  modal: {
-    marginLeft: -271,
-    marginTop: -94,
-    width: 542,
-    height: 188,
-  },
-  modalBody: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    fontFamily: globalTheme.font.familyHeader,
-    fontWeight: globalTheme.font.weightBold,
-    fontSize: globalTheme.font.sizeHeader,
-    color: globalTheme.color.deleteButton,
-    textAlign: 'center',
-    outline: 'none',
-    backgroundColor: globalTheme.color.backgroundModal,
-    borderRadius: 8,
-    borderColor: globalTheme.color.borderModal,
-    borderWidth: 2,
-    borderStyle: 'solid'
-  },
-  modalConfirmation: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 162
-  },
-  modalYes: {
-    cursor: 'pointer',
-    color: globalTheme.color.fontBackgroundInactive,
-    '&:hover': {
-      color: globalTheme.color.deleteButton,
-      textShadow: '0px 0px 4px #FFFFFF'
-    }
-  },
-  modalNo: {
-    cursor: 'pointer',
-    '&:hover': {
-      textShadow: '0px 0px 4px #FFFFFF'
-    }
-  }
 }));
 
 export const TgtDateDivider: React.FC<Props> = props => {
@@ -110,7 +67,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
   const [displayModal, setDisplayModal] = React.useState(false);
 
   function isValidDate(date: Date): boolean {
-    return Object.prototype.toString.call(date) !== "[object Date]" ? false
+    return Object.prototype.toString.call(date) !== '[object Date]' ? false
       : !(isNaN(date.getTime()) || date > new Date());
   }
 
@@ -140,7 +97,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
 
   function checkForExploitDate() {
     if (props.exploitDate) {
-      deleteExploitDateById(props.exploitDate.id)
+      deleteExploitDateById(props.exploitDate.id);
     } else {
       props.setAddDate(false);
     }
@@ -156,17 +113,18 @@ export const TgtDateDivider: React.FC<Props> = props => {
             InputProps={{
               startAdornment: (
                 <InputAdornment onClick={handleDeleteClick} position="start">
-                  <DeleteIcon
+                  <DeleteButtonX
+                    className={'delete-date'}
                     aria-label="delete date"
                   />
                 </InputAdornment>
-              )
+              ),
             }}
             margin="normal"
-            id={"date-picker-dialog" + (props.exploitDate ? props.exploitDate.exploitDate : "")}
+            id={'date-picker-dialog' + (props.exploitDate ? props.exploitDate.exploitDate : '')}
             label=""
             format="MM/dd/yyyy"
-            placeholder={"MM/DD/YYYY"}
+            placeholder={'MM/DD/YYYY'}
             value={(props.exploitDate ? props.exploitDateDisplay : selectedDate)}
             onChange={date => handleChange(date)}
             KeyboardButtonProps={{
@@ -175,68 +133,43 @@ export const TgtDateDivider: React.FC<Props> = props => {
             maxDate={new Date()}
             error={false}
             helperText={''}
+            autoFocus={props.exploitDate === undefined}
           />
         </MuiPickersUtilsProvider>
       </Box>
-      <Box className={classNames(classes.separator, "separator-line")}>
+      <Box className={classNames(classes.separator, 'separator-line')}>
         &nbsp;
       </Box>
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={displayModal}
-        onClose={() => setDisplayModal(false)}
-        style={{
-          top: '50%',
-          left: '50%'
-        }}
-        className={classNames('delete-modal', classes.modal)}
-      >
-        <div className={classes.modalBody}>
-          <div className={'modal-text'}>Are you sure?</div>
-          <div className={'modal-text'} style={{width: 339}}>This will delete all TGTs and interactions associated with
-            it.
-          </div>
-          <div className={classes.modalConfirmation}>
-            <span className={classNames('modal-yes', classes.modalYes)} onClick={() => checkForExploitDate()}>
-              YES
-            </span>
-            <span className={classNames('modal-no', classes.modalNo)} onClick={() => setDisplayModal(false)}>
-              NO
-            </span>
-          </div>
-        </div>
-      </Modal>
+      <DeleteConfirmationModal
+        deletingItem={props.exploitDate ? props.exploitDate.exploitDate.format('MM/DD/YYYY') : ''}
+        display={displayModal}
+        setDisplay={setDisplayModal}
+        handleYes={checkForExploitDate}
+      />
     </div>
-  )
+  );
 };
 
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
   updateRfiDate: updateRfiDate,
-  deleteExploitDate: deleteExploitDate
+  deleteExploitDate: deleteExploitDate,
 };
 
 export const StyledTgtDateDivider = styled(connect(mapStateToProps, mapDispatchToProps)(TgtDateDivider))`
-  font-family: ${(props) => props.theme.font.familyRegion};
-  font-weight: ${(props) => props.theme.font.weightBold};
-  font-size: ${(props) => props.theme.font.sizeRegion};
-  color: ${(props) => props.theme.color.fontPrimary};
-  width: 100%
+  font-family: ${theme.font.familyRegion};
+  font-weight: ${theme.font.weightBold};
+  font-size: ${theme.font.sizeRegion};
+  color: ${theme.color.fontPrimary};
+  width: 100%;
+  height: 100%;
  
   .separator-line {
-    background: ${(props) => props.theme.color.fontPrimary};
+    background: ${theme.color.fontPrimary};
   }
 
   .separator-title {
     text-align: center;
-  }
-  
-  .modal-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
   }
 `;
