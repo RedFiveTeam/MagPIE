@@ -55,8 +55,10 @@ export const TgtDashboard: React.FC<MyProps> = props => {
         }
         break;
       case Status.VIEW:
-        setAddTarget(-1);
-        setEditTarget(-1);
+        setTimeout(() => {
+          setAddTarget(-1);
+          setEditTarget(-1);
+        }, 150);
     }
   };
 

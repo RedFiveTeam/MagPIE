@@ -141,19 +141,19 @@ export const TgtRow: React.FC<Props> = props => {
   );
 
   function weakMatchNameError(name: string): boolean {
-    return name.length > 9 || (name.length === 9 && name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null)
+    return name.length > 9 || (name.length === 9 && name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null);
   }
 
   function strongMatchNameError(name: string): boolean {
-    return name.length !== 9 || name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null
+    return name.length !== 9 || name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null;
   }
 
   function weakMatchMgrsError(mgrs: string): boolean {
-    return mgrs.length > 15 || (mgrs.length === 15 && mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null)
+    return mgrs.length > 15 || (mgrs.length === 15 && mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null);
   }
 
   function strongMatchMgrsError(mgrs: string): boolean {
-    return mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null
+    return mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null;
   }
 
   const inputName = (event: any) => {
@@ -179,11 +179,15 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   const inputNotes = (event: any) => {
-    setNotes(event.target.value);
+    let newNotes = event.target.value;
+    if (newNotes.charAt(newNotes.length - 1) !== '\n')
+      setNotes(newNotes);
   };
 
   const inputDescription = (event: any) => {
-    setDescription(event.target.value);
+    let newDescription = event.target.value;
+    if (newDescription.charAt(newDescription.length - 1) !== '\n')
+      setDescription(newDescription);
   };
 
   const validateAllAndSubmit = () => {
@@ -210,7 +214,7 @@ export const TgtRow: React.FC<Props> = props => {
         setMgrs('');
         setNotes('');
         setDescription('');
-      }, 500)
+      }, 500);
     }
 
     setAction(Action.NONE);
@@ -260,8 +264,6 @@ export const TgtRow: React.FC<Props> = props => {
     }
   };
 
-  let disabled = !props.editable;
-
   const inputProps = {
     id: 'tgt-name-input-' + (props.target ? props.target.id.toString() : 'new'),
   };
@@ -298,7 +300,7 @@ export const TgtRow: React.FC<Props> = props => {
           <InProgressIcon/>
         </Box>
       </div>
-    )
+    );
   };
 
   const CompletedButton: React.FC<LocalProps> = props => {
@@ -328,135 +330,154 @@ export const TgtRow: React.FC<Props> = props => {
           <CompletedIcon/>
         </Box>
       </div>
-    )
+    );
   };
 
   return (
     <div className={props.className}>
-      <form className={classNames('tgt-form', props.target ? 'edit-tgt-form' : 'add-tgt-form')}
-            onBlur={onBlur}
-            onKeyPress={(e) => {
-              if (e.which === 13) {
-                validateAllAndSubmit();
-              }
-            }}
-            onDoubleClick={handleDoubleClick}
+      <Box
+        borderRadius={8}
+        className={'tgt-form-box'}
       >
-        <Box
-          borderRadius={8}
-          className={'tgt-form-box'}
-        >
-          <ThemeProvider theme={localTheme}>
-            <TextField
-              autoFocus={true}
-              className={classNames(
-                classes.margin,
-                'tgt-name',
-                'tgt-name-input-' + (props.target ? props.target.id : 'new'),
-                props.editable ? null : 'input-disabled',
-              )}
-              // Display local hook if editing, if local hook is not empty display it, otherwise display props.
-              // Local hook is on a setTimeout to be cleared  in order to update the display if the user submits a
-              // conflicting target name without there being a cut back to the old data for a split second on update
-              value={name !== '' ? name : (props.target && !props.editable ? props.target.name : name)}
-              disabled={disabled}
-              required
-              placeholder="OPRYY-###"
-              label={props.target ? '' : (nameError ? 'Error' : 'Required')}
-              error={nameError}
-              onChange={inputName}
-              inputProps={inputProps}
-            />
-            <TextField
-              className={classNames('mgrs', props.editable ? null : 'input-disabled', classes.margin)}
-              value={mgrs !== '' ? mgrs : (props.target && !props.editable ? props.target.mgrs : mgrs)}
-              disabled={disabled}
-              required
-              placeholder="##XXX##########"
-              label={props.target ? '' : (mgrsError ? 'Error' : 'Required')}
-              error={mgrsError}
-              onChange={inputMgrs}
-            />
-            <TextField
-              multiline
-              rowsMax="2"
-              className={classNames('notes', props.editable ? null : 'input-disabled', classes.margin)}
-              value={notes !== '' ? notes : (props.target && !props.editable ? props.target.notes : notes)}
-              disabled={disabled}
-              label={props.target || notes !== '' ? '' : 'EEI Notes'}
-              onChange={inputNotes}
-            />
-            <TextField
-              multiline
-              rowsMax="2"
-              className={classNames("description", props.editable ? null : 'input-disabled', classes.margin)}
-              value={description !== ""
-                ?
-                description
-                :
-                (props.target && !props.editable
-                  ?
-                  props.target.description
-                  :
-                  description)
-              }
-              disabled={disabled}
-              label={props.target || description !== '' ? '' : 'TGT Description'}
-              onChange={inputDescription}
-              onKeyDown={(e: any) => {
-                if (e.keyCode === 9) {
-                  validateAllAndSubmit();
-                }
-              }}
-            />
-            <HtmlTooltip
-              title={
-                <div className={'status-menu'}>
-                  <StyledStatusPickerOutline/>
-                  <InProgressButton buttonClass={classes.inProgressClickable}/>
-                  <CompletedButton buttonClass={classes.completedClickable}/>
-                </div>
-              }
-              interactive
-              disableHoverListener={props.addingOrEditing}
+        <ThemeProvider theme={localTheme}>
+          {props.editable ?
+            <form className={classNames('tgt-form', props.target ? 'edit-tgt-form' : 'add-tgt-form')}
+                  onBlur={onBlur}
+                  onKeyPress={(e) => {
+                    if (e.which === 13) {
+                      validateAllAndSubmit();
+                    }
+                  }}
             >
-              <div className={'status-wrapper'}>{props.target === null || props.target.status === TargetStatus.NOT_STARTED ?
-                <Box
-                  height={32}
-                  width={110}
-                  border={2}
-                  borderRadius={16}
-                  borderColor={crayonBox.eggWhite}
-                  bgcolor={localTheme.palette.secondary.main}
-                  display="flex"
-                  flexDirection="row"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  paddingRight={0.25}
-                  paddingLeft={2.8}
-                  fontSize={12}
-                  className={classes.statusUnclickable}
-                >
-                  Status
-                  <AddTgtDateButtonVector/>
-                </Box>
-                : (props.target.status === TargetStatus.IN_PROGRESS ?
-                  <InProgressButton buttonClass={classes.statusUnclickable}/>
+              <TextField
+                autoFocus={true}
+                className={classNames(
+                  classes.margin,
+                  'tgt-name',
+                  'tgt-name-input-' + (props.target ? props.target.id : 'new'),
+                  props.editable ? null : 'input-disabled',
+                )}
+                // Display local hook if editing, if local hook is not empty display it, otherwise display props.
+                // Local hook is on a setTimeout to be cleared  in order to update the display if the user submits a
+                // conflicting target name without there being a cut back to the old data for a split second on update
+                value={name !== '' ? name : (props.target && !props.editable ? props.target.name : name)}
+                required
+                placeholder="OPRYY-###"
+                label={props.target ? '' : (nameError ? 'Error' : 'Required')}
+                error={nameError}
+                onChange={inputName}
+                inputProps={inputProps}
+              />
+              <TextField
+                className={classNames('mgrs', props.editable ? null : 'input-disabled', classes.margin)}
+                value={mgrs !== '' ? mgrs : (props.target && !props.editable ? props.target.mgrs : mgrs)}
+                required
+                placeholder="##XXX##########"
+                label={props.target ? '' : (mgrsError ? 'Error' : 'Required')}
+                error={mgrsError}
+                onChange={inputMgrs}
+              />
+              <TextField
+                multiline
+                rowsMax="2"
+                className={classNames('notes', props.editable ? null : 'input-disabled', classes.margin)}
+                value={notes}
+                label={props.target || notes !== '' ? '' : 'EEI Notes'}
+                onChange={inputNotes}
+              />
+              <TextField
+                multiline
+                rowsMax="2"
+                className={classNames('description', props.editable ? null : 'input-disabled', classes.margin)}
+                value={description !== ''
+                  ?
+                  description
                   :
-                  <CompletedButton buttonClass={classes.statusUnclickable}/>)
-              }</div>
-            </HtmlTooltip>
-            <div className={'delete-tgt-button'}
-                 id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}
-                 onClick={handleDeleteClick}>
-              <StyledDeleteButtonTrashcan/>
+                  (props.target && !props.editable
+                    ?
+                    props.target.description
+                    :
+                    description)
+                }
+                label={props.target || description !== '' ? '' : 'TGT Description'}
+                onChange={inputDescription}
+                onKeyDown={(e: any) => {
+                  if (e.keyCode === 9) {
+                    validateAllAndSubmit();
+                  }
+                }}
+              />
+            </form>
+            :
+            <div className={'tgt-form'}
+                 onDoubleClick={handleDoubleClick}
+            >
+              <div className={classNames('data-cell', 'tgt-name')}>
+                {props.target!.name}
+              </div>
+              <div className={classNames('data-cell', 'mgrs')}>
+                {props.target!.mgrs}
+              </div>
+              <div className={classNames('data-cell', 'notes')}>
+                <div className={'data-overflow'}>
+                  {props.target!.notes}
+                </div>
+              </div>
+              <div className={classNames('data-cell', 'description')}>
+                <div className={'data-overflow'}>
+                  {props.target!.description}
+                </div>
+              </div>
             </div>
-            <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
-              <StyledExploitationLogButtonVector/>
-            </div>
-          </ThemeProvider>
-        </Box>
-      </form>
+          }
+          <HtmlTooltip
+            title={
+              <div className={'status-menu'}>
+                <StyledStatusPickerOutline/>
+                <InProgressButton buttonClass={classes.inProgressClickable}/>
+                <CompletedButton buttonClass={classes.completedClickable}/>
+              </div>
+            }
+            interactive
+            disableHoverListener={props.addingOrEditing}
+          >
+            <div
+              className={'status-wrapper'}>{props.target === null || props.target.status === TargetStatus.NOT_STARTED ?
+              <Box
+                height={32}
+                width={110}
+                border={2}
+                borderRadius={16}
+                borderColor={crayonBox.eggWhite}
+                bgcolor={localTheme.palette.secondary.main}
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                paddingRight={0.25}
+                paddingLeft={2.8}
+                fontSize={12}
+                className={classes.statusUnclickable}
+              >
+                Status
+                <AddTgtDateButtonVector/>
+              </Box>
+              : (props.target.status === TargetStatus.IN_PROGRESS ?
+                <InProgressButton buttonClass={classes.statusUnclickable}/>
+                :
+                <CompletedButton buttonClass={classes.statusUnclickable}/>)
+            }</div>
+          </HtmlTooltip>
+          <div className={'delete-tgt-button'}
+               id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}
+               onClick={handleDeleteClick}>
+            <StyledDeleteButtonTrashcan/>
+          </div>
+          <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
+            <StyledExploitationLogButtonVector/>
+          </div>
+        </ThemeProvider>
+      </Box>
       {nameError ?
         <div className={'input-error-msg'}>Please use the format "OPNYY-###" for TGT name</div>
         : null
@@ -466,7 +487,7 @@ export const TgtRow: React.FC<Props> = props => {
         : null
       }
     </div>
-  )
+  );
 };
 
 const mapStateToProps = (state: any) => ({});
@@ -509,6 +530,19 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     width: 120px;
   }
   
+  .data-cell {
+    margin: 8px 8px 15px 8px;
+    max-height: 38px;
+    font-size: ${theme.font.sizeRow};
+    font-weight: ${theme.font.weightRow};
+    font-family: ${theme.font.familyRow};
+    overflow-y: auto;
+  }
+  
+  .data-overflow {
+    overflow-wrap: break-word;
+  }
+  
   .delete-tgt-button {
     border-left: 4px solid ${crayonBox.softMetal};
     border-right: 4px solid ${crayonBox.softMetal};
@@ -542,6 +576,13 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     font-weight: normal;
     margin-bottom: 9px;
     padding-right: 7px;
+  }
+  
+  .tgt-form {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    max-height: 62px;
   }
 
   .status-wrapper {

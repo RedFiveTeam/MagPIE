@@ -102,7 +102,7 @@ describe("Target Row", () => {
   });
 
   it('should make target row editable after double clicking them', () => {
-    subject.find('.edit-tgt-form').at(0).simulate('dblclick');
+    subject.find('.tgt-form').at(0).simulate('dblclick');
     expect(setAddEditTargetSpy).toHaveBeenCalledWith(Status.EDIT, target.id);
   });
 });

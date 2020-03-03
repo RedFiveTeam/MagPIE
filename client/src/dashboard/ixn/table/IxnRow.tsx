@@ -394,6 +394,7 @@ export const StyledIxnRow = styled(IxnRow)`
   .track {
     width: 75px;
   }
+  
   .ixn-data-cell {
     margin: 8px 8px 8px 8px;
     overflow-wrap: break-word;
