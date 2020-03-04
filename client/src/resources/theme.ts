@@ -2,8 +2,9 @@ import { crayonBox } from './crayonBox';
 import './fonts/roboto/roboto.css';
 import './fonts/helveticaneue/helveticaneue.css';
 import './fonts/arvo/arvo.css';
-import { createMuiTheme } from '@material-ui/core';
+import { createMuiTheme, createStyles, Theme } from '@material-ui/core';
 import createPalette from '@material-ui/core/styles/createPalette';
+import { makeStyles } from '@material-ui/core/styles';
 
 const theme = {
   color: {
@@ -39,6 +40,7 @@ const theme = {
     inProgress: crayonBox.stoplightYellow,
     complete: crayonBox.stoplightGreen,
     buttonAddDate: crayonBox.brightBlue,
+    buttonRowDisabled: crayonBox.subtleGray,
   },
 
   font: {
@@ -68,12 +70,77 @@ const theme = {
 const muiPalette = createPalette({
   type: 'dark',
   primary: {
-    main: crayonBox.brightBlue
-  }
+    main: theme.color.buttonAddDate,
+  },
 });
 
 export const muiTheme = createMuiTheme({
-  palette: muiPalette
+  palette: muiPalette,
 });
+
+const rowPalette = createPalette({
+  primary: {
+    main: theme.color.fontInputFocus,
+  },
+  secondary: {
+    main: '#FFFFFF',
+  },
+});
+
+export const rowTheme = createMuiTheme({
+  palette: rowPalette,
+  overrides: {
+    MuiInput: {
+      input: {
+        '&::placeholder': {
+          color: theme.color.fontBackgroundInactive,
+        },
+        color: 'white', // if you also want to change the color of the input, this is the prop you'd use
+      },
+      underline: {
+        '&:before': {
+          borderBottom: '1px solid white',
+        },
+      },
+    },
+  },
+});
+
+export const rowStyles = makeStyles((localTheme: Theme) =>
+  createStyles({
+    margin: {
+      margin: localTheme.spacing(1),
+    },
+    inProgressClickable: {
+      cursor: 'pointer',
+      userSelect: 'none',
+      position: 'absolute',
+      marginLeft: '19px',
+      marginTop: '2px',
+      '&:hover': {
+        boxShadow: '0px 0px 6px #FFFFFF',
+      },
+    },
+    completedClickable: {
+      cursor: 'pointer',
+      userSelect: 'none',
+      position: 'absolute',
+      marginLeft: '19px',
+      marginTop: '46px',
+      '&:hover': {
+        boxShadow: '0px 0px 6px #FFFFFF',
+      },
+    },
+    statusUnclickable: {
+      alignSelf: 'center',
+      boxShadow: '0px 2px 4px #000000',
+      fontWeight: 'bold',
+      userSelect: 'none',
+    },
+    inputLabel: {
+      color: theme.color.fontBackgroundInactive,
+    },
+  }),
+);
 
 export default theme;

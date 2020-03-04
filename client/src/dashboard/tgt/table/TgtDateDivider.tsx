@@ -3,7 +3,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { Box, createStyles, InputAdornment, Theme } from '@material-ui/core';
+import { Box, createMuiTheme, createStyles, InputAdornment, MuiThemeProvider, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -12,6 +12,7 @@ import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
 import { deleteExploitDate, updateRfiDate } from '../../../store/tgt/Thunks';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
 import theme from '../../../resources/theme';
+import createPalette from '@material-ui/core/styles/createPalette';
 
 interface Props {
   rfiId: number;
@@ -63,6 +64,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 export const TgtDateDivider: React.FC<Props> = props => {
   const classes = useStyles();
 
+  const muiPalette = createPalette({
+    type: 'dark',
+    primary: {
+      main: theme.color.buttonAddDate,
+    },
+  });
+
+  const localTheme = createMuiTheme({
+    palette: muiPalette
+  });
+
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
   const [displayModal, setDisplayModal] = React.useState(false);
 
@@ -105,47 +117,49 @@ export const TgtDateDivider: React.FC<Props> = props => {
 
   return (
     <div className={classNames('segment-divider', props.className, classes.root)} key={props.uKey}>
-      <Box className={classes.dateInputField}>
-        <MuiPickersUtilsProvider
-          utils={DateFnsUtils}>
-          <KeyboardDatePicker
-            className={classNames(classes.dateInput, 'newExploitDate-input')}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment onClick={handleDeleteClick} position="start">
-                  <DeleteButtonX
-                    className={'delete-date'}
-                    aria-label="delete date"
-                  />
-                </InputAdornment>
-              ),
-            }}
-            margin="normal"
-            id={'date-picker-dialog' + (props.exploitDate ? props.exploitDate.exploitDate : '')}
-            label=""
-            format="MM/dd/yyyy"
-            placeholder={'MM/DD/YYYY'}
-            value={(props.exploitDate ? props.exploitDateDisplay : selectedDate)}
-            onChange={date => handleChange(date)}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-            maxDate={new Date()}
-            error={false}
-            helperText={''}
-            autoFocus={props.exploitDate === undefined}
-          />
-        </MuiPickersUtilsProvider>
-      </Box>
-      <Box className={classNames(classes.separator, 'separator-line')}>
-        &nbsp;
-      </Box>
-      <DeleteConfirmationModal
-        deletingItem={props.exploitDate ? props.exploitDate.exploitDate.format('MM/DD/YYYY') : ''}
-        display={displayModal}
-        setDisplay={setDisplayModal}
-        handleYes={checkForExploitDate}
-      />
+      <MuiThemeProvider theme={localTheme}>
+        <Box className={classes.dateInputField}>
+          <MuiPickersUtilsProvider
+            utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              className={classNames(classes.dateInput, 'newExploitDate-input')}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment onClick={handleDeleteClick} position="start">
+                    <DeleteButtonX
+                      className={'delete-date'}
+                      aria-label="delete date"
+                    />
+                  </InputAdornment>
+                ),
+              }}
+              margin="normal"
+              id={'date-picker-dialog' + (props.exploitDate ? props.exploitDate.exploitDate : '')}
+              label=""
+              format="MM/dd/yyyy"
+              placeholder={'MM/DD/YYYY'}
+              value={(props.exploitDate ? props.exploitDateDisplay : selectedDate)}
+              onChange={date => handleChange(date)}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+              maxDate={new Date()}
+              error={false}
+              helperText={''}
+              autoFocus={props.exploitDate === undefined}
+            />
+          </MuiPickersUtilsProvider>
+        </Box>
+        <Box className={classNames(classes.separator, 'separator-line')}>
+          &nbsp;
+        </Box>
+        <DeleteConfirmationModal
+          deletingItem={props.exploitDate ? props.exploitDate.exploitDate.format('MM/DD/YYYY') : ''}
+          display={displayModal}
+          setDisplay={setDisplayModal}
+          handleYes={checkForExploitDate}
+        />
+      </MuiThemeProvider>
     </div>
   );
 };

@@ -10,7 +10,7 @@ import { initStore } from '../../setupEnzyme';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { Provider } from 'react-redux';
 import { StyledTableHeader } from '../../dashboard/components/header/TableHeader';
-import { StyledIxnRow } from '../../dashboard/ixn/table/IxnRow';
+import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 
 let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '');
 
@@ -110,6 +110,6 @@ describe("Interactions Dashboard", () => {
       </Provider>
     );
 
-    expect(subject.find(StyledIxnRow).exists()).toBeTruthy();
+    expect(subject.find(StyledIxnInputRow).exists()).toBeTruthy();
   });
 });

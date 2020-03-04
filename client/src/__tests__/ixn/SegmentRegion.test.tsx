@@ -5,8 +5,9 @@ import { TargetModel } from '../../store/tgt/TargetModel';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { SegmentRegion } from '../../dashboard/ixn/table/SegmentRegion';
 import { StyledSegmentDivider } from '../../dashboard/ixn/table/SegmentDivider';
-import IxnModel from '../../store/ixn/IxnModel';
+import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledIxnRow } from '../../dashboard/ixn/table/IxnRow';
+import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 
 describe("Segment Region", () => {
   const moment = require('moment');
@@ -14,8 +15,8 @@ describe("Segment Region", () => {
   let target: TargetModel = new TargetModel(1, 1, 1, 'WER19-123', '19XCV1234567890', '', '');
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1, moment(0), moment(1));
   let interactions: IxnModel[] = [
-    new IxnModel(1, 1, 1, 1, 1, "Bob", moment(0), "Bob did stuff", "123-123"),
-    new IxnModel(2, 1, 1, 1, 1, "Bob", moment(0), "Bob did stuff", "123-123"),
+    new IxnModel(1, 1, 1, 1, 1, "Bob", moment(0), "Bob did stuff", "123-123", '', IxnStatus.NOT_STARTED, '', ''),
+    new IxnModel(2, 1, 1, 1, 1, "Bob", moment(0), "Bob did stuff", "123-123", '', IxnStatus.NOT_STARTED, '', ''),
   ];
   subject = shallow(
     <SegmentRegion
@@ -31,6 +32,8 @@ describe("Segment Region", () => {
       setAddSegment={(addSegment: boolean) => {}}
       editSegment={-1}
       setEditSegment={(segmentId: number) => {}}
+      editIxn={-1}
+      setEditIxn={jest.fn()}
     />
   );
 
@@ -43,7 +46,8 @@ describe("Segment Region", () => {
     expect(subject.find(StyledIxnRow).exists()).toBeTruthy();
   });
 
-  it('should display the ixn given to it', () => {
-    expect(subject.find(StyledIxnRow).length).toEqual(3);
+  it('should display the ixns given to it and an input row', () => {
+    expect(subject.find(StyledIxnRow).length).toEqual(2);
+    expect(subject.find(StyledIxnInputRow).length).toEqual(1);
   });
 });

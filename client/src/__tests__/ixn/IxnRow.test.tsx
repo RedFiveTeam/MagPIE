@@ -2,7 +2,7 @@ import '../../setupEnzyme';
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { IxnRow } from '../../dashboard/ixn/table/IxnRow';
-import IxnModel from '../../store/ixn/IxnModel';
+import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 
 describe('IxnRow', () => {
@@ -15,7 +15,8 @@ describe('IxnRow', () => {
         30 * 60 +
         15) * 1000),
     'Dudes did stuff',
-    '123-234');
+    '123-234',
+    '', IxnStatus.NOT_STARTED, '', '');
 
   let segment = new SegmentModel(1, 1, 1, 1,
     moment(
@@ -25,7 +26,7 @@ describe('IxnRow', () => {
     moment(
       (6 * 3600 +
         30 * 60 +
-        15) * 1000)
+        15) * 1000),
   );
 
   it('should display the info given to it', () => {
@@ -33,11 +34,12 @@ describe('IxnRow', () => {
       <IxnRow
         ixn={ixn}
         segment={segment}
-        postIxn={(ixn: IxnModel) => {}}
-        deleteIxn={(ixn: IxnModel) => {}}
+        postIxn={jest.fn()}
+        deleteIxn={jest.fn()}
         tgtAnalyst={''}
-        setTgtAnalyst={(tgtAnalyst: string) => {}}
-      />
+        setTgtAnalyst={jest.fn()}
+        setEditIxn={jest.fn()}
+      />,
     );
 
     expect(subject.find('.exploit-analyst').text()).toContain('Billy Bob');

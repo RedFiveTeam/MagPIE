@@ -85,7 +85,7 @@ const mapDispatchToProps = {
   loadTgtPage: loadTgtPage
 };
 
-export const StyledWorkflowContainer = styled(
+export const StyledDashboardContainer = styled(
   connect(mapStateToProps, mapDispatchToProps)(DashboardContainer))`
   display: flex;
   flex-direction: row;

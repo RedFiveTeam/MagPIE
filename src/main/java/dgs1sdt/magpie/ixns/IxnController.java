@@ -89,7 +89,6 @@ public class IxnController {
 
     if (segmentJson.getId() > 0) {
       segment.setId(segmentJson.getId());
-      Segment oldSegment = segmentRepository.findById(segmentJson.getId()).get();
     }
 
     if (rfiRepository.findById(segmentJson.getRfiId()).isPresent()) {
@@ -122,7 +121,48 @@ public class IxnController {
 
   @PostMapping(path = "/post")
   public void postIxn(@Valid @RequestBody IxnJson ixnJson) {
-    addIxn(ixnJson);
+    Ixn ixn = new Ixn(ixnJson);
+
+
+    if (ixnJson.getId() > 0) {
+      ixn.setId(ixnJson.getId());
+    }
+
+    if (ixnJson.getId() > 0) {
+      if (ixnRepository.findById(ixnJson.getId()).isPresent()) {
+        this.metricsService.addChangeIxn(ixnJson, ixnRepository.findById(ixnJson.getId()).get());
+        ixnRepository.save(ixn);
+      } else {
+        System.err.println("Error creating ixn metric: could not find ixn with id " + ixnJson.getId());
+      }
+    } else {
+
+      ixnRepository.save(ixn);
+      long ixnId = ixnRepository.findAll().get(ixnRepository.findAll().size() - 1).getId();
+
+      if (rfiRepository.findById(ixnJson.getRfiId()).isPresent()) {
+        String rfiNum = rfiRepository.findRfiById(ixnJson.getRfiId()).getRfiNum();
+        if (exploitDateRepository.findById(ixnJson.getExploitDateId()).isPresent()) {
+          Timestamp exploitDate = exploitDateRepository.findById(ixnJson.getExploitDateId()).get().getExploitDate();
+          if (targetRepository.findById(ixnJson.getTargetId()).isPresent()) {
+            String targetName = targetRepository.findById(ixnJson.getTargetId()).get().getName();
+            if (segmentRepository.findById(ixnJson.getSegmentId()).isPresent()) {
+              Segment segment = segmentRepository.findById(ixnJson.getSegmentId()).get();
+              this.metricsService.addCreateIxn(rfiNum, exploitDate, targetName, segment.getStartTime(),
+                segment.getEndTime(), ixnId);
+            } else {
+              System.err.println("Error creating ixn metric: could not find segment with id " + ixnJson.getSegmentId());
+            }
+          } else {
+            System.err.println("Error creating ixn metric: could not find target with id " + ixnJson.getTargetId());
+          }
+        } else {
+          System.err.println("Error creating ixn metric: could not find exploit date with id " + ixnJson.getExploitDateId());
+        }
+      } else {
+        System.err.println("Error creating ixn metric: could not find rfi with id " + ixnJson.getRfiId());
+      }
+    }
   }
 
   @DeleteMapping(path = "/{ixnId}")
@@ -190,34 +230,6 @@ public class IxnController {
       }
     } else {
       System.err.println("Error deleting segment: could not find segment with id " + segmentId);
-    }
-  }
-
-  private void addIxn(IxnJson ixnJson) {
-    Ixn ixn = new Ixn(ixnJson);
-    ixnRepository.save(ixn);
-    long ixnId = ixnRepository.findAll().get(ixnRepository.findAll().size() - 1).getId();
-
-    if (rfiRepository.findById(ixnJson.getRfiId()).isPresent()) {
-      String rfiNum = rfiRepository.findRfiById(ixnJson.getRfiId()).getRfiNum();
-      if (exploitDateRepository.findById(ixnJson.getExploitDateId()).isPresent()) {
-        Timestamp exploitDate = exploitDateRepository.findById(ixnJson.getExploitDateId()).get().getExploitDate();
-        if (targetRepository.findById(ixnJson.getTargetId()).isPresent()) {
-          String targetName = targetRepository.findById(ixnJson.getTargetId()).get().getName();
-          if (segmentRepository.findById(ixnJson.getSegmentId()).isPresent()) {
-            Segment segment = segmentRepository.findById(ixnJson.getSegmentId()).get();
-
-            metricsService.addCreateIxn(
-              rfiNum,
-              exploitDate,
-              targetName,
-              segment.getStartTime(),
-              segment.getEndTime(),
-              ixnId
-            );
-          }
-        }
-      }
     }
   }
 }

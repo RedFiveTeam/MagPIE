@@ -5,6 +5,7 @@ import { TargetModel } from '../../../store/tgt/TargetModel';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import IxnModel from '../../../store/ixn/IxnModel';
 import { StyledIxnRow } from './IxnRow';
+import { StyledIxnInputRow } from './IxnInputRow';
 
 interface MyProps {
   target: TargetModel;
@@ -19,6 +20,8 @@ interface MyProps {
   setAddSegment: (addSegment: boolean) => void;
   editSegment: number;
   setEditSegment: (segmentId: number) => void;
+  editIxn: number;
+  setEditIxn: (ixnId: number) => void;
   className?: string;
 }
 
@@ -30,15 +33,28 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
       ixns.push(null); //input row--mapped to force a re-render
 
     return ixns.map((ixn: IxnModel | null, index: number) =>
-      <StyledIxnRow
-        ixn={ixn}
-        key={index}
-        segment={props.segment}
-        postIxn={props.postIxn}
-        deleteIxn={props.deleteIxn}
-        tgtAnalyst={props.tgtAnalyst}
-        setTgtAnalyst={props.setTgtAnalyst}
-      />,
+      ixn === null || props.editIxn === ixn.id ?
+        <StyledIxnInputRow
+          ixn={ixn}
+          key={index}
+          segment={props.segment}
+          postIxn={props.postIxn}
+          deleteIxn={props.deleteIxn}
+          tgtAnalyst={props.tgtAnalyst}
+          setTgtAnalyst={props.setTgtAnalyst}
+          setEditIxn={props.setEditIxn}
+        />
+        :
+        <StyledIxnRow
+          ixn={ixn}
+          key={index}
+          segment={props.segment}
+          postIxn={props.postIxn}
+          deleteIxn={props.deleteIxn}
+          tgtAnalyst={props.tgtAnalyst}
+          setTgtAnalyst={props.setTgtAnalyst}
+          setEditIxn={props.setEditIxn}
+        />
     )
   };
 

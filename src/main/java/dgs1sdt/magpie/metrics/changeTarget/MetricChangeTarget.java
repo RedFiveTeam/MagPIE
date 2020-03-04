@@ -15,7 +15,7 @@ public class MetricChangeTarget {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  private long targetId;
+  private long dataId;
   private Timestamp timestamp; // time change *observed*
   private String field;
 
@@ -31,7 +31,7 @@ public class MetricChangeTarget {
     Target oldTarget,
     TargetJson newTarget
   ) throws Exception {
-    this.targetId = oldTarget.getId();
+    this.dataId = oldTarget.getId();
     this.field = field;
     this.timestamp = timestamp;
 
@@ -60,5 +60,4 @@ public class MetricChangeTarget {
         throw new Exception();
     }
   }
-
 }

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { Box, createMuiTheme, createStyles, TextField, Theme, Tooltip, withStyles } from '@material-ui/core';
+import { Box, createStyles, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { crayonBox } from '../../../resources/crayonBox';
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import { connect } from 'react-redux';
@@ -20,12 +20,12 @@ import AddTgtDateButtonVector from '../../../resources/icons/AddTgtDateButtonVec
 import { Status } from '../TgtDashboard';
 import InProgressIcon from '../../../resources/icons/InProgressIcon';
 import CompletedIcon from '../../../resources/icons/CompletedIcon';
+import { RowAction } from '../../../utils';
 
 interface Props {
-  target: TargetModel | null;
+  target: TargetModel;
   exploitDate: ExploitDateModel;
   rfi: RfiModel;
-  editable: boolean;
   setAddEditTarget: (status: Status, id?: number) => void;
   submitPostTarget: (target: TargetPostModel, rfi: RfiModel) => void;
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
@@ -82,55 +82,16 @@ const HtmlTooltip = withStyles((theme: Theme) => ({
 export const TgtRow: React.FC<Props> = props => {
   const classes = useStyles();
 
-  const localTheme = createMuiTheme({
-    palette: {
-      primary: {
-        main: crayonBox.skyBlue,
-      },
-      secondary: {
-        main: '#323232',
-      },
-    },
-    overrides: {
-      MuiInput: {
-        input: {
-          '&::placeholder': {
-            color: '#838383',
-          },
-          color: 'white', // if you also want to change the color of the input, this is the prop you'd use
-        },
-      },
-    },
-  });
-
-  enum Action {
-    NONE,
-    DELETING,
-    SUBMITTING
-  }
-
-  const [nameError, setNameError] = useState(false);
-  const [mgrsError, setMgrsError] = useState(false);
-  //If the user enters a name or MGRS incorrectly once, always check for exact match
-  const [strongValidateName, setStrongValidateName] = useState(false);
-  const [strongValidateMgrs, setStrongValidateMgrs] = useState(false);
-  const [name, setName] = useState('');
-  const [mgrs, setMgrs] = useState('');
-  const [notes, setNotes] = useState('');
-  const [description, setDescription] = useState('');
-  const [action, setAction] = useState(Action.NONE);
+  const [action, setAction] = useState(RowAction.NONE);
 
   const handleAction = () => {
     switch (action) {
-      case Action.DELETING:
+      case RowAction.DELETING:
         if (props.target) {
           props.deleteTgt(props.target.id);
         } else {
           props.setAddEditTarget(Status.VIEW);
         }
-        break;
-      case Action.SUBMITTING:
-        validateAllAndSubmit();
         break;
     }
   };
@@ -139,86 +100,6 @@ export const TgtRow: React.FC<Props> = props => {
     handleAction,
     [action],
   );
-
-  function weakMatchNameError(name: string): boolean {
-    return name.length > 9 || (name.length === 9 && name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null);
-  }
-
-  function strongMatchNameError(name: string): boolean {
-    return name.length !== 9 || name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null;
-  }
-
-  function weakMatchMgrsError(mgrs: string): boolean {
-    return mgrs.length > 15 || (mgrs.length === 15 && mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null);
-  }
-
-  function strongMatchMgrsError(mgrs: string): boolean {
-    return mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null;
-  }
-
-  const inputName = (event: any) => {
-    let newName = event.target.value;
-    setName(newName);
-    if (strongValidateName) {
-      setNameError(strongMatchNameError(newName));
-    } else {
-      setNameError(weakMatchNameError(newName));
-      setStrongValidateName(weakMatchNameError(newName));
-    }
-  };
-
-  const inputMgrs = (event: any) => {
-    let newMgrs = event.target.value;
-    setMgrs(newMgrs);
-    if (strongValidateMgrs) {
-      setMgrsError(strongMatchMgrsError(newMgrs));
-    } else {
-      setMgrsError(weakMatchMgrsError(newMgrs));
-      setStrongValidateMgrs(weakMatchMgrsError(newMgrs));
-    }
-  };
-
-  const inputNotes = (event: any) => {
-    let newNotes = event.target.value;
-    if (newNotes.charAt(newNotes.length - 1) !== '\n')
-      setNotes(newNotes);
-  };
-
-  const inputDescription = (event: any) => {
-    let newDescription = event.target.value;
-    if (newDescription.charAt(newDescription.length - 1) !== '\n')
-      setDescription(newDescription);
-  };
-
-  const validateAllAndSubmit = () => {
-    let nameErrorLocal = strongMatchNameError(name);
-    let mgrsErrorLocal = strongMatchMgrsError(mgrs);
-
-    setNameError(nameErrorLocal);
-    setMgrsError(mgrsErrorLocal);
-    if (!strongValidateName) {
-      setStrongValidateName(nameErrorLocal);
-    }
-    if (!strongValidateMgrs) {
-      setStrongValidateMgrs(mgrsErrorLocal);
-    }
-    if (!(nameErrorLocal || mgrsErrorLocal)) {
-      props.setAddEditTarget(Status.VIEW);
-      props.submitPostTarget(
-        new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
-          notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED),
-        props.rfi,
-      );
-      setTimeout(() => {
-        setName('');
-        setMgrs('');
-        setNotes('');
-        setDescription('');
-      }, 500);
-    }
-
-    setAction(Action.NONE);
-  };
 
   const submitStatusChange = (status: TargetStatus) => {
     if (props.target !== null) {
@@ -231,17 +112,8 @@ export const TgtRow: React.FC<Props> = props => {
     }
   };
 
-  function onBlur(event: any) {
-    let currentTarget: any = event.currentTarget;
-    setTimeout(() => {
-      if (!currentTarget.contains(document.activeElement) && action !== Action.DELETING) {
-        setAction(Action.SUBMITTING);
-      }
-    }, 50);
-  }
-
   const handleDeleteClick = () => {
-    setAction(Action.DELETING);
+    setAction(RowAction.DELETING);
   };
 
   const handleIxnClick = () => {
@@ -251,21 +123,11 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   const handleDoubleClick = () => {
-    if (props.target && !props.editable) {
-      props.setAddEditTarget(Status.EDIT, props.target.id);
-      setName(props.target.name);
-      setMgrs(props.target.mgrs);
-      setNotes(props.target.notes ? props.target.notes : '');
-      setDescription(props.target.description ? props.target.description : '');
-      setTimeout(() => {
-        if (props.target)
-          document.getElementById('tgt-name-input-' + props.target.id)!.focus();
-      }, 50);
-    }
-  };
-
-  const inputProps = {
-    id: 'tgt-name-input-' + (props.target ? props.target.id.toString() : 'new'),
+    props.setAddEditTarget(Status.EDIT, props.target.id);
+    setTimeout(() => {
+      if (props.target)
+        document.getElementById('tgt-name-input-' + props.target.id)!.focus();
+    }, 50);
   };
 
   interface LocalProps {
@@ -282,7 +144,7 @@ export const TgtRow: React.FC<Props> = props => {
           border={2}
           borderRadius={16}
           borderColor={theme.color.inProgress}
-          bgcolor={localTheme.palette.secondary.main}
+          bgcolor={theme.color.backgroundStatus}
           display="flex"
           flexDirection="row"
           alignItems="center"
@@ -312,7 +174,7 @@ export const TgtRow: React.FC<Props> = props => {
           border={2}
           borderRadius={16}
           borderColor={theme.color.complete}
-          bgcolor={localTheme.palette.secondary.main}
+          bgcolor={theme.color.backgroundStatus}
           display="flex"
           flexDirection="row"
           alignItems="center"
@@ -339,97 +201,38 @@ export const TgtRow: React.FC<Props> = props => {
         borderRadius={8}
         className={'tgt-form-box'}
       >
-        <ThemeProvider theme={localTheme}>
-          {props.editable ?
-            <form className={classNames('tgt-form', props.target ? 'edit-tgt-form' : 'add-tgt-form')}
-                  onBlur={onBlur}
-                  onKeyPress={(e) => {
-                    if (e.which === 13) {
-                      validateAllAndSubmit();
-                    }
-                  }}
-            >
-              <TextField
-                autoFocus={true}
-                className={classNames(
-                  classes.margin,
-                  'tgt-name',
-                  'tgt-name-input-' + (props.target ? props.target.id : 'new'),
-                  props.editable ? null : 'input-disabled',
-                )}
-                // Display local hook if editing, if local hook is not empty display it, otherwise display props.
-                // Local hook is on a setTimeout to be cleared  in order to update the display if the user submits a
-                // conflicting target name without there being a cut back to the old data for a split second on update
-                value={name !== '' ? name : (props.target && !props.editable ? props.target.name : name)}
-                required
-                placeholder="OPRYY-###"
-                label={props.target ? '' : (nameError ? 'Error' : 'Required')}
-                error={nameError}
-                onChange={inputName}
-                inputProps={inputProps}
-              />
-              <TextField
-                className={classNames('mgrs', props.editable ? null : 'input-disabled', classes.margin)}
-                value={mgrs !== '' ? mgrs : (props.target && !props.editable ? props.target.mgrs : mgrs)}
-                required
-                placeholder="##XXX##########"
-                label={props.target ? '' : (mgrsError ? 'Error' : 'Required')}
-                error={mgrsError}
-                onChange={inputMgrs}
-              />
-              <TextField
-                multiline
-                rowsMax="2"
-                className={classNames('notes', props.editable ? null : 'input-disabled', classes.margin)}
-                value={notes}
-                label={props.target || notes !== '' ? '' : 'EEI Notes'}
-                onChange={inputNotes}
-              />
-              <TextField
-                multiline
-                rowsMax="2"
-                className={classNames('description', props.editable ? null : 'input-disabled', classes.margin)}
-                value={description !== ''
-                  ?
-                  description
-                  :
-                  (props.target && !props.editable
-                    ?
-                    props.target.description
-                    :
-                    description)
-                }
-                label={props.target || description !== '' ? '' : 'TGT Description'}
-                onChange={inputDescription}
-                onKeyDown={(e: any) => {
-                  if (e.keyCode === 9) {
-                    validateAllAndSubmit();
-                  }
-                }}
-              />
-            </form>
-            :
-            <div className={'tgt-form'}
-                 onDoubleClick={handleDoubleClick}
-            >
+          <div className={'tgt-form'}
+               onDoubleClick={handleDoubleClick}
+          >
+            <div className={'data-cell-container'}>
               <div className={classNames('data-cell', 'tgt-name')}>
-                {props.target!.name}
+                {props.target.name}
               </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
+            <div className={'data-cell-container'}>
               <div className={classNames('data-cell', 'mgrs')}>
-                {props.target!.mgrs}
+                {props.target.mgrs}
               </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
+            <div className={'data-cell-container'}>
               <div className={classNames('data-cell', 'notes')}>
                 <div className={'data-overflow'}>
-                  {props.target!.notes}
+                  {props.target.notes === '' ? '\xa0' : props.target.notes}
                 </div>
               </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
+            <div className={'data-cell-container'}>
               <div className={classNames('data-cell', 'description')}>
                 <div className={'data-overflow'}>
-                  {props.target!.description}
+                  {props.target.description === '' ? '\xa0' : props.target.description}
                 </div>
               </div>
+              <div className={'data-bottom'}>&nbsp;</div>
             </div>
-          }
+          </div>
           <HtmlTooltip
             title={
               <div className={'status-menu'}>
@@ -448,8 +251,8 @@ export const TgtRow: React.FC<Props> = props => {
                 width={110}
                 border={2}
                 borderRadius={16}
-                borderColor={crayonBox.eggWhite}
-                bgcolor={localTheme.palette.secondary.main}
+                borderColor={theme.color.backgroundAssigned}
+                bgcolor={theme.color.backgroundStatus}
                 display="flex"
                 flexDirection="row"
                 alignItems="center"
@@ -476,16 +279,7 @@ export const TgtRow: React.FC<Props> = props => {
           <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
             <StyledExploitationLogButtonVector/>
           </div>
-        </ThemeProvider>
       </Box>
-      {nameError ?
-        <div className={'input-error-msg'}>Please use the format "OPNYY-###" for TGT name</div>
-        : null
-      }
-      {mgrsError ?
-        <div className={'input-error-msg'}>Please use the format "##XXX##########" for MGRS</div>
-        : null
-      }
     </div>
   );
 };
@@ -531,16 +325,36 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   }
   
   .data-cell {
-    margin: 8px 8px 15px 8px;
-    max-height: 38px;
+    margin: 10px 8px 0 8px;
+    //padding-bottom: 6px;
+    overflow-wrap: break-word;
+    //border-bottom: 1px solid #FFFFFF;
+    max-height: 42px;
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightRow};
     font-family: ${theme.font.familyRow};
     overflow-y: auto;
+    position: relative;
+    
+  }
+  
+  .data-cell-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-height: 62px;
   }
   
   .data-overflow {
     overflow-wrap: break-word;
+  }
+  
+  .data-bottom {
+    height: 7px;
+    margin-bottom: 4px;
+    width: calc(100% - 16px);
+    border-bottom: 1px solid #FFFFFF;
   }
   
   .delete-tgt-button {
@@ -569,10 +383,10 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     height: 62px;
     width: 100%;
     margin-top: 8px;
-    background-color: #464646;
+    background-color: ${theme.color.backgroundInformation};
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
     font-weight: normal;
     margin-bottom: 9px;
     padding-right: 7px;
@@ -581,20 +395,13 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   .tgt-form {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
     max-height: 62px;
   }
 
   .status-wrapper {
     align-self: center;
     margin-right: 25px;
-  }
-  
-  .no-select {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
   }
   
   .input-error-msg {

@@ -19,7 +19,14 @@
 .DS_Store
 
 ### Project files to ignore ###
-/acceptance/node_modules/
+/client/node_modules
+/client/build/
+/client/coverage/
 /src/main/resources/static/
 tmp/acceptance.log
+/client/yarn-error.log
 /target/
+
+### Acceptance output images/node_modules ###
+/acceptance/output/
+/acceptance/node_modules/

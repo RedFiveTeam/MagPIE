@@ -2,21 +2,22 @@
 
 Feature('Ixn Page');
 
-Scenario ('Should be able to navigate to and exit the interactions page', (I) => {
+Before((I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
   I.click('.cell--navigate-to-tgt-button');
   I.waitForText('RFI:', 10);
+});
+
+Scenario ('Should be able to navigate to and exit the interactions page', (I) => {
   I.click('.add-date-button');
-  I.fillField('.MuiInputBase-input', '02012020');
+  I.fillField('input', '02012020');
 
   I.click('.add-tgt-button');
   I.fillField('.name', 'SDT20-123');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
-  I.seeElement('.add-tgt-button');
-  I.dontSeeElement('.add-tgt-button-disabled');
 
   I.click('.tgt-dash--header--back-button');
   I.click('.cell--navigate-to-tgt-button');
@@ -30,10 +31,6 @@ Scenario ('Should be able to navigate to and exit the interactions page', (I) =>
 });
 
 Scenario('Should be able to add segments', (I) => {
-  I.amOnPage('/');
-  I.waitForText('RFI', 10);
-  I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('RFI:', 10);
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
   I.click('.add-segment-button');
@@ -47,10 +44,6 @@ Scenario('Should be able to add segments', (I) => {
 });
 
 Scenario('Should be able to add ixns', (I) => {
-  I.amOnPage('/');
-  I.waitForText('RFI', 10);
-  I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('RFI:', 10);
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
 
@@ -69,19 +62,41 @@ Scenario('Should be able to add ixns', (I) => {
   I.pressKey('Tab');
   I.fillField('.track', '123-234');
   I.pressKey('Tab');
+  I.pressKey('Tab');
+  I.pressKey('Tab');
+  I.pressKey('Tab');
   I.waitForText('12:15:00Z', 10);
   I.waitForText('123-234', 10);
 
   I.fillField('.time', '13');
   I.pressKey('Tab');
-  I.waitForText('The time you entered does not fall within the segment timeline');
+  I.waitForText('The time you entered does not fall within the segment timeline', 10);
+});
+
+Scenario('Should be able to edit ixns', (I) => {
+  I.click('.exploitation');
+  I.waitForText('TGT: SDT20-123', 10);
+
+  I.doubleClick('.exploit-analyst');
+  I.pressKey('Tab');
+  I.fillField('.time', '121030');
+  I.pressKey('Tab');
+  I.pressKey('Tab');
+  I.fillField('.track', '234-345');
+  I.pressKey('Tab');
+  I.fillField('.track-analyst', 'Giuseppe Alfredo');
+  I.pressKey('Enter');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+
+  I.waitForText('12:10:30Z');
+  I.see('234-345');
+  I.see('Giuseppe Alfredo');
+  I.dontSee('12:10:00Z');
 });
 
 Scenario('Should be able to delete ixns', (I) => {
-  I.amOnPage('/');
-  I.waitForText('RFI', 10);
-  I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('RFI:', 10);
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
 
@@ -109,10 +124,6 @@ Scenario('Should be able to delete ixns', (I) => {
 });
 
 Scenario('Should be able to edit segments', (I) => {
-  I.amOnPage('/');
-  I.waitForText('RFI', 10);
-  I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('RFI:', 10);
   I.click('.exploitation');
   I.waitForText('TGT:', 10);
 
@@ -130,10 +141,6 @@ Scenario('Should be able to edit segments', (I) => {
 });
 
 Scenario('Should be able to delete segments', (I) => {
-  I.amOnPage('/');
-  I.waitForText('RFI', 10);
-  I.click('.cell--navigate-to-tgt-button');
-  I.waitForText('RFI:', 10);
   I.click('.exploitation');
   I.waitForText('TGT:', 10);
 

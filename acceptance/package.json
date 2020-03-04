@@ -2,5 +2,8 @@
   "dependencies": {
     "codeceptjs": "^2.0.4",
     "nightmare": "^3.0.1"
+  },
+  "scripts": {
+    "acceptance": "yarn codeceptjs run"
   }
 }

@@ -10,13 +10,11 @@ import globalTheme from '../../../resources/theme';
 import theme from '../../../resources/theme';
 import { TargetModel } from '../../../store/tgt/TargetModel';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
-import { Moment } from 'moment';
 import IxnModel from '../../../store/ixn/IxnModel';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import EditButton from '../../../resources/icons/EditButton';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
-
-const moment = require('moment');
+import { convertTimeStringToMoment } from '../../../utils';
 
 interface Props {
   target: TargetModel;
@@ -93,22 +91,6 @@ export const SegmentDivider: React.FC<Props> = props => {
     setSegmentEndError(segmentError(newTime));
   };
 
-  const convertSegmentStringToMoment = (segment: string): Moment => {
-    segment = segment.replace(/_/g, '0');
-
-    let hours: number = +segment.substr(0, 2);
-    let minutes: number = +segment.substr(3, 2);
-    let seconds: number = +segment.substr(6, 2);
-
-    let segmentDate: Date = new Date(
-      (hours * 3600 +
-        minutes * 60 +
-        seconds)
-      * 1000,
-    );
-    return moment(segmentDate).utc();
-  };
-
   const validateAndSubmit = () => {
     setSegmentStartString(segmentStartString.replace(/_/g, '0'));
     setSegmentEndString(segmentEndString.replace(/_/g, '0'));
@@ -119,8 +101,8 @@ export const SegmentDivider: React.FC<Props> = props => {
     setSegmentEndError(segmentEndErrorLocal);
 
     if (!segmentStartErrorLocal && !segmentEndErrorLocal) {
-      let segmentStart = convertSegmentStringToMoment(segmentStartString);
-      let segmentEnd = convertSegmentStringToMoment(segmentEndString);
+      let segmentStart = convertTimeStringToMoment(segmentStartString);
+      let segmentEnd = convertTimeStringToMoment(segmentEndString);
       if (segmentStart.isBefore(segmentEnd)) {
         let segment = new SegmentModel(
           props.segment ? props.segment.id : null,

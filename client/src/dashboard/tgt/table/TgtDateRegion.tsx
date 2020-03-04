@@ -1,17 +1,16 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import { Box, createMuiTheme } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import AddTgtDateButtonVector from '../../../resources/icons/AddTgtDateButtonVector';
-import { ThemeProvider } from '@material-ui/styles'
-import { crayonBox } from '../../../resources/crayonBox';
-import { connect } from 'react-redux';
 import { StyledTgtRow } from './TgtRow';
 import { StyledTgtDateDivider } from './TgtDateDivider';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../../store/tgt/TargetModel';
 import RfiModel from '../../../store/rfi/RfiModel';
 import { Status } from '../TgtDashboard';
+import { StyledTgtInputRow } from './TgtInputRow';
+import theme from '../../../resources/theme';
 
 interface Props {
   rfi: RfiModel;
@@ -30,26 +29,26 @@ interface Props {
 
 export const TgtDateRegion: React.FC<Props> = props => {
 
-  const theme = createMuiTheme({
-    palette: {
-      primary: {
-        main: '#323232',
-      },
-    },
-  });
-
   function printTargets() {
     return props.targets.map((target: TargetModel, index: number) =>
-      <StyledTgtRow
-        theme={theme}
+      props.editTarget === target.id ?
+      <StyledTgtInputRow
         target={target}
         key={index}
         rfi={props.rfi}
         exploitDate={props.exploitDate}
         setAddEditTarget={props.setAddEditTarget}
-        editable={props.editTarget === target.id}
         addingOrEditing={props.addingOrEditing}
       />
+      :
+        <StyledTgtRow
+          target={target}
+          key={index}
+          rfi={props.rfi}
+          exploitDate={props.exploitDate}
+          setAddEditTarget={props.setAddEditTarget}
+          addingOrEditing={props.addingOrEditing}
+        />
     )
   }
 
@@ -70,15 +69,14 @@ export const TgtDateRegion: React.FC<Props> = props => {
         uKey={props.index}
         hasTgts={props.targets.length > 0}
       />
-      <ThemeProvider theme={theme}>
         <div className={'tgt-input'}>
           <Box
             height={32}
             width={110}
             border={2}
             borderRadius={16}
-            borderColor={crayonBox.safetyOrange}
-            bgcolor={theme.palette.primary.main}
+            borderColor={theme.color.backgroundAction}
+            bgcolor={theme.color.backgroundStatus}
             onClick={() => props.setAddEditTarget(Status.ADD, props.exploitDate.id)}
             display='flex'
             flexDirection='row'
@@ -94,32 +92,26 @@ export const TgtDateRegion: React.FC<Props> = props => {
           </Box>
           {printTargets()}
           {props.addTgt === props.exploitDate.id ?
-            <StyledTgtRow
+            <StyledTgtInputRow
               target={null}
               key={99999}
               rfi={props.rfi}
               exploitDate={props.exploitDate}
               setAddEditTarget={props.setAddEditTarget}
-              editable={true}
               addingOrEditing={props.addingOrEditing}
             />
             :
             null}
         </div>
-      </ThemeProvider>
     </div>
   )
 };
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = {};
-
-export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchToProps)(TgtDateRegion))`
-  font-family: ${(props) => props.theme.font.familyRegion};
-  font-weight: ${(props) => props.theme.font.weightBold};
-  font-size: ${(props) => props.theme.font.sizeRegion};
-  color: ${(props) => props.theme.color.fontPrimary};
+export const StyledTgtDateSection = styled(TgtDateRegion)`
+  font-family: ${theme.font.familyRegion};
+  font-weight: ${theme.font.weightBold};
+  font-size: ${theme.font.sizeRegion};
+  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -131,7 +123,7 @@ export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchT
     flex-grow: 1;
     height: 2px;
     border-radius: 4px;
-    background: ${(props) => props.theme.color.fontPrimary};
+    background: ${theme.color.fontPrimary};
     margin-bottom: 8px;
   }
   
@@ -163,13 +155,13 @@ export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchT
   }
   
   .input-delete {
-    border-left: 4px solid ${(props) => props.theme.color.backgroundBase};
+    border-left: 4px solid ${theme.color.backgroundBase};
     width: 89px;
     height: 62px;
   }
   
   .input-exploitation {
-    border-left: 4px solid ${(props) => props.theme.color.backgroundBase};
+    border-left: 4px solid ${theme.color.backgroundBase};
     width: 111px;
     height: 62px;
   }
@@ -185,7 +177,7 @@ export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchT
     height: 62px;
     min-width: 1359px;
     margin-top: 8px;
-    background-color: ${(props) => props.theme.color.backgroundInformation};
+    background-color: ${theme.color.backgroundInformation};
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -208,13 +200,5 @@ export const StyledTgtDateSection = styled(connect(mapStateToProps, mapDispatchT
     margin-left: 8px;
     opacity: 0.5;
     pointer-events: none;
-  }
-  
-  .no-select {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
   }
 `;

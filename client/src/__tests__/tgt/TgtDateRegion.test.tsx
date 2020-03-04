@@ -7,6 +7,7 @@ import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import { StyledTgtRow } from '../../dashboard/tgt/table/TgtRow';
 import { Status } from '../../dashboard/tgt/TgtDashboard';
+import { StyledTgtInputRow } from '../../dashboard/tgt/table/TgtInputRow';
 
 describe("Target Date Region", () => {
   const moment = require('moment');
@@ -46,7 +47,7 @@ describe("Target Date Region", () => {
     expect(subject.find(StyledTgtRow).length).toBe(3);
   });
 
-  it('should render and add target row appropriately', () => {
+  it('should render an add target row appropriately', () => {
     // let childrenCount = subject.children.length;
     subject = shallow(
       <TgtDateRegion
@@ -64,7 +65,8 @@ describe("Target Date Region", () => {
         addingOrEditing={true}
       />
     );
-    expect(subject.find(StyledTgtRow).length).toBe(4);
+    expect(subject.find(StyledTgtRow).length).toBe(3);
+    expect(subject.find(StyledTgtInputRow).length).toBe(1);
   });
 
   it('should have an add target button that calls the add target function on click', () => {

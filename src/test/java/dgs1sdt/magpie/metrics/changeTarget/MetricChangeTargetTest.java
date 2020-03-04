@@ -52,7 +52,6 @@ public class MetricChangeTargetTest {
     assertEquals("description", metric4.getField());
     assertEquals("Description", metric4.getOldData());
     assertEquals("New Description", metric4.getNewData());
-
   }
 
 }

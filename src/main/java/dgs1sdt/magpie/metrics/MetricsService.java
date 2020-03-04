@@ -1,9 +1,13 @@
 package dgs1sdt.magpie.metrics;
 
+import dgs1sdt.magpie.ixns.Ixn;
+import dgs1sdt.magpie.ixns.IxnJson;
 import dgs1sdt.magpie.ixns.Segment;
 import dgs1sdt.magpie.ixns.SegmentJson;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDate;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
+import dgs1sdt.magpie.metrics.changeIxn.MetricChangeIxn;
+import dgs1sdt.magpie.metrics.changeIxn.MetricChangeIxnRepository;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
@@ -68,6 +72,7 @@ public class MetricsService {
   private MetricChangeSegmentRepository metricChangeSegmentRepository;
   private MetricDeleteSegmentRepository metricDeleteSegmentRepository;
   private MetricCreateIxnRepository metricCreateIxnRepository;
+  private MetricChangeIxnRepository metricChangeIxnRepository;
   private MetricDeleteIxnRepository metricDeleteIxnRepository;
 
   @Autowired
@@ -135,6 +140,10 @@ public class MetricsService {
     this.metricCreateIxnRepository = metricCreateIxnRepository;
   }
   @Autowired
+  public void setMetricChangeIxnRepository(MetricChangeIxnRepository metricChangeIxnRepository) {
+    this.metricChangeIxnRepository = metricChangeIxnRepository;
+  }
+  @Autowired
   public void setMetricDeleteIxnRepository(MetricDeleteIxnRepository metricDeleteIxnRepository) {
     this.metricDeleteIxnRepository = metricDeleteIxnRepository;
   }
@@ -148,7 +157,7 @@ public class MetricsService {
 
 //    Array that has DATE epochs at midnight over the last 7 days
 //    e.g. daysAgo[0] is midnight today, daysAgo[1] is midnight yesterday, etc.
-    Date[] daysAgo = setupDaysAgo(7);
+    Date[] daysAgo = setupDaysAgo();
 
 //    Returns array of site visits
 
@@ -171,12 +180,12 @@ public class MetricsService {
     return last7Days;
   }
 
-  private Date[] setupDaysAgo(int numDays) {
-    Date[] daysAgo = new Date[numDays];
+  private Date[] setupDaysAgo() {
+    Date[] daysAgo = new Date[7];
     long now = new Date().getTime();
     long millisecondsInADay = 86400000L;
-    Calendar[] cal = new Calendar[numDays];
-    for (int i = 0; i < numDays; i++) {
+    Calendar[] cal = new Calendar[7];
+    for (int i = 0; i < 7; i++) {
       cal[i] = Calendar.getInstance(); // locale-specific
       cal[i].setTime(new Date(now - i * millisecondsInADay));
       cal[i].set(Calendar.HOUR_OF_DAY, 0);
@@ -361,5 +370,24 @@ public class MetricsService {
     );
 
     return metricDeleteIxnRepository.save(metricDeleteIxn);
+  }
+
+  public List<MetricChangeIxn> addChangeIxn(IxnJson newIxn, Ixn oldIxn) {
+    List<MetricChangeIxn> metrics = new ArrayList<>();
+    Timestamp now = new Timestamp(new Date().getTime());
+    for(String field : oldIxn.Compare(newIxn)){
+      try {
+        MetricChangeIxn changeIxn = new MetricChangeIxn(
+          now,
+          field,
+          oldIxn,
+          newIxn
+        );
+        metrics.add(changeIxn);
+      } catch (Exception e) {
+        System.err.println("Error creating change ixn metric with unknown field: " + field);
+      }
+    }
+    return metricChangeIxnRepository.saveAll(metrics);
   }
 }

@@ -268,14 +268,8 @@ export const StyledTgtDashboard = styled(
     pointer-events: none;
   }
   
-  .no-select {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
-  }
-  
   .header-cell--name {
+    margin-left: 40px;
     width: 123px;
   }
   
@@ -288,7 +282,7 @@ export const StyledTgtDashboard = styled(
   }
   
   .header-cell--description {
-    width: 398px;
+    width: 429px;
   }
   
   .header-cell--status {

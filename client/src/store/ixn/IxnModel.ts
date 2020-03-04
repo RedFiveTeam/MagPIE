@@ -1,5 +1,12 @@
 import { Moment } from 'moment';
 
+export enum IxnStatus {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  DOES_NOT_MEET_EEI = 'DOES_NOT_MEET_EEI',
+}
+
 export default class IxnModel {
   constructor(
     public id: number | null,
@@ -10,7 +17,11 @@ export default class IxnModel {
     public exploitAnalyst: string,
     public time: Moment,
     public activity: string,
-    public track: string
+    public track: string,
+    public trackAnalyst: string,
+    public status: IxnStatus,
+    public leadChecker: string,
+    public finalChecker: string,
   ) {
   }
 }

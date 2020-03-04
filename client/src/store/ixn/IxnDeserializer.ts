@@ -15,7 +15,11 @@ export class IxnDeserializer {
           json.exploitAnalyst,
           moment(json.time, moment.ISO_8601).utc(),
           json.activity,
-          json.track
+          json.track,
+          json.trackAnalyst,
+          json.status,
+          json.leadChecker,
+          json.finalChecker
         );
       });
     }

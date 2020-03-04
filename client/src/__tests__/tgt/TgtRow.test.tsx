@@ -7,6 +7,7 @@ import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { Status } from '../../dashboard/tgt/TgtDashboard';
+import { TgtInputRow } from '../../dashboard/tgt/table/TgtInputRow';
 
 describe("Target Row", () => {
   let subject: ReactWrapper;
@@ -35,7 +36,6 @@ describe("Target Row", () => {
         rfi={rfiTest}
         navigateToIxnPage={navToIxnPageSpy}
         deleteTgt={deleteSpy}
-        editable={false}
         setAddEditTarget={setAddEditTargetSpy}
         addingOrEditing={false}
       />
@@ -51,7 +51,7 @@ describe("Target Row", () => {
     subject.find('.delete-tgt-button').simulate('click');
 
     subject = mount(
-      <TgtRow
+      <TgtInputRow
         target={null}
         key={1}
         className={'class'}
@@ -61,7 +61,6 @@ describe("Target Row", () => {
         rfi={rfiTest}
         navigateToIxnPage={navToIxnPageSpy}
         deleteTgt={deleteSpy}
-        editable={true}
         setAddEditTarget={setAddEditTargetSpy}
         addingOrEditing={true}
       />
@@ -80,7 +79,7 @@ describe("Target Row", () => {
     expect(navToIxnPageSpy).toBeCalledWith(target, '11/20/2019');
 
     subject = mount(
-      <TgtRow
+      <TgtInputRow
         target={null}
         key={1}
         className={'class'}
@@ -90,7 +89,6 @@ describe("Target Row", () => {
         rfi={rfiTest}
         navigateToIxnPage={navToIxnPageSpy}
         deleteTgt={deleteSpy}
-        editable={true}
         setAddEditTarget={setAddEditTargetSpy}
         addingOrEditing={true}
       />

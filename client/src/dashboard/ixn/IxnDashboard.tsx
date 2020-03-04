@@ -25,6 +25,7 @@ interface Props {
 export const IxnDashboard: React.FC<Props> = props => {
   const [addSegment, setAddSegment] = useState(false);
   const [editSegment, setEditSegment] = useState(-1);
+  const [editIxn, setEditIxn] = useState(-1);
   const [tgtAnalyst, setTgtAnalyst] = React.useState('');
 
   const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
@@ -34,6 +35,12 @@ export const IxnDashboard: React.FC<Props> = props => {
   const handleEditSegment = (segmentId: number) => {
     if (!addSegment && editSegment < 0)
       setEditSegment(segmentId);
+  };
+
+  const handleEditIxn = (ixnId: number) => {
+    if (!addSegment && editSegment < 0 && editIxn < 0) {
+      setEditIxn(ixnId);
+    }
   };
 
   const theme = createMuiTheme({
@@ -52,11 +59,14 @@ export const IxnDashboard: React.FC<Props> = props => {
     setAddSegment(false);
     setTimeout(() => {
       setEditSegment(-1);
-    }, 100);
+    }, 300);
     dispatch(updateSegment(segment));
   };
 
   const handlePostIxn = (ixn: IxnModel) => {
+    setTimeout(() => {
+      setEditIxn(-1);
+    }, 300);
     dispatch(updateIxn(ixn));
   };
 
@@ -84,6 +94,8 @@ export const IxnDashboard: React.FC<Props> = props => {
         deleteSegment={handleDeleteSegment}
         editSegment={editSegment}
         setEditSegment={handleEditSegment}
+        editIxn={editIxn}
+        setEditIxn={handleEditIxn}
       />,
     );
   }
@@ -96,7 +108,8 @@ export const IxnDashboard: React.FC<Props> = props => {
       <div className={'ixn-dash-body'}>
         {segments.length > 0 ?
           <StyledTableHeader
-            headers={['Exploit Analyst', 'Time', 'Activity', 'Track ID', 'delete-spacer']}
+            headers={['Exploit Analyst', 'Time', 'Activity', 'Track ID', 'Track Analyst', 'Lead Checker',
+              'Final Checker', 'delete-spacer']}
           />
           :
           null
@@ -203,13 +216,6 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     pointer-events: none;
   }
   
-  .no-select {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
-  }
-  
   .ixn-dash-body {
     height: calc(100vh - 141px);
     display: flex;
@@ -222,6 +228,10 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .header-cell--analyst {
+    width: 154px;
+  }
+  
+  .header-cell--checker {
     width: 154px;
   }
   
@@ -245,5 +255,50 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     opacity: 0;
     z-index: -1;
     position: absolute;
+  }
+  
+  .ixn-row-box {
+    min-height: 62px;
+    margin-top: 8px;
+    background-color: #464646;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: normal;
+    margin-bottom: 9px;
+    padding-right: 7px;
+  }
+  
+  .name {
+    width: 146px;
+  }
+  
+  .time {
+    width: 98px;
+  }
+
+  .activity {
+    width: 406px;
+  }
+  
+  .track {
+    width: 75px;
+  }
+  
+  .delete-ixn-button-container {
+    display: flex;
+    align-self: stretch;
+  }
+  
+  .delete-ixn-button {
+    border-left: 4px solid ${theme.color.backgroundBase};
+    width: 90px;
+    height: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex: 1 1 auto;
   }
 `;

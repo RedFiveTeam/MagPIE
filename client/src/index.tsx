@@ -1,5 +1,5 @@
-import "core-js/stable";
-import "regenerator-runtime/runtime";
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -14,13 +14,13 @@ import configureStore from './configureStore';
 const history = createBrowserHistory();
 const initialState = window.INITIAL_REDUX_STATE;
 export const store = configureStore(
- history, initialState
+  history, initialState,
 );
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <MuiThemeProvider theme={muiTheme}>
-        <App store={store} history={history}/>
+      <App store={store} history={history}/>
     </MuiThemeProvider>
   </ThemeProvider>
   , document.getElementById('root'));
