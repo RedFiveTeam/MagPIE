@@ -16,7 +16,9 @@
       }
     }
   },
-  "include": {},
+  "include": {
+    "I": "./steps_file.ts"
+  },
   "bootstrap": false,
   "mocha": {},
   "name": "pie"

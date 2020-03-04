@@ -2,6 +2,7 @@
 
 Feature('Tgt Page');
 
+
 Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
   I.amOnPage('/');
   I.waitForText('RFI', 10);
@@ -85,10 +86,10 @@ Scenario('Should be able to edit tgt on the Tgt page', (I) => {
   I.click('.tgt-dash--header--back-button');
   I.click('.cell--navigate-to-tgt-button');
 
-  I.dontSeeElement(locate('.Mui-disabled').withAttr({value: 'SDT20-123'}));
-  I.dontSeeElement(locate('.Mui-disabled').withAttr({value: '12QWE1231231231'}));
-  I.seeElement(locate('.Mui-disabled').withAttr({value: 'SDT20-999'}));
-  I.seeElement(locate('.Mui-disabled').withAttr({value: '12QWE1234567890'}));
+  I.waitForText('SDT20-999', 10);
+  I.see('12QWE1234567890');
+  I.dontSee('SDT20-123');
+  I.dontSee('12QWE1231231231');
 });
 
 Scenario('should not be able to add tgt with conflicting names', (I) => {
@@ -121,7 +122,7 @@ Scenario('should not be able to add tgt with conflicting names', (I) => {
   I.click('.tgt-dash--header--back-button');
   I.click('.cell--navigate-to-tgt-button');
 
-  I.seeElement(locate('.Mui-disabled').withAttr({value: 'SDT20-999'}));
+  I.waitForText('SDT20-999', 10);
 });
 
 Scenario('Should be able to delete tgt on the Tgt page', (I) => {
