@@ -182,3 +182,59 @@ Scenario('Should be able to delete segments', (I) => {
 
   I.dontSee('12:00:00Z');
 });
+
+Scenario('Should display a modal when deleting targets with ixns', (I) => {
+  //Add date
+  I.click('.add-date-button');
+  I.fillField('input', '02012020');
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--navigate-to-tgt-button');
+
+
+  //Add target
+  I.click('.add-tgt-button');
+  I.fillField('.name', 'SDT20-123');
+  I.pressKey('Tab');
+  I.fillField('.mgrs', '12QWE1231231231');
+  I.pressKey('Enter');
+
+  //Add segment
+  I.click('.exploitation');
+  I.waitForText('TGT: SDT20-123', 10);
+  I.click('.add-segment-button');
+  I.fillField('.segment-start', '12');
+  I.pressKey('Tab');
+  I.fillField('.segment-end', '12304');
+  I.pressKey('Enter');
+  I.waitForText('12:00:00Z');
+
+  //Add Ixn
+  I.fillField('.exploit-analyst', 'Bob');
+  I.pressKey('Tab');
+  I.fillField('.time', '121');
+  I.pressKey('Tab');
+  I.fillField('.activity', 'thing');
+  I.pressKey('Enter');
+  I.waitForText('12:10:00Z', 10);
+
+  //Navigate back and try a delete
+  I.click('.ixn-dash--header--back-button');
+  I.click('.delete-tgt-button');
+  I.waitForText('Are you sure you want to delete ');
+  I.click('.modal-no');
+
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--navigate-to-tgt-button');
+
+  I.waitForText('SDT20-123');
+
+  I.click('.delete-tgt-button');
+  I.waitForText('Are you sure you want to delete ');
+  I.click('.modal-yes');
+
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--navigate-to-tgt-button');
+
+  I.waitForText('RFI:');
+  I.dontSee('SDT20-123');
+});

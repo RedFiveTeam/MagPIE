@@ -33,13 +33,11 @@ function acceptanceTests {
 
     SPECIFIC_TESTS=""
 
-    if [[ "${2}" == "./tests/"*".test.ts" ]]; then
-        SPECIFIC_TESTS=${2}
+    if [[ "${2}" != "" ]]; then
+        if [[ $(find ${BASE_DIR}/acceptance/tests/*${2}*) ]]; then
+            SPECIFIC_TESTS=$(find ${BASE_DIR}/acceptance/tests/*${2}*)
+        fi
     fi
-
-#    pushd ${BASE_DIR}/scripts/seed_db
-#        ./seed_db.sh
-#    popd
 
     java -jar -Dspring.profiles.active=test ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
     echo $! > ${BASE_DIR}/tmp/pie.pid
@@ -82,17 +80,13 @@ function cleanup {
         cat ${BASE_DIR}/tmp/pie.pid | xargs kill -9
         rm ${BASE_DIR}/tmp/pie.pid
     fi
-
-#    pushd ${BASE_DIR}/scripts/seed_db
-#        ./seed_db.sh
-#    popd
 }
 trap cleanup EXIT
 
 function jarBuild {
     showBanner "Build JAR"
     pushd ${BASE_DIR}
-        mvn -Dflyway.user=${PIE_DB_USERNAME} -Dflyway.password= -Dflyway.url=${PIE_DB_URL} clean flyway:migrate package
+        mvn -Dmaven.test.skip=true -DskipTests -Dflyway.user=${PIE_DB_USERNAME} -Dflyway.password= -Dflyway.url=${PIE_DB_URL} clean flyway:migrate package
         rm ${BASE_DIR}/artifacts/pie.jar || true
         cp ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar ${BASE_DIR}/artifacts/pie.jar
     popd

@@ -47,32 +47,6 @@ describe("Target Row", () => {
     expect(subject.find('.description').at(0).text()).toContain('This is a description');
   });
 
-  it('should call a delete target action when delete button is clicked except in add mode', () => {
-    subject.find('.delete-tgt-button').simulate('click');
-
-    subject = mount(
-      <TgtInputRow
-        target={null}
-        key={1}
-        className={'class'}
-        submitPostTarget={(target: TargetPostModel, rfi: RfiModel) => {
-        }}
-        exploitDate={exploitDate}
-        rfi={rfiTest}
-        navigateToIxnPage={navToIxnPageSpy}
-        deleteTgt={deleteSpy}
-        setAddEditTarget={setAddEditTargetSpy}
-        addingOrEditing={true}
-      />
-    );
-
-    subject.find('.delete-tgt-button').simulate('click');
-
-    expect(deleteSpy).toHaveBeenCalledTimes(1);
-    expect(setAddEditTargetSpy).toHaveBeenCalledWith(Status.VIEW);
-
-  });
-
   it('should call a navigate to interaction page test when the exploitation log button is clicked except in add mode',
     () => {
     subject.find('.exploitation').simulate('click');

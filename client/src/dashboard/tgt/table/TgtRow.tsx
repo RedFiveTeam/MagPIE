@@ -21,6 +21,8 @@ import { Status } from '../TgtDashboard';
 import InProgressIcon from '../../../resources/icons/InProgressIcon';
 import CompletedIcon from '../../../resources/icons/CompletedIcon';
 import { RowAction } from '../../../utils';
+import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
+import { IxnDeserializer } from '../../../store/ixn/IxnDeserializer';
 
 interface Props {
   target: TargetModel;
@@ -83,6 +85,7 @@ export const TgtRow: React.FC<Props> = props => {
   const classes = useStyles();
 
   const [action, setAction] = useState(RowAction.NONE);
+  const [displayModal, setDisplayModal] = useState(false);
 
   const handleAction = () => {
     switch (action) {
@@ -113,7 +116,16 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   const handleDeleteClick = () => {
-    setAction(RowAction.DELETING);
+    fetch('/api/ixn/' + props.target.id)
+      .then(response => response.json())
+      .then(ixns => checkIxns(IxnDeserializer.deserialize(ixns).length > 0));
+  };
+  
+  const checkIxns = (hasIxns: boolean) => {
+    if (hasIxns)
+      setDisplayModal(true);
+    else
+      setAction(RowAction.DELETING);
   };
 
   const handleIxnClick = () => {
@@ -201,85 +213,91 @@ export const TgtRow: React.FC<Props> = props => {
         borderRadius={8}
         className={'tgt-form-box'}
       >
-          <div className={'tgt-form'}
-               onDoubleClick={handleDoubleClick}
-          >
-            <div className={'data-cell-container'}>
-              <div className={classNames('data-cell', 'tgt-name')}>
-                {props.target.name}
-              </div>
-              <div className={'data-bottom'}>&nbsp;</div>
+        <div className={'tgt-form'}
+             onDoubleClick={handleDoubleClick}
+        >
+          <div className={'data-cell-container'}>
+            <div className={classNames('data-cell', 'tgt-name')}>
+              {props.target.name}
             </div>
-            <div className={'data-cell-container'}>
-              <div className={classNames('data-cell', 'mgrs')}>
-                {props.target.mgrs}
-              </div>
-              <div className={'data-bottom'}>&nbsp;</div>
-            </div>
-            <div className={'data-cell-container'}>
-              <div className={classNames('data-cell', 'notes')}>
-                <div className={'data-overflow'}>
-                  {props.target.notes === '' ? '\xa0' : props.target.notes}
-                </div>
-              </div>
-              <div className={'data-bottom'}>&nbsp;</div>
-            </div>
-            <div className={'data-cell-container'}>
-              <div className={classNames('data-cell', 'description')}>
-                <div className={'data-overflow'}>
-                  {props.target.description === '' ? '\xa0' : props.target.description}
-                </div>
-              </div>
-              <div className={'data-bottom'}>&nbsp;</div>
-            </div>
+            <div className={'data-bottom'}>&nbsp;</div>
           </div>
-          <HtmlTooltip
-            title={
-              <div className={'status-menu'}>
-                <StyledStatusPickerOutline/>
-                <InProgressButton buttonClass={classes.inProgressClickable}/>
-                <CompletedButton buttonClass={classes.completedClickable}/>
+          <div className={'data-cell-container'}>
+            <div className={classNames('data-cell', 'mgrs')}>
+              {props.target.mgrs}
+            </div>
+            <div className={'data-bottom'}>&nbsp;</div>
+          </div>
+          <div className={'data-cell-container'}>
+            <div className={classNames('data-cell', 'notes')}>
+              <div className={'data-overflow'}>
+                {props.target.notes === '' ? '\xa0' : props.target.notes}
               </div>
-            }
-            interactive
-            disableHoverListener={props.addingOrEditing}
-          >
-            <div
-              className={'status-wrapper'}>{props.target === null || props.target.status === TargetStatus.NOT_STARTED ?
-              <Box
-                height={32}
-                width={110}
-                border={2}
-                borderRadius={16}
-                borderColor={theme.color.backgroundAssigned}
-                bgcolor={theme.color.backgroundStatus}
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-between"
-                paddingRight={0.25}
-                paddingLeft={2.8}
-                fontSize={12}
-                className={classes.statusUnclickable}
-              >
-                Status
-                <AddTgtDateButtonVector/>
-              </Box>
-              : (props.target.status === TargetStatus.IN_PROGRESS ?
-                <InProgressButton buttonClass={classes.statusUnclickable}/>
-                :
-                <CompletedButton buttonClass={classes.statusUnclickable}/>)
-            }</div>
-          </HtmlTooltip>
-          <div className={'delete-tgt-button'}
-               id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}
-               onClick={handleDeleteClick}>
-            <StyledDeleteButtonTrashcan/>
+            </div>
+            <div className={'data-bottom'}>&nbsp;</div>
           </div>
-          <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
-            <StyledExploitationLogButtonVector/>
+          <div className={'data-cell-container'}>
+            <div className={classNames('data-cell', 'description')}>
+              <div className={'data-overflow'}>
+                {props.target.description === '' ? '\xa0' : props.target.description}
+              </div>
+            </div>
+            <div className={'data-bottom'}>&nbsp;</div>
           </div>
+        </div>
+        <HtmlTooltip
+          title={
+            <div className={'status-menu'}>
+              <StyledStatusPickerOutline/>
+              <InProgressButton buttonClass={classes.inProgressClickable}/>
+              <CompletedButton buttonClass={classes.completedClickable}/>
+            </div>
+          }
+          interactive
+          disableHoverListener={props.addingOrEditing}
+        >
+          <div
+            className={'status-wrapper'}>{props.target === null || props.target.status === TargetStatus.NOT_STARTED ?
+            <Box
+              height={32}
+              width={110}
+              border={2}
+              borderRadius={16}
+              borderColor={theme.color.backgroundAssigned}
+              bgcolor={theme.color.backgroundStatus}
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
+              paddingRight={0.25}
+              paddingLeft={2.8}
+              fontSize={12}
+              className={classes.statusUnclickable}
+            >
+              Status
+              <AddTgtDateButtonVector/>
+            </Box>
+            : (props.target.status === TargetStatus.IN_PROGRESS ?
+              <InProgressButton buttonClass={classes.statusUnclickable}/>
+              :
+              <CompletedButton buttonClass={classes.statusUnclickable}/>)
+          }</div>
+        </HtmlTooltip>
+        <div className={'delete-tgt-button'}
+             id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}
+             onClick={handleDeleteClick}>
+          <StyledDeleteButtonTrashcan/>
+        </div>
+        <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
+          <StyledExploitationLogButtonVector/>
+        </div>
       </Box>
+      <DeleteConfirmationModal
+        deletingItem={props.target.name}
+        display={displayModal}
+        setDisplay={setDisplayModal}
+        handleYes={() => setAction(RowAction.DELETING)}
+      />
     </div>
   );
 };

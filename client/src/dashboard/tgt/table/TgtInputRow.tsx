@@ -184,63 +184,70 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                   }
                 }}
           >
-            <TextField
-              autoFocus={true}
-              className={classNames(
-                classes.margin,
-                'tgt-name',
-                'tgt-name-input-' + (props.target ? props.target.id : 'new'),
-              )}
-              value={name}
-              required
-              placeholder="OPRYY-###"
-              label={props.target ? '' : (nameError ? 'Error' : 'Required')}
-              error={nameError}
-              onChange={inputName}
-              inputProps={inputProps}
-              InputLabelProps={{
-                className: classes.inputLabel
-              }}
-            />
-            <TextField
-              className={classNames('mgrs', classes.margin)}
-              value={mgrs}
-              required
-              placeholder="##XXX##########"
-              label={props.target ? '' : (mgrsError ? 'Error' : 'Required')}
-              error={mgrsError}
-              onChange={inputMgrs}
-              InputLabelProps={{
-                className: classes.inputLabel
-              }}
-            />
-            <TextField
-              multiline
-              rowsMax="2"
-              className={classNames('notes', classes.margin)}
-              value={notes}
-              label={props.target || notes !== '' ? '' : 'EEI Notes'}
-              onChange={inputNotes}
-              InputLabelProps={{
-                className: classes.inputLabel
-              }}
-            />
-            <TextField
-              multiline
-              rowsMax="2"
-              className={classNames('description', classes.margin)}
-              value={description}
-              label={props.target || description !== '' ? '' : 'TGT Description'}
-              onChange={inputDescription}
-              onKeyDown={(e: any) => {
-                if (e.keyCode === 9 && !e.shiftKey) {
-                  validateAllAndSubmit();
-                }
-              }}
-              InputLabelProps={{
-                className: classes.inputLabel
-              }}
-            />
+            <div className={classes.margin}>
+              <TextField
+                autoFocus={true}
+                className={classNames(
+                  'tgt-name',
+                  'tgt-name-input-' + (props.target ? props.target.id : 'new'),
+                )}
+                value={name}
+                required
+                placeholder="OPRYY-###"
+                label={props.target ? '' : (nameError ? 'Error' : 'Required')}
+                error={nameError}
+                onChange={inputName}
+                inputProps={inputProps}
+                InputLabelProps={{
+                  className: classes.inputLabel,
+                }}
+              />
+            </div>
+            <div className={classes.margin}>
+              <TextField
+                className={'mgrs'}
+                value={mgrs}
+                required
+                placeholder="##XXX##########"
+                label={props.target ? '' : (mgrsError ? 'Error' : 'Required')}
+                error={mgrsError}
+                onChange={inputMgrs}
+                InputLabelProps={{
+                  className: classes.inputLabel,
+                }}
+              />
+            </div>
+            <div className={classes.margin}>
+              <TextField
+                multiline
+                rowsMax="2"
+                className={'notes'}
+                value={notes}
+                label={props.target || notes !== '' ? '' : 'EEI Notes'}
+                onChange={inputNotes}
+                InputLabelProps={{
+                  className: classes.inputLabel,
+                }}
+              />
+            </div>
+            <div className={classes.margin}>
+              <TextField
+                multiline
+                rowsMax="2"
+                className={'description'}
+                value={description}
+                label={props.target || description !== '' ? '' : 'TGT Description'}
+                onChange={inputDescription}
+                onKeyDown={(e: any) => {
+                  if (e.keyCode === 9 && !e.shiftKey) {
+                    validateAllAndSubmit();
+                  }
+                }}
+                InputLabelProps={{
+                  className: classes.inputLabel,
+                }}
+              />
+            </div>
           </form>
         </MuiThemeProvider>
         <div
