@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.metrics.createTarget;
 
+import dgs1sdt.magpie.tgts.TargetJson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,24 +9,32 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Date;
 
-
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 public class MetricCreateTarget {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  private String rfiNum;
-  private Timestamp exploitDate;
+  private long rfiId;
+  private long exploitDateId;
+  private long targetId;
   private String name;
+  private String mgrs;
+  private String notes;
+  private String description;
   private Timestamp timestamp;
 
-  public MetricCreateTarget(String rfiNum, Timestamp exploitDate, String name, Timestamp timestamp) {
-    this.rfiNum = rfiNum;
-    this.exploitDate = exploitDate;
-    this.name = name;
-    this.timestamp = timestamp;
+  public MetricCreateTarget(long targetId, TargetJson target) {
+    this.rfiId = target.getRfiId();
+    this.exploitDateId = target.getExploitDateId();
+    this.targetId = targetId;
+    this.name = target.getName();
+    this.mgrs = target.getMgrs();
+    this.notes = target.getNotes();
+    this.description = target.getDescription();
+    this.timestamp = new Timestamp(new Date().getTime());
   }
 }

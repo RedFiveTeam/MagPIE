@@ -16,7 +16,9 @@ import { StyledExploitationLogButtonVector } from '../../../resources/icons/Expl
 import { Status } from '../TgtDashboard';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import AddTgtDateButtonVector from '../../../resources/icons/AddTgtDateButtonVector';
+import NotStartedButton from '../../components/statusButtons/NotStartedButton';
+import InProgressButton from '../../components/statusButtons/InProgressButton';
+import CompletedButton from '../../components/statusButtons/CompletedButton';
 
 
 interface MyProps {
@@ -252,25 +254,13 @@ export const TgtInputRow: React.FC<MyProps> = props => {
         </MuiThemeProvider>
         <div
           className={'status-wrapper'}>
-          <Box
-            height={32}
-            width={110}
-            border={2}
-            borderRadius={16}
-            borderColor={theme.color.backgroundAssigned}
-            bgcolor={theme.color.backgroundStatus}
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            paddingRight={0.25}
-            paddingLeft={2.8}
-            fontSize={12}
-            className={classes.statusUnclickable}
-          >
-            Status
-            <AddTgtDateButtonVector/>
-          </Box>
+          {props.target === null || props.target.status === TargetStatus.NOT_STARTED ?
+            <NotStartedButton buttonClass={classes.statusUnclickable}/>
+            : (props.target.status === TargetStatus.IN_PROGRESS ?
+              <InProgressButton buttonClass={classes.statusUnclickable}/>
+              :
+              <CompletedButton buttonClass={classes.statusUnclickable}/>)
+          }
         </div>
         <div className={classNames('delete-tgt-button', props.target ? 'delete-disabled' : null)}
              id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}

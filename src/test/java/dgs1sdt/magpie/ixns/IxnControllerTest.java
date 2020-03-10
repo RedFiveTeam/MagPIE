@@ -111,9 +111,10 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
     MetricCreateSegment metric = metricCreateSegmentRepository.findAll().get(0);
 
-    assertEquals("DGS-1-SDT-2020-00338", metric.getRfiNum());
-    assertEquals("1970-01-01 00:00:00.0", metric.getExploitDate().toString());
-    assertEquals("SDT12-123", metric.getTargetName());
+    assertEquals(rfiId, metric.getRfiId());
+    assertEquals(exploitDateId, metric.getExploitDateId());
+    assertEquals(targetId, metric.getTargetId());
+    assertEquals(segment.getId(), metric.getSegmentId());
     assertEquals("1970-01-01 12:34:56.0", metric.getSegmentStart().toString());
     assertEquals("1970-01-01 13:02:00.0", metric.getSegmentEnd().toString());
   }
@@ -236,11 +237,11 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
     MetricCreateIxn metric = metricCreateIxnRepository.findAll().get(0);
 
-    assertEquals("DGS-1-SDT-2020-00338", metric.getRfiNum());
-    assertEquals("1970-01-01 00:00:00.0", metric.getExploitDate().toString());
-    assertEquals("SDT12-123", metric.getTargetName());
-    assertEquals("1970-01-01 12:10:10.0", metric.getSegmentStart().toString());
-    assertEquals("1970-01-01 12:30:45.0", metric.getSegmentEnd().toString());
+    assertEquals(rfiId, metric.getRfiId());
+    assertEquals(exploitDateId, metric.getExploitDateId());
+    assertEquals(targetId, metric.getTargetId());
+    assertEquals(segmentId, metric.getSegmentId());
+    assertEquals(ixn.getId(), metric.getIxnId());
   }
 
   @Test
@@ -388,13 +389,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
     assertEquals(1, metricDeleteIxnRepository.findAll().size());
 
-    MetricDeleteIxn metric = metricDeleteIxnRepository.findAll().get(0);
-
-    assertEquals("DGS-1-SDT-2020-00338", metric.getRfiNum());
-    assertEquals("1970-01-01 00:00:00.0", metric.getExploitDate().toString());
-    assertEquals("SDT12-123", metric.getTargetName());
-    assertEquals("1970-01-01 12:10:10.0", metric.getSegmentStart().toString());
-    assertEquals("1970-01-01 12:30:45.0", metric.getSegmentEnd().toString());
+    assertEquals(ixnId, metricDeleteIxnRepository.findAll().get(0).getIxnId());
   }
 
   @Test
@@ -472,11 +467,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
     MetricDeleteSegment metric = metricDeleteSegmentRepository.findAll().get(0);
 
-    assertEquals("DGS-1-SDT-2020-00338", metric.getRfiNum());
-    assertEquals("1970-01-01 00:00:00.0", metric.getExploitDate().toString());
-    assertEquals("SDT12-123", metric.getTargetName());
-    assertEquals("1970-01-01 12:10:10.0", metric.getSegmentStart().toString());
-    assertEquals("1970-01-01 12:30:45.0", metric.getSegmentEnd().toString());
+    assertEquals(segmentId, metric.getSegmentId());
     assertTrue(metric.isHadIxns());
 
     segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDateId, targetId,
@@ -587,8 +578,6 @@ public class IxnControllerTest extends BaseIntegrationTest {
       .statusCode(200);
 
     assertEquals(1, segmentRepository.findAll().size());
-    assertEquals(1, metricChangeSegmentRepository.findAll().size());
-
     Segment segment = segmentRepository.findAll().get(0);
 
     assertEquals(rfiId, segment.getRfiId());
@@ -597,13 +586,10 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("1970-01-01 12:30:00.0", segment.getStartTime().toString());
     assertEquals("1970-01-01 15:15:30.0", segment.getEndTime().toString());
 
+    assertEquals(1, metricChangeSegmentRepository.findAll().size());
     MetricChangeSegment metric = metricChangeSegmentRepository.findAll().get(0);
 
-    assertEquals("DGS-1-SDT-2020-00338", metric.getRfiNum());
-    assertEquals("1970-01-01 00:00:00.0", metric.getExploitDate().toString());
-    assertEquals("SDT12-123", metric.getTargetName());
-    assertEquals("1970-01-01 12:10:10.0", metric.getOldSegmentStart().toString());
-    assertEquals("1970-01-01 12:30:45.0", metric.getOldSegmentEnd().toString());
+    assertEquals(segmentId, metric.getSegmentId());
     assertEquals("1970-01-01 12:30:00.0", metric.getNewSegmentStart().toString());
     assertEquals("1970-01-01 15:15:30.0", metric.getNewSegmentEnd().toString());
   }
@@ -733,16 +719,16 @@ public class IxnControllerTest extends BaseIntegrationTest {
     MetricChangeIxn metric3 = metricChangeIxnRepository.findAll().get(2);
     MetricChangeIxn metric5 = metricChangeIxnRepository.findAll().get(4);
 
+    assertEquals(ixnId, metric1.getIxnId());
     assertEquals("exploit_analyst", metric1.getField());
-    assertEquals("Billy Bob", metric1.getOldData());
     assertEquals("William Robert", metric1.getNewData());
 
+    assertEquals(ixnId, metric3.getIxnId());
     assertEquals("track", metric3.getField());
-    assertEquals("123-234", metric3.getOldData());
     assertEquals("123-345", metric3.getNewData());
 
+    assertEquals(ixnId, metric5.getIxnId());
     assertEquals("status", metric5.getField());
-    assertEquals("NOT_STARTED", metric5.getOldData());
     assertEquals("IN_PROGRESS", metric5.getNewData());
   }
 }

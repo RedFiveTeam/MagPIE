@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Data
@@ -16,25 +17,12 @@ public class MetricDeleteIxn {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
+  private long ixnId;
 
-  private String rfiNum;
-  private Timestamp exploitDate;
-  private String targetName;
-  private Timestamp segmentStart;
-  private Timestamp segmentEnd;
   private Timestamp timestamp;
 
-  public MetricDeleteIxn(String rfiNum,
-                         Timestamp exploitDate,
-                         String targetName,
-                         Timestamp segmentStart,
-                         Timestamp segmentEnd,
-                         Timestamp timestamp) {
-    this.rfiNum = rfiNum;
-    this.exploitDate = exploitDate;
-    this.targetName = targetName;
-    this.segmentStart = segmentStart;
-    this.segmentEnd = segmentEnd;
-    this.timestamp = timestamp;
+  public MetricDeleteIxn(long ixnId) {
+    this.ixnId = ixnId;
+    this.timestamp = new Timestamp(new Date().getTime());
   }
 }

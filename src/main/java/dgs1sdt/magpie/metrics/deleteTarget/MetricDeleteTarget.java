@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Data
@@ -16,15 +17,11 @@ public class MetricDeleteTarget {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  private String rfiNum;
-  private Timestamp exploitDate;
-  private String targetName;
+  private long targetId;
   private Timestamp timestamp;
 
-  public MetricDeleteTarget(String rfiNum, Timestamp exploitDate, String targetName, Timestamp timestamp) {
-    this.rfiNum = rfiNum;
-    this.exploitDate = exploitDate;
-    this.targetName = targetName;
-    this.timestamp = timestamp;
+  public MetricDeleteTarget(long targetId) {
+    this.targetId = targetId;
+    this.timestamp = new Timestamp(new Date().getTime());
   }
 }

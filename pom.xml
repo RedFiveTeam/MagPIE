@@ -9,10 +9,10 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>dgs1SDT.project</groupId>
-  <artifactId>pie</artifactId>
+  <artifactId>magpie</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>pie</name>
-  <description>Demo project for Spring Boot</description>
+  <name>magpie</name>
+  <description>Post-Ingest Exploitation Magnification</description>
 
   <properties>
     <java.version>1.8</java.version>
@@ -89,4 +89,3 @@
     </plugins>
   </build>
 </project>
-

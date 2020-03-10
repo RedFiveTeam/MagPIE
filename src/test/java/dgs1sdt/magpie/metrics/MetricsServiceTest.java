@@ -21,14 +21,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class MetricsServiceTest extends BaseIntegrationTest {
@@ -136,67 +134,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void addsExploitDateChangeMetric() throws Exception {
-    Timestamp oldTime = new Timestamp(new SimpleDateFormat("MM/dd/yyyy").parse("11/10/2020").getTime());
-    Timestamp newTime = new Timestamp(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
-
-    metricsService.addChangeExploitDate(oldTime, newTime, "DGS-1-SDT-2020-00338");
-
-    assertEquals(1, metricChangeExploitDateRepository.findAll().size());
-    assertEquals(
-      "2020-11-10 00:00:00.0",
-      metricChangeExploitDateRepository.findAll().get(0).getOldExploitDate().toString()
-    );
-    assertEquals(
-      "2020-11-11 00:00:00.0",
-      metricChangeExploitDateRepository.findAll().get(0).getNewExploitDate().toString()
-    );
-
-    metricsService.addChangeExploitDate(null, newTime, "DGS-1-SDT-2020-00338");
-
-    assertNull(metricChangeExploitDateRepository.findAll().get(1).getOldExploitDate());
-    assertEquals(
-      "2020-11-11 00:00:00.0",
-      metricChangeExploitDateRepository.findAll().get(1).getNewExploitDate().toString()
-    );
-
-  }
-
-  @Test
-  public void addsTargetDateCreationMetric() throws Exception {
-    TargetJson targetJson = new TargetJson(
-      1,
-      1,
-      "SDT12-123",
-      "12ASD1231231231",
-      "",
-      ""
-    );
-
-    metricsService.addCreateTarget(
-      targetJson,
-      "DGS-1-SDT-2020-00338",
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime())
-    );
-
-    assertEquals(1, metricCreateTargetRepository.findAll().size());
-    assertEquals(
-      "SDT12-123",
-      metricCreateTargetRepository.findAll().get(0).getName()
-    );
-    assertEquals(
-      "DGS-1-SDT-2020-00338",
-      metricCreateTargetRepository.findAll().get(0).getRfiNum()
-    );
-    assertEquals(
-      "2020-11-11 00:00:00.0",
-      metricCreateTargetRepository.findAll().get(0).getExploitDate().toString()
-    );
-
-  }
-
-  @Test
-  public void addsChangeTargetMetric() throws Exception {
+  public void addsChangeTargetMetric() {
     Target oldTarget = new Target(
       1, 1, 1,
       "SDT20-123",
@@ -226,16 +164,12 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     MetricChangeTarget description = metricChangeTargetRepository.findAll()
       .stream().filter((metric) -> metric.getField().equals("description")).collect(Collectors.toList()).get(0);
 
-    assertEquals(oldTarget.getName(), name.getOldData());
     assertEquals(newTarget.getName(), name.getNewData());
 
-    assertEquals(oldTarget.getMgrs(), mgrs.getOldData());
     assertEquals(newTarget.getMgrs(), mgrs.getNewData());
 
-    assertEquals(oldTarget.getNotes(), notes.getOldData());
     assertEquals(newTarget.getNotes(), notes.getNewData());
 
-    assertEquals(oldTarget.getDescription(), description.getOldData());
     assertEquals(newTarget.getDescription(), description.getNewData());
   }
 }

@@ -1,0 +1,39 @@
+import { Box } from '@material-ui/core';
+import theme from '../../../resources/theme';
+import AddTgtDateButtonVector from '../../../resources/icons/AddTgtDateButtonVector';
+import * as React from 'react';
+
+export interface StatusButtonProps {
+  buttonClass: string;
+  onClick?: () => void;
+  className?: string;
+}
+
+
+const NotStartedButton: React.FC<StatusButtonProps> = props => {
+  return (
+    <div className={props.className}>
+      <Box
+        height={32}
+        width={110}
+        border={2}
+        borderRadius={16}
+        borderColor={theme.color.backgroundAssigned}
+        bgcolor={theme.color.backgroundStatus}
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        paddingRight={0.25}
+        paddingLeft={2.8}
+        fontSize={12}
+        className={props.buttonClass}
+      >
+        Status
+        <AddTgtDateButtonVector/>
+      </Box>
+    </div>
+  );
+};
+
+export default NotStartedButton;

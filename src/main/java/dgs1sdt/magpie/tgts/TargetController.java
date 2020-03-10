@@ -5,8 +5,6 @@ import dgs1sdt.magpie.ixns.IxnRepository;
 import dgs1sdt.magpie.ixns.Segment;
 import dgs1sdt.magpie.ixns.SegmentRepository;
 import dgs1sdt.magpie.metrics.MetricsService;
-import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDate;
-import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTarget;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
@@ -16,10 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -128,17 +124,10 @@ public class TargetController {
       exploitDateRepository.save(newExploitDate);
 
       if (exploitDateRepository.findById(exploitDateJson.getExploitDateId()).isPresent()) {
-        metricsService.addChangeExploitDate(
-          exploitDateRepository.findById(exploitDateJson.getExploitDateId()).get().getExploitDate(),
-          exploitDateJson.getNewExploitDate(),
-          rfi.getRfiNum()
-        );
+        metricsService.addChangeExploitDate(exploitDateJson);
       } else {
-        metricsService.addChangeExploitDate(
-          null,
-          exploitDateJson.getNewExploitDate(),
-          rfi.getRfiNum()
-        );
+        long lastExploitDateId = exploitDateRepository.findAll().get(exploitDateRepository.findAll().size() - 1).getId();
+        metricsService.addCreateExploitDate(lastExploitDateId, exploitDateJson);
       }
     }
     return exploitDateRepository.findAllByRfiId(rfi.getId());
@@ -148,38 +137,17 @@ public class TargetController {
   public List<Target> deleteTarget(@RequestParam("targetId") long targetId) {
     if (targetRepository.findById(targetId).isPresent()) {
       long rfiId = targetRepository.findById(targetId).get().getRfiId();
-      long exploitDateId = targetRepository.findById(targetId).get().getExploitDateId();
-      if (rfiRepository.findById(rfiId).isPresent()) {
-        String rfiNum = rfiRepository.findById(rfiId).get().getRfiNum();
-        if (exploitDateRepository.findById(exploitDateId).isPresent()) {
-          Timestamp exploitDate = exploitDateRepository.findById(exploitDateId).get().getExploitDate();
+      metricsService.addDeleteTarget(targetId);
 
-          MetricDeleteTarget metric = new MetricDeleteTarget(
-            rfiNum,
-            exploitDate,
-            targetRepository.findById(targetId).get().getName(),
-            new Timestamp(new Date().getTime())
-          );
+      List<Ixn> ixns = ixnRepository.findAllByTargetId(targetId);
+      ixnRepository.deleteAll(ixns);
 
-          metricsService.addDeleteTarget(metric);
+      List<Segment> segments = segmentRepository.findAllByTargetId(targetId);
+      segmentRepository.deleteAll(segments);
 
-          List<Ixn> ixns = ixnRepository.findAllByTargetId(targetId);
+      targetRepository.deleteById(targetId);
 
-          ixnRepository.deleteAll(ixns);
-
-          List<Segment> segments = segmentRepository.findAllByTargetId(targetId);
-
-          segmentRepository.deleteAll(segments);
-
-          targetRepository.deleteById(targetId);
-          return getTargets(rfiId);
-        } else {
-
-          System.err.println("Error deleting target: Could not find exploit date by id " + exploitDateId);
-        }
-      } else {
-        System.err.println("Error deleting target: Could not find RFI by id " + rfiId);
-      }
+      return getTargets(rfiId);
     } else {
       System.err.println("Error deleting target: Could not find target by id " + targetId);
     }
@@ -197,16 +165,8 @@ public class TargetController {
     if (exploitDateRepository.findById(exploitDateId).isPresent()) {
       long rfiId = exploitDateRepository.findById(exploitDateId).get().getRfiId();
       if (rfiRepository.findById(rfiId).isPresent()) {
-        String rfiNum = rfiRepository.findById(rfiId).get().getRfiNum();
-        Timestamp exploitDate = exploitDateRepository.findById(exploitDateId).get().getExploitDate();
 
-        MetricDeleteExploitDate metricDeleteExploitDate = new MetricDeleteExploitDate(
-          new Timestamp(new Date().getTime()),
-          rfiNum,
-          exploitDate
-        );
-
-        metricsService.addDeleteExploitDate(metricDeleteExploitDate);
+        metricsService.addDeleteExploitDate(exploitDateId);
         exploitDateRepository.deleteById(exploitDateId);
         return getExploitDates(rfiId);
       } else {
@@ -230,9 +190,9 @@ public class TargetController {
 
       if (rfiRepository.findById(rfiId).isPresent()) {
         if (exploitDateRepository.findById(exploitDateId).isPresent()) {
-          String rfiNum = rfiRepository.findById(rfiId).get().getRfiNum();
-          Timestamp exploitDate = exploitDateRepository.findById(exploitDateId).get().getExploitDate();
-          metricsService.addCreateTarget(targetJson, rfiNum, exploitDate);
+          long lastTargetId = targetRepository.findAll().get(targetRepository.findAll().size() - 1).getId();
+
+          metricsService.addCreateTarget(lastTargetId, targetJson);
         } else {
           System.err.println("Error finding exploit date by id: " + exploitDateId);
         }
