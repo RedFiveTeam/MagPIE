@@ -125,6 +125,9 @@ export const rowStyles = makeStyles((localTheme: Theme) =>
       },
       textAlign: 'center',
     },
+    tgtClickable: {
+      marginLeft: '19px'
+    },
     inProgress: {
       marginTop: '2px',
     },

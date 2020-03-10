@@ -1,9 +1,6 @@
 package dgs1sdt.magpie.tgts;
 
-import dgs1sdt.magpie.ixns.Ixn;
-import dgs1sdt.magpie.ixns.IxnRepository;
-import dgs1sdt.magpie.ixns.Segment;
-import dgs1sdt.magpie.ixns.SegmentRepository;
+import dgs1sdt.magpie.ixns.*;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
@@ -29,6 +26,7 @@ public class TargetController {
   private TargetRepository targetRepository;
   private SegmentRepository segmentRepository;
   private IxnRepository ixnRepository;
+  private IxnController ixnController;
 
 
   @Autowired
@@ -36,12 +34,14 @@ public class TargetController {
                           ExploitDateRepository exploitDateRepository,
                           TargetRepository targetRepository,
                           SegmentRepository segmentRepository,
-                          IxnRepository ixnRepository) {
+                          IxnRepository ixnRepository,
+                          IxnController ixnController) {
     this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
     this.targetRepository = targetRepository;
     this.segmentRepository = segmentRepository;
     this.ixnRepository = ixnRepository;
+    this.ixnController = ixnController;
   }
 
   @Autowired
@@ -72,6 +72,11 @@ public class TargetController {
   @Autowired
   public void setIxnRepository(IxnRepository ixnRepository) {
     this.ixnRepository = ixnRepository;
+  }
+
+  @Autowired
+  public void setIxnController(IxnController ixnController) {
+    this.ixnController = ixnController;
   }
 
   @GetMapping
@@ -126,7 +131,8 @@ public class TargetController {
       if (exploitDateRepository.findById(exploitDateJson.getExploitDateId()).isPresent()) {
         metricsService.addChangeExploitDate(exploitDateJson);
       } else {
-        long lastExploitDateId = exploitDateRepository.findAll().get(exploitDateRepository.findAll().size() - 1).getId();
+        long lastExploitDateId =
+          exploitDateRepository.findAll().get(exploitDateRepository.findAll().size() - 1).getId();
         metricsService.addCreateExploitDate(lastExploitDateId, exploitDateJson);
       }
     }
@@ -137,6 +143,8 @@ public class TargetController {
   public List<Target> deleteTarget(@RequestParam("targetId") long targetId) {
     if (targetRepository.findById(targetId).isPresent()) {
       long rfiId = targetRepository.findById(targetId).get().getRfiId();
+      String targetName = targetRepository.findById(targetId).get().getName();
+
       metricsService.addDeleteTarget(targetId);
 
       List<Ixn> ixns = ixnRepository.findAllByTargetId(targetId);
@@ -147,6 +155,7 @@ public class TargetController {
 
       targetRepository.deleteById(targetId);
 
+      ixnController.assignTracks(rfiId, targetName);
       return getTargets(rfiId);
     } else {
       System.err.println("Error deleting target: Could not find target by id " + targetId);
@@ -160,18 +169,14 @@ public class TargetController {
       List<Target> targetList = targetRepository.findAllByExploitDateId(exploitDateId);
       for (Target target : targetList) {
         deleteTarget(target.getId());
+        ixnController.assignTracks(target.getRfiId(), target.getName());
       }
     }
     if (exploitDateRepository.findById(exploitDateId).isPresent()) {
       long rfiId = exploitDateRepository.findById(exploitDateId).get().getRfiId();
-      if (rfiRepository.findById(rfiId).isPresent()) {
-
-        metricsService.addDeleteExploitDate(exploitDateId);
-        exploitDateRepository.deleteById(exploitDateId);
-        return getExploitDates(rfiId);
-      } else {
-        System.err.println("Error deleting exploit date: Could not find RFI by id " + rfiId);
-      }
+      metricsService.addDeleteExploitDate(exploitDateId);
+      exploitDateRepository.deleteById(exploitDateId);
+      return getExploitDates(rfiId);
     } else {
       System.err.println("Error deleting exploit date: Could not find exploit Date by id " + exploitDateId);
     }
@@ -212,9 +217,18 @@ public class TargetController {
           return; //name conflict, do nothing
         }
         Target oldTarget = targetRepository.findById(targetId).get();
+        String oldName = oldTarget.getName();
         metricsService.addChangeTarget(oldTarget, targetJson);
         Target newTarget = new Target(targetJson);
         targetRepository.save(newTarget);
+
+        System.out.println(oldName);
+        System.out.println(newTarget.getName());
+        if (!oldName.equals(newTarget.getName())) {
+          ixnController.assignTracks(oldTarget.getRfiId(), oldName);
+          ixnController.assignTracks(newTarget.getRfiId(), newTarget.getName());
+        }
+
       } else
         System.err.println("Error updating target: Could not find exploit date by id " + exploitDateId);
 

@@ -66,22 +66,22 @@ export const IxnRow: React.FC<MyProps> = props => {
         <div className={classNames('ixn-data-cell', 'activity')}>
           {props.ixn.activity ? props.ixn.activity : '\xa0'}
         </div>
-        <div className={classNames('ixn-data-cell', 'track')}>
+        <div className={classNames('ixn-data-cell', 'track', 'no-underline')}>
           {props.ixn.track ? props.ixn.track : '\xa0'}
         </div>
         <div className={classNames('ixn-data-cell', 'track-analyst', 'name')}>
           {props.ixn.trackAnalyst ? props.ixn.trackAnalyst : '\xa0'}
         </div>
-        <div className={classNames('ixn-data-cell', 'status')}>
+        <div className={classNames('ixn-data-cell', 'status', 'no-underline')}>
           <HtmlTooltip
             title={
               <div className={'status-menu'}>
                 <StyledIxnStatusPickerOutline/>
-                <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable)}
+                <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable, 'in-progress-button')}
                                   onClick={() => submitStatusChange(IxnStatus.IN_PROGRESS)}/>
-                <CompletedButton buttonClass={classNames(classes.completed, classes.clickable)}
+                <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, 'completed-button')}
                                  onClick={() => submitStatusChange(IxnStatus.COMPLETED)}/>
-                <DoesNotMeetEeiButton buttonClass={classNames(classes.doesNotMeetEei, classes.clickable)}
+                <DoesNotMeetEeiButton buttonClass={classNames(classes.doesNotMeetEei, classes.clickable, 'does-not-meet-eei-button')}
                                       onClick={() => submitStatusChange(IxnStatus.DOES_NOT_MEET_EEI)}/>
               </div>
             }
@@ -119,7 +119,7 @@ export const StyledIxnRow = styled(IxnRow)`
     border-bottom: 1px solid #FFFFFF;
   }
   
-  .status {
-    border: none;
+  .no-underline {
+    border:none;
   }
 `;

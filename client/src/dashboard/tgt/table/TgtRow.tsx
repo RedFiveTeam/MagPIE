@@ -147,9 +147,9 @@ export const TgtRow: React.FC<Props> = props => {
           title={
             <div className={'status-menu'}>
               <StyledTgtStatusPickerOutline/>
-              <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable)}
+              <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable, classes.tgtClickable)}
                                 onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
-              <CompletedButton buttonClass={classNames(classes.completed, classes.clickable)}
+              <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, classes.tgtClickable)}
                                onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
             </div>
           }

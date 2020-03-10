@@ -78,7 +78,7 @@ export const DeleteConfirmationModal: React.FC<MyProps> = props => {
         <div className={'modal-text'}>Are you sure you want to delete <br/>{props.deletingItem}?</div>
         <div className={'modal-text'} style={{width: 339}}>All associated data will be erased.</div>
         <div className={classes.modalConfirmation}>
-            <span className={classNames('modal-yes', classes.modalYes)} onClick={() => props.handleYes()}>
+            <span className={classNames('modal-yes', classes.modalYes)} onClick={() => {props.handleYes(); props.setDisplay(false)}}>
               YES
             </span>
           <span className={classNames('modal-no', classes.modalNo)} onClick={() => props.setDisplay(false)}>

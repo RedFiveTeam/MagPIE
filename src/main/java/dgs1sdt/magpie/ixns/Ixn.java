@@ -57,7 +57,7 @@ public class Ixn {
     this.exploitAnalyst = ixnJson.getExploitAnalyst();
     this.time = ixnJson.getTime();
     this.activity = ixnJson.getActivity();
-    this.track = ixnJson.getTrack();
+    this.track = "";
     this.trackAnalyst = ixnJson.getTrackAnalyst();
     this.status = ixnJson.getStatus();
     this.leadChecker = ixnJson.getLeadChecker();
@@ -89,14 +89,6 @@ public class Ixn {
       }
     } catch (NullPointerException e) {
       diff.add("activity");
-    }
-
-    try {
-      if (!this.track.equals(other.getTrack())) {
-        diff.add("track");
-      }
-    } catch (NullPointerException e) {
-      diff.add("track");
     }
 
     try {

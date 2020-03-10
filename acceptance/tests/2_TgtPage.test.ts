@@ -4,7 +4,7 @@ Feature('Tgt Page');
 
 Before((I) => {
   I.amOnPage('/');
-  I.waitForText('RFI', 10);
+  I.waitForText('20-321', 10);
   I.click('.cell--navigate-to-tgt-button');
   I.waitForText('RFI: 20-325', 10);
 });

@@ -87,10 +87,6 @@ public class MetricChangeData {
         oldData = oldIxn.getActivity();
         newData = newIxn.getActivity();
         break;
-      case "track":
-        oldData = oldIxn.getTrack();
-        newData = newIxn.getTrack();
-        break;
       case "track_analyst":
         oldData = oldIxn.getTrackAnalyst();
         newData = newIxn.getTrackAnalyst();

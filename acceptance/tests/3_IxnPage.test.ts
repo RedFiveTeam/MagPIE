@@ -4,7 +4,7 @@ Feature('Ixn Page');
 
 Before((I) => {
   I.amOnPage('/');
-  I.waitForText('RFI', 10);
+  I.waitForText('20-321', 10);
   I.click('.cell--navigate-to-tgt-button');
   I.waitForText('RFI:', 10);
 });
@@ -60,13 +60,10 @@ Scenario('Should be able to add ixns', (I) => {
   I.fillField('.time', '1215');
   I.pressKey('Tab');
   I.pressKey('Tab');
-  I.fillField('.track', '123-234');
-  I.pressKey('Tab');
   I.pressKey('Tab');
   I.pressKey('Tab');
   I.pressKey('Tab');
   I.waitForText('12:15:00Z', 10);
-  I.waitForText('123-234', 10);
 
   I.fillField('.time', '13');
   I.pressKey('Tab');
@@ -82,8 +79,6 @@ Scenario('Should be able to edit ixns', (I) => {
   I.fillField('.time', '121030');
   I.pressKey('Tab');
   I.pressKey('Tab');
-  I.fillField('.track', '234-345');
-  I.pressKey('Tab');
   I.fillField('.track-analyst', 'Giuseppe Alfredo');
   I.pressKey('Enter');
 
@@ -91,9 +86,42 @@ Scenario('Should be able to edit ixns', (I) => {
   I.click('.exploitation');
 
   I.waitForText('12:10:30Z');
-  I.see('234-345');
   I.see('Giuseppe Alfredo');
   I.dontSee('12:10:00Z');
+});
+
+Scenario('Should be able to assign status and see tracks generate', (I) =>{
+  I.click('.exploitation');
+  I.waitForText('Status', 10);
+
+  I.moveCursorTo('.status-wrapper', 10, 10);
+  I.click('.in-progress-button');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+
+  I.waitForText('In Progress', 10);
+  I.see('123-001');
+
+  I.moveCursorTo('.status-wrapper', 10, 10);
+  I.click('.completed-button');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+
+  I.waitForText('Complete', 10);
+  I.see('123-001');
+  I.dontSee('In Progress');
+
+  I.moveCursorTo('.status-wrapper', 10, 10);
+  I.click('.does-not-meet-eei-button');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+
+  I.waitForText('EEI', 10);
+  I.dontSee('Completed');
+  I.dontSee('123-001');
 });
 
 Scenario('Should be able to delete ixns', (I) => {

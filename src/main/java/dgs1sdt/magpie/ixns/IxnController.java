@@ -1,14 +1,16 @@
 package dgs1sdt.magpie.ixns;
 
 import dgs1sdt.magpie.metrics.MetricsService;
-import dgs1sdt.magpie.rfis.RfiRepository;
+import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetRepository;
+import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
+import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,7 +20,6 @@ public class IxnController {
   public static final String URI = "/api/ixn";
 
   private MetricsService metricsService;
-  private RfiRepository rfiRepository;
   private ExploitDateRepository exploitDateRepository;
   private TargetRepository targetRepository;
   private SegmentRepository segmentRepository;
@@ -26,13 +27,11 @@ public class IxnController {
 
   @Autowired
   public IxnController(MetricsService metricsService,
-                       RfiRepository rfiRepository,
                        ExploitDateRepository exploitDateRepository,
                        TargetRepository targetRepository,
                        SegmentRepository segmentRepository,
                        IxnRepository ixnRepository) {
     this.metricsService = metricsService;
-    this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
     this.targetRepository = targetRepository;
     this.segmentRepository = segmentRepository;
@@ -42,11 +41,6 @@ public class IxnController {
   @Autowired
   public void setMetricsService(MetricsService metricsService) {
     this.metricsService = metricsService;
-  }
-
-  @Autowired
-  public void setRfiRepository(RfiRepository rfiRepository) {
-    this.rfiRepository = rfiRepository;
   }
 
   @Autowired
@@ -122,17 +116,19 @@ public class IxnController {
       long lastIxnId = ixnRepository.findAll().get(ixnRepository.findAll().size() - 1).getId();
       this.metricsService.addCreateIxn(lastIxnId, ixnJson);
     }
+
+    assignTracks(ixnJson.getRfiId(), targetRepository.findById(ixnJson.getTargetId()).get().getName());
   }
 
   @DeleteMapping(path = "/{ixnId}")
   public void deleteIxn(@PathVariable("ixnId") long ixnId) {
     if (ixnRepository.findById(ixnId).isPresent()) {
       Ixn ixn = ixnRepository.findById(ixnId).get();
-
       ixnRepository.deleteById(ixnId);
 
       metricsService.addDeleteIxn(ixnId);
 
+      assignTracks(ixn.getRfiId(), targetRepository.findById(ixn.getTargetId()).get().getName());
     } else {
       System.err.println("Could not find ixn to delete with id " + ixnId);
     }
@@ -143,7 +139,6 @@ public class IxnController {
 
     if (segmentRepository.findById(segmentId).isPresent()) {
       Segment segment = segmentRepository.findById(segmentId).get();
-
       List<Ixn> ixns = ixnRepository.findAllBySegmentId(segmentId);
 
       boolean hadIxns = !ixns.isEmpty();
@@ -154,8 +149,36 @@ public class IxnController {
 
       this.metricsService.addDeleteSegment(segmentId, hadIxns);
 
+      assignTracks(segment.getRfiId(), targetRepository.findById(segment.getTargetId()).get().getName());
     } else {
       System.err.println("Error deleting segment: could not find segment with id " + segmentId);
     }
+  }
+
+  public void assignTracks(long rfiId, String targetName) {
+    List<Target> targets = targetRepository.findAllByRfiIdAndName(rfiId, targetName);
+    List<Ixn> ixns = new ArrayList<>();
+
+    //sort targets by exploit date
+    targets.sort((target1, target2) -> {
+      ExploitDate date1 = exploitDateRepository.findById(target1.getExploitDateId()).get();
+      ExploitDate date2 = exploitDateRepository.findById(target2.getExploitDateId()).get();
+      return date1.getExploitDate().compareTo(date2.getExploitDate());
+    });
+
+    for (Target target : targets) {
+      List<Ixn> targetIxns = ixnRepository.findAllInProgressOrCompleteByTargetId(target.getId());
+      targetIxns.sort(Comparator.comparing(Ixn::getTime));
+      ixns.addAll(targetIxns);
+    }
+
+    int trackNum = 1;
+    for (Ixn ixn : ixns) {
+      String trackId = targetName.substring(6) + "-" + StringUtils.leftPad(String.valueOf(trackNum), 3, '0');
+      ixn.setTrack(trackId);
+      trackNum++;
+    }
+
+    ixnRepository.saveAll(ixns);
   }
 }

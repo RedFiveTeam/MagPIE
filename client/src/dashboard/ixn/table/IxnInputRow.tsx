@@ -52,7 +52,6 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const [exploitAnalyst, setExploitAnalyst] = React.useState(props.ixn ? props.ixn.exploitAnalyst : props.tgtAnalyst);
   const [time, setTime] = React.useState(props.ixn ? props.ixn.time.format('HH:mm:ss') : '');
   const [activity, setActivity] = React.useState(props.ixn ? props.ixn.activity : '');
-  const [track, setTrack] = React.useState(props.ixn ? props.ixn.track : '');
   const [trackAnalyst, setTrackAnalyst] = React.useState(props.ixn ? props.ixn.trackAnalyst : '');
   const [leadChecker, setLeadChecker] = React.useState(props.ixn ? props.ixn.leadChecker : '');
   const [finalChecker, setFinalChecker] = React.useState(props.ixn ? props.ixn.finalChecker : '');
@@ -77,7 +76,6 @@ export const IxnInputRow: React.FC<MyProps> = props => {
           setExploitAnalyst('');
           setTime('');
           setActivity('');
-          setTrack('');
           setTrackAnalyst('');
           setLeadChecker('');
           setFinalChecker('');
@@ -139,10 +137,6 @@ export const IxnInputRow: React.FC<MyProps> = props => {
       setActivity(event.target.value);
   };
 
-  const inputTrack = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTrack(event.target.value);
-  };
-
   const inputTrackAnalyst = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTrackAnalyst(event.target.value);
   };
@@ -185,7 +179,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
       if (props.segment.id) {
         props.postIxn(new IxnModel(props.ixn ? props.ixn.id : null, props.segment.rfiId, props.segment.exploitDateId,
           props.segment.targetId, props.segment.id, exploitAnalyst.trim(), convertTimeStringToMoment(time),
-          activity.trim(), track.trim(), trackAnalyst.trim(), props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED,
+          activity.trim(), '', trackAnalyst.trim(), props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED,
           leadChecker.trim(), finalChecker.trim()));
 
         if (props.ixn === null)
@@ -207,7 +201,6 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   let isBlank = exploitAnalyst === '' &&
     time === '' &&
     activity === '' &&
-    track === '' &&
     trackAnalyst === '' &&
     leadChecker === '' &&
     finalChecker === '';
@@ -258,13 +251,8 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                 placeholder={'Activity'}
               />
             </div>
-            <div className={classes.margin}>
-              <TextField
-                className={classNames('track')}
-                value={track}
-                onChange={inputTrack}
-                placeholder={'###-###'}
-              />
+            <div className={classNames(classes.margin, 'track')}>
+              {props.ixn ? props.ixn.track : '\xa0'}
             </div>
             <div className={classes.margin}>
               <TextField

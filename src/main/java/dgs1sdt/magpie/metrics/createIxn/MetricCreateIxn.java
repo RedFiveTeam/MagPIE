@@ -43,7 +43,6 @@ public class MetricCreateIxn {
     this.exploitAnalyst = ixn.getExploitAnalyst();
     this.time = ixn.getTime();
     this.activity = ixn.getActivity();
-    this.track = ixn.getTrack();
     this.trackAnalyst = ixn.getTrackAnalyst();
     this.leadChecker = ixn.getLeadChecker();
     this.finalChecker = ixn.getFinalChecker();

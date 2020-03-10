@@ -290,6 +290,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   
   .track {
     width: 75px;
+    text-align: center;
   }
   
   .status {

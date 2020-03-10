@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static io.restassured.RestAssured.given;
@@ -54,6 +55,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
   MetricChangeSegmentRepository metricChangeSegmentRepository;
   @Autowired
   MetricChangeIxnRepository metricChangeIxnRepository;
+  @Autowired
+  IxnController ixnController;
 
   @Before
   public void clean() {
@@ -203,7 +206,6 @@ public class IxnControllerTest extends BaseIntegrationTest {
       ",\"exploitAnalyst\":\"Billy Bob\"" +
       ",\"time\":\"1970-01-01T12:10:55.000Z\"" +
       ",\"activity\":\"Person entered building from right\"" +
-      ",\"track\":\"123-234\"" +
       ",\"trackAnalyst\":\"Billy Joe\"" +
       ",\"status\":\"NOT_STARTED\"" +
       ",\"leadChecker\":\"\"" +
@@ -226,7 +228,6 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("Billy Bob", ixn.getExploitAnalyst());
     assertEquals("1970-01-01 12:10:55.0", ixn.getTime().toString());
     assertEquals("Person entered building from right", ixn.getActivity());
-    assertEquals("123-234", ixn.getTrack());
     assertEquals("Billy Joe", ixn.getTrackAnalyst());
     assertEquals("NOT_STARTED", ixn.getStatus());
     assertEquals("", ixn.getLeadChecker());
@@ -646,7 +647,6 @@ public class IxnControllerTest extends BaseIntegrationTest {
       ",\"exploitAnalyst\":\"William Robert\"" +
       ",\"time\":\"1970-01-01T12:15:55.000Z\"" +
       ",\"activity\":\"Person entered building from right side\"" +
-      ",\"track\":\"123-345\"" +
       ",\"trackAnalyst\":\"William Joseph\"" +
       ",\"status\":\"NOT_STARTED\"" +
       ",\"leadChecker\":\"\"" +
@@ -669,7 +669,6 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("William Robert", ixn.getExploitAnalyst());
     assertEquals("1970-01-01 12:15:55.0", ixn.getTime().toString());
     assertEquals("Person entered building from right side", ixn.getActivity());
-    assertEquals("123-345", ixn.getTrack());
     assertEquals("William Joseph", ixn.getTrackAnalyst());
     assertEquals("NOT_STARTED", ixn.getStatus());
     assertEquals("", ixn.getLeadChecker());
@@ -684,7 +683,6 @@ public class IxnControllerTest extends BaseIntegrationTest {
       ",\"exploitAnalyst\":\"William Robert\"" +
       ",\"time\":\"1970-01-01T12:15:55.000Z\"" +
       ",\"activity\":\"Person entered building from right side\"" +
-      ",\"track\":\"123-345\"" +
       ",\"trackAnalyst\":\"William Joseph\"" +
       ",\"status\":\"IN_PROGRESS\"" +
       ",\"leadChecker\":\"\"" +
@@ -707,28 +705,94 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("William Robert", ixn.getExploitAnalyst());
     assertEquals("1970-01-01 12:15:55.0", ixn.getTime().toString());
     assertEquals("Person entered building from right side", ixn.getActivity());
-    assertEquals("123-345", ixn.getTrack());
+    assertEquals("123-001", ixn.getTrack());
     assertEquals("William Joseph", ixn.getTrackAnalyst());
     assertEquals("IN_PROGRESS", ixn.getStatus());
     assertEquals("", ixn.getLeadChecker());
     assertEquals("", ixn.getFinalChecker());
 
-    assertEquals(5, metricChangeIxnRepository.findAll().size());
+    assertEquals(4, metricChangeIxnRepository.findAll().size());
 
     MetricChangeIxn metric1 = metricChangeIxnRepository.findAll().get(0);
-    MetricChangeIxn metric3 = metricChangeIxnRepository.findAll().get(2);
-    MetricChangeIxn metric5 = metricChangeIxnRepository.findAll().get(4);
+    MetricChangeIxn metric4 = metricChangeIxnRepository.findAll().get(3);
 
     assertEquals(ixnId, metric1.getIxnId());
     assertEquals("exploit_analyst", metric1.getField());
     assertEquals("William Robert", metric1.getNewData());
 
-    assertEquals(ixnId, metric3.getIxnId());
-    assertEquals("track", metric3.getField());
-    assertEquals("123-345", metric3.getNewData());
+    assertEquals(ixnId, metric4.getIxnId());
+    assertEquals("status", metric4.getField());
+    assertEquals("IN_PROGRESS", metric4.getNewData());
+  }
 
-    assertEquals(ixnId, metric5.getIxnId());
-    assertEquals("status", metric5.getField());
-    assertEquals("IN_PROGRESS", metric5.getNewData());
+  @Test
+  public void properlyAssignsTrackIDs() throws Exception {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
+    Date exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
+    exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));
+    Date exploitDate2 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/10/2020").getTime());
+    exploitDateRepository.save(new ExploitDate(exploitDate2, rfiId));
+
+
+    long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
+    long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
+
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
+    long target1Id = targetRepository.findAll().get(0).getId();
+
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
+    long target2Id = targetRepository.findAll().get(1).getId();
+
+
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id, new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
+    long segment1Id = segmentRepository.findAll().get(0).getId();
+
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate2Id, target2Id, new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
+    long segment2Id = segmentRepository.findAll().get(1).getId();
+
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-003
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-004
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-005
+
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", ""));  //123-001
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-002
+
+    ixnController.assignTracks(rfiId, "SDT12-123");
+
+    Ixn ixn1 = ixnRepository.findAll().get(7);
+    Ixn ixn2 = ixnRepository.findAll().get(9);
+    Ixn ixn3 = ixnRepository.findAll().get(0);
+    Ixn ixn4 = ixnRepository.findAll().get(2);
+    Ixn ixn5 = ixnRepository.findAll().get(4);
+
+    assertEquals("123-001", ixn1.getTrack());
+    assertEquals("123-002", ixn2.getTrack());
+    assertEquals("123-003", ixn3.getTrack());
+    assertEquals("123-004", ixn4.getTrack());
+    assertEquals("123-005", ixn5.getTrack());
+
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(678000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-003
+
+    ixnController.assignTracks(rfiId, "SDT12-123");
+
+    ixn1 = ixnRepository.findAll().get(7);
+    ixn2 = ixnRepository.findAll().get(9);
+    ixn3 = ixnRepository.findAll().get(10);
+    ixn4 = ixnRepository.findAll().get(0);
+    ixn5 = ixnRepository.findAll().get(2);
+    Ixn ixn6 = ixnRepository.findAll().get(4);
+
+    assertEquals("123-001", ixn1.getTrack());
+    assertEquals("123-002", ixn2.getTrack());
+    assertEquals("123-003", ixn3.getTrack());
+    assertEquals("123-004", ixn4.getTrack());
+    assertEquals("123-005", ixn5.getTrack());
+    assertEquals("123-006", ixn6.getTrack());
   }
 }

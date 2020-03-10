@@ -41,9 +41,6 @@ public class MetricChangeIxn {
       case "activity":
         newData = newIxn.getActivity();
         break;
-      case "track":
-        newData = newIxn.getTrack();
-        break;
       case "track_analyst":
         newData = newIxn.getTrackAnalyst();
         break;
