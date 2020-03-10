@@ -23,6 +23,7 @@ export const crayonBox = {
   skyBlue: '#82BFF9',
   straightWhite: '#FFFFFF',
   brightRed: '#FF0000',
+  tomatoRed: '#971625',
   brightBlue: '#1E98E5',
   stoplightYellow: '#D2A60A',
   stoplightGreen: '#01734F',

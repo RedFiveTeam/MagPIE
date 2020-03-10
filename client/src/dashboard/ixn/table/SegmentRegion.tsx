@@ -22,6 +22,7 @@ interface MyProps {
   setEditSegment: (segmentId: number) => void;
   editIxn: number;
   setEditIxn: (ixnId: number) => void;
+  addingOrEditing: boolean
   className?: string;
 }
 
@@ -54,6 +55,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           tgtAnalyst={props.tgtAnalyst}
           setTgtAnalyst={props.setTgtAnalyst}
           setEditIxn={props.setEditIxn}
+          addingOrEditing={props.addingOrEditing}
         />
     )
   };

@@ -13,7 +13,7 @@ const CompletedButton: React.FC<StatusButtonProps> = props => {
         border={2}
         borderRadius={16}
         borderColor={theme.color.complete}
-        bgcolor={theme.color.backgroundStatus}
+        bgcolor={theme.color.backgroundModal}
         display="flex"
         flexDirection="row"
         alignItems="center"

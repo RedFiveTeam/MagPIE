@@ -1,10 +1,16 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import IxnModel from '../../../store/ixn/IxnModel';
-import { Box } from '@material-ui/core';
+import IxnModel, { IxnStatus } from '../../../store/ixn/IxnModel';
+import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import classNames from 'classnames';
+import InProgressButton from '../../components/statusButtons/InProgressButton';
+import CompletedButton from '../../components/statusButtons/CompletedButton';
+import NotStartedButton from '../../components/statusButtons/NotStartedButton';
+import { StyledIxnStatusPickerOutline } from '../../../resources/icons/IxnStatusPickerOutline';
+import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiButton';
 import { IxnDeleteButton } from './IxnDeleteButton';
+import styled from 'styled-components';
+import { rowStyles } from '../../../resources/theme';
 
 interface MyProps {
   ixn: IxnModel;
@@ -14,10 +20,22 @@ interface MyProps {
   tgtAnalyst: string;
   setTgtAnalyst: (tgtAnalyst: string) => void;
   setEditIxn: (ixnId: number) => void;
+  addingOrEditing: boolean;
   className?: string;
 }
 
+const HtmlTooltip = withStyles((theme: Theme) => ({
+  tooltip: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    marginTop: '-15px',
+  },
+}))(Tooltip);
+
 export const IxnRow: React.FC<MyProps> = props => {
+  const classes = rowStyles();
 
   const handleDeleteClick = () => {
     props.deleteIxn(props.ixn);
@@ -25,6 +43,11 @@ export const IxnRow: React.FC<MyProps> = props => {
 
   const handleDoubleClick = () => {
     props.setEditIxn(props.ixn.id!);
+  };
+
+  const submitStatusChange = (status: IxnStatus) => {
+    let ixn: IxnModel = {...props.ixn, status: status};
+    props.postIxn(ixn);
   };
 
   return (
@@ -49,6 +72,33 @@ export const IxnRow: React.FC<MyProps> = props => {
         <div className={classNames('ixn-data-cell', 'track-analyst', 'name')}>
           {props.ixn.trackAnalyst ? props.ixn.trackAnalyst : '\xa0'}
         </div>
+        <div className={classNames('ixn-data-cell', 'status')}>
+          <HtmlTooltip
+            title={
+              <div className={'status-menu'}>
+                <StyledIxnStatusPickerOutline/>
+                <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable)}
+                                  onClick={() => submitStatusChange(IxnStatus.IN_PROGRESS)}/>
+                <CompletedButton buttonClass={classNames(classes.completed, classes.clickable)}
+                                 onClick={() => submitStatusChange(IxnStatus.COMPLETED)}/>
+                <DoesNotMeetEeiButton buttonClass={classNames(classes.doesNotMeetEei, classes.clickable)}
+                                      onClick={() => submitStatusChange(IxnStatus.DOES_NOT_MEET_EEI)}/>
+              </div>
+            }
+            interactive
+            disableHoverListener={props.addingOrEditing}
+          >
+            <div className={'status-wrapper'}>
+              {props.ixn.status === IxnStatus.NOT_STARTED ?
+                <NotStartedButton buttonClass={classes.statusUnclickable}/>
+                : props.ixn.status === IxnStatus.IN_PROGRESS ?
+                  <InProgressButton buttonClass={classes.statusUnclickable}/>
+                  : props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI ?
+                    <DoesNotMeetEeiButton buttonClass={classes.statusUnclickable}/>
+                    : <CompletedButton buttonClass={classes.statusUnclickable}/>}
+            </div>
+          </HtmlTooltip>
+        </div>
         <div className={classNames('ixn-data-cell', 'lead-checker', 'name')}>
           {props.ixn.leadChecker ? props.ixn.leadChecker : '\xa0'}
         </div>
@@ -67,5 +117,9 @@ export const StyledIxnRow = styled(IxnRow)`
     padding-bottom: 6px;
     overflow-wrap: break-word;
     border-bottom: 1px solid #FFFFFF;
+  }
+  
+  .status {
+    border: none;
   }
 `;

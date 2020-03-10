@@ -272,7 +272,7 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
   
   .segment-divider--bar {
     margin-bottom: -4px;
-    width: 1430px;
+    width: 1500px;
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;

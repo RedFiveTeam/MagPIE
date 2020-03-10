@@ -39,6 +39,7 @@ describe('IxnRow', () => {
         tgtAnalyst={''}
         setTgtAnalyst={jest.fn()}
         setEditIxn={jest.fn()}
+        addingOrEditing={false}
       />,
     );
 

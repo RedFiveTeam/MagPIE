@@ -10,6 +10,10 @@ import classNames from 'classnames';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
 import { convertTimeStringToMoment, RowAction } from '../../../utils';
 import { IxnDeleteButton } from './IxnDeleteButton';
+import NotStartedButton from '../../components/statusButtons/NotStartedButton';
+import InProgressButton from '../../components/statusButtons/InProgressButton';
+import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiButton';
+import CompletedButton from '../../components/statusButtons/CompletedButton';
 
 interface MyProps {
   ixn: IxnModel | null;
@@ -181,8 +185,8 @@ export const IxnInputRow: React.FC<MyProps> = props => {
       if (props.segment.id) {
         props.postIxn(new IxnModel(props.ixn ? props.ixn.id : null, props.segment.rfiId, props.segment.exploitDateId,
           props.segment.targetId, props.segment.id, exploitAnalyst.trim(), convertTimeStringToMoment(time),
-          activity.trim(), track.trim(), trackAnalyst.trim(), IxnStatus.NOT_STARTED, leadChecker.trim(),
-          finalChecker.trim()));
+          activity.trim(), track.trim(), trackAnalyst.trim(), props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED,
+          leadChecker.trim(), finalChecker.trim()));
 
         if (props.ixn === null)
           bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
@@ -269,6 +273,15 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                 placeholder="Name"
                 onChange={inputTrackAnalyst}
               />
+            </div>
+            <div className={classNames('status', classes.margin)}>
+              {props.ixn === null || props.ixn.status === IxnStatus.NOT_STARTED ?
+                <NotStartedButton buttonClass={classes.statusUnclickable}/>
+                : props.ixn.status === IxnStatus.IN_PROGRESS ?
+                  <InProgressButton buttonClass={classes.statusUnclickable}/>
+                  : props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI ?
+                    <DoesNotMeetEeiButton buttonClass={classes.statusUnclickable}/>
+                    : <CompletedButton buttonClass={classes.statusUnclickable}/>}
             </div>
             <div className={classes.margin}>
               <TextField

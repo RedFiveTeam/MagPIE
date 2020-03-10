@@ -34,6 +34,7 @@ describe("Segment Region", () => {
       setEditSegment={(segmentId: number) => {}}
       editIxn={-1}
       setEditIxn={jest.fn()}
+      addingOrEditing={false}
     />
   );
 

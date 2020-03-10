@@ -2,20 +2,19 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { Box, createStyles, Theme, Tooltip, withStyles } from '@material-ui/core';
+import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { crayonBox } from '../../../resources/crayonBox';
-import { makeStyles } from '@material-ui/core/styles';
 import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import { connect } from 'react-redux';
-import theme from '../../../resources/theme';
+import theme, { rowStyles } from '../../../resources/theme';
 import { deleteTgt, submitPostTarget } from '../../../store/tgt/Thunks';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
 import { navigateToIxnPage } from '../../../store/ixn';
 import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import RfiModel from '../../../store/rfi/RfiModel';
-import { StyledStatusPickerOutline } from '../../../resources/icons/StatusPickerOutline';
+import { StyledTgtStatusPickerOutline } from '../../../resources/icons/TgtStatusPickerOutline';
 import { Status } from '../TgtDashboard';
 import { RowAction } from '../../../utils';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
@@ -37,40 +36,6 @@ interface Props {
   className?: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    margin: {
-      margin: theme.spacing(1),
-    },
-    inProgressClickable: {
-      cursor: 'pointer',
-      userSelect: 'none',
-      position: 'absolute',
-      marginLeft: '19px',
-      marginTop: '2px',
-      '&:hover': {
-        boxShadow: '0px 0px 6px #FFFFFF',
-      },
-    },
-    completedClickable: {
-      cursor: 'pointer',
-      userSelect: 'none',
-      position: 'absolute',
-      marginLeft: '19px',
-      marginTop: '46px',
-      '&:hover': {
-        boxShadow: '0px 0px 6px #FFFFFF',
-      },
-    },
-    statusUnclickable: {
-      alignSelf: 'center',
-      boxShadow: '0px 2px 4px #000000',
-      fontWeight: 'bold',
-      userSelect: 'none',
-    },
-  }),
-);
-
 const HtmlTooltip = withStyles((theme: Theme) => ({
   tooltip: {
     backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -82,7 +47,7 @@ const HtmlTooltip = withStyles((theme: Theme) => ({
 }))(Tooltip);
 
 export const TgtRow: React.FC<Props> = props => {
-  const classes = useStyles();
+  const classes = rowStyles();
 
   const [action, setAction] = useState(RowAction.NONE);
   const [displayModal, setDisplayModal] = useState(false);
@@ -105,14 +70,12 @@ export const TgtRow: React.FC<Props> = props => {
   );
 
   const submitStatusChange = (status: TargetStatus) => {
-    if (props.target !== null) {
-      let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
-        props.target.name, props.target.mgrs, props.target.notes, props.target.description, status);
-      props.submitPostTarget(
-        newTarget,
-        props.rfi,
-      );
-    }
+    let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
+      props.target.name, props.target.mgrs, props.target.notes, props.target.description, status);
+    props.submitPostTarget(
+      newTarget,
+      props.rfi,
+    );
   };
 
   const handleDeleteClick = () => {
@@ -183,10 +146,10 @@ export const TgtRow: React.FC<Props> = props => {
         <HtmlTooltip
           title={
             <div className={'status-menu'}>
-              <StyledStatusPickerOutline/>
-              <InProgressButton buttonClass={classes.inProgressClickable}
+              <StyledTgtStatusPickerOutline/>
+              <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable)}
                                 onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
-              <CompletedButton buttonClass={classes.completedClickable}
+              <CompletedButton buttonClass={classNames(classes.completed, classes.clickable)}
                                onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
             </div>
           }

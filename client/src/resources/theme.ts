@@ -41,6 +41,7 @@ const theme = {
     complete: crayonBox.stoplightGreen,
     buttonAddDate: crayonBox.brightBlue,
     buttonRowDisabled: crayonBox.subtleGray,
+    buttonDoesNotMeetEei: crayonBox.tomatoRed,
   },
 
   font: {
@@ -111,34 +112,34 @@ export const rowStyles = makeStyles((localTheme: Theme) =>
     margin: {
       margin: localTheme.spacing(1),
     },
-    inProgressClickable: {
-      cursor: 'pointer',
-      userSelect: 'none',
-      position: 'absolute',
-      marginLeft: '19px',
-      marginTop: '2px',
-      '&:hover': {
-        boxShadow: '0px 0px 6px #FFFFFF',
-      },
+    inputLabel: {
+      color: theme.color.fontBackgroundInactive,
     },
-    completedClickable: {
+    clickable: {
       cursor: 'pointer',
       userSelect: 'none',
       position: 'absolute',
-      marginLeft: '19px',
-      marginTop: '46px',
+      marginLeft: '12px',
       '&:hover': {
         boxShadow: '0px 0px 6px #FFFFFF',
       },
+      textAlign: 'center',
+    },
+    inProgress: {
+      marginTop: '2px',
+    },
+    completed: {
+      marginTop: '46px',
+    },
+    doesNotMeetEei: {
+      marginTop: '90px',
     },
     statusUnclickable: {
       alignSelf: 'center',
       boxShadow: '0px 2px 4px #000000',
       fontWeight: 'bold',
       userSelect: 'none',
-    },
-    inputLabel: {
-      color: theme.color.fontBackgroundInactive,
+      textAlign: 'center',
     },
   }),
 );

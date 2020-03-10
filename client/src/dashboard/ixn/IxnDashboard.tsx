@@ -32,6 +32,8 @@ export const IxnDashboard: React.FC<Props> = props => {
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
   const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
 
+  let addingOrEditing = addSegment || editSegment > 0 || editIxn > 0;
+
   const handleEditSegment = (segmentId: number) => {
     if (!addSegment && editSegment < 0)
       setEditSegment(segmentId);
@@ -96,6 +98,7 @@ export const IxnDashboard: React.FC<Props> = props => {
         setEditSegment={handleEditSegment}
         editIxn={editIxn}
         setEditIxn={handleEditIxn}
+        addingOrEditing={addingOrEditing}
       />,
     );
   }
@@ -108,7 +111,7 @@ export const IxnDashboard: React.FC<Props> = props => {
       <div className={'ixn-dash-body'}>
         {segments.length > 0 ?
           <StyledTableHeader
-            headers={['Exploit Analyst', 'Time', 'Activity', 'Track ID', 'Track Analyst', 'Lead Checker',
+            headers={['Exploit Analyst', 'Time', 'Activity', 'Track ID', 'Track Analyst', 'Track Status', 'Lead Checker',
               'Final Checker', 'delete-spacer']}
           />
           :
@@ -247,6 +250,10 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     width: 83px;
   }
   
+  .header-cell--status {
+    width: 126px;
+  }
+  
   .header-cell--delete-spacer {
     width: 90px;
   }
@@ -283,6 +290,10 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   
   .track {
     width: 75px;
+  }
+  
+  .status {
+    width: 110px;
   }
   
   .delete-ixn-button-container {
