@@ -39,10 +39,10 @@ function acceptanceTests {
         fi
     fi
 
-    java -jar -Dspring.profiles.active=test ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
-    echo $! > ${BASE_DIR}/tmp/pie.pid
+    java -jar -Dspring.profiles.active=test ${BASE_DIR}/target/magpie-[0-9\.]*-SNAPSHOT.jar --server.port=9090 &> ${BASE_DIR}/tmp/acceptance.log &
+    echo $! > ${BASE_DIR}/tmp/magpie.pid
 
-    testConnection ${REACT_APP_HOST} $(cat ${BASE_DIR}/tmp/pie.pid)
+    testConnection ${REACT_APP_HOST} $(cat ${BASE_DIR}/tmp/magpie.pid)
 
     pushd ${BASE_DIR}/acceptance
         yarn install
@@ -76,9 +76,9 @@ function unitTests {
 
 function cleanup {
     showBanner "Cleanup"
-    if [[ -f ${BASE_DIR}/tmp/pie.pid ]]; then
-        cat ${BASE_DIR}/tmp/pie.pid | xargs kill -9
-        rm ${BASE_DIR}/tmp/pie.pid
+    if [[ -f ${BASE_DIR}/tmp/magpie.pid ]]; then
+        cat ${BASE_DIR}/tmp/magpie.pid | xargs kill -9
+        rm ${BASE_DIR}/tmp/magpie.pid
     fi
 }
 trap cleanup EXIT
@@ -87,8 +87,8 @@ function jarBuild {
     showBanner "Build JAR"
     pushd ${BASE_DIR}
         mvn -Dmaven.test.skip=true -DskipTests -Dflyway.user=${PIE_DB_USERNAME} -Dflyway.password= -Dflyway.url=${PIE_DB_URL} clean flyway:migrate package
-        rm ${BASE_DIR}/artifacts/pie.jar || true
-        cp ${BASE_DIR}/target/pie-[0-9\.]*-SNAPSHOT.jar ${BASE_DIR}/artifacts/pie.jar
+        rm ${BASE_DIR}/artifacts/magpie.jar || true
+        cp ${BASE_DIR}/target/magpie-[0-9\.]*-SNAPSHOT.jar ${BASE_DIR}/artifacts/magpie.jar
     popd
 }
 

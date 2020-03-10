@@ -16,13 +16,13 @@ import { navigateToIxnPage } from '../../../store/ixn';
 import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import RfiModel from '../../../store/rfi/RfiModel';
 import { StyledStatusPickerOutline } from '../../../resources/icons/StatusPickerOutline';
-import AddTgtDateButtonVector from '../../../resources/icons/AddTgtDateButtonVector';
 import { Status } from '../TgtDashboard';
-import InProgressIcon from '../../../resources/icons/InProgressIcon';
-import CompletedIcon from '../../../resources/icons/CompletedIcon';
 import { RowAction } from '../../../utils';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
 import { IxnDeserializer } from '../../../store/ixn/IxnDeserializer';
+import CompletedButton from '../../components/statusButtons/CompletedButton';
+import InProgressButton from '../../components/statusButtons/InProgressButton';
+import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 
 interface Props {
   target: TargetModel;
@@ -120,7 +120,7 @@ export const TgtRow: React.FC<Props> = props => {
       .then(response => response.json())
       .then(ixns => checkIxns(IxnDeserializer.deserialize(ixns).length > 0));
   };
-  
+
   const checkIxns = (hasIxns: boolean) => {
     if (hasIxns)
       setDisplayModal(true);
@@ -140,71 +140,6 @@ export const TgtRow: React.FC<Props> = props => {
       if (props.target)
         document.getElementById('tgt-name-input-' + props.target.id)!.focus();
     }, 50);
-  };
-
-  interface LocalProps {
-    buttonClass: string
-    className?: string
-  }
-
-  const InProgressButton: React.FC<LocalProps> = props => {
-    return (
-      <div className={props.className}>
-        <Box
-          height={32}
-          width={110}
-          border={2}
-          borderRadius={16}
-          borderColor={theme.color.inProgress}
-          bgcolor={theme.color.backgroundStatus}
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-          paddingRight={0.25}
-          paddingLeft={1.25}
-          className={props.buttonClass}
-          zIndex={1000}
-          color={theme.color.fontPrimary}
-          fontSize={12}
-          fontWeight={'bold'}
-          onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}
-        >
-          In Progress
-          <InProgressIcon/>
-        </Box>
-      </div>
-    );
-  };
-
-  const CompletedButton: React.FC<LocalProps> = props => {
-    return (
-      <div className={props.className}>
-        <Box
-          height={32}
-          width={110}
-          border={2}
-          borderRadius={16}
-          borderColor={theme.color.complete}
-          bgcolor={theme.color.backgroundStatus}
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-          paddingRight={0.25}
-          paddingLeft={1.25}
-          className={props.buttonClass}
-          zIndex={1000}
-          color={theme.color.fontPrimary}
-          fontSize={12}
-          fontWeight={'bold'}
-          onClick={() => submitStatusChange(TargetStatus.COMPLETED)}
-        >
-          Complete
-          <CompletedIcon/>
-        </Box>
-      </div>
-    );
   };
 
   return (
@@ -249,39 +184,24 @@ export const TgtRow: React.FC<Props> = props => {
           title={
             <div className={'status-menu'}>
               <StyledStatusPickerOutline/>
-              <InProgressButton buttonClass={classes.inProgressClickable}/>
-              <CompletedButton buttonClass={classes.completedClickable}/>
+              <InProgressButton buttonClass={classes.inProgressClickable}
+                                onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
+              <CompletedButton buttonClass={classes.completedClickable}
+                               onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
             </div>
           }
           interactive
           disableHoverListener={props.addingOrEditing}
         >
           <div
-            className={'status-wrapper'}>{props.target === null || props.target.status === TargetStatus.NOT_STARTED ?
-            <Box
-              height={32}
-              width={110}
-              border={2}
-              borderRadius={16}
-              borderColor={theme.color.backgroundAssigned}
-              bgcolor={theme.color.backgroundStatus}
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-              paddingRight={0.25}
-              paddingLeft={2.8}
-              fontSize={12}
-              className={classes.statusUnclickable}
-            >
-              Status
-              <AddTgtDateButtonVector/>
-            </Box>
-            : (props.target.status === TargetStatus.IN_PROGRESS ?
-              <InProgressButton buttonClass={classes.statusUnclickable}/>
-              :
-              <CompletedButton buttonClass={classes.statusUnclickable}/>)
-          }</div>
+            className={'status-wrapper'}>
+            {props.target.status === TargetStatus.NOT_STARTED ?
+              <NotStartedButton buttonClass={classes.statusUnclickable}/>
+              : (props.target.status === TargetStatus.IN_PROGRESS ?
+                <InProgressButton buttonClass={classes.statusUnclickable}/>
+                :
+                <CompletedButton buttonClass={classes.statusUnclickable}/>)
+            }</div>
         </HtmlTooltip>
         <div className={'delete-tgt-button'}
              id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}

@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.metrics.createIxn;
 
+import dgs1sdt.magpie.ixns.IxnJson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Data
@@ -16,28 +18,35 @@ public class MetricCreateIxn {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-
-  private String rfiNum;
-  private Timestamp exploitDate;
-  private String targetName;
-  private Timestamp segmentStart;
-  private Timestamp segmentEnd;
+  private long rfiId;
+  private long exploitDateId;
+  private long targetId;
+  private long segmentId;
   private long ixnId;
+
+  private String exploitAnalyst;
+  private Timestamp time;
+  private String activity;
+  private String track;
+  private String trackAnalyst;
+  private String leadChecker;
+  private String finalChecker;
+
   private Timestamp timestamp;
 
-  public MetricCreateIxn(String rfiNum,
-                         Timestamp exploitDate,
-                         String targetName,
-                         Timestamp segmentStart,
-                         Timestamp segmentEnd,
-                         long ixnId,
-                         Timestamp timestamp) {
-    this.rfiNum = rfiNum;
-    this.exploitDate = exploitDate;
-    this.targetName = targetName;
-    this.segmentStart = segmentStart;
-    this.segmentEnd = segmentEnd;
+  public MetricCreateIxn(long ixnId, IxnJson ixn) {
+    this.rfiId = ixn.getRfiId();
+    this.exploitDateId = ixn.getExploitDateId();
+    this.targetId = ixn.getTargetId();
+    this.segmentId = ixn.getSegmentId();
     this.ixnId = ixnId;
-    this.timestamp = timestamp;
+    this.exploitAnalyst = ixn.getExploitAnalyst();
+    this.time = ixn.getTime();
+    this.activity = ixn.getActivity();
+    this.track = ixn.getTrack();
+    this.trackAnalyst = ixn.getTrackAnalyst();
+    this.leadChecker = ixn.getLeadChecker();
+    this.finalChecker = ixn.getFinalChecker();
+    this.timestamp = new Timestamp(new Date().getTime());
   }
 }

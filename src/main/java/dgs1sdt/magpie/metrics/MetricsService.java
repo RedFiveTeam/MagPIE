@@ -21,6 +21,8 @@ import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefresh;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.magpie.metrics.createExploitDate.MetricCreateExploitDate;
+import dgs1sdt.magpie.metrics.createExploitDate.MetricCreateExploitDateRepository;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
@@ -45,6 +47,7 @@ import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
+import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +66,12 @@ public class MetricsService {
   private MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository;
   private MetricChangeRfiRepository metricChangeRfiRepository;
   private MetricClickRefreshRepository metricClickRefreshRepository;
+  private MetricCreateExploitDateRepository metricCreateExploitDateRepository;
   private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
-  private MetricCreateTargetRepository metricCreateTargetRepository;
-  private MetricDeleteTargetRepository metricDeleteTargetRepository;
-  private MetricChangeTargetRepository metricChangeTargetRepository;
   private MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
+  private MetricCreateTargetRepository metricCreateTargetRepository;
+  private MetricChangeTargetRepository metricChangeTargetRepository;
+  private MetricDeleteTargetRepository metricDeleteTargetRepository;
   private MetricCreateSegmentRepository metricCreateSegmentRepository;
   private MetricChangeSegmentRepository metricChangeSegmentRepository;
   private MetricDeleteSegmentRepository metricDeleteSegmentRepository;
@@ -79,70 +83,92 @@ public class MetricsService {
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
     this.metricClickGetsRepository = metricClickGetsRepository;
   }
+
   @Autowired
   public void setMetricSiteVisitRepository(MetricSiteVisitRepository metricSiteVisitRepository) {
     this.metricSiteVisitRepository = metricSiteVisitRepository;
   }
+
   @Autowired
   public void setMetricClickSortRepository(MetricClickSortRepository metricClickSortRepository) {
     this.metricClickSortRepository = metricClickSortRepository;
   }
+
   @Autowired
   public void setMetricRfiFetchTimeRepository(MetricRfiFetchTimeRepository metricRfiFetchTimeRepository) {
     this.metricRfiFetchTimeRepository = metricRfiFetchTimeRepository;
   }
+
   @Autowired
   public void setMetricChangeRfiPriorityRepository(MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository) {
     this.metricChangeRfiPriorityRepository = metricChangeRfiPriorityRepository;
   }
+
   @Autowired
   public void setMetricChangeRfiRepository(MetricChangeRfiRepository metricChangeRfiRepository) {
     this.metricChangeRfiRepository = metricChangeRfiRepository;
   }
+
   @Autowired
   public void setMetricClickRefreshRepository(MetricClickRefreshRepository metricClickRefreshRepository) {
     this.metricClickRefreshRepository = metricClickRefreshRepository;
   }
+
+  @Autowired
+  public void setMetricCreateExploitDateRepository(MetricCreateExploitDateRepository metricCreateExploitDateRepository) {
+    this.metricCreateExploitDateRepository = metricCreateExploitDateRepository;
+  }
+
   @Autowired
   public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
   }
+
   @Autowired
   public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
     this.metricCreateTargetRepository = metricCreateTargetRepository;
   }
+
   @Autowired
   public void setMetricDeleteTargetRepository(MetricDeleteTargetRepository metricDeleteTargetRepository) {
     this.metricDeleteTargetRepository = metricDeleteTargetRepository;
   }
+
   @Autowired
   public void setMetricDeleteExploitDateRepository(MetricDeleteExploitDateRepository metricDeleteExploitDateRepository) {
     this.metricDeleteExploitDateRepository = metricDeleteExploitDateRepository;
   }
+
   @Autowired
   public void setMetricChangeTargetRepository(MetricChangeTargetRepository metricChangeTargetRepository) {
     this.metricChangeTargetRepository = metricChangeTargetRepository;
   }
+
   @Autowired
   public void setMetricCreateSegmentRepository(MetricCreateSegmentRepository metricCreateSegmentRepository) {
     this.metricCreateSegmentRepository = metricCreateSegmentRepository;
   }
+
   @Autowired
   public void setMetricChangeSegmentRepository(MetricChangeSegmentRepository metricChangeSegmentRepository) {
     this.metricChangeSegmentRepository = metricChangeSegmentRepository;
   }
+
   @Autowired
   public void setMetricDeleteSegmentRepository(MetricDeleteSegmentRepository metricDeleteSegmentRepository) {
     this.metricDeleteSegmentRepository = metricDeleteSegmentRepository;
   }
+
   @Autowired
   public void setMetricCreateIxnRepository(MetricCreateIxnRepository metricCreateIxnRepository) {
     this.metricCreateIxnRepository = metricCreateIxnRepository;
   }
+
   @Autowired
   public void setMetricChangeIxnRepository(MetricChangeIxnRepository metricChangeIxnRepository) {
     this.metricChangeIxnRepository = metricChangeIxnRepository;
   }
+
   @Autowired
   public void setMetricDeleteIxnRepository(MetricDeleteIxnRepository metricDeleteIxnRepository) {
     this.metricDeleteIxnRepository = metricDeleteIxnRepository;
@@ -235,7 +261,6 @@ public class MetricsService {
   }
 
   public MetricRfiFetchTime createRfiFetchTime(MetricRfiFetchTimeJson metricRfiFetchTimeJson) {
-    System.out.println("logging rfi fetch metric " + metricRfiFetchTimeJson);
     MetricRfiFetchTime metricRfiFetchTime = new MetricRfiFetchTime(
       new Date(metricRfiFetchTimeJson.getStartTime()),
       new Date(metricRfiFetchTimeJson.getEndTime())
@@ -251,44 +276,31 @@ public class MetricsService {
     return this.metricChangeRfiRepository.save(metricChangeRfi);
   }
 
-  public MetricChangeExploitDate addChangeExploitDate(Timestamp oldDate, Timestamp newDate, String rfiNum) {
-    MetricChangeExploitDate metricChangeExploitDate = new MetricChangeExploitDate(
-      new Timestamp(new Date().getTime()),
-      oldDate,
-      newDate,
-      rfiNum
-    );
-    return this.metricChangeExploitDateRepository.save(metricChangeExploitDate);
+  public MetricChangeExploitDate addChangeExploitDate(ExploitDateJson exploitDate) {
+    return this.metricChangeExploitDateRepository.save(new MetricChangeExploitDate(exploitDate));
   }
 
-  public MetricCreateTarget addCreateTarget(TargetJson targetJson, String rfiNum, Timestamp exploitDate) {
-    MetricCreateTarget metricCreateTarget = new MetricCreateTarget(
-      rfiNum,
-      exploitDate,
-      targetJson.getName(),
-      new Timestamp(new Date().getTime())
-    );
-    return this.metricCreateTargetRepository.save(metricCreateTarget);
+  public MetricCreateTarget addCreateTarget(long targetId, TargetJson target) {
+    return this.metricCreateTargetRepository.save(new MetricCreateTarget(targetId, target));
   }
 
-  public MetricDeleteExploitDate addDeleteExploitDate(MetricDeleteExploitDate metricDeleteExploitDate) {
-    return metricDeleteExploitDateRepository.save(metricDeleteExploitDate);
+  public MetricDeleteExploitDate addDeleteExploitDate(long exploitDateId) {
+    return metricDeleteExploitDateRepository.save(new MetricDeleteExploitDate(exploitDateId));
   }
 
-  public MetricDeleteTarget addDeleteTarget(MetricDeleteTarget metric) {
-    return this.metricDeleteTargetRepository.save(metric);
+  public MetricDeleteTarget addDeleteTarget(long targetId) {
+    return this.metricDeleteTargetRepository.save(new MetricDeleteTarget(targetId));
   }
 
   public List<MetricChangeTarget> addChangeTarget(Target oldTarget, TargetJson newTarget) {
     List<MetricChangeTarget> metrics = new ArrayList<>();
     Timestamp now = new Timestamp(new Date().getTime());
-    for(String field : oldTarget.Compare(newTarget)){
+    for (String field : oldTarget.Compare(newTarget)) {
       try {
         MetricChangeTarget changeTarget = new MetricChangeTarget(
-          now,
           field,
-          oldTarget,
-          newTarget
+          newTarget,
+          now
         );
         metrics.add(changeTarget);
       } catch (Exception e) {
@@ -298,96 +310,40 @@ public class MetricsService {
     return metricChangeTargetRepository.saveAll(metrics);
   }
 
-  public MetricCreateSegment addCreateSegment(String rfiNum, Timestamp exploitDate, String targetName,
-                                              SegmentJson segmentJson) {
-    MetricCreateSegment metricCreateSegment = new MetricCreateSegment(
-      rfiNum,
-      exploitDate,
-      targetName,
-      segmentJson.getStartTime(),
-      segmentJson.getEndTime(),
-      new Timestamp(new Date().getTime())
-    );
-
-    return metricCreateSegmentRepository.save(metricCreateSegment);
+  public MetricCreateSegment addCreateSegment(long segmentId, SegmentJson segmentJson) {
+    return metricCreateSegmentRepository.save(new MetricCreateSegment(segmentId, segmentJson));
   }
 
-  public MetricChangeSegment addChangeSegment(String rfiNum, Timestamp exploitDate, String targetName,
-                                              SegmentJson newSegment, Segment oldSegment) {
-    MetricChangeSegment metricChangeSegment = new MetricChangeSegment(
-      rfiNum,
-      exploitDate,
-      targetName,
-      oldSegment.getStartTime(),
-      oldSegment.getEndTime(),
-      newSegment.getStartTime(),
-      newSegment.getEndTime(),
-      new Timestamp(new Date().getTime())
-    );
-
-    return metricChangeSegmentRepository.save(metricChangeSegment);
+  public MetricChangeSegment addChangeSegment(SegmentJson newSegment) {
+    return metricChangeSegmentRepository.save(new MetricChangeSegment(newSegment));
   }
 
-  public MetricDeleteSegment addDeleteSegment(String rfiNum, Timestamp exploitDate, String targetName,
-                                              Timestamp segmentStart, Timestamp segmentEnd, boolean hadIxns) {
-    MetricDeleteSegment metricDeleteSegment = new MetricDeleteSegment(
-      rfiNum,
-      exploitDate,
-      targetName,
-      segmentStart,
-      segmentEnd,
-      hadIxns,
-      new Timestamp(new Date().getTime())
-    );
-
-    return metricDeleteSegmentRepository.save(metricDeleteSegment);
+  public MetricDeleteSegment addDeleteSegment(long segmentId, boolean hadIxns) {
+    return metricDeleteSegmentRepository.save(new MetricDeleteSegment(segmentId, hadIxns));
   }
 
-  public MetricCreateIxn addCreateIxn(String rfiNum, Timestamp exploitDate, String targetName, Timestamp segmentStart,
-                                        Timestamp segmentEnd, long ixnId) {
-    MetricCreateIxn metricCreateIxn = new MetricCreateIxn(
-      rfiNum,
-      exploitDate,
-      targetName,
-      segmentStart,
-      segmentEnd,
-      ixnId,
-      new Timestamp(new Date().getTime())
-    );
-
-    return metricCreateIxnRepository.save(metricCreateIxn);
+  public MetricCreateIxn addCreateIxn(long ixnId, IxnJson ixn) {
+    return metricCreateIxnRepository.save(new MetricCreateIxn(ixnId, ixn));
   }
 
-  public MetricDeleteIxn addDeleteIxn(String rfiNum, Timestamp exploitDate, String targetName, Timestamp segmentStart,
-                                      Timestamp segmentEnd) {
-    MetricDeleteIxn metricDeleteIxn = new MetricDeleteIxn(
-      rfiNum,
-      exploitDate,
-      targetName,
-      segmentStart,
-      segmentEnd,
-      new Timestamp(new Date().getTime())
-    );
-
-    return metricDeleteIxnRepository.save(metricDeleteIxn);
+  public MetricDeleteIxn addDeleteIxn(long ixnId) {
+    return metricDeleteIxnRepository.save(new MetricDeleteIxn(ixnId));
   }
 
   public List<MetricChangeIxn> addChangeIxn(IxnJson newIxn, Ixn oldIxn) {
     List<MetricChangeIxn> metrics = new ArrayList<>();
     Timestamp now = new Timestamp(new Date().getTime());
-    for(String field : oldIxn.Compare(newIxn)){
+    for (String field : oldIxn.Compare(newIxn)) {
       try {
-        MetricChangeIxn changeIxn = new MetricChangeIxn(
-          now,
-          field,
-          oldIxn,
-          newIxn
-        );
-        metrics.add(changeIxn);
+        metrics.add(new MetricChangeIxn(field, newIxn, now));
       } catch (Exception e) {
         System.err.println("Error creating change ixn metric with unknown field: " + field);
       }
     }
     return metricChangeIxnRepository.saveAll(metrics);
+  }
+
+  public MetricCreateExploitDate addCreateExploitDate(long lastExploitDateId, ExploitDateJson exploitDateJson) {
+    return metricCreateExploitDateRepository.save(new MetricCreateExploitDate(lastExploitDateId, exploitDateJson));
   }
 }

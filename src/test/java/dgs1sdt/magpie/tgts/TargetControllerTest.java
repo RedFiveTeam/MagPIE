@@ -1,9 +1,13 @@
 package dgs1sdt.magpie.tgts;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
+import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDate;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
+import dgs1sdt.magpie.metrics.createExploitDate.MetricCreateExploitDate;
+import dgs1sdt.magpie.metrics.createExploitDate.MetricCreateExploitDateRepository;
+import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
@@ -37,11 +41,12 @@ public class TargetControllerTest extends BaseIntegrationTest {
   RfiRepository rfiRepository;
   ExploitDateRepository exploitDateRepository;
   TargetRepository targetRepository;
+  MetricCreateExploitDateRepository metricCreateExploitDateRepository;
   MetricChangeExploitDateRepository metricChangeExploitDateRepository;
-  MetricCreateTargetRepository metricCreateTargetRepository;
   MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
-  MetricDeleteTargetRepository metricDeleteTargetRepository;
+  MetricCreateTargetRepository metricCreateTargetRepository;
   MetricChangeTargetRepository metricChangeTargetRepository;
+  MetricDeleteTargetRepository metricDeleteTargetRepository;
 
   @Autowired
   public void setTargetController(TargetController targetController) {
@@ -74,18 +79,13 @@ public class TargetControllerTest extends BaseIntegrationTest {
   }
 
   @Autowired
+  public void setMetricCreateExploitDateRepository(MetricCreateExploitDateRepository metricCreateExploitDateRepository) {
+    this.metricCreateExploitDateRepository = metricCreateExploitDateRepository;
+  }
+
+  @Autowired
   public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
-  }
-
-  @Autowired
-  public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
-    this.metricCreateTargetRepository = metricCreateTargetRepository;
-  }
-
-  @Autowired
-  public void setMetricDeleteTargetRepository(MetricDeleteTargetRepository metricDeleteTargetRepository) {
-    this.metricDeleteTargetRepository = metricDeleteTargetRepository;
   }
 
   @Autowired
@@ -94,8 +94,18 @@ public class TargetControllerTest extends BaseIntegrationTest {
   }
 
   @Autowired
+  public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
+    this.metricCreateTargetRepository = metricCreateTargetRepository;
+  }
+
+  @Autowired
   public void setMetricChangeTargetRepository(MetricChangeTargetRepository metricChangeTargetRepository) {
     this.metricChangeTargetRepository = metricChangeTargetRepository;
+  }
+
+  @Autowired
+  public void setMetricDeleteTargetRepository(MetricDeleteTargetRepository metricDeleteTargetRepository) {
+    this.metricDeleteTargetRepository = metricDeleteTargetRepository;
   }
 
   @Before
@@ -103,19 +113,20 @@ public class TargetControllerTest extends BaseIntegrationTest {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
+    metricCreateExploitDateRepository.deleteAll();
     metricChangeExploitDateRepository.deleteAll();
-    metricCreateTargetRepository.deleteAll();
-    metricDeleteTargetRepository.deleteAll();
-    metricChangeTargetRepository.deleteAll();
     metricDeleteExploitDateRepository.deleteAll();
+    metricCreateTargetRepository.deleteAll();
+    metricChangeTargetRepository.deleteAll();
+    metricDeleteTargetRepository.deleteAll();
   }
 
   @Test
   public void addsExploitDatesCorrectly() throws Exception {
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
-
+    long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     ExploitDateJson exploitDateJson = new ExploitDateJson(
-      rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId(),
+      rfiId,
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("11/11/2020 11:22:33").getTime()));
 
     targetController.postExploitDate(exploitDateJson);
@@ -123,13 +134,17 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals(1, exploitDateRepository.findAll().size());
     assertEquals("2020-11-11 00:00:00.0", exploitDateRepository.findAll().get(0).getExploitDate().toString());
 
-    assertEquals(1, metricChangeExploitDateRepository.findAll().size());
-
     targetController.postExploitDate(exploitDateJson);
 
     assertEquals(1, exploitDateRepository.findAll().size());
 
-    assertEquals(1, metricChangeExploitDateRepository.findAll().size());
+    assertEquals(1, metricCreateExploitDateRepository.findAll().size());
+
+    MetricCreateExploitDate metric = metricCreateExploitDateRepository.findAll().get(0);
+
+    assertEquals(rfiId, metric.getRfiId());
+
+    assertEquals(exploitDateRepository.findAll().get(0).getId(), metric.getExploitDateId());
   }
 
   @Test
@@ -218,12 +233,18 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals(1, targetRepository.findAll().size());
 
     assertEquals(1, metricCreateTargetRepository.findAll().size());
+
+    MetricCreateTarget metric = metricCreateTargetRepository.findAll().get(0);
+
+    assertEquals(target.getRfiId(), metric.getRfiId());
+    assertEquals(target.getExploitDateId(), metric.getExploitDateId());
+    assertEquals(target.getId(), metric.getTargetId());
   }
 
   @Test
   public void changesExploitDates() throws Exception {
-    Timestamp oldDate = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime());
-    Timestamp newDate = new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/12/2020").getTime());
+    Timestamp oldDate = new Timestamp(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
+    Timestamp newDate = new Timestamp(new SimpleDateFormat("MM/dd/yyyy").parse("11/12/2020").getTime());
 
     rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
     long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
@@ -246,35 +267,36 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertEquals(newDate, exploitDateRepository.findAll().get(0).getExploitDate());
 
+    assertEquals(1, metricChangeExploitDateRepository.findAll().size());
 
+    MetricChangeExploitDate metric = metricChangeExploitDateRepository.findAll().get(0);
+
+    assertEquals(exploitDateId, metric.getExploitDateId());
+    assertEquals("2020-11-12 00:00:00.0", metric.getNewExploitDate().toString());
   }
 
   @Test
   public void deletesExploitDates() throws Exception {
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
 
     ExploitDateJson exploitDateJson = new ExploitDateJson(
-      rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId(),
+      rfiId,
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("11/11/2020 00:00:00").getTime()));
 
     targetController.postExploitDate(exploitDateJson);
 
-    long id = exploitDateRepository.findAll().get(0).getId();
+    long exploitDateId = exploitDateRepository.findAll().get(0).getId();
 
-    targetController.deleteExploitDate(id);
+    targetController.deleteExploitDate(exploitDateId);
 
     assertEquals(0, exploitDateRepository.findAll().size());
 
     assertEquals(1, metricDeleteExploitDateRepository.findAll().size());
 
     assertEquals(
-      "2020-11-11 00:00:00.0",
-      metricDeleteExploitDateRepository.findAll().get(0).getExploitDate().toString()
-    );
-
-    assertEquals(
-      "DGS-1-SDT-2020-00338",
-      metricDeleteExploitDateRepository.findAll().get(0).getRfiNum()
+      exploitDateId,
+      metricDeleteExploitDateRepository.findAll().get(0).getExploitDateId()
     );
   }
 
@@ -343,6 +365,10 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertEquals(0, targetController.deleteTarget(targetId).size());
 
+    assertEquals(1, metricDeleteTargetRepository.findAll().size());
+
+    assertEquals(targetId, metricDeleteTargetRepository.findAll().get(0).getTargetId());
+
     assertEquals(0, targetRepository.findAll().size());
 
     targetController.postTarget(targetJson);
@@ -357,6 +383,10 @@ public class TargetControllerTest extends BaseIntegrationTest {
       .statusCode(200);
 
     assertEquals(0, targetRepository.findAll().size());
+
+    assertEquals(2, metricDeleteTargetRepository.findAll().size());
+
+    assertEquals(targetId, metricDeleteTargetRepository.findAll().get(1).getTargetId());
   }
 
   @Test
@@ -404,77 +434,18 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals("12ABC1234567890", target.getMgrs());
     assertEquals("These are some RAD supercool EEI notes", target.getNotes());
     assertEquals("This is a different description", target.getDescription());
-  }
-
-  @Test
-  public void addsTargetDeletionMetrics() throws Exception {
-    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
-    long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
-    exploitDateRepository.save(new ExploitDate(
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
-      rfiId
-    ));
-    long exploitDateId = exploitDateRepository.findByRfiIdAndExploitDate(rfiId,
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime())).getId();
-
-    TargetJson targetJson = new TargetJson(
-      rfiId,
-      exploitDateId,
-      "SDT20-123",
-      "12ABC1234567890",
-      "These are some EEI notes",
-      "This is a description"
-    );
-
-    targetController.postTarget(targetJson);
-
-    long targetId = targetRepository.findAll().get(0).getId();
-
-    targetController.deleteTarget(targetId);
-
-    assertEquals(1, metricDeleteTargetRepository.findAll().size());
-    assertEquals("SDT-123", metricDeleteTargetRepository.findAll().get(0).getRfiNum());
-    assertEquals("SDT20-123", metricDeleteTargetRepository.findAll().get(0).getTargetName());
-
-  }
-
-  @Test
-  public void updatesTargetsAndAddsMetrics() throws Exception {
-    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
-    long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
-    exploitDateRepository.save(new ExploitDate(
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
-      rfiId
-    ));
-    long exploitDateId = exploitDateRepository.findByRfiIdAndExploitDate(rfiId,
-      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime())).getId();
-
-    TargetJson targetJson = new TargetJson(
-      rfiId,
-      exploitDateId,
-      "SDT20-123",
-      "12ABC1234567890",
-      "These are some EEI notes",
-      "This is a description"
-    );
-
-    targetController.postTarget(targetJson);
-
-    long targetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, "SDT20-123").getId();
-
-    TargetJson updatedTargetJson = new TargetJson(
-      targetId,
-      rfiId,
-      exploitDateId,
-      "SDT20-123",
-      "12ABC1234567890",
-      "These are some different notes for the EEI",
-      "This is a description that's also different",
-      TargetStatus.NOT_STARTED);
-
-    targetController.postTarget(updatedTargetJson);
 
     assertEquals(2, metricChangeTargetRepository.findAll().size());
+
+    MetricChangeTarget metric1 = metricChangeTargetRepository.findAll().get(0);
+    MetricChangeTarget metric2 = metricChangeTargetRepository.findAll().get(1);
+
+    assertEquals(targetId, metric1.getTargetId());
+    assertEquals("notes", metric1.getField());
+    assertEquals("These are some RAD supercool EEI notes", metric1.getNewData());
+    assertEquals(targetId, metric2.getTargetId());
+    assertEquals("description", metric2.getField());
+    assertEquals("This is a different description", metric2.getNewData());
   }
 
   @Test
@@ -524,6 +495,8 @@ public class TargetControllerTest extends BaseIntegrationTest {
     targetController.postTarget(updatedTargetJson);
 
     assertEquals("SDT20-123", targetRepository.findById(targetId).get().getName());
+
+    assertEquals(0, metricChangeTargetRepository.findAll().size());
   }
 
   @Test
@@ -606,11 +579,11 @@ public class TargetControllerTest extends BaseIntegrationTest {
     MetricChangeTarget metric1 = metricChangeTargetRepository.findAll().get(0);
     MetricChangeTarget metric2 = metricChangeTargetRepository.findAll().get(1);
 
+    assertEquals(targetId, metric1.getTargetId());
+    assertEquals(targetId, metric2.getTargetId());
     assertEquals("status", metric1.getField());
-    assertEquals(TargetStatus.NOT_STARTED, metric1.getOldData());
     assertEquals(TargetStatus.IN_PROGRESS, metric1.getNewData());
     assertEquals("status", metric2.getField());
-    assertEquals(TargetStatus.IN_PROGRESS, metric2.getOldData());
     assertEquals(TargetStatus.COMPLETED, metric2.getNewData());
   }
 }
