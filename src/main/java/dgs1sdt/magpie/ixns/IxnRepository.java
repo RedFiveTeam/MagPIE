@@ -11,4 +11,7 @@ public interface IxnRepository extends JpaRepository<Ixn, Long> {
 
   @Query("SELECT ixn FROM Ixn ixn WHERE ixn.targetId = ?1 AND (ixn.status = 'IN_PROGRESS' OR ixn.status = 'COMPLETED')")
   List<Ixn> findAllInProgressOrCompleteByTargetId(long targetId);
+
+  @Query("SELECT COUNT(ixn) FROM Ixn ixn WHERE ixn.rfiId = ?1")
+  long findNumByRfiId(long rfiId);
 }

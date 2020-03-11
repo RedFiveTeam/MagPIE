@@ -52,13 +52,13 @@ Scenario('Should be able to add tgt on the Tgt page', (I) => {
   I.pressKey('Tab');
   I.fillField('.description', 'desc');
   I.pressKey('Enter');
-  I.seeElement('.add-tgt-button');
-  I.dontSeeElement('.add-tgt-button-disabled');
 
   I.click('.tgt-dash--header--back-button');
   I.click('.cell--navigate-to-tgt-button');
 
   I.waitForText('SDT20-123', 10);
+  I.seeElement('.add-tgt-button');
+  I.dontSeeElement('.add-tgt-button-disabled');
   I.see('12QWE1231231231');
   I.see('notes');
   I.see('desc');
@@ -101,8 +101,6 @@ Scenario('should not be able to add tgt with conflicting names', (I) => {
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
-  I.seeElement('.add-tgt-button');
-  I.dontSeeElement('.add-tgt-button-disabled');
 
   I.doubleClick('.tgt-name');
   for (let i = 0; i < 5; i++)

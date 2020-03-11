@@ -24,7 +24,7 @@ describe('RfiTableHeader', () => {
 
   it('should render a header for each field', () => {
     expect(subject.find(StyledHeaderCell).length).toBe(5);
-    expect(subject.find(StyledUnsortableTableHeaderCell).length).toBe(2);
+    expect(subject.find(StyledUnsortableTableHeaderCell).length).toBe(3);
   });
 
   it('should render a container for buttons', () => {

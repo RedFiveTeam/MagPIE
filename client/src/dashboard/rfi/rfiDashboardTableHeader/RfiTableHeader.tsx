@@ -11,6 +11,7 @@ import { Field, SortKeyModel } from '../../../store/sort/SortKeyModel';
 import { sortRfis } from '../../../store/rfi';
 import { fetchLocalUpdate } from '../../../store/rfi/Thunks';
 import { postRefreshClick } from '../../../store/metrics';
+import theme from '../../../resources/theme';
 
 interface Props {
   sortRfis: (field: Field) => void;
@@ -64,6 +65,10 @@ export const RfiTableHeader: React.FC<Props> = props => {
           className={'header-cell--tgt'}
         />
         <StyledUnsortableTableHeaderCell
+          text={'IXNs'}
+          className={'header-cell--tgt'}
+        />
+        <StyledUnsortableTableHeaderCell
           text={'Description'}
           className={'header-cell--description'}
         />
@@ -89,10 +94,10 @@ const mapDispatchToProps = {
 
 export const StyledRfiTableHeader = styled(
   connect(mapStateToProps, mapDispatchToProps)(RfiTableHeader))`
-  font-family: ${(props) => props.theme.font.familyHeader};
-  color: ${(props) => props.theme.color.fontPrimary};
-  font-weight: ${(props) => props.theme.font.weightHeader};
-  font-size: ${(props) => props.theme.font.sizeHeader};
+  font-family: ${theme.font.familyHeader};
+  color: ${theme.color.fontPrimary};
+  font-weight: ${theme.font.weightHeader};
+  font-size: ${theme.font.sizeRow};
   margin-top: 64px;
   margin-right: 20px;
   height: 48px;
@@ -100,6 +105,19 @@ export const StyledRfiTableHeader = styled(
   flex: 0 0;
   flex-direction: row;
   justify-content: space-between;
+  
+  .header--pri {
+    padding-left: 26px; 
+  }
+  
+  .header--tgts {
+    text-align: center;
+  }
+  
+  .header--ixns {
+    text-align: center;
+  }
+  
   
   .header-cell {
     padding-left: 16px;
@@ -137,12 +155,13 @@ export const StyledRfiTableHeader = styled(
   }
   
   .header-cell--tgt {
-    padding-left: 2px;
     width: 59px;  
+    padding-left: 8px;
   }
   
   .header-cell--description {
-    padding-left: 0px;
+    padding-left: 0;
+    margin-left: 0;
   }
   
   .header-cell--buttonSection {

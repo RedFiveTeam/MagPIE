@@ -9,7 +9,7 @@ Before((I) => {
   I.waitForText('RFI:', 10);
 });
 
-Scenario ('Should be able to navigate to and exit the interactions page', (I) => {
+Scenario('Should be able to navigate to and exit the interactions page', (I) => {
   I.click('.add-date-button');
   I.fillField('input', '02012020');
 
@@ -70,6 +70,15 @@ Scenario('Should be able to add ixns', (I) => {
   I.waitForText('The time you entered does not fall within the segment timeline', 10);
 });
 
+Scenario('Should be able to see Tgt and Ixn counts on the RFI page', (I) => {
+  I.click('.tgt-dash--header--back-button');
+
+  I.waitForText('TGTs', 10);
+  I.see('IXNs');
+  I.see('1', locate('.region--prioritized').find('.cell--tgtCount').at(1));
+  I.see('2', locate('.region--prioritized').find('.cell--ixnCount').at(1));
+});
+
 Scenario('Should be able to edit ixns', (I) => {
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
@@ -90,7 +99,7 @@ Scenario('Should be able to edit ixns', (I) => {
   I.dontSee('12:10:00Z');
 });
 
-Scenario('Should be able to assign status and see tracks generate', (I) =>{
+Scenario('Should be able to assign status and see tracks generate', (I) => {
   I.click('.exploitation');
   I.waitForText('Status', 10);
 

@@ -32,7 +32,7 @@ export const StyledRfiRegionDivider = styled(RfiRegionDivider)`
   
   .separator-line {
     flex-grow: 1;
-    height: 2px;
+    height: 4px;
     border-radius: 4px;
     background: ${theme.color.fontPrimary};
     margin-top: 22px;

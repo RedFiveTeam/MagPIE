@@ -13,8 +13,7 @@ describe("Target Row", () => {
   let subject: ReactWrapper;
   const moment = require('moment');
   let target: TargetModel = new TargetModel(1, 1, 3, 'SDT12-123', '12QWE1231231231', 'These are the notes', 'This is a description');
-  let rfiTest = new RfiModel(1, "DGS-SPC-2035-02335", "www.spacejam.com", RfiStatus.OPEN, "space forse",
-    moment('2019-11-20').utc(), "USLT", "Good morning starshine, the earth says hello", 42);
+  let rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse', moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 42, 0, 0);
   let exploitDate = new ExploitDateModel(1, 1, moment('2019-11-20').utc());
   let deleteSpy: jest.Mock;
   let navToIxnPageSpy: jest.Mock;

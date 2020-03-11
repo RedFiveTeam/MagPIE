@@ -16,7 +16,9 @@ export default class RfiModel {
     public ltiov: Moment | undefined,
     public country: string,
     public description: string,
-    public priority: number
+    public priority: number,
+    public tgtCount: number,
+    public ixnCount: number
   ) {
   }
 }

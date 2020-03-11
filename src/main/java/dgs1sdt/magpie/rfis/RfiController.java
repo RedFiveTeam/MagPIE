@@ -1,7 +1,9 @@
 package dgs1sdt.magpie.rfis;
 
+import dgs1sdt.magpie.ixns.IxnRepository;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
+import dgs1sdt.magpie.tgts.TargetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +21,20 @@ public class RfiController {
   private RfiService rfiService;
   private MetricsService metricsService;
   private RfiRepository rfiRepository;
+  private TargetRepository targetRepository;
+  private IxnRepository ixnRepository;
 
   @Autowired
   public RfiController(RfiService rfiService,
                        MetricsService metricsService,
-                       RfiRepository rfiRepository) {
+                       RfiRepository rfiRepository,
+                       TargetRepository targetRepository,
+                       IxnRepository ixnRepository) {
     this.rfiService = rfiService;
     this.metricsService = metricsService;
     this.rfiRepository = rfiRepository;
-
+    this.targetRepository = targetRepository;
+    this.ixnRepository = ixnRepository;
   }
 
   @Autowired
@@ -45,9 +52,28 @@ public class RfiController {
     this.rfiRepository = rfiRepository;
   }
 
+  @Autowired
+  public void setTargetRepository(TargetRepository targetRepository) {
+    this.targetRepository = targetRepository;
+  }
+
+  @Autowired
+  public void setIxnRepository(IxnRepository ixnRepository) {
+    this.ixnRepository = ixnRepository;
+  }
+
   @GetMapping
-  public List<Rfi> getAllRfis() {
-    return this.rfiService.fetchRfisFromRepo();
+  public List<RfiGet> getAllRfis() {
+    List<Rfi> rfis = this.rfiService.fetchRfisFromRepo();
+    List<RfiGet> rfiGetList = new ArrayList<>();
+
+    for(Rfi rfi : rfis) {
+      long tgtCount = targetRepository.findNumByRfiId(rfi.getId());
+      long ixnCount = ixnRepository.findNumByRfiId(rfi.getId());
+      rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount));
+    }
+
+    return rfiGetList;
   }
 
   //  Return value: whether the passed priority change results in a valid priority list

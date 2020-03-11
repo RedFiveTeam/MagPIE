@@ -5,10 +5,8 @@ import { connect } from 'react-redux';
 import RfiModel, { RfiStatus } from '../../../../store/rfi/RfiModel';
 import IconDnDBurger from '../../../../resources/icons/DnDBurgerVector';
 import { formatRfiNum } from '../../../../utils';
-import { StyledTgtPageButtonVector } from '../../../../resources/icons/TgtPageButtonVector';
 import { ApplicationState } from '../../../../store';
 import { Field } from '../../../../store/sort/SortKeyModel';
-import { fetchRfiTargets, loadTgtPage } from '../../../../store/tgt/Thunks';
 import theme from '../../../../resources/theme';
 import { StyledIconShowMore } from '../../../../resources/icons/ShowMoreVector';
 import { StyledIconShowLess } from '../../../../resources/icons/ShowLessVector';
@@ -17,7 +15,6 @@ interface Props {
   rfi: RfiModel;
   scrollRegionRef: any;
   prioritizing: boolean;
-  loadTgtPage: (rfi: RfiModel, firstLoad: boolean) => void;
   className?: string;
 }
 
@@ -50,45 +47,43 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
       if (expandedRowHeight > clientHeight) { //row is longer than window, so scroll to top of row
         scrollRegion.scrollTo({
           top: offsetTop - buffer,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       } else { //push up just enough to leave row at bottom
         scrollRegion.scrollTo({
           top: offsetTop - (clientHeight - expandedRowHeight) + buffer,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     }
   }
 
-  function handleClick() {
+  function handleSeeMoreLessClick() {
     let descriptionContainer = descriptionRef.current!;
     setExpanded(!expanded);
     if (!expanded)
       setTimeout(scrollFit, 50, descriptionContainer); //slight delay to ensure we use the expanded row height
   }
 
-  function addTgtToRFI() {
-    props.loadTgtPage(props.rfi, true);
-  }
-
   return (
     <div
       className={classNames('row-section', 'section--information', props.className)}
     >
-      {props.rfi.priority > -1 && props.rfi.status === "OPEN" ? props.prioritizing ?
-        <span className={classNames('cell', 'cell--pri-prioritizing')}>
-                <IconDnDBurger/>
-          {props.rfi.priority}
-            </span>
+      {props.rfi.priority > -1 && props.rfi.status === 'OPEN' ? props.prioritizing ?
+        <div className={classNames('cell', 'cell--pri')}>
+          <IconDnDBurger/>
+          <span className={'priority'}>{props.rfi.priority}</span>
+        </div>
         :
-        <span className={classNames('cell', 'cell--pri')}>
-              {props.rfi.priority}
-            </span>
+        <div className={classNames('cell', 'cell--pri', 'not-prioritizing')}>
+          <IconDnDBurger/>
+          <span className={'priority'}>{props.rfi.priority}</span>
+        </div>
         :
-        <span className={classNames('cell', 'cell--pri')}>
-            -
-          </span>
+        <div className={classNames('cell', 'cell--pri', 'not-prioritizing')}>
+          <IconDnDBurger/>
+          <span className={'priority'}>-</span>
+        </div>
       }
       <span className={classNames('cell', 'cell--rfiNum')}>
         {formatRfiNum(props.rfi.rfiNum)}
@@ -100,19 +95,14 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
           <div>{props.rfi.customer}</div>
       </span>
       <span className={classNames('cell', 'cell--ltiov')}>
-            {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format("D MMM YY").toUpperCase()}
+            {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format('D MMM YY').toUpperCase()}
       </span>
-      <div>
-        {props.rfi.status === RfiStatus.OPEN ?
-          <button onClick={addTgtToRFI} className={'cell--navigate-to-tgt-button'}>
-            <StyledTgtPageButtonVector/>
-          </button>
-          :
-          <div className={'cell--navigate-to-tgt-button-disabled'}>
-            <span>-</span>
-          </div>
-        }
-      </div>
+      <span className={classNames('cell', 'cell--tgtCount')}>
+          {props.rfi.status === RfiStatus.PENDING ? '-' : props.rfi.tgtCount}
+      </span>
+      <span className={classNames('cell', 'cell--ixnCount')}>
+          {props.rfi.status === RfiStatus.PENDING ? '-' : props.rfi.ixnCount}
+      </span>
       <div className={'description-container'}>
         <span className={classNames('cell', expanded ? 'cell--description-expanded' : 'cell--description')}
               ref={descriptionRef}>
@@ -121,7 +111,7 @@ export const RfiRowInformationSection: React.FC<Props> = props => {
       </div>
       <div className={classNames('see-more-or-less',
         props.rfi.description.length > 100 ? '' : 'hidden')} onClick={() => {
-        handleClick()
+        handleSeeMoreLessClick();
       }}>
         {expanded ? <StyledIconShowLess/> : <StyledIconShowMore/>}
       </div>
@@ -134,8 +124,6 @@ const mapStateToProps = ({rfiState}: ApplicationState) => ({
 });
 
 const mapDispatchToProps = {
-  loadTgtPage: loadTgtPage,
-  fetchRfiTargets: fetchRfiTargets
 };
 
 export const StyledRfiRowInformationSection = styled(
@@ -143,7 +131,7 @@ export const StyledRfiRowInformationSection = styled(
   display: flex;
   flex-direction: row;
   flex: 1 1 0%;
-  min-width: 950px;
+  min-width: 1098px;
   max-width: 1336px;
   justify-content: space-around;
   border-top-left-radius: 8px;
@@ -161,17 +149,20 @@ export const StyledRfiRowInformationSection = styled(
     display: flex;
     flex-direction: row;
     flex: 0 0 88px;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: space-around;
   }
   
-  .cell--pri-prioritizing {
-    display: flex;
-    flex-direction: row;
-    flex: 0 0 88px;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 20px;
+  .not-prioritizing {
+    svg {
+      path {
+        fill: ${theme.color.backgroundInformation};
+      }
+    }
+  }
+  
+  .priority {
+    width: 14px;
   }
   
   .cell--id {
@@ -199,6 +190,20 @@ export const StyledRfiRowInformationSection = styled(
     flex: 0 1 56px;
   }
   
+  .cell--tgtCount {
+    flex: 0 0 59px;
+    text-align: center;
+  }
+  
+   .cell--ixnCount {
+    flex: 0 0 59px;
+    text-align: center;
+  }
+  
+  .cell--navigate-to-tgt-button {
+    flex: 0 0 74px;
+  }
+  
   .hidden {
     opacity:0;
     z-index: -100;
@@ -213,6 +218,25 @@ export const StyledRfiRowInformationSection = styled(
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  
+  .cell--gets-button {
+    width: 164px;
+    font-weight: ${(props) => props.theme.font.weightBold};
+    padding: 16px;
+    border-top-right-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 1;
+      
+    :hover {
+      text-shadow: 0 0 4px #FFFFFF;
+      svg {
+        filter: drop-shadow(0 0 4px #FFFFFF);
+      }
+    }
   }
   
   .cell--navigate-to-tgt-button-disabled {

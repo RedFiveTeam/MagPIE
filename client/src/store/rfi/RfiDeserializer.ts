@@ -30,8 +30,10 @@ export class RfiDeserializer {
           item.ltiov === null ? undefined : moment(item.ltiov, moment.ISO_8601).utc(),
           item.country,
           item.description,
-          item.priority
-          );
+          item.priority,
+          item.tgtCount,
+          item.ixnCount
+        );
       });
     }
     return [];

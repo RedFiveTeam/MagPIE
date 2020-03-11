@@ -228,6 +228,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
 
   .header {
     margin-top: -25px;
+    padding-left: 8px;
   }
   
   .header-cell--analyst {
@@ -247,11 +248,13 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .header-cell--id {
+    text-align: center;
+    padding-left: 10px;
     width: 83px;
   }
   
   .header-cell--status {
-    width: 126px;
+    width: 118px;
   }
   
   .header-cell--delete-spacer {

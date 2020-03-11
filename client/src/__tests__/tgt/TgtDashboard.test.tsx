@@ -18,8 +18,7 @@ describe('TgtDashboardContainer', () => {
     exitSpy = jest.fn();
     updateSpy = jest.fn();
     setPlaceholderSpy = jest.fn();
-    rfiTest = new RfiModel(1, "DGS-SPC-2035-02335", "www.spacejam.com", RfiStatus.OPEN, "space forse",
-      moment('2019-11-20').utc(), "USLT", "Good morning starshine, the earth says hello", 42);
+    rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse', moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 42, 0, 0);
     subject = shallow(
       <TgtDashboard
         rfi={rfiTest}

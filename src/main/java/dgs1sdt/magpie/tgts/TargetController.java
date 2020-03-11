@@ -222,8 +222,6 @@ public class TargetController {
         Target newTarget = new Target(targetJson);
         targetRepository.save(newTarget);
 
-        System.out.println(oldName);
-        System.out.println(newTarget.getName());
         if (!oldName.equals(newTarget.getName())) {
           ixnController.assignTracks(oldTarget.getRfiId(), oldName);
           ixnController.assignTracks(newTarget.getRfiId(), newTarget.getName());

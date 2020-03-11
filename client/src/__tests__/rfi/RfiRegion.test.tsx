@@ -14,22 +14,28 @@ describe('Region', () => {
     const moment = require('moment');
     rows = [
       <RfiRow
-        rfi={new RfiModel(1, '19-001', 'url', RfiStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi', -1)}
+        rfi={new RfiModel(1, '19-001', 'url', RfiStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi', -1, 0, 0)}
         key={'1'}
         scrollRegionRef={{}}
         index={0}
+        loadTgtPage={jest.fn()}
+        postGetsClick={jest.fn()}
       />,
       <RfiRow
-        rfi={new RfiModel(2, '19-004', 'url', RfiStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi', -1)}
+        rfi={new RfiModel(2, '19-004', 'url', RfiStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi', -1, 0, 0)}
         key={'2'}
         scrollRegionRef={{}}
         index={1}
+        loadTgtPage={jest.fn()}
+        postGetsClick={jest.fn()}
       />,
       <RfiRow
-        rfi={new RfiModel(3, '19-003', 'url', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', -1)}
+        rfi={new RfiModel(3, '19-003', 'url', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', -1, 0, 0)}
         key={'3'}
         scrollRegionRef={{}}
         index={2}
+        loadTgtPage={jest.fn()}
+        postGetsClick={jest.fn()}
       />,
     ];
     subject = shallow(

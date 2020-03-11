@@ -13,7 +13,9 @@ describe('RFIDeserializer', () => {
         customer: 'customer',
         ltiov: '2020-11-20T00:00:00.000+0000',
         country: 'country',
-        priority: -1
+        priority: -1,
+        tgtCount: 50,
+        ixnCount: 5462789
       },
       {
         rfiNum: 'id',
@@ -23,7 +25,9 @@ describe('RFIDeserializer', () => {
         customer: 'customer',
         ltiov: null,
         country: 'country',
-        priority: 7
+        priority: 7,
+        tgtCount: 2,
+        ixnCount: 0
       }];
 
     let rfis = RfiDeserializer.deserialize(json);
@@ -34,6 +38,8 @@ describe('RFIDeserializer', () => {
     expect(rfis[0].customer).toBe('customer');
     expect(rfis[0].country).toBe('country');
     expect(rfis[0].priority).toBe(-1);
+    expect(rfis[0].tgtCount).toBe(50);
+    expect(rfis[0].ixnCount).toBe(5462789);
 
     expect(rfis[1].ltiov).toBe(undefined);
     expect(rfis[1].priority).toBe(7);

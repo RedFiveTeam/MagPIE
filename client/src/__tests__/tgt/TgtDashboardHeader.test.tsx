@@ -7,8 +7,7 @@ import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 describe('TgtDashboardHeader', () => {
   const moment = require('moment');
   let exitSpy: jest.Mock = jest.fn();
-  let rfiTest: RfiModel = new RfiModel(1, "DGS-SPC-2035-02335", "www.spacejam.com", RfiStatus.OPEN, "space forse",
-    moment('2019-11-20').utc(), "USLT", "Good morning starshine, the earth says hello", 42);
+  let rfiTest: RfiModel = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse', moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 42, 0, 0);
 
   let subject = shallow(
     <TgtDashboardHeader
