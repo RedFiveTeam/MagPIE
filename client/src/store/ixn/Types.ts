@@ -14,4 +14,5 @@ export interface IxnState {
   readonly dateString: string;
   readonly segments: SegmentModel[];
   readonly ixns: IxnModel[];
+  readonly autofocus: boolean;
 }

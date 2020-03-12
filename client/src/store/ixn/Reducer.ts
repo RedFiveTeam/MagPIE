@@ -10,7 +10,8 @@ const initState: IxnState = {
   target: {} as TargetModel,
   dateString: '',
   segments: [] as SegmentModel[],
-  ixns: [] as IxnModel[]
+  ixns: [] as IxnModel[],
+  autofocus: false,
 };
 
 const reducer: Reducer<IxnState> = (state = initState, action: any) => {
@@ -29,6 +30,7 @@ const reducer: Reducer<IxnState> = (state = initState, action: any) => {
         ...state,
         segments: action.segments,
         ixns: action.ixns,
+        autofocus: action.autofocus,
       };
     case IxnActionTypes.EXIT_IXN_PAGE:
       return {
