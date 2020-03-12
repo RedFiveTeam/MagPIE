@@ -4,6 +4,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { IxnRow } from '../../dashboard/ixn/table/IxnRow';
 import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SnackbarProvider } from 'notistack';
 
 describe('IxnRow', () => {
   const moment = require('moment');
@@ -31,16 +32,22 @@ describe('IxnRow', () => {
 
   it('should display the info given to it', () => {
     subject = mount(
-      <IxnRow
-        ixn={ixn}
-        segment={segment}
-        postIxn={jest.fn()}
-        deleteIxn={jest.fn()}
-        tgtAnalyst={''}
-        setTgtAnalyst={jest.fn()}
-        setEditIxn={jest.fn()}
-        addingOrEditing={false}
-      />,
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={15000}
+        hideIconVariant
+      >
+        <IxnRow
+          ixn={ixn}
+          segment={segment}
+          postIxn={jest.fn()}
+          deleteIxn={jest.fn()}
+          tgtAnalyst={''}
+          setTgtAnalyst={jest.fn()}
+          setEditIxn={jest.fn()}
+          addingOrEditing={false}
+        />
+      </SnackbarProvider>
     );
 
     expect(subject.find('.exploit-analyst').text()).toContain('Billy Bob');

@@ -12,6 +12,7 @@ import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
 import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxnRepository;
 import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegment;
 import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegmentRepository;
+import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDeleteRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.*;
@@ -52,6 +53,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
   MetricChangeSegmentRepository metricChangeSegmentRepository;
   @Autowired
   MetricChangeIxnRepository metricChangeIxnRepository;
+  @Autowired
+  MetricUndoIxnDeleteRepository metricUndoIxnDeleteRepository;
   @Autowired
   IxnController ixnController;
   @Autowired
@@ -814,6 +817,27 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("123-003", ixnRepository.findAll().get(0).getTrack());
   }
 
+  @Test
+  public void undoesIxnDeleteAndLogsMetric() throws Exception {
+    setupIxns();
+    Ixn ixn = ixnRepository.findAll().get(0);
+    IxnJson ixnJson = new IxnJson(ixn.getId(), ixn.getRfiId(), ixn.getExploitDateId(), ixn.getTargetId(), ixn.getSegmentId(),
+      ixn.getExploitAnalyst(), ixn.getTime(), ixn.getActivity(), ixn.getTrackAnalyst(), ixn.getStatus(),
+      ixn.getLeadChecker(), ixn.getFinalChecker());
+
+    long ixnId = ixn.getId();
+
+    long numIxns = ixnRepository.findAll().size();
+
+    ixnController.deleteIxn(ixnId);
+
+    ixnController.postIxn(ixnJson);
+
+    assertEquals(numIxns, ixnRepository.findAll().size());
+    assertEquals(1, metricUndoIxnDeleteRepository.findAll().size());
+    assertEquals(ixnId, metricUndoIxnDeleteRepository.findAll().get(0).getIxnId());
+
+  }
 
   private void setupIxns() throws Exception {
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));

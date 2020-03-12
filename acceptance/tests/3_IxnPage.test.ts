@@ -133,23 +133,39 @@ Scenario('Should be able to assign status and see tracks generate', (I) => {
   I.dontSee('123-001');
 });
 
-Scenario('Should be able to delete ixns', (I) => {
+Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
 
+  //Delete first ixn
   I.click('.delete-ixn-button');
 
   I.click('.ixn-dash--header--back-button');
   I.click('.exploitation');
 
   I.dontSee('Person entered tgt from right side');
+
+  //Delete second ixn and undo
+  I.click('.delete-ixn-button');
+
+  I.waitForText('Interaction deleted', 10);
+
+  I.click('UNDO');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+
+  I.waitForText('Person entered tgt from right side', 10);
+
+  //Delete second ixn
   I.click('.delete-ixn-button');
 
   I.click('.ixn-dash--header--back-button');
   I.click('.exploitation');
 
-  I.dontSee('123-234');
+  I.dontSee('Person entered tgt from right side');
 
+  //Clear entered data with delete button on input row
   I.pressKey('Tab');
   I.fillField('.exploit-analyst', 'Billy Bob Joe');
   I.pressKey('Tab');

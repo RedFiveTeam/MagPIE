@@ -17,9 +17,10 @@ const theme = {
     backgroundAssigned: crayonBox.notEggWhite,
     backgroundModal: crayonBox.lightBlack,
     backgroundStatus: crayonBox.darkGray,
+    backgroundSnackbar: crayonBox.mediumBlue,
     fontLoading: crayonBox.lightGray,
-    fontInactive: crayonBox.mediumGray,
-    fontBackgroundInactive: crayonBox.mediumLightGray,
+    fontInactive: crayonBox.mediumMediumLightGray,
+    fontBackgroundInactive: crayonBox.mediumGray,
     buttonInactive: crayonBox.notEggWhite,
     buttonActive: crayonBox.softMetal,
     buttonBackgroundActive: crayonBox.pitchBlack,
@@ -34,7 +35,7 @@ const theme = {
     deleteButtonFocus: crayonBox.brightRed,
     backgroundHeader: crayonBox.pitchBlack,
     buttonOnBlack: crayonBox.straightWhite,
-    segmentDivider: crayonBox.mediumMediumLightGray,
+    segmentDivider: crayonBox.mediumLightGray,
     fontToolTip: crayonBox.softMetal,
     backgroundToolTip: crayonBox.lightGray,
     inProgress: crayonBox.stoplightYellow,
@@ -42,6 +43,7 @@ const theme = {
     buttonAddDate: crayonBox.brightBlue,
     buttonRowDisabled: crayonBox.subtleGray,
     buttonDoesNotMeetEei: crayonBox.tomatoRed,
+    fontSnackbar: crayonBox.notEggWhite,
   },
 
   font: {
@@ -58,6 +60,7 @@ const theme = {
     weightRegion: 500,
     sizeRegion: '18px',
     sizeRowSmall: '12px',
+    sizeRowMedium: '14px',
   },
 
   table: {
@@ -144,6 +147,9 @@ export const rowStyles = makeStyles((localTheme: Theme) =>
       userSelect: 'none',
       textAlign: 'center',
     },
+    snackbarButton: {
+      fontSize: theme.font.sizeRowMedium,
+    }
   }),
 );
 

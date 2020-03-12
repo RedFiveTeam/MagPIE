@@ -21,6 +21,7 @@
     "date-fns": "^2.9.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
+    "notistack": "^0.9.9",
     "react": "^16.9.0",
     "react-beautiful-dnd": "^12.2.0",
     "react-chartjs-2": "^2.8.0",

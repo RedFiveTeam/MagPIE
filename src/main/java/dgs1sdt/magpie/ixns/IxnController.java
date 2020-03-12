@@ -109,7 +109,8 @@ public class IxnController {
         this.metricsService.addChangeIxn(ixnJson, ixnRepository.findById(ixnJson.getId()).get());
         ixnRepository.save(ixn);
       } else {
-        System.err.println("Error creating ixn metric: could not find ixn with id " + ixnJson.getId());
+        this.metricsService.addUndoIxnDeleteMetric(ixnJson.getId());
+        ixnRepository.save(ixn);
       }
     } else {
       ixnRepository.save(ixn);

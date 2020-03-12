@@ -45,6 +45,8 @@ import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSort;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDelete;
+import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDeleteRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
@@ -78,6 +80,7 @@ public class MetricsService {
   private MetricCreateIxnRepository metricCreateIxnRepository;
   private MetricChangeIxnRepository metricChangeIxnRepository;
   private MetricDeleteIxnRepository metricDeleteIxnRepository;
+  private MetricUndoIxnDeleteRepository metricUndoIxnDeleteRepository;
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
@@ -172,6 +175,11 @@ public class MetricsService {
   @Autowired
   public void setMetricDeleteIxnRepository(MetricDeleteIxnRepository metricDeleteIxnRepository) {
     this.metricDeleteIxnRepository = metricDeleteIxnRepository;
+  }
+
+  @Autowired
+  public void setMetricUndoIxnDeleteRepository(MetricUndoIxnDeleteRepository metricUndoIxnDeleteRepository) {
+    this.metricUndoIxnDeleteRepository = metricUndoIxnDeleteRepository;
   }
 
   public long getSiteVisitCount() {
@@ -345,5 +353,9 @@ public class MetricsService {
 
   public MetricCreateExploitDate addCreateExploitDate(long lastExploitDateId, ExploitDateJson exploitDateJson) {
     return metricCreateExploitDateRepository.save(new MetricCreateExploitDate(lastExploitDateId, exploitDateJson));
+  }
+
+  public MetricUndoIxnDelete addUndoIxnDeleteMetric(long ixnId) {
+    return metricUndoIxnDeleteRepository.save(new MetricUndoIxnDelete(ixnId));
   }
 }

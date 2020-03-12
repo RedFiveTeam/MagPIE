@@ -62,6 +62,7 @@ function acceptanceTests {
 function unitTests {
     showBanner "Unit Tests"
 
+    showBanner "Backend"
     pushd ${BASE_DIR}
         if [[ $(mvn test | grep -E "\[INFO\]|\[ERROR\]|Expected" | grep "\[ERROR\]" | wc -l) -gt 0 ]]; then
             echo "Unit Tests Failed... Exiting"
@@ -69,6 +70,7 @@ function unitTests {
         fi
     popd
 
+    showBanner "Frontend"
     pushd ${BASE_DIR}/client
         CI=true yarn jest
     popd

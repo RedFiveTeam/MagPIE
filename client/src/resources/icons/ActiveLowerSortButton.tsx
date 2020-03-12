@@ -21,6 +21,3 @@ const ActiveLowerSortButtonVector = () => {
 };
 
 export default ActiveLowerSortButtonVector;
-
-
-
