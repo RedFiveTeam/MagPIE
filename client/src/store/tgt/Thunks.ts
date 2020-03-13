@@ -57,7 +57,7 @@ export const updateRfiDate = (rfiId: number, date: Date, oldDate?: ExploitDateMo
 export const submitPostTarget = (target: TargetPostModel, rfi: RfiModel) => {
   return (dispatch: any) => {
     postTarget(target)
-      .then(response => dispatch(loadTgtPage(rfi, true)))
+      .then(response => dispatch(loadTgtPage(rfi, false)))
       .catch((reason) => {
         console.log(reason)
       })

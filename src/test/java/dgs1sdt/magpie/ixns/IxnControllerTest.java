@@ -76,6 +76,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     metricDeleteSegmentRepository.deleteAll();
     metricChangeSegmentRepository.deleteAll();
     metricChangeIxnRepository.deleteAll();
+    metricUndoSegmentDeleteRepository.deleteAll();
   }
 
   @Test

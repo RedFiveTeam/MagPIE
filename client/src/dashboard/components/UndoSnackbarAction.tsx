@@ -3,8 +3,9 @@ import { Button, IconButton } from '@material-ui/core';
 import SnackbarDismissIcon from '../../resources/icons/SnackbarDismissIcon';
 import * as React from 'react';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 
-type UndoTypes = IxnModel | SegmentModel;
+type UndoTypes = IxnModel | SegmentModel | TargetPostModel;
 
 export const UndoSnackbarAction = (key: any, data: UndoTypes, postData: (data: any) => void,
                                    closeSnackbar: (key: any) => void, className: string) => {

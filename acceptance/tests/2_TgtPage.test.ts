@@ -114,7 +114,11 @@ Scenario('should not be able to add tgt with conflicting names', (I) => {
   I.waitForText('SDT20-999', 10);
 });
 
-Scenario('Should be able to delete tgt on the Tgt page', (I) => {
+Scenario('Should be able to delete and undo delete tgt on the Tgt page', (I) => {
+  I.click('.delete-tgt-button');
+  I.waitForText('You deleted SDT20-999');
+  I.click('UNDO');
+  I.waitForText('12QWE1234567890');
   I.click('.delete-tgt-button');
 
   //Need to leave page and come back to see changes
@@ -122,6 +126,10 @@ Scenario('Should be able to delete tgt on the Tgt page', (I) => {
   I.click('.cell--navigate-to-tgt-button');
 
   I.click('.delete-tgt-button');
+
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--navigate-to-tgt-button');
+
   I.dontSeeElement('.tgt-form-box');
   I.click('.delete-date');
 });

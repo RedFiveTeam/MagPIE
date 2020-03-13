@@ -8,6 +8,7 @@ import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetController;
 import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.TargetRepository;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
@@ -49,11 +50,14 @@ public class RfiControllerTest extends BaseIntegrationTest {
   MetricDeleteTargetRepository metricDeleteTargetRepository;
   MetricChangeTargetRepository metricChangeTargetRepository;
 
-//  TODO: Change this to a service maybe?
   @Autowired
   SegmentRepository segmentRepository;
   @Autowired
   IxnRepository ixnRepository;
+  @Autowired
+  IxnController ixnController;
+  @Autowired
+  TargetController targetController;
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -305,5 +309,17 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals(2, rfi.getTgtCount());
     assertEquals(10, rfi.getIxnCount());
+
+    ixnController.deleteSegment(segment2Id);
+    targetController.deleteTarget(target1Id);
+    rfi = rfiController.getAllRfis().get(0);
+
+    assertEquals(1, rfi.getTgtCount());
+    assertEquals(0, rfi.getIxnCount());
+
+    targetController.deleteExploitDate(exploitDate2Id);
+    rfi = rfiController.getAllRfis().get(0);
+
+    assertEquals(0, rfi.getTgtCount());
   }
 }

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import { useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledTgtTable } from './table/TgtTable';
@@ -16,8 +16,9 @@ import { StyledTgtDashboardHeader } from './TgtDashboardHeader';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel from '../../store/rfi/RfiModel';
-import { updateRfiDate } from '../../store/tgt/Thunks';
+import { submitPostTarget, updateRfiDate } from '../../store/tgt/Thunks';
 import { exitTgtPage, setDatePlaceholder } from '../../store/tgt';
+import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 
 interface MyProps {
   rfi: RfiModel;
@@ -41,6 +42,12 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const [addTarget, setAddTarget] = useState(-1); //value is the id of the exploit date that is being added to
   const [editTarget, setEditTarget] = useState(-1); // value is the id of the tgt that is being edited
   const [addDate, setAddDate] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handlePostTarget = (target: TargetPostModel) => {
+    dispatch(submitPostTarget(target, props.rfi));
+  };
 
   const handleAddEdit = (status: Status, id?: number) => {
     switch (status) {
@@ -78,6 +85,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
         className={'date-divider--' + moment(exploitDateModel.exploitDate).format('D-MMM-YY')}
         key={index}
         addingOrEditing={!(addTarget === -1 && editTarget === -1 && !addDate)}
+        postTarget={handlePostTarget}
       />,
     );
   }

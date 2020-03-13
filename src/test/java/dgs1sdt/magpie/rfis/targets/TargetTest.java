@@ -17,7 +17,8 @@ public class TargetTest {
       "12QWE1231231231",
       "Notes",
       "Description",
-      TargetStatus.NOT_STARTED
+      TargetStatus.NOT_STARTED,
+      null
     );
 
     TargetJson target2 = new TargetJson(

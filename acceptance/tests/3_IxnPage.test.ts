@@ -293,5 +293,5 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.click('.cell--navigate-to-tgt-button');
 
   I.waitForText('RFI:');
-  I.dontSee('SDT20-123');
+  I.dontSee('12QWE1231231231');
 });

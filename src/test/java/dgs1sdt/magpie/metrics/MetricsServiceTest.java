@@ -141,7 +141,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       "12ABC1234567890",
       "These are old notes",
       "This is an old description",
-      TargetStatus.NOT_STARTED
+      TargetStatus.NOT_STARTED,
+      null
     );
     TargetJson newTarget = new TargetJson(
       oldTarget.getRfiId(),

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
@@ -8,7 +8,7 @@ import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButto
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import { connect } from 'react-redux';
 import theme, { rowStyles } from '../../../resources/theme';
-import { deleteTgt, submitPostTarget } from '../../../store/tgt/Thunks';
+import { deleteTgt } from '../../../store/tgt/Thunks';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
 import { navigateToIxnPage } from '../../../store/ixn';
@@ -16,19 +16,20 @@ import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import RfiModel from '../../../store/rfi/RfiModel';
 import { StyledTgtStatusPickerOutline } from '../../../resources/icons/TgtStatusPickerOutline';
 import { Status } from '../TgtDashboard';
-import { RowAction } from '../../../utils';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
 import { IxnDeserializer } from '../../../store/ixn/IxnDeserializer';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
+import { useSnackbar } from 'notistack';
+import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
 
 interface Props {
   target: TargetModel;
   exploitDate: ExploitDateModel;
   rfi: RfiModel;
   setAddEditTarget: (status: Status, id?: number) => void;
-  submitPostTarget: (target: TargetPostModel, rfi: RfiModel) => void;
+  postTarget: (target: TargetPostModel) => void;
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
   deleteTgt: (tgtId: number) => void;
   key: number;
@@ -49,32 +50,15 @@ const HtmlTooltip = withStyles((theme: Theme) => ({
 export const TgtRow: React.FC<Props> = props => {
   const classes = rowStyles();
 
-  const [action, setAction] = useState(RowAction.NONE);
   const [displayModal, setDisplayModal] = useState(false);
 
-  const handleAction = () => {
-    switch (action) {
-      case RowAction.DELETING:
-        if (props.target) {
-          props.deleteTgt(props.target.id);
-        } else {
-          props.setAddEditTarget(Status.VIEW);
-        }
-        break;
-    }
-  };
-
-  useEffect(
-    handleAction,
-    [action],
-  );
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   const submitStatusChange = (status: TargetStatus) => {
     let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
       props.target.name, props.target.mgrs, props.target.notes, props.target.description, status);
-    props.submitPostTarget(
-      newTarget,
-      props.rfi,
+    props.postTarget(
+      newTarget
     );
   };
 
@@ -84,11 +68,21 @@ export const TgtRow: React.FC<Props> = props => {
       .then(ixns => checkIxns(IxnDeserializer.deserialize(ixns).length > 0));
   };
 
+  const performDelete = () => {
+    enqueueSnackbar('You deleted ' + props.target.name, {
+      action: (key) => UndoSnackbarAction(key, {...props.target, targetId: props.target.id},
+        props.postTarget, closeSnackbar, classes.snackbarButton),
+      variant: 'info'
+    });
+    props.deleteTgt(props.target.id);
+  }
+
   const checkIxns = (hasIxns: boolean) => {
     if (hasIxns)
       setDisplayModal(true);
-    else
-      setAction(RowAction.DELETING);
+    else {
+      performDelete();
+    }
   };
 
   const handleIxnClick = () => {
@@ -179,7 +173,7 @@ export const TgtRow: React.FC<Props> = props => {
         deletingItem={props.target.name}
         display={displayModal}
         setDisplay={setDisplayModal}
-        handleYes={() => setAction(RowAction.DELETING)}
+        handleYes={() => performDelete()}
       />
     </div>
   );
@@ -188,7 +182,6 @@ export const TgtRow: React.FC<Props> = props => {
 const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = {
-  submitPostTarget: submitPostTarget,
   navigateToIxnPage: navigateToIxnPage,
   deleteTgt: deleteTgt,
 };

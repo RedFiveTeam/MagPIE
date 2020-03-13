@@ -35,18 +35,17 @@ public class RoombaServiceTest extends BaseIntegrationTest {
   IxnService ixnService;
 
   @Before
-  public void clean() {
+  public void clean() throws Exception {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
     segmentRepository.deleteAll();
     ixnRepository.deleteAll();
+    setupIxns();
   }
 
   @Test
-  public void deletesOldSegments() throws Exception {
-    setupIxns();
-
+  public void deletesOldSegments() {
     Timestamp moreThanADayAgo = new Timestamp(new Date().getTime() - RoombaService.timeDelayInMs - 1);
     Segment segment = segmentRepository.findAll().get(0);
     segment.setDeleted(moreThanADayAgo);
@@ -57,6 +56,24 @@ public class RoombaServiceTest extends BaseIntegrationTest {
 
     roombaService.clean();
 
+    assertEquals(1, segmentRepository.findAll().size());
+    assertEquals(5, ixnRepository.findAll().size());
+  }
+
+  @Test
+  public void deletesOldTargets() {
+    Timestamp moreThanADayAgo = new Timestamp(new Date().getTime() - RoombaService.timeDelayInMs - 1);
+    Target target = targetRepository.findAll().get(0);
+    target.setDeleted(moreThanADayAgo);
+    targetRepository.save(target);
+
+    assertEquals(2, targetRepository.findAll().size());
+    assertEquals(2, segmentRepository.findAll().size());
+    assertEquals(10, ixnRepository.findAll().size());
+
+    roombaService.clean();
+
+    assertEquals(1, targetRepository.findAll().size());
     assertEquals(1, segmentRepository.findAll().size());
     assertEquals(5, ixnRepository.findAll().size());
   }

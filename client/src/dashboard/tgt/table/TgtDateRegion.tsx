@@ -11,6 +11,7 @@ import RfiModel from '../../../store/rfi/RfiModel';
 import { Status } from '../TgtDashboard';
 import { StyledTgtInputRow } from './TgtInputRow';
 import theme from '../../../resources/theme';
+import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
 
 interface Props {
   rfi: RfiModel;
@@ -24,6 +25,7 @@ interface Props {
   addTgt: number;
   index: number;
   addingOrEditing: boolean;
+  postTarget: (target: TargetPostModel) => void;
   className?: string;
 }
 
@@ -48,6 +50,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
           exploitDate={props.exploitDate}
           setAddEditTarget={props.setAddEditTarget}
           addingOrEditing={props.addingOrEditing}
+          postTarget={props.postTarget}
         />
     )
   }
