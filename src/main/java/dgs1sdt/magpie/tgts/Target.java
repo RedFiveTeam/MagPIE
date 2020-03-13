@@ -3,6 +3,7 @@ package dgs1sdt.magpie.tgts;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 @Data
@@ -24,6 +25,7 @@ public class Target {
   private String notes;
   private String description;
   private String status;
+  private Timestamp deleted;
 
   public Target(long rfiId, long exploitDateId, TargetJson targetJson) {
     this.rfiId = rfiId;

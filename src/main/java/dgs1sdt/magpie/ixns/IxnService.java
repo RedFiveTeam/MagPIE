@@ -169,7 +169,9 @@ public class IxnService {
   }
 
   public void assignTracks(long rfiId, String targetName) {
-    List<Target> targets = targetRepository.findAllByRfiIdAndName(rfiId, targetName);
+    List<Target> targets = targetRepository.findAllByRfiIdAndName(rfiId, targetName)
+      .stream().filter(target -> target.getDeleted() == null)
+      .collect(Collectors.toList());
     List<Ixn> ixns = new ArrayList<>();
 
     //sort targets by exploit date
@@ -203,11 +205,10 @@ public class IxnService {
       .collect(Collectors.toList());
   }
 
-
   public long findNumByRfiId(long rfiId) {
-    return ixnRepository.findAllByRfiId(rfiId)
-      .stream().filter(ixn -> segmentRepository.findById(ixn.getSegmentId()).get().getDeleted() == null)
-      .collect(Collectors.toList())
-      .size();
+    return ixnRepository.findAllByRfiId(rfiId).stream()
+      .filter(ixn -> segmentRepository.findById(ixn.getSegmentId()).get().getDeleted() == null)
+      .filter(ixn -> targetRepository.findById(ixn.getTargetId()).get().getDeleted() == null)
+      .count();
   }
 }

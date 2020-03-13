@@ -38,6 +38,7 @@ describe("Target Date Region", () => {
         setAddEditTarget={addEditSpy}
         index={1}
         addingOrEditing={false}
+        postTarget={jest.fn()}
       />
     );
   });
@@ -62,6 +63,7 @@ describe("Target Date Region", () => {
         setAddEditTarget={addEditSpy}
         index={1}
         addingOrEditing={true}
+        postTarget={jest.fn()}
       />
     );
     expect(subject.find(StyledTgtRow).length).toBe(3);
@@ -90,6 +92,7 @@ describe("Target Date Region", () => {
         setAddEditTarget={addEditSpy}
         index={1}
         addingOrEditing={true}
+        postTarget={jest.fn()}
       />
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();
@@ -110,6 +113,7 @@ describe("Target Date Region", () => {
         setAddEditTarget={addEditSpy}
         index={1}
         addingOrEditing={true}
+        postTarget={jest.fn()}
       />
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();

@@ -1,6 +1,7 @@
 package dgs1sdt.magpie.tgts;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
+import dgs1sdt.magpie.ixns.*;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDate;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
@@ -11,6 +12,7 @@ import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
+import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiController;
 import dgs1sdt.magpie.rfis.RfiRepository;
@@ -35,18 +37,27 @@ import static org.junit.Assert.assertEquals;
 
 public class TargetControllerTest extends BaseIntegrationTest {
 
-  TargetController targetController;
   RfiController rfiController;
+  TargetController targetController;
+  IxnController ixnController;
   RfiService rfiService;
   RfiRepository rfiRepository;
   ExploitDateRepository exploitDateRepository;
   TargetRepository targetRepository;
+  SegmentRepository segmentRepository;
+  IxnRepository ixnRepository;
   MetricCreateExploitDateRepository metricCreateExploitDateRepository;
   MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
   MetricCreateTargetRepository metricCreateTargetRepository;
   MetricChangeTargetRepository metricChangeTargetRepository;
   MetricDeleteTargetRepository metricDeleteTargetRepository;
+  MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository;
+
+  @Autowired
+  public void setRfiController(RfiController rfiController) {
+    this.rfiController = rfiController;
+  }
 
   @Autowired
   public void setTargetController(TargetController targetController) {
@@ -54,8 +65,8 @@ public class TargetControllerTest extends BaseIntegrationTest {
   }
 
   @Autowired
-  public void setRfiController(RfiController rfiController) {
-    this.rfiController = rfiController;
+  public void setIxnController(IxnController ixnController) {
+    this.ixnController = ixnController;
   }
 
   @Autowired
@@ -76,6 +87,16 @@ public class TargetControllerTest extends BaseIntegrationTest {
   @Autowired
   public void setTargetRepository(TargetRepository targetRepository) {
     this.targetRepository = targetRepository;
+  }
+
+  @Autowired
+  public void setSegmentRepository(SegmentRepository segmentRepository) {
+    this.segmentRepository = segmentRepository;
+  }
+
+  @Autowired
+  public void setIxnRepository(IxnRepository ixnRepository) {
+    this.ixnRepository = ixnRepository;
   }
 
   @Autowired
@@ -108,17 +129,25 @@ public class TargetControllerTest extends BaseIntegrationTest {
     this.metricDeleteTargetRepository = metricDeleteTargetRepository;
   }
 
+  @Autowired
+  public void setMetricUndoTargetDeleteRepository(MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository) {
+    this.metricUndoTargetDeleteRepository = metricUndoTargetDeleteRepository;
+  }
+
   @Before
   public void clean() {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
+    segmentRepository.deleteAll();
+    ixnRepository.deleteAll();
     metricCreateExploitDateRepository.deleteAll();
     metricChangeExploitDateRepository.deleteAll();
     metricDeleteExploitDateRepository.deleteAll();
     metricCreateTargetRepository.deleteAll();
     metricChangeTargetRepository.deleteAll();
     metricDeleteTargetRepository.deleteAll();
+    metricUndoTargetDeleteRepository.deleteAll();
   }
 
   @Test
@@ -369,10 +398,10 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertEquals(targetId, metricDeleteTargetRepository.findAll().get(0).getTargetId());
 
-    assertEquals(0, targetRepository.findAll().size());
+    assertEquals(0, targetController.getTargets(rfiId).size());
 
     targetController.postTarget(targetJson);
-    targetId = targetRepository.findAll().get(0).getId();
+    targetId = targetRepository.findAll().get(1).getId();
 
     given()
       .port(port)
@@ -382,7 +411,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       .then()
       .statusCode(200);
 
-    assertEquals(0, targetRepository.findAll().size());
+    assertEquals(0, targetController.getTargets(rfiId).size());
 
     assertEquals(2, metricDeleteTargetRepository.findAll().size());
 
@@ -585,5 +614,84 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals(TargetStatus.IN_PROGRESS, metric1.getNewData());
     assertEquals("status", metric2.getField());
     assertEquals(TargetStatus.COMPLETED, metric2.getNewData());
+  }
+
+  @Test
+  public void undoesTargetDeleteAndLogsMetrics() throws Exception {
+    setupIxns();
+    Target target = targetRepository.findAll().get(0);
+    TargetJson targetJson = new TargetJson(target.getId(), target.getRfiId(), target.getExploitDateId(),
+      target.getName(), target.getMgrs(), target.getNotes(), target.getDescription(), target.getStatus());
+
+    long targetId = target.getId();
+
+    long numTargets = targetRepository.findAll().size();
+
+    targetController.deleteTarget(targetId);
+
+    targetController.postTarget(targetJson);
+
+    assertEquals(numTargets, targetRepository.findAll().size());
+    assertEquals(1, metricUndoTargetDeleteRepository.findAll().size());
+    assertEquals(targetId, metricUndoTargetDeleteRepository.findAll().get(0).getTargetId());
+  }
+
+  @Test
+  public void addsTargetsWithNameOfADeletedTarget() throws Exception {
+    setupIxns();
+    Target target = targetRepository.findAll().get(0);
+    long rfiId = target.getRfiId();
+    long exploitDateId = target.getExploitDateId();
+    long targetId = target.getId();
+    String targetName = target.getName();
+
+    targetController.deleteTarget(targetId);
+
+    TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
+
+    targetController.postTarget(targetJson);
+
+    long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetName).getId();
+
+    assertEquals(2, targetController.getTargets(rfiId).size());
+    assertEquals(0, ixnController.getIxns(newTargetId).size());
+  }
+
+  private void setupIxns() throws Exception {
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
+    Date exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
+    exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));
+    Date exploitDate2 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/10/2020").getTime());
+    exploitDateRepository.save(new ExploitDate(exploitDate2, rfiId));
+
+
+    long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
+    long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
+
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
+    long target1Id = targetRepository.findAll().get(0).getId();
+
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
+    long target2Id = targetRepository.findAll().get(1).getId();
+
+
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id, new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
+    long segment1Id = segmentRepository.findAll().get(0).getId();
+
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate2Id, target2Id, new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
+    long segment2Id = segmentRepository.findAll().get(1).getId();
+
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-003
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-004
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-005
+
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", ""));  //123-001
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-002
   }
 }

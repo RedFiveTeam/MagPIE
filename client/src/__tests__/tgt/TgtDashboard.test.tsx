@@ -1,13 +1,24 @@
 import { TgtDashboard } from '../../dashboard/tgt/TgtDashboard';
 import '../../setupEnzyme';
-import { shallow, ShallowWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import { StyledTgtTable } from '../../dashboard/tgt/table/TgtTable';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { SnackbarProvider } from 'notistack';
+import { Provider } from 'react-redux';
+import { initStore } from '../../setupEnzyme';
+import configureStore from '../../configureStore';
+import { StyledTgtDateDivider } from '../../dashboard/tgt/table/TgtDateDivider';
+
+const initState = {
+  ...initStore
+};
+
+//@ts-ignore
+const mockStore = configureStore(history, initState);
 
 describe('TgtDashboardContainer', () => {
-  let subject: ShallowWrapper;
+  let subject: ReactWrapper;
   const moment = require('moment');
   let rfiTest: RfiModel;
   let exitSpy: jest.Mock;
@@ -19,16 +30,24 @@ describe('TgtDashboardContainer', () => {
     updateSpy = jest.fn();
     setPlaceholderSpy = jest.fn();
     rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse', moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 42, 0, 0);
-    subject = shallow(
-      <TgtDashboard
-        rfi={rfiTest}
-        exitTgtPage={exitSpy}
-        updateRfiDate={updateSpy}
-        exploitDates={[]}
-        setDatePlaceholder={setPlaceholderSpy}
-        showDatePlaceholder={false}
-        targets={[]}
-      />
+    subject = mount(
+      <Provider store={mockStore}>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={15000}
+          hideIconVariant
+        >
+          <TgtDashboard
+            rfi={rfiTest}
+            exitTgtPage={exitSpy}
+            updateRfiDate={updateSpy}
+            exploitDates={[]}
+            setDatePlaceholder={setPlaceholderSpy}
+            showDatePlaceholder={false}
+            targets={[]}
+          />
+        </SnackbarProvider>
+      </Provider>,
     );
   });
 
@@ -41,61 +60,40 @@ describe('TgtDashboardContainer', () => {
   });
 
   it('should display the date dividers or not properly', () => {
-    expect(subject.find('.region-divider').exists()).toBeFalsy();
-    expect(subject.find(StyledTgtTable).children().length).toBe(0);
+    expect(subject.find(StyledTgtDateDivider).exists()).toBeFalsy();
 
     let dates: ExploitDateModel[] = [
       new ExploitDateModel(2, 1, moment('2019-11-20').utc()),
       new ExploitDateModel(3, 1, moment('2019-11-21').utc()),
+      new ExploitDateModel(4, 1, moment('2019-11-21').utc()),
     ];
-    subject = shallow(
-      <TgtDashboard
-        rfi={rfiTest}
-        exitTgtPage={exitSpy}
-        updateRfiDate={updateSpy}
-        exploitDates={dates}
-        setDatePlaceholder={setPlaceholderSpy}
-        showDatePlaceholder={false}
-        targets={[]}
-      />
+
+    subject = mount(
+      <Provider store={mockStore}>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={15000}
+          hideIconVariant
+        >
+          <TgtDashboard
+            rfi={rfiTest}
+            exitTgtPage={exitSpy}
+            updateRfiDate={updateSpy}
+            exploitDates={dates}
+            setDatePlaceholder={setPlaceholderSpy}
+            showDatePlaceholder={false}
+            targets={[]}
+          />
+        </SnackbarProvider>
+      </Provider>,
     );
 
-    expect(subject.find(StyledTgtTable).children().length).toBe(2);
-
+    expect(subject.find(StyledTgtDateDivider).length).toBe(3);
   });
 
   it('should display a date placeholder when the add date button is clicked', () => {
     expect(subject.find('.date-divider--placeholder').exists()).toBeFalsy();
-    subject.find('.add-date-button').simulate('click');
+    subject.find('.add-date-button').at(0).simulate('click');
     expect(subject.find('.date-divider--placeholder').exists()).toBeTruthy();
   });
-
-  // TODO: simultaneous rows editable test?
-  // it('should not allow multiple rows to be edited simultaneously', () => {
-  //   let dates = [
-  //     new ExploitDateModel(1, 1, moment('2019-11-21').utc()),
-  //     new ExploitDateModel(2, 1, moment('2019-11-22').utc())
-  //   ];
-  //
-  //   let targets = [
-  //     new TargetModel(1, 1, 1, 'SDT12-123', '12XCV1234567890', '', ''),
-  //     new TargetModel(2, 1, 2, 'SDT12-124', '12XCV1234567891', '', '')
-  //   ];
-  //
-  //   let wrapper = mount(
-  //     <TgtDashboard
-  //       rfi={rfiTest}
-  //       exitTgtPage={exitSpy}
-  //       updateRfiDate={updateSpy}
-  //       exploitDates={dates}
-  //       setDatePlaceholder={setPlaceholderSpy}
-  //       showDatePlaceholder={false}
-  //       targets={targets}
-  //     />
-  //   );
-  //
-  //   expect(wrapper.find(StyledTgtDateSection).at(0)).toBeFalsy();
-  // });
-
-
 });

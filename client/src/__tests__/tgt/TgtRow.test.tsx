@@ -8,8 +8,9 @@ import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { Status } from '../../dashboard/tgt/TgtDashboard';
 import { TgtInputRow } from '../../dashboard/tgt/table/TgtInputRow';
+import { SnackbarProvider } from 'notistack';
 
-describe("Target Row", () => {
+describe('Target Row', () => {
   let subject: ReactWrapper;
   const moment = require('moment');
   let target: TargetModel = new TargetModel(1, 1, 3, 'SDT12-123', '12QWE1231231231', 'These are the notes', 'This is a description');
@@ -25,19 +26,24 @@ describe("Target Row", () => {
     setAddEditTargetSpy = jest.fn();
 
     subject = mount(
-      <TgtRow
-        target={target}
-        key={1}
-        className={'class'}
-        submitPostTarget={(target: TargetPostModel, rfi: RfiModel) => {
-        }}
-        exploitDate={exploitDate}
-        rfi={rfiTest}
-        navigateToIxnPage={navToIxnPageSpy}
-        deleteTgt={deleteSpy}
-        setAddEditTarget={setAddEditTargetSpy}
-        addingOrEditing={false}
-      />
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={15000}
+        hideIconVariant
+      >
+        <TgtRow
+          target={target}
+          key={1}
+          className={'class'}
+          postTarget={jest.fn()}
+          exploitDate={exploitDate}
+          rfi={rfiTest}
+          navigateToIxnPage={navToIxnPageSpy}
+          deleteTgt={deleteSpy}
+          setAddEditTarget={setAddEditTargetSpy}
+          addingOrEditing={false}
+        />
+      </SnackbarProvider>,
     );
   });
 
@@ -48,29 +54,29 @@ describe("Target Row", () => {
 
   it('should call a navigate to interaction page test when the exploitation log button is clicked except in add mode',
     () => {
-    subject.find('.exploitation').simulate('click');
-    expect(navToIxnPageSpy).toBeCalledWith(target, '11/20/2019');
+      subject.find('.exploitation').simulate('click');
+      expect(navToIxnPageSpy).toBeCalledWith(target, '11/20/2019');
 
-    subject = mount(
-      <TgtInputRow
-        target={null}
-        key={1}
-        className={'class'}
-        submitPostTarget={(target: TargetPostModel, rfi: RfiModel) => {
-        }}
-        exploitDate={exploitDate}
-        rfi={rfiTest}
-        navigateToIxnPage={navToIxnPageSpy}
-        deleteTgt={deleteSpy}
-        setAddEditTarget={setAddEditTargetSpy}
-        addingOrEditing={true}
-      />
-    );
+      subject = mount(
+        <TgtInputRow
+          target={null}
+          key={1}
+          className={'class'}
+          submitPostTarget={(target: TargetPostModel, rfi: RfiModel) => {
+          }}
+          exploitDate={exploitDate}
+          rfi={rfiTest}
+          navigateToIxnPage={navToIxnPageSpy}
+          deleteTgt={deleteSpy}
+          setAddEditTarget={setAddEditTargetSpy}
+          addingOrEditing={true}
+        />,
+      );
 
-    subject.find('.exploitation').simulate('click');
+      subject.find('.exploitation').simulate('click');
 
-    expect(navToIxnPageSpy).toHaveBeenCalledTimes(1);
-  });
+      expect(navToIxnPageSpy).toHaveBeenCalledTimes(1);
+    });
 
   it('should make target row editable after double clicking them', () => {
     subject.find('.tgt-form').at(0).simulate('dblclick');

@@ -3,7 +3,7 @@ package dgs1sdt.magpie.rfis;
 import dgs1sdt.magpie.ixns.IxnService;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
-import dgs1sdt.magpie.tgts.TargetRepository;
+import dgs1sdt.magpie.tgts.TargetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,19 +21,19 @@ public class RfiController {
   private RfiService rfiService;
   private MetricsService metricsService;
   private RfiRepository rfiRepository;
-  private TargetRepository targetRepository;
+  private TargetService targetService;
   private IxnService ixnService;
 
   @Autowired
   public RfiController(RfiService rfiService,
                        MetricsService metricsService,
                        RfiRepository rfiRepository,
-                       TargetRepository targetRepository,
+                       TargetService targetService,
                        IxnService ixnService) {
     this.rfiService = rfiService;
     this.metricsService = metricsService;
     this.rfiRepository = rfiRepository;
-    this.targetRepository = targetRepository;
+    this.targetService = targetService;
     this.ixnService = ixnService;
   }
 
@@ -53,8 +53,8 @@ public class RfiController {
   }
 
   @Autowired
-  public void setTargetRepository(TargetRepository targetRepository) {
-    this.targetRepository = targetRepository;
+  public void setTargetService(TargetService targetRepository) {
+    this.targetService = targetRepository;
   }
 
   @Autowired
@@ -68,7 +68,7 @@ public class RfiController {
     List<RfiGet> rfiGetList = new ArrayList<>();
 
     for(Rfi rfi : rfis) {
-      long tgtCount = targetRepository.findNumByRfiId(rfi.getId());
+      long tgtCount = targetService.findNumByRfiId(rfi.getId());
       long ixnCount = ixnService.findNumByRfiId(rfi.getId());
       rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount));
     }
