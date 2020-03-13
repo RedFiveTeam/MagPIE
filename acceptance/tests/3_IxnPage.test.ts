@@ -47,6 +47,7 @@ Scenario('Should be able to add ixns', (I) => {
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
 
+  I.pressKey('Tab');
   I.fillField('.exploit-analyst', 'Billy Bob Joe');
   I.pressKey('Tab');
   I.fillField('.time', '121');
@@ -213,7 +214,7 @@ Scenario('Should be able to delete segments', (I) => {
   I.pressKey('Enter');
   I.waitForText('12:00:00Z');
   I.waitForText('12:30:40Z');
-
+  
   I.fillField('.exploit-analyst', 'Billy Bob Joe');
   I.pressKey('Tab');
   I.fillField('.time', '121');

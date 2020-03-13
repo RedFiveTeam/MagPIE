@@ -35,6 +35,7 @@ describe("Segment Region", () => {
       editIxn={-1}
       setEditIxn={jest.fn()}
       addingOrEditing={false}
+      autofocus={false}
     />
   );
 

@@ -22,7 +22,8 @@ interface MyProps {
   setEditSegment: (segmentId: number) => void;
   editIxn: number;
   setEditIxn: (ixnId: number) => void;
-  addingOrEditing: boolean
+  addingOrEditing: boolean;
+  autofocus: boolean;
   className?: string;
 }
 
@@ -44,6 +45,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           tgtAnalyst={props.tgtAnalyst}
           setTgtAnalyst={props.setTgtAnalyst}
           setEditIxn={props.setEditIxn}
+          autofocus={props.autofocus}
         />
         :
         <StyledIxnRow
@@ -56,8 +58,8 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           setTgtAnalyst={props.setTgtAnalyst}
           setEditIxn={props.setEditIxn}
           addingOrEditing={props.addingOrEditing}
-        />
-    )
+        />,
+    );
   };
 
   return (

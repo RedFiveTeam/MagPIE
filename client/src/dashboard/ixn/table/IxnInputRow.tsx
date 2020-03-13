@@ -23,6 +23,7 @@ interface MyProps {
   tgtAnalyst: string;
   setTgtAnalyst: (tgtAnalyst: string) => void;
   setEditIxn: (ixnId: number) => void;
+  autofocus: boolean;
   className?: string;
 }
 
@@ -226,7 +227,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                 value={exploitAnalyst}
                 placeholder="Name"
                 onChange={inputExploitAnalyst}
-                autoFocus={props.tgtAnalyst === ''}
+                autoFocus={(props.autofocus && props.tgtAnalyst === '') || props.ixn !== null}
               />
             </div>
             <div className={classes.margin}>
@@ -239,7 +240,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                 onBlur={timeBlur}
                 required
                 inputProps={inputProps}
-                autoFocus={props.tgtAnalyst !== ''}
+                autoFocus={props.autofocus && props.tgtAnalyst !== ''}
               />
             </div>
             <div className={classes.margin}>

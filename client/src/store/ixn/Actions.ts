@@ -5,60 +5,61 @@ import { SegmentDeserializer } from './SegmentDeserializer';
 import IxnModel from './IxnModel';
 import { IxnDeserializer } from './IxnDeserializer';
 
-export const loadIxnPage = (target: TargetModel | null, dateString: string | null, segments: SegmentModel[], ixns: IxnModel[]) => {
+export const loadIxnPage = (target: TargetModel | null, dateString: string | null, segments: SegmentModel[], ixns: IxnModel[], autofocus: boolean) => {
   if (target) {
     return {
       type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
       target: target,
       segments: segments,
       ixns: ixns,
-      dateString: dateString
-    }
+      dateString: dateString,
+    };
   } else {
     return {
       type: IxnActionTypes.RELOAD_IXN_PAGE,
       segments: segments,
-      ixns: ixns
-    }
+      ixns: ixns,
+      autofocus: autofocus,
+    };
   }
 };
 
 export const exitIxnPage = () => {
   return {
-    type: IxnActionTypes.EXIT_IXN_PAGE
-  }
+    type: IxnActionTypes.EXIT_IXN_PAGE,
+  };
 };
 
 export const navigateToIxnPage = (target: TargetModel, dateString: string) => {
   return (dispatch: any) => {
     fetchSegments(target.id)
-      .then(segments => dispatch(fetchIxns(target.id, target, dateString, SegmentDeserializer.deserialize(segments))))
+      .then(segments => dispatch(fetchIxns(target.id, target, dateString, SegmentDeserializer.deserialize(segments), false)))
       .catch((reason => {
         console.log(reason);
-      }))
-  }
+      }));
+  };
 };
 
 export const updateSegment = (segment: SegmentModel) => {
   return (dispatch: any) => {
     postSegment(segment)
       .then(response => fetchSegments(segment.targetId))
-      .then(segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments))))
+      .then(segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments), true)))
       .catch((reason) => {
         console.log(reason);
-      })
-  }
+      });
+  };
 };
 
 export const updateIxn = (ixn: IxnModel) => {
   return (dispatch: any) => {
     postIxn(ixn)
       .then(response => fetchSegments(ixn.targetId))
-      .then(segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments))))
+      .then(segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments), !ixn.id)))
       .catch((reason) => {
         console.log(reason);
-      })
-  }
+      });
+  };
 };
 
 export const fetchSegments = (targetId: number) => {
@@ -66,40 +67,40 @@ export const fetchSegments = (targetId: number) => {
     .then(response => response.json())
     .catch((reason => {
       console.log(reason);
-    }))
+    }));
 };
 
-export const fetchIxns = (targetId: number, target: TargetModel | null, dateString: string | null, segments: SegmentModel[]) => {
+export const fetchIxns = (targetId: number, target: TargetModel | null, dateString: string | null, segments: SegmentModel[], autofocus: boolean) => {
   return (dispatch: any) => {
     return fetch('/api/ixn/' + targetId)
       .then(response => response.json())
-      .then(ixns => dispatch(loadIxnPage(target, dateString, segments, IxnDeserializer.deserialize(ixns))))
+      .then(ixns => dispatch(loadIxnPage(target, dateString, segments, IxnDeserializer.deserialize(ixns), autofocus)))
       .catch((reason => {
         console.log(reason);
-      }))
-  }
+      }));
+  };
 };
 
 export const deleteIxn = (ixn: IxnModel) => {
   return (dispatch: any) => {
     return postIxnDelete(ixn.id!)
       .then(response => fetchSegments(ixn.targetId))
-      .then(segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments))))
+      .then(segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments), false)))
       .catch((reason) => {
         console.log(reason);
-      })
-  }
+      });
+  };
 };
 
 export const deleteSegment = (segment: SegmentModel) => {
   return (dispatch: any) => {
     return postSegmentDelete(segment.id!)
       .then(response => fetchSegments(segment.targetId))
-      .then(segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments))))
+      .then(segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments), false)))
       .catch((reason) => {
         console.log(reason);
-      })
-  }
+      });
+  };
 };
 
 export const postIxnDelete = (ixnId: number) => {
@@ -111,7 +112,7 @@ export const postIxnDelete = (ixnId: number) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-    }
+    },
   );
 };
 
@@ -124,7 +125,7 @@ export const postSegmentDelete = (segmentId: number) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-    }
+    },
   );
 };
 
@@ -138,7 +139,7 @@ export const postSegment = (segment: SegmentModel) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(segment),
-    }
+    },
   );
 };
 
@@ -152,6 +153,6 @@ export const postIxn = (ixn: IxnModel) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(ixn),
-    }
+    },
   );
 };

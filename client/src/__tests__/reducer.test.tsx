@@ -354,11 +354,12 @@ describe('reducer', () => {
         segments: segments,
         dateString: '11/14/2020',
         ixns: ixns,
+        autofocus: false,
       });
 
     let newSegments = [
       new SegmentModel(1, 1, 1, 1, moment(123), moment(456)),
-      new SegmentModel(2, 1, 1, 1, moment(678), moment(789)),
+      new SegmentModel(2, 1, 1, 1, moment(567), moment(789)),
     ];
 
     let newIxns = [
@@ -409,6 +410,7 @@ describe('reducer', () => {
         dateString: '11/11/2011',
         segments: [],
         ixns: [],
+        autofocus: false
       });
   });
 

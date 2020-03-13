@@ -31,6 +31,7 @@ export const IxnDashboard: React.FC<Props> = props => {
   const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
   const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
+  const autofocus: boolean = useSelector(({ixnState}: ApplicationState) => ixnState.autofocus);
 
   let addingOrEditing = addSegment || editSegment > 0 || editIxn > 0;
 
@@ -99,6 +100,7 @@ export const IxnDashboard: React.FC<Props> = props => {
         editIxn={editIxn}
         setEditIxn={handleEditIxn}
         addingOrEditing={addingOrEditing}
+        autofocus={autofocus}
       />,
     );
   }
