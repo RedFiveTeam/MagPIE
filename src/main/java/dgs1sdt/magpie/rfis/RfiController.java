@@ -1,6 +1,6 @@
 package dgs1sdt.magpie.rfis;
 
-import dgs1sdt.magpie.ixns.IxnRepository;
+import dgs1sdt.magpie.ixns.IxnService;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.magpie.tgts.TargetRepository;
@@ -22,19 +22,19 @@ public class RfiController {
   private MetricsService metricsService;
   private RfiRepository rfiRepository;
   private TargetRepository targetRepository;
-  private IxnRepository ixnRepository;
+  private IxnService ixnService;
 
   @Autowired
   public RfiController(RfiService rfiService,
                        MetricsService metricsService,
                        RfiRepository rfiRepository,
                        TargetRepository targetRepository,
-                       IxnRepository ixnRepository) {
+                       IxnService ixnService) {
     this.rfiService = rfiService;
     this.metricsService = metricsService;
     this.rfiRepository = rfiRepository;
     this.targetRepository = targetRepository;
-    this.ixnRepository = ixnRepository;
+    this.ixnService = ixnService;
   }
 
   @Autowired
@@ -58,8 +58,8 @@ public class RfiController {
   }
 
   @Autowired
-  public void setIxnRepository(IxnRepository ixnRepository) {
-    this.ixnRepository = ixnRepository;
+  public void setIxnService(IxnService ixnService) {
+    this.ixnService = ixnService;
   }
 
   @GetMapping
@@ -69,7 +69,7 @@ public class RfiController {
 
     for(Rfi rfi : rfis) {
       long tgtCount = targetRepository.findNumByRfiId(rfi.getId());
-      long ixnCount = ixnRepository.findNumByRfiId(rfi.getId());
+      long ixnCount = ixnService.findNumByRfiId(rfi.getId());
       rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount));
     }
 

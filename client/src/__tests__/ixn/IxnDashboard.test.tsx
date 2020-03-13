@@ -11,6 +11,7 @@ import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { Provider } from 'react-redux';
 import { StyledTableHeader } from '../../dashboard/components/header/TableHeader';
 import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
+import { SnackbarProvider } from 'notistack';
 
 let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '');
 
@@ -21,23 +22,28 @@ const initState = {
     target: target,
     dateString: '11/11/2011',
     segments: [] as SegmentModel[],
-    ixns: []
-  }
+    ixns: [],
+  },
 };
 
 //@ts-ignore
 const mockStore = configureStore(history, initState);
 
-describe("Interactions Dashboard", () => {
+describe('Interactions Dashboard', () => {
   let subject: ReactWrapper;
   const moment = require('moment');
-
 
   beforeEach(() => {
     subject = mount(
       <Provider store={mockStore}>
-        <IxnDashboard />
-      </Provider>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={15000}
+          hideIconVariant
+        >
+          <IxnDashboard/>
+        </SnackbarProvider>
+      </Provider>,
     );
   });
 
@@ -69,8 +75,8 @@ describe("Interactions Dashboard", () => {
         target: target,
         dateString: '11/11/2011',
         segments: [new SegmentModel(1, 1, 1, 1, moment(0), moment(1))],
-        ixns: []
-      }
+        ixns: [],
+      },
     };
 
     //@ts-ignore
@@ -78,15 +84,21 @@ describe("Interactions Dashboard", () => {
 
     subject = mount(
       <Provider store={newMockStore}>
-        <IxnDashboard />
-      </Provider>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={15000}
+          hideIconVariant
+        >
+          <IxnDashboard/>
+        </SnackbarProvider>
+      </Provider>,
     );
 
     expect(subject.find(StyledTableHeader).exists()).toBeTruthy();
-    expect(subject.find(StyledTableHeader).text()).toContain("Exploit Analyst");
-    expect(subject.find(StyledTableHeader).text()).toContain("Time");
-    expect(subject.find(StyledTableHeader).text()).toContain("Activity");
-    expect(subject.find(StyledTableHeader).text()).toContain("Track ID");
+    expect(subject.find(StyledTableHeader).text()).toContain('Exploit Analyst');
+    expect(subject.find(StyledTableHeader).text()).toContain('Time');
+    expect(subject.find(StyledTableHeader).text()).toContain('Activity');
+    expect(subject.find(StyledTableHeader).text()).toContain('Track ID');
   });
 
   it('should display interactions within the interactions table', () => {
@@ -97,8 +109,8 @@ describe("Interactions Dashboard", () => {
         target: target,
         dateString: '11/11/2011',
         segments: [new SegmentModel(1, 1, 1, 1, moment(0), moment(1))],
-        ixns: []
-      }
+        ixns: [],
+      },
     };
 
     //@ts-ignore
@@ -106,8 +118,14 @@ describe("Interactions Dashboard", () => {
 
     subject = mount(
       <Provider store={newMockStore}>
-        <IxnDashboard />
-      </Provider>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={15000}
+          hideIconVariant
+        >
+          <IxnDashboard/>
+        </SnackbarProvider>
+      </Provider>,
     );
 
     expect(subject.find(StyledIxnInputRow).exists()).toBeTruthy();

@@ -26,8 +26,7 @@ public class TargetController {
   private TargetRepository targetRepository;
   private SegmentRepository segmentRepository;
   private IxnRepository ixnRepository;
-  private IxnController ixnController;
-
+  private IxnService ixnService;
 
   @Autowired
   public TargetController(RfiRepository rfiRepository,
@@ -35,13 +34,13 @@ public class TargetController {
                           TargetRepository targetRepository,
                           SegmentRepository segmentRepository,
                           IxnRepository ixnRepository,
-                          IxnController ixnController) {
+                          IxnService ixnService) {
     this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
     this.targetRepository = targetRepository;
     this.segmentRepository = segmentRepository;
     this.ixnRepository = ixnRepository;
-    this.ixnController = ixnController;
+    this.ixnService = ixnService;
   }
 
   @Autowired
@@ -75,8 +74,8 @@ public class TargetController {
   }
 
   @Autowired
-  public void setIxnController(IxnController ixnController) {
-    this.ixnController = ixnController;
+  public void setIxnService(IxnService ixnService) {
+    this.ixnService = ixnService;
   }
 
   @GetMapping
@@ -155,7 +154,7 @@ public class TargetController {
 
       targetRepository.deleteById(targetId);
 
-      ixnController.assignTracks(rfiId, targetName);
+      ixnService.assignTracks(rfiId, targetName);
       return getTargets(rfiId);
     } else {
       System.err.println("Error deleting target: Could not find target by id " + targetId);
@@ -169,7 +168,7 @@ public class TargetController {
       List<Target> targetList = targetRepository.findAllByExploitDateId(exploitDateId);
       for (Target target : targetList) {
         deleteTarget(target.getId());
-        ixnController.assignTracks(target.getRfiId(), target.getName());
+        ixnService.assignTracks(target.getRfiId(), target.getName());
       }
     }
     if (exploitDateRepository.findById(exploitDateId).isPresent()) {
@@ -223,8 +222,8 @@ public class TargetController {
         targetRepository.save(newTarget);
 
         if (!oldName.equals(newTarget.getName())) {
-          ixnController.assignTracks(oldTarget.getRfiId(), oldName);
-          ixnController.assignTracks(newTarget.getRfiId(), newTarget.getName());
+          ixnService.assignTracks(oldTarget.getRfiId(), oldName);
+          ixnService.assignTracks(newTarget.getRfiId(), newTarget.getName());
         }
 
       } else

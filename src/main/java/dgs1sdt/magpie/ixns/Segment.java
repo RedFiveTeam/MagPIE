@@ -24,6 +24,7 @@ public class Segment {
   private long targetId;
   private Timestamp startTime;
   private Timestamp endTime;
+  private Timestamp deleted;
 
   public Segment(SegmentJson segmentJson) {
     this.rfiId = segmentJson.getRfiId();

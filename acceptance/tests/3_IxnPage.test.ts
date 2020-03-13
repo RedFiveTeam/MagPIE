@@ -194,17 +194,23 @@ Scenario('Should be able to edit segments', (I) => {
   I.waitForText('12:00:00Z');
 });
 
-Scenario('Should be able to delete segments', (I) => {
+Scenario('Should be able to delete segments and undo segment delete', (I) => {
   I.click('.exploitation');
   I.waitForText('TGT:', 10);
 
-  //Delete segment w/o interactions
+  //Delete segment w/o interactions and undo
   I.click('.delete-segment');
+
+  I.waitForText('You deleted 11:00:00Z-12:00:00Z', 10);
+
+  I.click('UNDO');
+
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:', 10);
   I.click('.exploitation');
-  I.waitForText('TGT:', 10);
-  I.dontSee('12:00:00Z');
+
+  //Redo delete
+  I.click('.delete-segment');
+  I.waitForText('You deleted 11:00:00Z-12:00:00Z', 10);
 
   //Delete segment with interactions
   I.click('.add-segment-button');
@@ -231,10 +237,7 @@ Scenario('Should be able to delete segments', (I) => {
   I.click('.delete-segment');
   I.click('.modal-yes');
 
-  I.click('.ixn-dash--header--back-button');
-  I.click('.exploitation');
-
-  I.dontSee('12:00:00Z');
+  I.waitForText('You deleted');
 });
 
 Scenario('Should display a modal when deleting targets with ixns', (I) => {

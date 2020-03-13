@@ -13,6 +13,7 @@ import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxnRepository;
 import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegment;
 import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegmentRepository;
 import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDeleteRepository;
+import dgs1sdt.magpie.metrics.undoSegmentDelete.MetricUndoSegmentDeleteRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.*;
@@ -55,6 +56,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
   MetricChangeIxnRepository metricChangeIxnRepository;
   @Autowired
   MetricUndoIxnDeleteRepository metricUndoIxnDeleteRepository;
+  @Autowired
+  MetricUndoSegmentDeleteRepository metricUndoSegmentDeleteRepository;
   @Autowired
   IxnController ixnController;
   @Autowired
@@ -452,7 +455,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       ""
     ));
 
-    assertEquals(1, segmentRepository.findAll().size());
+    assertEquals(1, ixnController.getSegments(targetId).size());
     assertEquals(2, ixnRepository.findAll().size());
 
     given()
@@ -463,8 +466,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
       .then()
       .statusCode(200);
 
-    assertEquals(0, segmentRepository.findAll().size());
-    assertEquals(0, ixnRepository.findAll().size());
+    assertEquals(0, ixnController.getSegments(targetId).size());
+    assertEquals(0, ixnController.getIxns(targetId).size());
 
     assertEquals(1, metricDeleteSegmentRepository.findAll().size());
 
@@ -488,7 +491,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       )
     )));
 
-    segmentId = segmentRepository.findAll().get(0).getId();
+    segmentId = segmentRepository.findAll().get(1).getId();
 
     given()
       .port(port)
@@ -728,47 +731,6 @@ public class IxnControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void properlyAssignsTrackIDs() throws Exception {
-    setupIxns();
-    long rfiId = rfiRepository.findAll().get(0).getId();
-    long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
-    long target2Id = targetRepository.findAll().get(1).getId();
-    long segment2Id = segmentRepository.findAll().get(1).getId();
-
-    ixnController.assignTracks(rfiId, "SDT12-123");
-
-    Ixn ixn1 = ixnRepository.findAll().get(7);
-    Ixn ixn2 = ixnRepository.findAll().get(9);
-    Ixn ixn3 = ixnRepository.findAll().get(0);
-    Ixn ixn4 = ixnRepository.findAll().get(2);
-    Ixn ixn5 = ixnRepository.findAll().get(4);
-
-    assertEquals("123-001", ixn1.getTrack());
-    assertEquals("123-002", ixn2.getTrack());
-    assertEquals("123-003", ixn3.getTrack());
-    assertEquals("123-004", ixn4.getTrack());
-    assertEquals("123-005", ixn5.getTrack());
-
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(678000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-003
-
-    ixnController.assignTracks(rfiId, "SDT12-123");
-
-    ixn1 = ixnRepository.findAll().get(7);
-    ixn2 = ixnRepository.findAll().get(9);
-    ixn3 = ixnRepository.findAll().get(10);
-    ixn4 = ixnRepository.findAll().get(0);
-    ixn5 = ixnRepository.findAll().get(2);
-    Ixn ixn6 = ixnRepository.findAll().get(4);
-
-    assertEquals("123-001", ixn1.getTrack());
-    assertEquals("123-002", ixn2.getTrack());
-    assertEquals("123-003", ixn3.getTrack());
-    assertEquals("123-004", ixn4.getTrack());
-    assertEquals("123-005", ixn5.getTrack());
-    assertEquals("123-006", ixn6.getTrack());
-  }
-
-  @Test
   public void assignsTrackIDsOnIxnSegmentTargetExploitDateDeleteAndTargetRename() throws Exception {
     long rfiId;
     long exploitDate2Id;
@@ -837,6 +799,25 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals(1, metricUndoIxnDeleteRepository.findAll().size());
     assertEquals(ixnId, metricUndoIxnDeleteRepository.findAll().get(0).getIxnId());
 
+  }
+
+  @Test
+  public void undoesSegmentDeleteAndLogsMetrics() throws Exception {
+    setupIxns();
+    Segment segment = segmentRepository.findAll().get(0);
+    SegmentJson segmentJson = new SegmentJson(segment.getId(), segment.getRfiId(), segment.getExploitDateId(), segment.getTargetId(), segment.getStartTime(), segment.getEndTime());
+
+    long segmentId = segment.getId();
+
+    long numSegments = segmentRepository.findAll().size();
+
+    ixnController.deleteSegment(segmentId);
+
+    ixnController.postSegment(segmentJson);
+
+    assertEquals(numSegments, segmentRepository.findAll().size());
+    assertEquals(1, metricUndoSegmentDeleteRepository.findAll().size());
+    assertEquals(segmentId, metricUndoSegmentDeleteRepository.findAll().get(0).getSegmentId());
   }
 
   private void setupIxns() throws Exception {

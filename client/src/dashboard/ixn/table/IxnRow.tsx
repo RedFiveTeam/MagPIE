@@ -1,6 +1,6 @@
 import * as React from 'react';
 import IxnModel, { IxnStatus } from '../../../store/ixn/IxnModel';
-import { Box, Button, IconButton, Theme, Tooltip, withStyles } from '@material-ui/core';
+import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import classNames from 'classnames';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
@@ -12,7 +12,7 @@ import { IxnDeleteButton } from './IxnDeleteButton';
 import styled from 'styled-components';
 import { rowStyles } from '../../../resources/theme';
 import { useSnackbar } from 'notistack';
-import SnackbarDismissIcon from '../../../resources/icons/SnackbarDismissIcon';
+import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
 
 interface MyProps {
   ixn: IxnModel;
@@ -40,32 +40,9 @@ export const IxnRow: React.FC<MyProps> = props => {
   const classes = rowStyles();
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-  const undo = (key: any, ixn: IxnModel, postIxn: (ixn: IxnModel) => void) => (
-    <>
-      <Button
-        variant={'text'}
-        color={'primary'}
-        onClick={() => {
-          postIxn(ixn);
-          closeSnackbar(key);
-        }}
-        className={classes.snackbarButton}
-      >
-        UNDO
-      </Button>
-      <IconButton
-        onClick={() => closeSnackbar(key)}
-        color={'primary'}
-      >
-        <SnackbarDismissIcon/>
-      </IconButton>
-
-    </>
-  );
-
   const handleDeleteClick = () => {
     enqueueSnackbar('Interaction deleted', {
-      action: (key) => undo(key, props.ixn, props.postIxn),
+      action: (key) => UndoSnackbarAction(key, props.ixn, props.postIxn, closeSnackbar, classes.snackbarButton),
       variant: 'info'
     });
     props.deleteIxn(props.ixn);
