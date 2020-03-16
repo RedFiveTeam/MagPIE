@@ -29,11 +29,11 @@ public class TargetService {
 
   @Autowired
   public TargetService(RfiRepository rfiRepository,
-                          ExploitDateRepository exploitDateRepository,
-                          TargetRepository targetRepository,
-                          SegmentRepository segmentRepository,
-                          IxnRepository ixnRepository,
-                          IxnService ixnService) {
+                       ExploitDateRepository exploitDateRepository,
+                       TargetRepository targetRepository,
+                       SegmentRepository segmentRepository,
+                       IxnRepository ixnRepository,
+                       IxnService ixnService) {
     this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
     this.targetRepository = targetRepository;
@@ -144,10 +144,12 @@ public class TargetService {
       this.metricsService.addDeleteTarget(targetId);
 
       ixnService.assignTracks(target.getRfiId(), targetRepository.findById(target.getId()).get().getName());
+
+      return this.getTargets(target.getRfiId());
     } else {
       System.err.println("Error deleting target: could not find target with id " + targetId);
+      return new ArrayList<>();
     }
-    return new ArrayList<>();
   }
 
   public void deleteTarget(long targetId) {

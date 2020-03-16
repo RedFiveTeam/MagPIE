@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
@@ -16,7 +16,6 @@ import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import RfiModel from '../../../store/rfi/RfiModel';
 import { StyledTgtStatusPickerOutline } from '../../../resources/icons/TgtStatusPickerOutline';
 import { Status } from '../TgtDashboard';
-import { RowAction } from '../../../utils';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
 import { IxnDeserializer } from '../../../store/ixn/IxnDeserializer';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
@@ -51,32 +50,9 @@ const HtmlTooltip = withStyles((theme: Theme) => ({
 export const TgtRow: React.FC<Props> = props => {
   const classes = rowStyles();
 
-  const [action, setAction] = useState(RowAction.NONE);
   const [displayModal, setDisplayModal] = useState(false);
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-
-  const handleAction = () => {
-    switch (action) {
-      case RowAction.DELETING:
-        if (props.target) {
-          enqueueSnackbar('You deleted ' + props.target.name, {
-            action: (key) => UndoSnackbarAction(key, {...props.target, targetId: props.target.id},
-              props.postTarget, closeSnackbar, classes.snackbarButton),
-            variant: 'info'
-          });
-          props.deleteTgt(props.target.id);
-        } else {
-          props.setAddEditTarget(Status.VIEW);
-        }
-        break;
-    }
-  };
-
-  useEffect(
-    handleAction,
-    [action],
-  );
 
   const submitStatusChange = (status: TargetStatus) => {
     let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
@@ -92,11 +68,21 @@ export const TgtRow: React.FC<Props> = props => {
       .then(ixns => checkIxns(IxnDeserializer.deserialize(ixns).length > 0));
   };
 
+  const performDelete = () => {
+    enqueueSnackbar('You deleted ' + props.target.name, {
+      action: (key) => UndoSnackbarAction(key, {...props.target, targetId: props.target.id},
+        props.postTarget, closeSnackbar, classes.snackbarButton),
+      variant: 'info'
+    });
+    props.deleteTgt(props.target.id);
+  }
+
   const checkIxns = (hasIxns: boolean) => {
     if (hasIxns)
       setDisplayModal(true);
-    else
-      setAction(RowAction.DELETING);
+    else {
+      performDelete();
+    }
   };
 
   const handleIxnClick = () => {
@@ -187,7 +173,7 @@ export const TgtRow: React.FC<Props> = props => {
         deletingItem={props.target.name}
         display={displayModal}
         setDisplay={setDisplayModal}
-        handleYes={() => setAction(RowAction.DELETING)}
+        handleYes={() => performDelete()}
       />
     </div>
   );

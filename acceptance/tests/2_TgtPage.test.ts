@@ -126,6 +126,10 @@ Scenario('Should be able to delete and undo delete tgt on the Tgt page', (I) => 
   I.click('.cell--navigate-to-tgt-button');
 
   I.click('.delete-tgt-button');
+
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--navigate-to-tgt-button');
+
   I.dontSeeElement('.tgt-form-box');
   I.click('.delete-date');
 });
