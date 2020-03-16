@@ -12,6 +12,7 @@ import { Status } from '../TgtDashboard';
 import { StyledTgtInputRow } from './TgtInputRow';
 import theme from '../../../resources/theme';
 import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
+import { ExploitDatePostModel } from '../../../store/tgt/ExploitDatePostModel';
 
 interface Props {
   rfi: RfiModel;
@@ -26,6 +27,7 @@ interface Props {
   index: number;
   addingOrEditing: boolean;
   postTarget: (target: TargetPostModel) => void;
+  postExploitDate: (date: ExploitDatePostModel) => void;
   className?: string;
 }
 
@@ -71,6 +73,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
         className={"date-divider--" + props.exploitDateDisplay}
         uKey={props.index}
         hasTgts={props.targets.length > 0}
+        postExploitDate={props.postExploitDate}
       />
         <div className={'tgt-input'}>
           <Box

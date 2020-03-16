@@ -52,6 +52,6 @@ public class TargetController {
 
   @DeleteMapping(path = "/dates/delete")
   public List<ExploitDate> deleteExploitDate(@RequestParam("exploitDateId") long exploitDateId) {
-    return targetService.deleteExploitDate(exploitDateId);
+    return targetService.setDeletedExploitDate(exploitDateId);
   }
 }

@@ -12,6 +12,7 @@ import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
+import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDeleteRepository;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiController;
@@ -33,6 +34,7 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 
 public class TargetControllerTest extends BaseIntegrationTest {
@@ -53,6 +55,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
   MetricChangeTargetRepository metricChangeTargetRepository;
   MetricDeleteTargetRepository metricDeleteTargetRepository;
   MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository;
+  MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -132,6 +135,11 @@ public class TargetControllerTest extends BaseIntegrationTest {
   @Autowired
   public void setMetricUndoTargetDeleteRepository(MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository) {
     this.metricUndoTargetDeleteRepository = metricUndoTargetDeleteRepository;
+  }
+
+  @Autowired
+  public void setMetricUndoExploitDateDeleteRepository(MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository) {
+    this.metricUndoExploitDateDeleteRepository = metricUndoExploitDateDeleteRepository;
   }
 
   @Before
@@ -319,7 +327,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     targetController.deleteExploitDate(exploitDateId);
 
-    assertEquals(0, exploitDateRepository.findAll().size());
+    assertEquals(0, targetController.getExploitDates(rfiId).size());
 
     assertEquals(1, metricDeleteExploitDateRepository.findAll().size());
 
@@ -364,9 +372,9 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     targetController.deleteExploitDate(id);
 
-    assertEquals(0, exploitDateRepository.findAll().size());
+    assertEquals(0, targetController.getExploitDates(rfiId).size());
 
-    assertEquals(0, targetRepository.findAll().size());
+    assertEquals(0, targetController.getTargets(rfiId).size());
   }
 
   @Test
@@ -646,6 +654,65 @@ public class TargetControllerTest extends BaseIntegrationTest {
     String targetName = target.getName();
 
     targetController.deleteTarget(targetId);
+
+    TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
+
+    targetController.postTarget(targetJson);
+
+    long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetName).getId();
+
+    assertEquals(2, targetController.getTargets(rfiId).size());
+    assertEquals(0, ixnController.getIxns(newTargetId).size());
+  }
+
+  @Test
+  public void undoesDateDeleteAndLogsMetrics() throws Exception {
+    setupIxns();
+    ExploitDate exploitDate = exploitDateRepository.findAll().get(0);
+    ExploitDateJson exploitDateJson = new ExploitDateJson(exploitDate.getId(), exploitDate.getRfiId(),
+      exploitDate.getExploitDate());
+    long exploitDateId = exploitDate.getId();
+    long rfiId = exploitDate.getRfiId();
+
+    long numExploitDates = exploitDateRepository.findAll().size();
+
+    long numTargets = targetController.getTargets(rfiId).size();
+
+    targetController.deleteExploitDate(exploitDateId);
+
+    targetController.postExploitDate(exploitDateJson);
+
+    assertEquals(numExploitDates, exploitDateRepository.findAll().size());
+    assertEquals(numTargets, targetController.getTargets(rfiId).size());
+    assertEquals(1, metricUndoExploitDateDeleteRepository.findAll().size());
+    assertEquals(exploitDateId, metricUndoExploitDateDeleteRepository.findAll().get(0).getExploitDateId());
+    assertNull(exploitDateRepository.findById(exploitDateId).get().getDeleted());
+  }
+
+  @Test
+  public void createsExploitDatesWithTheSameDateAsADeletedDate() throws Exception {
+    setupIxns();
+    ExploitDate date = exploitDateRepository.findAll().get(0);
+    ExploitDateJson dateJson = new ExploitDateJson(date.getRfiId(), date.getExploitDate());
+
+    long numExploitDates = exploitDateRepository.findAll().size();
+
+    targetController.deleteExploitDate(date.getId());
+
+    targetController.postExploitDate(dateJson);
+
+    assertEquals(numExploitDates, targetController.getExploitDates(date.getRfiId()).size());
+  }
+
+  @Test
+  public void addsTargetsWithNameOfATargetUnderADeletedDate() throws Exception {
+    setupIxns();
+    Target target = targetRepository.findAll().get(0);
+    long rfiId = target.getRfiId();
+    long exploitDateId = target.getExploitDateId();
+    String targetName = target.getName();
+
+    targetController.deleteExploitDate(exploitDateId);
 
     TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
 

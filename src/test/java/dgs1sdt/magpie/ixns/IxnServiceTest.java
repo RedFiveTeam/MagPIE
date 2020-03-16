@@ -63,7 +63,8 @@ public class IxnServiceTest extends BaseIntegrationTest {
     assertEquals("123-004", ixn4.getTrack());
     assertEquals("123-005", ixn5.getTrack());
 
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(678000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-003
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(678000)
+      .getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-003
 
     ixnService.assignTracks(rfiId, "SDT12-123");
 

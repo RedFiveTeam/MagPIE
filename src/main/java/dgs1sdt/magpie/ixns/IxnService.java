@@ -169,9 +169,7 @@ public class IxnService {
   }
 
   public void assignTracks(long rfiId, String targetName) {
-    List<Target> targets = targetRepository.findAllByRfiIdAndName(rfiId, targetName)
-      .stream().filter(target -> target.getDeleted() == null)
-      .collect(Collectors.toList());
+    List<Target> targets = targetRepository.findAllByRfiIdAndName(rfiId, targetName);
     List<Ixn> ixns = new ArrayList<>();
 
     //sort targets by exploit date

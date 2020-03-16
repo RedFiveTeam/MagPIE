@@ -10,9 +10,8 @@ import {
   postExploitDatesUpdate,
   postTarget,
   postTargetDelete,
-  truncateAndConvertDateToUtc,
   updateExploitDateSuccess,
-  updateTgtSuccess
+  updateTgtSuccess,
 } from './Actions';
 
 export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstLoad: boolean) => {
@@ -37,17 +36,10 @@ export const deleteExploitDate = (exploitDateId: number) => {
   }
 };
 
-export const updateRfiDate = (rfiId: number, date: Date, oldDate?: ExploitDateModel) => {
-  let newDate = truncateAndConvertDateToUtc(date); //convert date to UTC
-  let exploitDate: ExploitDatePostModel = new ExploitDatePostModel(
-    oldDate ? oldDate.id : null,
-    rfiId,
-    newDate
-  );
+export const postExploitDate = (rfi: RfiModel, exploitDate: ExploitDatePostModel) => {
   return (dispatch: any) => {
     postExploitDatesUpdate(exploitDate)
-      .then(response => response.json())
-      .then(dates => dispatch(updateExploitDateSuccess(ExploitDateDeserializer.deserialize(dates))))
+      .then(response => dispatch(loadTgtPage(rfi, false)))
       .catch((reason) => {
         console.log(reason)
       })

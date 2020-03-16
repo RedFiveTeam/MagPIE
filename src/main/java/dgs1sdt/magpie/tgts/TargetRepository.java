@@ -10,10 +10,15 @@ public interface TargetRepository extends JpaRepository<Target, Long> {
     "AND tgt.deleted IS NULL")
   Target findByRfiIdAndExploitDateIdAndName(long rfiId, long exploitDateId, String name);
 
+  @Query("SELECT tgt FROM Target tgt WHERE tgt.rfiId = ?1 AND tgt.deleted IS NULL")
   List<Target> findAllByRfiId(long rfiId);
-  List<Target> findAllByExploitDateId(long exploit);
-  List<Target> findAllByRfiIdAndName(long rfiId, String name);
 
-//  @Query("SELECT COUNT(tgt) FROM Target tgt WHERE tgt.rfiId = ?1")
-//  long findNumByRfiId(long rfiId);
+  @Query("SELECT tgt FROM Target tgt WHERE tgt.exploitDateId = ?1 AND tgt.deleted IS NULL")
+  List<Target> findAllByExploitDateId(long exploitDateId);
+
+  @Query("SELECT tgt FROM Target tgt WHERE tgt.exploitDateId = ?1 AND tgt.deleted IS NOT NULL")
+  List<Target> findAllByExploitDateIdAndDeletedIsNotNull(long exploitDateId);
+
+  @Query("SELECT tgt FROM Target tgt WHERE tgt.rfiId = ?1 AND tgt.name = ?2 AND tgt.deleted IS NULL")
+  List<Target> findAllByRfiIdAndName(long rfiId, String name);
 }

@@ -58,7 +58,7 @@ export const TgtRow: React.FC<Props> = props => {
     let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
       props.target.name, props.target.mgrs, props.target.notes, props.target.description, status);
     props.postTarget(
-      newTarget
+      newTarget,
     );
   };
 
@@ -72,10 +72,10 @@ export const TgtRow: React.FC<Props> = props => {
     enqueueSnackbar('You deleted ' + props.target.name, {
       action: (key) => UndoSnackbarAction(key, {...props.target, targetId: props.target.id},
         props.postTarget, closeSnackbar, classes.snackbarButton),
-      variant: 'info'
+      variant: 'info',
     });
     props.deleteTgt(props.target.id);
-  }
+  };
 
   const checkIxns = (hasIxns: boolean) => {
     if (hasIxns)

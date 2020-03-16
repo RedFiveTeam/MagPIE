@@ -4,8 +4,9 @@ import SnackbarDismissIcon from '../../resources/icons/SnackbarDismissIcon';
 import * as React from 'react';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { TargetPostModel } from '../../store/tgt/TargetPostModel';
+import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 
-type UndoTypes = IxnModel | SegmentModel | TargetPostModel;
+type UndoTypes = IxnModel | SegmentModel | TargetPostModel | ExploitDatePostModel;
 
 export const UndoSnackbarAction = (key: any, data: UndoTypes, postData: (data: any) => void,
                                    closeSnackbar: (key: any) => void, className: string) => {

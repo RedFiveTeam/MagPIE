@@ -45,6 +45,8 @@ import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSort;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDelete;
+import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDeleteRepository;
 import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDelete;
 import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDeleteRepository;
 import dgs1sdt.magpie.metrics.undoSegmentDelete.MetricUndoSegmentDelete;
@@ -87,6 +89,7 @@ public class MetricsService {
   private MetricUndoIxnDeleteRepository metricUndoIxnDeleteRepository;
   private MetricUndoSegmentDeleteRepository metricUndoSegmentDeleteRepository;
   private MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository;
+  private MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
@@ -196,6 +199,11 @@ public class MetricsService {
   @Autowired
   public void setMetricUndoTargetDeleteRepository(MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository) {
     this.metricUndoTargetDeleteRepository = metricUndoTargetDeleteRepository;
+  }
+
+  @Autowired
+  public void setMetricUndoExploitDateDeleteRepository(MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository) {
+    this.metricUndoExploitDateDeleteRepository = metricUndoExploitDateDeleteRepository;
   }
 
   public long getSiteVisitCount() {
@@ -381,5 +389,9 @@ public class MetricsService {
 
   public MetricUndoTargetDelete addUndoTargetDelete(long targetId) {
     return metricUndoTargetDeleteRepository.save(new MetricUndoTargetDelete(targetId));
+  }
+
+  public MetricUndoExploitDateDelete addUndoExploitDateDelete(long exploitDateId) {
+    return metricUndoExploitDateDeleteRepository.save(new MetricUndoExploitDateDelete(exploitDateId));
   }
 }

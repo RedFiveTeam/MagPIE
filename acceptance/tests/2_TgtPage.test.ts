@@ -32,10 +32,20 @@ Scenario('Should be able to edit dates on the Tgt page', (I) => {
   I.dontSeeElement(locate('input').withAttr({value: '02/01/2020'}));
 });
 
-Scenario('Should be able to delete dates on the Tgt page', (I) => {
+Scenario('Should be able to delete and undo delete dates on the Tgt page', (I) => {
   I.see('TGT Name');
   I.seeElement(locate('input').withAttr({value: '02/09/2020'}));
   I.click('.delete-date');
+  I.waitForText('You deleted 02/09/2020', 10);
+  I.dontSeeElement(locate('input').withAttr({value: '02/09/2020'}));
+  I.click('UNDO');
+
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--navigate-to-tgt-button');
+  I.waitForText('RFI: 20-325', 10);
+  I.seeElement(locate('input').withAttr({value: '02/09/2020'}));
+  I.click('.delete-date');
+  I.waitForText('You deleted 02/09/2020', 10);
   I.dontSeeElement(locate('input').withAttr({value: '02/09/2020'}));
 });
 

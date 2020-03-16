@@ -9,14 +9,18 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
-import { deleteExploitDate, updateRfiDate } from '../../../store/tgt/Thunks';
+import { deleteExploitDate } from '../../../store/tgt/Thunks';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
-import theme from '../../../resources/theme';
+import theme, { rowStyles } from '../../../resources/theme';
 import createPalette from '@material-ui/core/styles/createPalette';
+import { useSnackbar } from 'notistack';
+import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
+import { ExploitDatePostModel } from '../../../store/tgt/ExploitDatePostModel';
+import { truncateAndConvertDateToUtc } from '../../../store/tgt';
 
 interface Props {
   rfiId: number;
-  updateRfiDate: (rfiId: number, date: Date, oldDate?: ExploitDateModel) => void;
+  postExploitDate: (date: ExploitDatePostModel) => void;
   setAddDate: (addDate: boolean) => void;
   uKey: number
   deleteExploitDate: (exploitDateId: number) => void;
@@ -63,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 export const TgtDateDivider: React.FC<Props> = props => {
   const classes = useStyles();
+  const rowClasses = rowStyles();
 
   const muiPalette = createPalette({
     type: 'dark',
@@ -77,6 +82,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
 
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
   const [displayModal, setDisplayModal] = React.useState(false);
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   function isValidDate(date: Date): boolean {
     return Object.prototype.toString.call(date) !== '[object Date]' ? false
@@ -86,7 +92,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
   function handleChange(date: Date | null) {
     setSelectedDate(date);
     if (date !== null && isValidDate(date)) {
-      props.updateRfiDate(props.rfiId, date, (props.exploitDate ? props.exploitDate : undefined));
+      props.postExploitDate(createExploitDatePostModel(date));
       props.setAddDate(false);
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
@@ -107,8 +113,21 @@ export const TgtDateDivider: React.FC<Props> = props => {
     setDisplayModal(false);
   }
 
+  const createExploitDatePostModel = (date: Date): ExploitDatePostModel => {
+    return new ExploitDatePostModel(
+      props.exploitDate ? props.exploitDate.id : null,
+      props.rfiId,
+      truncateAndConvertDateToUtc(date)
+    );
+  };
+
   function checkForExploitDate() {
     if (props.exploitDate) {
+      enqueueSnackbar('You deleted ' + props.exploitDate!.exploitDate.format('MM/DD/YYYY'), {
+        action: (key) => UndoSnackbarAction(key, createExploitDatePostModel(new Date(props.exploitDate!.exploitDate
+            .unix() * 1000)), props.postExploitDate, closeSnackbar, rowClasses.snackbarButton),
+        variant: 'info'
+      });
       deleteExploitDateById(props.exploitDate.id);
     } else {
       props.setAddDate(false);
@@ -167,7 +186,6 @@ export const TgtDateDivider: React.FC<Props> = props => {
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
-  updateRfiDate: updateRfiDate,
   deleteExploitDate: deleteExploitDate,
 };
 

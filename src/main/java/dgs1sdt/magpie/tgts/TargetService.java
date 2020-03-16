@@ -78,9 +78,7 @@ public class TargetService {
   }
 
   public List<Target> getTargets(long rfiId) {
-    return targetRepository.findAllByRfiId(rfiId)
-      .stream().filter(target -> target.getDeleted() == null)
-      .collect(Collectors.toList());
+    return targetRepository.findAllByRfiId(rfiId);
   }
 
   public List<ExploitDate> getExploitDates(long rfiId) {
@@ -98,7 +96,6 @@ public class TargetService {
   }
 
   public List<ExploitDate> postExploitDate(ExploitDateJson exploitDateJson) {
-
     Rfi rfi = rfiRepository.findRfiById(exploitDateJson.getRfiId());
     if (rfi == null) {
       // Failback in case there is no rfi associated with the provided rfiId
@@ -120,11 +117,25 @@ public class TargetService {
       exploitDateRepository.findAllByRfiId(rfi.getId()).stream()
         .noneMatch(exploitDate -> exploitDate.getExploitDate().equals(newExploitDate.getExploitDate()))
     ) {
-      exploitDateRepository.save(newExploitDate);
 
       if (exploitDateRepository.findById(exploitDateJson.getExploitDateId()).isPresent()) {
-        metricsService.addChangeExploitDate(exploitDateJson);
+        ExploitDate oldDate = exploitDateRepository.findById(exploitDateJson.getExploitDateId()).get();
+
+        if (oldDate.getDeleted() == null) {
+          metricsService.addChangeExploitDate(exploitDateJson);
+          exploitDateRepository.save(newExploitDate);
+        } else {
+          metricsService.addUndoExploitDateDelete(exploitDateJson.getExploitDateId());
+          List<Target> targets = targetRepository
+            .findAllByExploitDateIdAndDeletedIsNotNull(exploitDateJson.getExploitDateId());
+          for(Target target : targets)
+            target.setDeleted(null);
+          targetRepository.saveAll(targets);
+          oldDate.setDeleted(null);
+          exploitDateRepository.save(oldDate);
+        }
       } else {
+        exploitDateRepository.save(newExploitDate);
         long lastExploitDateId =
           exploitDateRepository.findAll().get(exploitDateRepository.findAll().size() - 1).getId();
         metricsService.addCreateExploitDate(lastExploitDateId, exploitDateJson);
@@ -165,7 +176,27 @@ public class TargetService {
     }
   }
 
-  public List<ExploitDate> deleteExploitDate(long exploitDateId) {
+  public List<ExploitDate> setDeletedExploitDate(long exploitDateId) {
+    if (!targetRepository.findAllByExploitDateId(exploitDateId).isEmpty()) {
+      List<Target> targetList = targetRepository.findAllByExploitDateId(exploitDateId);
+      for (Target target : targetList) {
+        setDeletedTarget(target.getId());
+        ixnService.assignTracks(target.getRfiId(), target.getName());
+      }
+    }
+    if (exploitDateRepository.findById(exploitDateId).isPresent()) {
+      metricsService.addDeleteExploitDate(exploitDateId);
+      ExploitDate exploitDate = exploitDateRepository.findById(exploitDateId).get();
+      exploitDate.setDeleted(new Timestamp(new Date().getTime()));
+      exploitDateRepository.save(exploitDate);
+      return this.getExploitDates(exploitDate.getRfiId());
+    } else {
+      System.err.println("Error deleting exploit date: Could not find exploit Date by id " + exploitDateId);
+      return new ArrayList<>();
+    }
+  }
+
+  public void deleteExploitDate(long exploitDateId) {
     if (!targetRepository.findAllByExploitDateId(exploitDateId).isEmpty()) {
       List<Target> targetList = targetRepository.findAllByExploitDateId(exploitDateId);
       for (Target target : targetList) {
@@ -174,15 +205,11 @@ public class TargetService {
       }
     }
     if (exploitDateRepository.findById(exploitDateId).isPresent()) {
-      long rfiId = exploitDateRepository.findById(exploitDateId).get().getRfiId();
       metricsService.addDeleteExploitDate(exploitDateId);
       exploitDateRepository.deleteById(exploitDateId);
-      return getExploitDates(rfiId);
     } else {
       System.err.println("Error deleting exploit date: Could not find exploit Date by id " + exploitDateId);
     }
-    return new ArrayList<>(exploitDateRepository.findAllByRfiId(
-      exploitDateRepository.findById(exploitDateId).get().getRfiId()));
   }
 
   private void addTarget(TargetJson targetJson) {
@@ -251,8 +278,7 @@ public class TargetService {
   }
 
   public long findNumByRfiId(long rfiId) {
-    return targetRepository.findAllByRfiId(rfiId)
-      .stream().filter(target -> target.getDeleted() == null).count();
+    return targetRepository.findAllByRfiId(rfiId).size();
   }
 }
 

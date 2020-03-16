@@ -16,16 +16,16 @@ import { StyledTgtDashboardHeader } from './TgtDashboardHeader';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel from '../../store/rfi/RfiModel';
-import { submitPostTarget, updateRfiDate } from '../../store/tgt/Thunks';
+import { postExploitDate, submitPostTarget } from '../../store/tgt/Thunks';
 import { exitTgtPage, setDatePlaceholder } from '../../store/tgt';
 import { TargetPostModel } from '../../store/tgt/TargetPostModel';
+import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 
 interface MyProps {
   rfi: RfiModel;
   exploitDates: ExploitDateModel[];
   showDatePlaceholder: boolean;
   exitTgtPage: () => void;
-  updateRfiDate: (rfiId: number, date: Date) => void;
   setDatePlaceholder: (show: boolean) => void;
   targets: TargetModel[];
   className?: string;
@@ -47,6 +47,10 @@ export const TgtDashboard: React.FC<MyProps> = props => {
 
   const handlePostTarget = (target: TargetPostModel) => {
     dispatch(submitPostTarget(target, props.rfi));
+  };
+
+  const handlePostExploitDate = (date: ExploitDatePostModel) => {
+    dispatch(postExploitDate(props.rfi, date));
   };
 
   const handleAddEdit = (status: Status, id?: number) => {
@@ -86,6 +90,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
         key={index}
         addingOrEditing={!(addTarget === -1 && editTarget === -1 && !addDate)}
         postTarget={handlePostTarget}
+        postExploitDate={handlePostExploitDate}
       />,
     );
   }
@@ -114,6 +119,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
               className={'date-divider--placeholder'}
               uKey={props.rfi.id}
               hasTgts={false}
+              postExploitDate={handlePostExploitDate}
             />
             :
             null
@@ -176,7 +182,6 @@ const mapStateToProps = ({tgtState}: ApplicationState) => ({
 
 const mapDispatchToProps = {
   exitTgtPage: exitTgtPage,
-  updateRfiDate: updateRfiDate,
   setDatePlaceholder: setDatePlaceholder,
 };
 

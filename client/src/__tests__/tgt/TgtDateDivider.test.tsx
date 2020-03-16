@@ -4,33 +4,38 @@ import '../../setupEnzyme';
 import { TgtDateDivider } from '../../dashboard/tgt/table/TgtDateDivider';
 import { Modal } from '@material-ui/core';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
+import { SnackbarProvider } from 'notistack';
 
 //material ui content may be internally tested
 describe('TgtDateDivider', () => {
   let subject: ReactWrapper;
-  let updateRfiDateSpy: jest.Mock;
   let exploitDate: ExploitDateModel;
   let setAddDateSpy: jest.Mock;
   let deleteExploitDateSpy: jest.Mock;
   const moment = require('moment');
 
   beforeEach(() => {
-    updateRfiDateSpy = jest.fn();
     let exploitDateMoment = moment(new Date);
     exploitDate = new ExploitDateModel(1, 1, exploitDateMoment);
     setAddDateSpy = jest.fn();
     deleteExploitDateSpy = jest.fn();
     subject = mount(
-      <TgtDateDivider
-        rfiId={1}
-        updateRfiDate={updateRfiDateSpy}
-        setAddDate={setAddDateSpy}
-        exploitDate={exploitDate}
-        exploitDateDisplay={exploitDate.exploitDate.toString()}
-        deleteExploitDate={deleteExploitDateSpy}
-        hasTgts={false}
-        uKey={1}
-      />,
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={15000}
+        hideIconVariant
+      >
+        <TgtDateDivider
+          rfiId={1}
+          setAddDate={setAddDateSpy}
+          exploitDate={exploitDate}
+          exploitDateDisplay={exploitDate.exploitDate.toString()}
+          deleteExploitDate={deleteExploitDateSpy}
+          hasTgts={false}
+          uKey={1}
+          postExploitDate={jest.fn()}
+        />
+      </SnackbarProvider>,
     );
   });
 
@@ -51,16 +56,22 @@ describe('TgtDateDivider', () => {
 
   it('should display a modal when trying to delete a date with tgts', () => {
     subject = mount(
-      <TgtDateDivider
-        rfiId={1}
-        updateRfiDate={updateRfiDateSpy}
-        setAddDate={setAddDateSpy}
-        exploitDate={exploitDate}
-        exploitDateDisplay={exploitDate.exploitDate.toString()}
-        deleteExploitDate={deleteExploitDateSpy}
-        hasTgts={true}
-        uKey={1}
-      />,
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={15000}
+        hideIconVariant
+      >
+        <TgtDateDivider
+          rfiId={1}
+          setAddDate={setAddDateSpy}
+          exploitDate={exploitDate}
+          exploitDateDisplay={exploitDate.exploitDate.toString()}
+          deleteExploitDate={deleteExploitDateSpy}
+          hasTgts={true}
+          uKey={1}
+          postExploitDate={jest.fn()}
+        />
+      </SnackbarProvider>,
     );
 
     subject.find('.delete-date').at(0).simulate('click');
@@ -78,16 +89,22 @@ describe('TgtDateDivider', () => {
 
   it('should not display a modal when trying to delete a date with no tgts', () => {
     subject = mount(
-      <TgtDateDivider
-        rfiId={1}
-        updateRfiDate={updateRfiDateSpy}
-        setAddDate={setAddDateSpy}
-        exploitDate={exploitDate}
-        exploitDateDisplay={exploitDate.exploitDate.toString()}
-        deleteExploitDate={deleteExploitDateSpy}
-        hasTgts={false}
-        uKey={1}
-      />,
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={15000}
+        hideIconVariant
+      >
+        <TgtDateDivider
+          rfiId={1}
+          setAddDate={setAddDateSpy}
+          exploitDate={exploitDate}
+          exploitDateDisplay={exploitDate.exploitDate.toString()}
+          deleteExploitDate={deleteExploitDateSpy}
+          hasTgts={false}
+          uKey={1}
+          postExploitDate={jest.fn()}
+        />
+      </SnackbarProvider>,
     );
 
     subject.find('.delete-date').at(0).simulate('click');
