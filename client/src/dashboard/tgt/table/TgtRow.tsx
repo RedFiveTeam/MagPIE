@@ -3,7 +3,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
-import { crayonBox } from '../../../resources/crayonBox';
 import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import { connect } from 'react-redux';
@@ -23,6 +22,7 @@ import InProgressButton from '../../components/statusButtons/InProgressButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import { useSnackbar } from 'notistack';
 import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
+import { DeleteCancelButton } from '../../ixn/table/DeleteCancelButton';
 
 interface Props {
   target: TargetModel;
@@ -160,11 +160,14 @@ export const TgtRow: React.FC<Props> = props => {
                 <CompletedButton buttonClass={classes.statusUnclickable}/>)
             }</div>
         </HtmlTooltip>
-        <div className={'delete-tgt-button'}
-             id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}
-             onClick={handleDeleteClick}>
+        <DeleteCancelButton
+          handleClick={handleDeleteClick}
+          title={'Delete Target'}
+          buttonClassName={'delete-tgt-button'}
+          className={'delete-edit-button-container'}
+        >
           <StyledDeleteButtonTrashcan/>
-        </div>
+        </DeleteCancelButton>
         <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
           <StyledExploitationLogButtonVector/>
         </div>
@@ -249,18 +252,6 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     margin-bottom: 4px;
     width: calc(100% - 16px);
     border-bottom: 1px solid #FFFFFF;
-  }
-  
-  .delete-tgt-button {
-    border-left: 4px solid ${crayonBox.softMetal};
-    border-right: 4px solid ${crayonBox.softMetal};
-    width: 90px;
-    height: 62px;
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
   }
   
   .exploitation {

@@ -8,11 +8,12 @@ import CompletedButton from '../../components/statusButtons/CompletedButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import { StyledIxnStatusPickerOutline } from '../../../resources/icons/IxnStatusPickerOutline';
 import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiButton';
-import { IxnDeleteButton } from './IxnDeleteButton';
+import { DeleteCancelButton } from './DeleteCancelButton';
 import styled from 'styled-components';
 import { rowStyles } from '../../../resources/theme';
 import { useSnackbar } from 'notistack';
 import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
+import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 
 interface MyProps {
   ixn: IxnModel;
@@ -113,7 +114,14 @@ export const IxnRow: React.FC<MyProps> = props => {
         <div className={classNames('ixn-data-cell', 'final-checker', 'name')}>
           {props.ixn.finalChecker ? props.ixn.finalChecker : '\xa0'}
         </div>
-        <IxnDeleteButton handleClick={handleDeleteClick} className={'delete-ixn-button-container'}/>
+        <DeleteCancelButton
+          handleClick={handleDeleteClick}
+          className={'delete-edit-button-container'}
+          buttonClassName={'delete-ixn-button'}
+          title={'Delete Interaction'}
+        >
+          <StyledDeleteButtonTrashcan />
+        </DeleteCancelButton>
       </Box>
     </div>
   );

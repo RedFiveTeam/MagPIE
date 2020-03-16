@@ -315,4 +315,16 @@ export const StyledTgtDashboard = styled(
     z-index: -1;
     position: absolute;
   }
+  
+  .delete-edit-button-container {
+    border-left: 4px solid ${crayonBox.softMetal};
+    border-right: 4px solid ${crayonBox.softMetal};
+    height: 62px;
+    display: flex;
+    flex: 0 0 81px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
 `;

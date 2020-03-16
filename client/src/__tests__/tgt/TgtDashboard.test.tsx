@@ -6,9 +6,9 @@ import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { SnackbarProvider } from 'notistack';
 import { Provider } from 'react-redux';
-import { initStore } from '../../setupEnzyme';
 import configureStore from '../../configureStore';
 import { StyledTgtDateDivider } from '../../dashboard/tgt/table/TgtDateDivider';
+import { initStore } from '../../setupTests';
 
 const initState = {
   ...initStore

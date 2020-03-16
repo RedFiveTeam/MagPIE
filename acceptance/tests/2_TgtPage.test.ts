@@ -17,14 +17,14 @@ Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
   I.waitForText('LTIOV', 10);
 });
 
-Scenario('Should be able to set dates on the Tgt page', (I) => {
+Scenario('Should be able to set dates', (I) => {
   I.click('.add-date-button');
   I.fillField('input', '02012020');
   I.waitForText('TGT Name', 10);
   I.seeElement(locate('input').withAttr({value: '02/01/2020'}));
 });
 
-Scenario('Should be able to edit dates on the Tgt page', (I) => {
+Scenario('Should be able to edit dates', (I) => {
   I.see('TGT Name');
   I.clearField('input');
   I.fillField('input', '02092020');
@@ -32,7 +32,7 @@ Scenario('Should be able to edit dates on the Tgt page', (I) => {
   I.dontSeeElement(locate('input').withAttr({value: '02/01/2020'}));
 });
 
-Scenario('Should be able to delete and undo delete dates on the Tgt page', (I) => {
+Scenario('Should be able to delete and undo delete dates', (I) => {
   I.see('TGT Name');
   I.seeElement(locate('input').withAttr({value: '02/09/2020'}));
   I.click('.delete-date');
@@ -49,7 +49,7 @@ Scenario('Should be able to delete and undo delete dates on the Tgt page', (I) =
   I.dontSeeElement(locate('input').withAttr({value: '02/09/2020'}));
 });
 
-Scenario('Should be able to add tgt on the Tgt page', (I) => {
+Scenario('Should be able to add tgts', (I) => {
   I.click('.add-date-button');
   I.fillField('.MuiInputBase-input', '02012020');
 
@@ -74,7 +74,7 @@ Scenario('Should be able to add tgt on the Tgt page', (I) => {
   I.see('desc');
 });
 
-Scenario('Should be able to edit tgt on the Tgt page', (I) => {
+Scenario('Should be able to edit tgts', (I) => {
   I.doubleClick('.tgt-name');
   for (let i = 0; i < 3; i++)
     I.pressKey('Backspace');
@@ -91,9 +91,21 @@ Scenario('Should be able to edit tgt on the Tgt page', (I) => {
   I.see('12QWE1234567890');
   I.dontSee('SDT20-123');
   I.dontSee('12QWE1231231231');
+
+  //Cancel edit
+  I.doubleClick('.tgt-name');
+  I.pressKey('Tab');
+  I.fillField('.mgrs', '12QWE0987654321');
+  I.click('.cancel-edit-tgt-button');
+
+  I.click('.tgt-dash--header--back-button');
+  I.click('.cell--navigate-to-tgt-button');
+
+  I.waitForText('SDT20-999', 10);
+  I.dontSee('12QWE0987654321');
 });
 
-Scenario('should not be able to add tgt with conflicting names', (I) => {
+Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.click('.add-tgt-button');
   I.fillField('.name', 'SDT20-999');
   I.pressKey('Tab');
@@ -124,7 +136,7 @@ Scenario('should not be able to add tgt with conflicting names', (I) => {
   I.waitForText('SDT20-999', 10);
 });
 
-Scenario('Should be able to delete and undo delete tgt on the Tgt page', (I) => {
+Scenario('Should be able to delete and undo delete tgts', (I) => {
   I.click('.delete-tgt-button');
   I.waitForText('You deleted SDT20-999');
   I.click('UNDO');

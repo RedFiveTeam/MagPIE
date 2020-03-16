@@ -98,6 +98,17 @@ Scenario('Should be able to edit ixns', (I) => {
   I.waitForText('12:10:30Z');
   I.see('Giuseppe Alfredo');
   I.dontSee('12:10:00Z');
+
+  I.doubleClick('.exploit-analyst');
+  I.pressKey('Tab');
+  I.fillField('.time', '121133');
+  I.pressKey('Tab');
+  I.click('.cancel-edit-ixn-button');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+  I.waitForText('12:10:30Z');
+  I.dontSee('12:11:33Z');
 });
 
 Scenario('Should be able to assign status and see tracks generate', (I) => {
@@ -166,11 +177,11 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
 
   I.dontSee('Person entered tgt from right side');
 
-  //Clear entered data with delete button on input row
+  //Clear entered data with cancel button on input row
   I.pressKey('Tab');
   I.fillField('.exploit-analyst', 'Billy Bob Joe');
   I.pressKey('Tab');
-  I.click('.delete-ixn-button');
+  I.click('.cancel-edit-ixn-button');
 
   I.wait(1);
 

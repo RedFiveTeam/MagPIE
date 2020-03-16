@@ -2,18 +2,19 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import IxnModel, { IxnStatus } from '../../../store/ixn/IxnModel';
-import { Box, ThemeProvider, TextField } from '@material-ui/core';
+import { Box, TextField, ThemeProvider } from '@material-ui/core';
 import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import classNames from 'classnames';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
 import { convertTimeStringToMoment, RowAction } from '../../../utils';
-import { IxnDeleteButton } from './IxnDeleteButton';
+import { DeleteCancelButton } from './DeleteCancelButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
 import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiButton';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
+import CancelButton from '../../../resources/icons/CancelButton';
 
 interface MyProps {
   ixn: IxnModel | null;
@@ -71,7 +72,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     switch (action) {
       case RowAction.DELETING:
         if (props.ixn) {
-          props.deleteIxn(props.ixn);
+          props.setEditIxn(-1);
           resetAction();
         } else {
           setExploitAnalyst('');
@@ -191,7 +192,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     resetAction();
   };
 
-  const handleDeleteClick = () => {
+  const handleCancelClick = () => {
     setAction(RowAction.DELETING);
   };
 
@@ -293,13 +294,16 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                 }}
               />
             </div>
-            <IxnDeleteButton
-              handleClick={handleDeleteClick}
+            <DeleteCancelButton
+              handleClick={handleCancelClick}
               className={classNames(
-                'delete-ixn-button-container',
-                (props.ixn === null && isBlank) || props.ixn ? 'delete-disabled' : null,
-              )}
-            />
+                'delete-edit-button-container',
+                (props.ixn === null && isBlank) ? 'delete-disabled' : null,)}
+              buttonClassName={'cancel-edit-ixn-button'}
+              title={'Cancel Edit'}
+            >
+              <CancelButton />
+            </DeleteCancelButton>
           </Box>
         </form>
       </ThemeProvider>
@@ -336,6 +340,7 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
   
     svg {
       filter: none;
+      box-shadow: none;
       
       path {
         fill: ${theme.color.buttonRowDisabled};

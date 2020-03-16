@@ -7,7 +7,6 @@ import { navigateToIxnPage } from '../../../store/ixn';
 import { Box, MuiThemeProvider, TextField } from '@material-ui/core';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
 import styled from 'styled-components';
-import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 import { crayonBox } from '../../../resources/crayonBox';
 import { deleteTgt, submitPostTarget } from '../../../store/tgt/Thunks';
 import RfiModel from '../../../store/rfi/RfiModel';
@@ -19,6 +18,8 @@ import classNames from 'classnames';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
+import CancelButton from '../../../resources/icons/CancelButton';
+import { DeleteCancelButton } from '../../ixn/table/DeleteCancelButton';
 
 
 interface MyProps {
@@ -51,11 +52,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
   const handleAction = () => {
     switch (action) {
       case RowAction.DELETING:
-        if (props.target) {
-          props.deleteTgt(props.target.id);
-        } else {
           props.setAddEditTarget(Status.VIEW);
-        }
         break;
       case RowAction.SUBMITTING:
         validateAllAndSubmit();
@@ -156,10 +153,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
       }
     }, 300);
   }
-
-  const handleDeleteClick = () => {
-    setAction(RowAction.DELETING);
-  };
 
   const handleIxnClick = () => {
     if (props.target !== null) {
@@ -262,11 +255,14 @@ export const TgtInputRow: React.FC<MyProps> = props => {
               <CompletedButton buttonClass={classes.statusUnclickable}/>)
           }
         </div>
-        <div className={classNames('delete-tgt-button', props.target ? 'delete-disabled' : null)}
-             id={'delete' + (props.target !== null ? ('' + props.target.id) : '-add-tgt-row')}
-             onClick={handleDeleteClick}>
-          <StyledDeleteButtonTrashcan/>
-        </div>
+        <DeleteCancelButton
+          handleClick={() => setAction(RowAction.DELETING)}
+          title={'Cancel Edit'}
+          buttonClassName={'cancel-edit-tgt-button'}
+          className={'delete-edit-button-container'}
+        >
+          <CancelButton/>
+        </DeleteCancelButton>
         <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
           <StyledExploitationLogButtonVector/>
         </div>
@@ -356,7 +352,7 @@ export const StyledTgtInputRow = styled(connect(mapStateToProps, mapDispatchToPr
     border-bottom: 1px solid #FFFFFF;
   }
   
-  .delete-tgt-button {
+  .delete-cancel-cell {
     border-left: 4px solid ${crayonBox.softMetal};
     border-right: 4px solid ${crayonBox.softMetal};
     width: 90px;

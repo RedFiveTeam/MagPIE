@@ -43,6 +43,8 @@ export const IxnDashboard: React.FC<Props> = props => {
   const handleEditIxn = (ixnId: number) => {
     if (!addSegment && editSegment < 0 && editIxn < 0) {
       setEditIxn(ixnId);
+    } else if (ixnId < 0) {
+      setEditIxn(-1);
     }
   };
 
@@ -302,16 +304,12 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     width: 110px;
   }
   
-  .delete-ixn-button-container {
+  .delete-edit-button-container {
     display: flex;
     align-self: stretch;
-  }
-  
-  .delete-ixn-button {
     border-left: 4px solid ${theme.color.backgroundBase};
     width: 90px;
     height: inherit;
-    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
