@@ -32,11 +32,10 @@ const RefreshButtonVector = (props: MyProps) => {
 
 export const StyledRefreshButtonVector = styled(RefreshButtonVector)`
  svg {
-  
-    :hover {
-      filter: drop-shadow(0 0px 4px #FFFFFF);
-    }
-  }
+   :hover {
+     filter: drop-shadow(0 0px 4px #FFFFFF);
+   }
+ }
 `;
 
 export default RefreshButtonVector;

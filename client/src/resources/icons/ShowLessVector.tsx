@@ -28,8 +28,8 @@ const IconShowLess = (props: MyProps) => {
 };
 
 export const StyledIconShowLess = styled(IconShowLess)`
- svg {
-  
+   
+   svg {
     :hover {
       filter: drop-shadow(0 0px 4px #FFFFFF);
     }

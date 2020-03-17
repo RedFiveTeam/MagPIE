@@ -24,7 +24,7 @@ const snackbarStyle = makeStyles((localTheme) =>
   createStyles({
     snackbar: {
       backgroundColor: theme.color.backgroundSnackbar,
-      color: theme.color.fontSnackbar,
+      color: theme.color.fontActive,
       fontSize: theme.font.sizeRow,
       fontFamily: theme.font.familyRow,
       fontWeight: theme.font.weightRow,
