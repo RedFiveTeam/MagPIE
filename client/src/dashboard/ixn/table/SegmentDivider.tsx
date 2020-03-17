@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import MaskedInput from 'react-text-mask';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
@@ -6,17 +7,18 @@ import FormControl from '@material-ui/core/FormControl';
 import { InputAdornment } from '@material-ui/core';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import globalTheme, { rowStyles } from '../../../resources/theme';
-import theme from '../../../resources/theme';
+import globalTheme from '../../../resources/theme';
+import theme, { rowStyles } from '../../../resources/theme';
 import { TargetModel } from '../../../store/tgt/TargetModel';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import IxnModel from '../../../store/ixn/IxnModel';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import EditButton from '../../../resources/icons/EditButton';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
-import { convertTimeStringToMoment } from '../../../utils';
+import { convertTimeStringToMoment, RowAction } from '../../../utils';
 import { useSnackbar } from 'notistack';
 import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
+import { postCancelAddSegment } from '../../../store/ixn';
 
 interface Props {
   target: TargetModel;
@@ -75,8 +77,30 @@ export const SegmentDivider: React.FC<Props> = props => {
   const [segmentStartError, setSegmentStartError] = React.useState(false);
   const [segmentEndError, setSegmentEndError] = React.useState(false);
   const [displayModal, setDisplayModal] = React.useState(false);
-
+  const [action, setAction] = useState(RowAction.NONE);
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+
+  const resetAction = () => {
+    setTimeout(() => {
+      setAction(RowAction.NONE);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    switch (action) {
+      case (RowAction.DELETING):
+        if (props.editing)
+          handleCancel();
+        else
+          handleDelete();
+        resetAction();
+        break;
+      case (RowAction.SUBMITTING):
+        validateAndSubmit();
+        resetAction();
+        break;
+    }
+  }, [action]);
 
   const segmentError = (segment: string): boolean => {
     segment = segment.replace(/_/g, '0');
@@ -128,7 +152,16 @@ export const SegmentDivider: React.FC<Props> = props => {
     if (props.hasIxns)
       setDisplayModal(true);
     else
-      handleDelete();
+      setAction(RowAction.DELETING);
+  };
+
+  const handleCancel = () => {
+    if (props.segment) {
+      props.setEdit(-1);
+    } else {
+      props.setAddSegment(false);
+      postCancelAddSegment(props.target.id);
+    }
   };
 
   const handleDelete = () => {
@@ -137,7 +170,7 @@ export const SegmentDivider: React.FC<Props> = props => {
         props.segment!.endTime.format('HH:mm:ss') + 'Z', {
         action: (key) => UndoSnackbarAction(key, props.segment!, props.postSegment, closeSnackbar,
           rowClasses.snackbarButton),
-        variant: 'info'
+        variant: 'info',
       });
       props.deleteSegment(props.segment);
     } else {
@@ -154,10 +187,10 @@ export const SegmentDivider: React.FC<Props> = props => {
   const handleBlur = (event: any) => {
     let currentTarget: any = event.currentTarget;
     setTimeout(() => {
-      if (!currentTarget.contains(document.activeElement)) {
-        validateAndSubmit();
+      if (!currentTarget.contains(document.activeElement) && action === RowAction.NONE) {
+        setAction(RowAction.SUBMITTING);
       }
-    }, 50);
+    }, 500);
   };
 
   return (
@@ -168,9 +201,9 @@ export const SegmentDivider: React.FC<Props> = props => {
           {!props.editing ?
             <div className={'add-segment-form'}>
               <div
-                className={classNames('delete-segment', 'delete-segment-wrapper')}
+                className={classNames('delete-segment', 'delete-cancel-segment-wrapper')}
                 onClick={handleDeleteClick}>
-                <DeleteButtonX className={'delete-segment'}/>
+                <DeleteButtonX className={'delete-cancel-segment'}/>
               </div>
               <div className={classNames('segment-value', 'segment-start')}>
                 {props.segment!.startTime.format('HH:mm:ss') + 'Z'}
@@ -192,6 +225,11 @@ export const SegmentDivider: React.FC<Props> = props => {
             <div className={'add-segment-form'}
                  onBlur={handleBlur}
             >
+              <div
+                className={classNames('cancel-add-segment', 'delete-cancel-segment-wrapper')}
+                onClick={() => setAction(RowAction.DELETING)}>
+                <DeleteButtonX className={'delete-cancel-segment'}/>
+              </div>
               <div className={'segment-value'}>
                 <FormControl>
                   <div className={'segment-input-container'}>
@@ -213,7 +251,7 @@ export const SegmentDivider: React.FC<Props> = props => {
                       error={segmentStartError}
                       onKeyPress={(e) => {
                         if (e.which === 13) {
-                          validateAndSubmit();
+                          setAction(RowAction.SUBMITTING);
                         }
                       }}
                       onBlur={() => setSegmentStartString(segmentStartString.replace(/_/g, '0'))}
@@ -243,13 +281,18 @@ export const SegmentDivider: React.FC<Props> = props => {
                       error={segmentEndError}
                       onKeyPress={(e) => {
                         if (e.which === 13) {
-                          validateAndSubmit();
+                          setAction(RowAction.SUBMITTING);
                         }
                       }}
                       onBlur={() => setSegmentEndString(segmentEndString.replace(/_/g, '0'))}
                     />
                   </div>
                 </FormControl>
+              </div>
+              <div
+                className={'edit-segment'}
+              >
+                &nbsp;
               </div>
             </div>
           }
@@ -350,14 +393,18 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     padding-top: 1px;
   }
   
-  .delete-segment {
+  .delete-cancel-segment {
     display:flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
   }
   
-  .delete-segment-wrapper {
+  .delete-cancel-segment-wrapper {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     margin-right: 24px;
   }
   
@@ -367,5 +414,6 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     justify-content: center;
     align-items: center;
     margin-left: 24px;
+    width: 12px;
   }
 `;

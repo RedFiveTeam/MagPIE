@@ -58,4 +58,55 @@ describe('Segment Divider', () => {
     subject.find('.delete-segment').at(0).simulate('click');
     expect(deleteSegmentSpy).toHaveBeenCalledWith(segment);
   });
+
+  it('should contain a cancel button that calls a cancel function', () => {
+    let editSpy: jest.Mock;
+    editSpy = jest.fn();
+    subject = mount(
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={15000}
+        hideIconVariant
+      >
+        <SegmentDivider
+          target={target}
+          segment={segment}
+          postSegment={submitSegmentSpy}
+          postIxn={jest.fn()}
+          deleteSegment={deleteSegmentSpy}
+          setAddSegment={jest.fn()}
+          hasIxns={false}
+          editing={true}
+          setEdit={editSpy}
+        />
+      </SnackbarProvider>,
+    );
+
+    subject.find('.cancel-add-segment').simulate('click');
+    expect(editSpy).toHaveBeenCalledWith(-1);
+
+    editSpy = jest.fn();
+    subject = mount(
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={15000}
+        hideIconVariant
+      >
+        <SegmentDivider
+          target={target}
+          segment={null}
+          postSegment={submitSegmentSpy}
+          postIxn={jest.fn()}
+          deleteSegment={deleteSegmentSpy}
+          setAddSegment={editSpy}
+          hasIxns={false}
+          editing={true}
+          setEdit={jest.fn()}
+        />
+      </SnackbarProvider>,
+    );
+
+    subject.find('.cancel-add-segment').simulate('click');
+    expect(editSpy).toHaveBeenCalledWith(false);
+  });
 });

@@ -2,8 +2,9 @@ package dgs1sdt.magpie.metrics;
 
 import dgs1sdt.magpie.ixns.Ixn;
 import dgs1sdt.magpie.ixns.IxnJson;
-import dgs1sdt.magpie.ixns.Segment;
 import dgs1sdt.magpie.ixns.SegmentJson;
+import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegment;
+import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegmentRepository;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDate;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.magpie.metrics.changeIxn.MetricChangeIxn;
@@ -90,6 +91,7 @@ public class MetricsService {
   private MetricUndoSegmentDeleteRepository metricUndoSegmentDeleteRepository;
   private MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository;
   private MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
+  private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
@@ -204,6 +206,11 @@ public class MetricsService {
   @Autowired
   public void setMetricUndoExploitDateDeleteRepository(MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository) {
     this.metricUndoExploitDateDeleteRepository = metricUndoExploitDateDeleteRepository;
+  }
+
+  @Autowired
+  public void setMetricCancelAddSegmentRepository(MetricCancelAddSegmentRepository metricCancelAddSegmentRepository) {
+    this.metricCancelAddSegmentRepository = metricCancelAddSegmentRepository;
   }
 
   public long getSiteVisitCount() {
@@ -393,5 +400,9 @@ public class MetricsService {
 
   public MetricUndoExploitDateDelete addUndoExploitDateDelete(long exploitDateId) {
     return metricUndoExploitDateDeleteRepository.save(new MetricUndoExploitDateDelete(exploitDateId));
+  }
+
+  public MetricCancelAddSegment createCancelAddSegment(long targetId) {
+    return metricCancelAddSegmentRepository.save(new MetricCancelAddSegment(targetId));
   }
 }

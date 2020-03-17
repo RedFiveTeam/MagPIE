@@ -1,6 +1,7 @@
 package dgs1sdt.magpie.metrics;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
+import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegmentRepository;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
@@ -56,6 +57,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Autowired
   private MetricChangeTargetRepository metricChangeTargetRepository;
+
+  @Autowired
+  private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
 
   @Before
   public void setup() {
@@ -181,14 +185,16 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   }
 
-//  @Test
-//  public void createsNewExploitDatesChangeMetric() {
-//    MetricChangeExploitDate metricChangeExploitDate1 = new MetricChangeExploitDate("20-001", null, null, new Timestamp(1), new Timestamp(2), new Timestamp(100));
-//    MetricChangeExploitDate metricChangeExploitDate2 = new MetricChangeExploitDate("20-002", null, null, new Timestamp(3), new Timestamp(4), new Timestamp(100));
-//
-//    metricController.addRfiExploitDatesChange(metricChangeExploitDate1);
-//    metricController.addRfiExploitDatesChange(metricChangeExploitDate2);
-//
-//    assertEquals(2, metricChangeExploitDateRepository.count());
-//  }
+  @Test
+  public void postCreatesNewCancelAddSegmentMetric() {
+    given()
+      .port(port)
+      .contentType("application/json")
+      .when()
+      .post(MetricController.URI + "/cancel-add-segment/5")
+      .then()
+      .statusCode(200);
+
+    assertEquals(5, metricCancelAddSegmentRepository.findAll().get(0).getTargetId());
+  }
 }

@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.metrics;
 
+import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegment;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTime;
@@ -71,6 +72,11 @@ public class MetricController {
   @PostMapping(path = "/rfi-fetch")
   public MetricRfiFetchTime createRfiFetchTime(@Valid @RequestBody MetricRfiFetchTimeJson metricRfiFetchTimeJson) {
     return metricsService.createRfiFetchTime(metricRfiFetchTimeJson);
+  }
+
+  @PostMapping(path = "/cancel-add-segment/{targetId}")
+  public MetricCancelAddSegment createCancelAddSegment(@PathVariable("targetId") long targetId) {
+    return metricsService.createCancelAddSegment(targetId);
   }
 }
 

@@ -30,14 +30,29 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.waitForText('RFI: 20-325', 10);
 });
 
-Scenario('Should be able to add segments', (I) => {
+Scenario('Should be able to add and cancel adding segments', (I) => {
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
+
+  //Add and cancel
+  I.click('.add-segment-button');
+  I.fillField('.segment-start', '12');
+  I.pressKey('Tab');
+  I.fillField('.segment-end', '12304');
+  I.click('.cancel-add-segment');
+
+  I.click('.ixn-dash--header--back-button');
+  I.click('.exploitation');
+  I.waitForText('TGT: SDT20-123', 10);
+  I.dontSee('12:00:00Z');
+
+  //Add
   I.click('.add-segment-button');
   I.fillField('.segment-start', '12');
   I.pressKey('Tab');
   I.fillField('.segment-end', '12304');
   I.pressKey('Enter');
+
   I.waitForText('12:00:00Z');
   I.waitForText('12:30:40Z');
   I.dontSee('.segment-input-container');

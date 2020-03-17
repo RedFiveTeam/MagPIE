@@ -156,3 +156,16 @@ export const postIxn = (ixn: IxnModel) => {
     },
   );
 };
+
+export const postCancelAddSegment = (targetId: number) => {
+  return fetch(
+    '/api/metrics/cancel-add-segment/' + targetId,
+    {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+};
