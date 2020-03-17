@@ -22,10 +22,13 @@ interface Props {
   loading: boolean;
   viewTgtPage: boolean;
   viewIxnPage: boolean;
+  user: string;
   className?: string;
 }
 
 export class DashboardContainer extends React.Component<Props, any> {
+
+
   componentDidMount(): void {
     setInterval(() => {
       this.refreshRfis();
@@ -53,7 +56,9 @@ export class DashboardContainer extends React.Component<Props, any> {
   }
 
   render() {
-    return <StyledLoginDashboard/>;
+    console.log(this.props.user);
+    if (this.props.user === undefined)
+      return <StyledLoginDashboard/>;
 
     if (this.props.loading)
       return <StyledLoadingScreen/>;

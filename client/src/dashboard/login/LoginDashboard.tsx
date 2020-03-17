@@ -6,6 +6,7 @@ import { TextField } from '@material-ui/core';
 import classNames from 'classnames';
 import UserIcon from '../../resources/icons/UserIcon';
 import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
+import { useCookies } from 'react-cookie';
 
 interface MyProps {
   className?: string;
@@ -30,17 +31,36 @@ interface MyProps {
 //   }),
 // );
 
+const cookieValidTimeInMS: number = 24*60*60*1000;
+
 export const LoginDashboard: React.FC<MyProps> = (props) => {
   const [username, setUsername] = useState('');
   // const classes = useStyles();
+  const [, setUserCookie] = useCookies(['username']);
+
+  // setUserCookie('username', 'billy.bob.joe', {});
+
+  const login = () => {
+    setUserCookie(
+      'username',
+      username,
+      {expires: new Date(new Date().getTime() + cookieValidTimeInMS)},
+    );
+  };
 
   return (
     <div className={props.className}>
       <div className={'login-container'}>
         <MagpieFullLogo/>
-        <form className={'login-form'}>
+        <form className={'login-form'}
+              onKeyPress={(e) => {
+                if (e.which === 13) {
+                  login();
+                }
+              }}
+        >
           <div className={'username-row'}>
-            <UserIcon className={'username-icon'} />
+            <UserIcon className={'username-icon'}/>
             <TextField
               autoFocus
               className={classNames('username-input')}
@@ -55,6 +75,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
           </div>
           <div
             className={classNames('no-select', 'submit-button')}
+            onClick={login}
           >
             <span>Sign In</span>
           </div>
