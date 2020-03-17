@@ -2,8 +2,14 @@
 
 Feature('RFI Page');
 
+Before((I)=> {
+  I.amOnPage('/');
+  I.waitForText('Don\'t have an account?', 10);
+  I.fillField('.sign-in', 'billy.bob.joe');
+  I.pressKey('Enter');
+});
+
 Scenario ('Should see the RFI page', (I) => {
-    I.amOnPage('/');
     I.waitForText('RFI', 10);
     I.waitForText('20-321', 10);
     I.waitForText('633d', 10);
@@ -13,7 +19,6 @@ Scenario ('Should see the RFI page', (I) => {
 });
 
 Scenario ('Should be able to sort by clickin\' Buttons', (I) => {
-  I.amOnPage('/');
   I.waitForText('20-321', 10);
 
   I.see('-', locate('.region--new').find('.rfi-row').at(1));
@@ -32,7 +37,6 @@ Scenario ('Should be able to sort by clickin\' Buttons', (I) => {
 });
 
 Scenario ('Should expand and collapse descriptions', (I) => {
-  I.amOnPage('/');
   I.waitForText('RFI', 10);
   // @ts-ignore
   I.seeElement('.see-more', locate('.region--prioritized').find('.rfi-row').at(1));

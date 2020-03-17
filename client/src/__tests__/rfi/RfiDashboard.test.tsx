@@ -6,7 +6,7 @@ import { Droppable } from 'react-beautiful-dnd';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
 import { StyledRfiTableHeader } from '../../dashboard/rfi/rfiDashboardTableHeader/RfiTableHeader';
 
-describe('RFITable', () => {
+describe('RFI dashboard', () => {
   let subject: ShallowWrapper;
 
   beforeEach(() => {

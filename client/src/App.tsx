@@ -13,6 +13,7 @@ import theme from './resources/theme';
 import { makeStyles } from '@material-ui/core/styles';
 import { createStyles } from '@material-ui/core';
 import { SnackbarProvider } from 'notistack';
+import { useCookies } from 'react-cookie';
 
 interface AppProps {
   store: Store<ApplicationState>;
@@ -24,7 +25,7 @@ const snackbarStyle = makeStyles((localTheme) =>
   createStyles({
     snackbar: {
       backgroundColor: theme.color.backgroundSnackbar,
-      color: theme.color.fontSnackbar,
+      color: theme.color.fontActive,
       fontSize: theme.font.sizeRow,
       fontFamily: theme.font.familyRow,
       fontWeight: theme.font.weightRow,
@@ -36,6 +37,8 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
   const moment = require('moment-timezone');
   moment.tz.setDefault('Etc/UTC');
   const classes = snackbarStyle();
+
+  const [userCookie] = useCookies(['username']);
 
   return (
     <SnackbarProvider
@@ -51,7 +54,10 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
           <Router>
             <div className={classNames('app', className)}>
               <Switch>
-                <Route exact path={'/'} component={StyledDashboardContainer}/>
+                <Route exact path={'/'}
+                       render={(props) =>
+                         <StyledDashboardContainer {...props} user={userCookie.username}/>}
+                />
                 <Route exact path={'/metrics'} component={StyledMetricsContainer}/>
               </Switch>
             </div>

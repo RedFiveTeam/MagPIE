@@ -11,6 +11,7 @@ import { StyledLoadingScreen } from './components/loading/LoadingScreen';
 import { fetchLocalUpdate, fetchRfis } from '../store/rfi/Thunks';
 import { postSiteVisit } from '../store/metrics';
 import { loadTgtPage } from '../store/tgt/Thunks';
+import { StyledLoginDashboard } from './login/LoginDashboard';
 
 interface Props {
   fetchRfis: () => void;
@@ -21,10 +22,12 @@ interface Props {
   loading: boolean;
   viewTgtPage: boolean;
   viewIxnPage: boolean;
+  user: string | undefined;
   className?: string;
 }
 
 export class DashboardContainer extends React.Component<Props, any> {
+
   componentDidMount(): void {
     setInterval(() => {
       this.refreshRfis();
@@ -36,7 +39,7 @@ export class DashboardContainer extends React.Component<Props, any> {
 
     this.props.postSiteVisit()
       .catch((reason => {
-        console.log("Failed to post sort click metric: " + reason)
+        console.log('Failed to post sort click metric: ' + reason);
       }));
     this.props.fetchRfis();
   }
@@ -52,11 +55,14 @@ export class DashboardContainer extends React.Component<Props, any> {
   }
 
   render() {
+    if (this.props.user === undefined)
+      return <StyledLoginDashboard/>;
+
     if (this.props.loading)
       return <StyledLoadingScreen/>;
 
     if (this.props.viewIxnPage) {
-      return <StyledIxnDashboard/>
+      return <StyledIxnDashboard/>;
     }
 
     if (this.props.viewTgtPage) {
@@ -75,14 +81,14 @@ const mapStateToProps = ({rfiState, tgtState, ixnState}: ApplicationState) => ({
   loading: rfiState.loading,
   viewTgtPage: tgtState.viewTgtPage,
   viewIxnPage: ixnState.viewIxnPage,
-  rfi: tgtState.rfi
+  rfi: tgtState.rfi,
 });
 
 const mapDispatchToProps = {
   fetchRfis: fetchRfis,
   postSiteVisit: postSiteVisit,
   fetchLocalUpdate: fetchLocalUpdate,
-  loadTgtPage: loadTgtPage
+  loadTgtPage: loadTgtPage,
 };
 
 export const StyledDashboardContainer = styled(

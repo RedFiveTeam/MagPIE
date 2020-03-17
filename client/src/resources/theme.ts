@@ -43,7 +43,12 @@ const theme = {
     buttonAddDate: crayonBox.brightBlue,
     buttonRowDisabled: crayonBox.subtleGray,
     buttonDoesNotMeetEei: crayonBox.tomatoRed,
-    fontSnackbar: crayonBox.notEggWhite,
+    fontActive: crayonBox.notEggWhite,
+    backgroundLoading: crayonBox.coolBlack,
+    backgroundUsernameSuffix: crayonBox.warmGray,
+    backgroundInput: crayonBox.lessDarkGray,
+    fontUsernameSuffix: crayonBox.lighterGray,
+    loginIcon: crayonBox.mediumBrightBlue,
   },
 
   font: {
@@ -129,7 +134,7 @@ export const rowStyles = makeStyles((localTheme: Theme) =>
       textAlign: 'center',
     },
     tgtClickable: {
-      marginLeft: '19px'
+      marginLeft: '19px',
     },
     inProgress: {
       marginTop: '2px',
@@ -149,7 +154,7 @@ export const rowStyles = makeStyles((localTheme: Theme) =>
     },
     snackbarButton: {
       fontSize: theme.font.sizeRowMedium,
-    }
+    },
   }),
 );
 
