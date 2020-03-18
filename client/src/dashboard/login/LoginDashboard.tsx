@@ -21,7 +21,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
   const [signUp, setSignUp] = useState(false);
   const [signUpError, setSignUpError] = useState('');
   const [verifyError, setVerifyError] = useState('');
-  const [loginError, setLoginError] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
   const [, setUserCookie] = useCookies(['username']);
 
@@ -31,7 +31,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
     setSignUpUsernameVerify('');
     setSignUpError('');
     setVerifyError('');
-    setLoginError(false);
+    setLoginError('');
   };
 
   const postLogin = (userName: string) => {
@@ -55,11 +55,15 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
   };
 
   const login = () => {
-    postLogin(username)
-      .then(response => handleResponse(response.status))
-      .catch((reason) => {
-        console.log(reason);
-      });
+    if (username === '') {
+      setLoginError('Field cannot be empty');
+    } else if (loginError === '') {
+      postLogin(username)
+        .then(response => handleResponse(response.status))
+        .catch((reason) => {
+          console.log(reason);
+        });
+    }
   };
 
   const handleResponse = (status: number) => {
@@ -68,7 +72,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
     else if (status === 409)
       setVerifyError('Account already exists');
     else if (status === 401)
-      setLoginError(true);
+      setLoginError('Account does not exist');
   };
 
   const register = () => {
@@ -102,7 +106,16 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
     return !validChars.test(username);
   };
 
-  const updateSignUpUsername = (event: any) => {
+  const inputUsername = (event: any) => {
+    let newUsername: string = event.target.value;
+    if (checkInvalid(newUsername) && newUsername !== '')
+      setLoginError('Invalid input');
+    else
+      setLoginError('');
+    setUsername(newUsername);
+  };
+
+  const inputSignUpUsername = (event: any) => {
     let newUsername: string = event.target.value;
     if (checkInvalid(newUsername) && newUsername !== '')
       setSignUpError('Invalid input');
@@ -111,7 +124,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
     setSignUpUsername(newUsername);
   };
 
-  const updateVerifyUsername = (event: any) => {
+  const inputVerifyUsername = (event: any) => {
     let newUsername: string = event.target.value;
     if (checkInvalid(newUsername) && newUsername !== '')
       setVerifyError('Invalid input');
@@ -141,7 +154,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
                 value={signUpUsername}
                 placeholder={'Enter SIPR Email'}
                 disableUnderline
-                onChange={updateSignUpUsername}
+                onChange={inputSignUpUsername}
               />
               <div className={'username-suffix'}><span>@mail.smil.mil</span></div>
             </div>
@@ -156,7 +169,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
                 InputProps={{
                   disableUnderline: true,
                 }}
-                onChange={updateVerifyUsername}
+                onChange={inputVerifyUsername}
               />
               <div className={'username-suffix'}><span>@mail.smil.mil</span></div>
             </div>
@@ -196,16 +209,12 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
                 InputProps={{
                   disableUnderline: true,
                 }}
-                onChange={(event) => setUsername(event.target.value)}
+                onChange={inputUsername}
 
               />
               <div className={'username-suffix'}><span>@mail.smil.mil</span></div>
             </div>
-            {loginError ?
-              <div className={'error-message'}><span>Email not found</span></div>
-              :
-              null
-            }
+            <div className={'error-message'}><span>{loginError}</span></div>
             <div
               className={classNames('no-select', 'submit-button')}
               onClick={login}
