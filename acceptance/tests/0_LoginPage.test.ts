@@ -8,7 +8,7 @@ Scenario ('Should be able to create an account', (I) => {
   I.waitForText('Don\'t have an account?', 10);
   I.fillField('.sign-in', 'billy.bob.joe');
   I.pressKey('Enter');
-  I.waitForText('Email not found');
+  I.waitForText('Account does not exist');
 
   //Go to and exit sign up screen
   I.click('.create-account-button');
