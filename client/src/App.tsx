@@ -40,8 +40,6 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
 
   const [userCookie] = useCookies(['username']);
 
-  // setUserCookie('username', 'billy.bob.joe', {expires: });
-
   return (
     <SnackbarProvider
       maxSnack={3}

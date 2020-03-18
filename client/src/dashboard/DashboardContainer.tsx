@@ -22,12 +22,11 @@ interface Props {
   loading: boolean;
   viewTgtPage: boolean;
   viewIxnPage: boolean;
-  user: string;
+  user: string | undefined;
   className?: string;
 }
 
 export class DashboardContainer extends React.Component<Props, any> {
-
 
   componentDidMount(): void {
     setInterval(() => {
@@ -56,7 +55,6 @@ export class DashboardContainer extends React.Component<Props, any> {
   }
 
   render() {
-    console.log(this.props.user);
     if (this.props.user === undefined)
       return <StyledLoginDashboard/>;
 

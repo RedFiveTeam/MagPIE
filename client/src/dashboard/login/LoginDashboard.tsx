@@ -12,25 +12,6 @@ interface MyProps {
   className?: string;
 }
 
-// export const useStyles = makeStyles((localTheme: Theme) =>
-//   createStyles({
-//     input: {
-//       textAlign: 'right',
-//       background: theme.color.backgroundInput,
-//       height: '48px',
-//       borderRadius: '8px',
-//       display: 'flex',
-//     },
-//     end: {
-//       background: theme.color.backgroundUsernameSuffix,
-//       height: '44px',
-//       width: '127px',
-//       borderBottomRightRadius: '7px',
-//       borderTopRightRadius: '7px',
-//     },
-//   }),
-// );
-
 const cookieValidTimeInMS: number = 24 * 60 * 60 * 1000;
 
 export const LoginDashboard: React.FC<MyProps> = (props) => {
@@ -38,7 +19,6 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
   const [signUpUsername, setSignUpUsername] = useState('');
   const [signUpUsernameVerify, setSignUpUsernameVerify] = useState('');
   const [signUp, setSignUp] = useState(false);
-
   const [signUpError, setSignUpError] = useState('');
   const [verifyError, setVerifyError] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -49,11 +29,24 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
     setUsername('');
     setSignUpUsername('');
     setSignUpUsernameVerify('');
+    setSignUpError('');
+    setVerifyError('');
+    setLoginError(false);
   };
 
   const postLogin = (userName: string) => {
     return fetch(
       '/api/login',
+      {
+        method: 'post',
+        body: userName,
+      },
+    );
+  };
+
+  const postRegistration = (userName: string) => {
+    return fetch(
+      '/api/login/register',
       {
         method: 'post',
         body: userName,
@@ -69,16 +62,6 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
       });
   };
 
-  const postRegistration = (userName: string) => {
-    return fetch(
-      '/api/login/register',
-      {
-        method: 'post',
-        body: userName,
-      },
-    );
-  };
-
   const handleResponse = (status: number) => {
     if (status === 201 || status === 200)
       setUserCookie('username', signUpUsername, {expires: new Date(new Date().getTime() + cookieValidTimeInMS)});
@@ -87,6 +70,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
     else if (status === 401)
       setLoginError(true);
   };
+
   const register = () => {
 
     let errors = signUpError !== '' && verifyError !== '';
@@ -100,7 +84,6 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
     } else if (signUpUsername !== signUpUsernameVerify) {
       setVerifyError('Does not match');
       errors = true;
-
     }
 
     if (!errors) {
@@ -137,7 +120,6 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
     setSignUpUsernameVerify(newUsername);
   };
 
-
   return (
     <div className={props.className}>
       <div className={'login-container'}>
@@ -170,7 +152,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
                 required
                 className={classNames('username-input', 'sign-up-verify')}
                 value={signUpUsernameVerify}
-                placeholder={'Enter SIPR Email'}
+                placeholder={'Confirm Email'}
                 InputProps={{
                   disableUnderline: true,
                 }}
@@ -186,7 +168,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
               <span>Submit</span>
             </div>
             <div
-              className={classNames('no-select', 'create-account-button')}
+              className={classNames('no-select', 'text-button', 'cancel-create-account-button')}
               onClick={() => {
                 resetHooks();
                 setSignUp(false);
@@ -202,6 +184,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
                     login();
                   }
                 }}
+                onSubmit={(e: any) => e.preventDefault()}
           >
             <div className={'username-row'}>
               <UserIcon className={'username-icon'}/>
@@ -214,11 +197,12 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
                   disableUnderline: true,
                 }}
                 onChange={(event) => setUsername(event.target.value)}
+
               />
               <div className={'username-suffix'}><span>@mail.smil.mil</span></div>
             </div>
             {loginError ?
-              <div className={'error-message'}><span>Account not found</span></div>
+              <div className={'error-message'}><span>Email not found</span></div>
               :
               null
             }
@@ -229,7 +213,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
               <span>Sign In</span>
             </div>
             <div
-              className={classNames('no-select', 'create-account-button')}
+              className={classNames('no-select', 'text-button', 'create-account-button')}
               onClick={() => {
                 resetHooks();
                 setSignUp(true);
@@ -323,7 +307,7 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
     }
   }
   
-  .create-account-button {
+  .text-button {
     text-align: center;
     color: ${theme.color.loginIcon};
     cursor: pointer;

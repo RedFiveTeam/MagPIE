@@ -48,7 +48,6 @@ public class LoginController {
     if (userRepository.findByUserName(userName) != null) {
       return new ResponseEntity(HttpStatus.CONFLICT);
     }
-
     userRepository.save(new User(userName));
     metricsService.addLoginMetric(userName);
     return new ResponseEntity(HttpStatus.CREATED);

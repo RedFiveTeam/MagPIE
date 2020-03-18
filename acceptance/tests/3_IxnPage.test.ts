@@ -4,6 +4,9 @@ Feature('Ixn Page');
 
 Before((I) => {
   I.amOnPage('/');
+  I.waitForText('Don\'t have an account?', 10);
+  I.fillField('.sign-in', 'billy.bob.joe');
+  I.pressKey('Enter');
   I.waitForText('20-321', 10);
   I.click('.cell--navigate-to-tgt-button');
   I.waitForText('RFI:', 10);

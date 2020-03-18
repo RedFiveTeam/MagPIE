@@ -11,13 +11,13 @@ Scenario ('Should be able to create an account', (I) => {
   I.waitForText('Email not found');
 
   //Go to and exit sign up screen
-  I.click('Don\'t have an account?');
+  I.click('.create-account-button');
   I.waitForText('Submit', 10);
-  I.click('Cancel');
+  I.click('.cancel-create-account-button');
   I.waitForText('Don\'t have an account?', 10);
 
   //Sign up
-  I.click('Don\'t have an account?');
+  I.click('.create-account-button');
   I.fillField('.sign-up', 'billy.bob.joe!');
   I.waitForText('Invalid input', 10);
   I.pressKey('Backspace');
@@ -28,17 +28,15 @@ Scenario ('Should be able to create an account', (I) => {
   I.pressKey('Enter');
   I.waitForText('Does not match', 10);
   I.pressKey('Backspace');
-  I.click('Submit');
+  I.click('.submit-button');
 
   I.waitForText('RFI', 10);
 });
 
 Scenario('Should not be able to register an existing account', (I) => {
-  I.clearCookie('username');
-
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
-  I.click('Don\'t have an account?');
+  I.click('.create-account-button');
   I.fillField('.sign-up', 'billy.bob.joe');
   I.pressKey('Tab');
   I.fillField('.sign-up-verify', 'billy.bob.joe');

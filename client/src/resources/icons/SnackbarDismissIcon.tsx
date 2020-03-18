@@ -22,6 +22,3 @@ const SnackbarDismissIcon = () => {
 };
 
 export default SnackbarDismissIcon;
-
-
-
