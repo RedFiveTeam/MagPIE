@@ -12,7 +12,7 @@ public class RfiDeserializer {
   public static Rfi deserialize(Node rfiNode) throws Exception {
     Element element = (Element) rfiNode;
 
-    return new Rfi(
+    Rfi rfi = new Rfi(
       getRfiNum(rfiNode),
       getUrl(element),
       getStatus(element),
@@ -22,6 +22,14 @@ public class RfiDeserializer {
       getStringFromElement(element, "gets:iso1366trigraph"),
       getStringFromElement(element, "getsrfi:requestText")
     );
+
+    Timestamp receiveDate = getReceiveDate(element);
+
+    if (receiveDate != null) {
+      rfi.setReceiveDate(receiveDate);
+    }
+
+    return rfi;
   }
 
   private static String getRfiNum(Node node) {
@@ -75,4 +83,14 @@ public class RfiDeserializer {
     return "N/A";
   }
 
+  private static Timestamp getReceiveDate(Element element) {
+    Timestamp receiveDate;
+    try {
+      Date date = Utilities.parseDate(getStringFromElement(element, "getsrfi:receiveDate"));
+      receiveDate = new Timestamp(date.getTime());
+    } catch (Exception e) {
+      receiveDate = null;
+    }
+    return receiveDate;
+  }
 }

@@ -14,6 +14,8 @@ import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.magpie.rfis.Rfi;
+import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.TargetStatus;
@@ -21,7 +23,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +64,9 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
   @Autowired
   private MetricChangeTargetRepository metricChangeTargetRepository;
+
+  @Autowired
+  private RfiRepository rfiRepository;
 
   @Before
   public void setup() {
@@ -172,5 +179,56 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     assertEquals(newTarget.getNotes(), notes.getNewData());
 
     assertEquals(newTarget.getDescription(), description.getNewData());
+  }
+
+  private long convertDaysToMS(int days) {
+    return ((long) days) * 86400000L;
+  }
+
+  @Test
+  public void returnsAverageTimeRfisAreInPendingAndOpen() {
+
+    Rfi rfi1 = new Rfi("SDT20-321", "", "CLOSED", new Date(), "", null, "", "");
+    Rfi rfi2 = new Rfi("SDT20-322", "", "CLOSED", new Date(), "", null, "", "");
+    Rfi rfi3 = new Rfi("SDT20-323", "", "CLOSED", new Date(), "", null, "", "");
+    Rfi rfi4 = new Rfi("SDT20-324", "", "CLOSED", new Date(), "", null, "", "");
+
+    //status is not closed, ignore
+    Rfi rfi5 = new Rfi("SDT20-325", "", "NEW", new Date(), "", null, "", "");
+    Rfi rfi6 = new Rfi("SDT20-326", "", "OPEN", new Date(), "", null, "", "");
+
+    rfi1.setReceiveDate(new Timestamp(0));
+    rfi2.setReceiveDate(new Timestamp(0));
+    rfi3.setReceiveDate(new Timestamp(0));
+
+    //receive date unknown, ignore
+    rfi4.setReceiveDate(null);
+
+    rfiRepository.saveAll(new ArrayList<Rfi>(Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5, rfi6)));
+
+    //closed immediately, ignore
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-321", new Timestamp(convertDaysToMS(7)), "status", "NEW"
+      , "OPEN"));
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-321", new Timestamp(convertDaysToMS(7) + 10000L),
+      "status", "OPEN", "CLOSED"));
+
+    //pending for 10 days
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-322", new Timestamp(convertDaysToMS(10)), "status",
+      "NEW", "OPEN"));
+    //open for 7 days
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-322", new Timestamp(convertDaysToMS(17) + 10000L),
+      "status", "OPEN", "CLOSED"));
+
+    //pending for 20 days
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-323", new Timestamp(convertDaysToMS(20)), "status",
+      "NEW", "OPEN"));
+    //open for 21 days
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-323", new Timestamp(convertDaysToMS(41) + 10000L),
+      "status", "OPEN", "CLOSED"));
+
+    long [] averageWorkflowTimeInDays = metricsService.getAverageWorkflowTime();
+
+    assertEquals(14, averageWorkflowTimeInDays[0]);
+    assertEquals(15, averageWorkflowTimeInDays[1]);
   }
 }

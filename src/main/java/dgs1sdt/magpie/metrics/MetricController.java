@@ -49,6 +49,11 @@ public class MetricController {
     return metricsService.getClickGetsCount();
   }
 
+  @GetMapping(path = "/workflow-time")
+  public long[] getAverageWorkflowTime() {
+    return metricsService.getAverageWorkflowTime();
+  }
+
   @PostMapping(path = "/refresh-click")
   public void addClickRefresh() {
     metricsService.addClickRefresh();
@@ -79,6 +84,3 @@ public class MetricController {
     return metricsService.createCancelAddSegment(targetId);
   }
 }
-
-
-

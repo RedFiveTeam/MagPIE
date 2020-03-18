@@ -49,6 +49,9 @@ const theme = {
     backgroundInput: crayonBox.lessDarkGray,
     fontUsernameSuffix: crayonBox.lighterGray,
     loginIcon: crayonBox.mediumBrightBlue,
+    backgroundSidebar: crayonBox.steelBlue,
+    backgroundMetricsCard: crayonBox.darkBlue,
+    fontMetricsHeader: crayonBox.brightBlue,
   },
 
   font: {
@@ -66,6 +69,7 @@ const theme = {
     sizeRegion: '18px',
     sizeRowSmall: '12px',
     sizeRowMedium: '14px',
+    sizeMetricsHeader: '20px',
   },
 
   table: {

@@ -56,6 +56,8 @@ import dgs1sdt.magpie.metrics.undoSegmentDelete.MetricUndoSegmentDelete;
 import dgs1sdt.magpie.metrics.undoSegmentDelete.MetricUndoSegmentDeleteRepository;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDelete;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
+import dgs1sdt.magpie.rfis.Rfi;
+import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
@@ -70,6 +72,7 @@ import java.util.List;
 
 @Service
 public class MetricsService {
+  private RfiRepository rfiRepository;
   private MetricClickGetsRepository metricClickGetsRepository;
   private MetricSiteVisitRepository metricSiteVisitRepository;
   private MetricClickSortRepository metricClickSortRepository;
@@ -95,6 +98,11 @@ public class MetricsService {
   private MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
   private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
   private MetricLoginRepository metricLoginRepository;
+
+  @Autowired
+  public void setRfiRepository(RfiRepository rfiRepository) {
+    this.rfiRepository = rfiRepository;
+  }
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
@@ -416,5 +424,35 @@ public class MetricsService {
 
   public MetricLogin addLoginMetric(String userName) {
     return metricLoginRepository.save(new MetricLogin(userName));
+  }
+
+  public long[] getAverageWorkflowTime() {
+    final long MillisecondsInADay = 86400000L;
+    int totalTimePending = 0;
+    int totalTimeOpen = 0;
+    int numberRfis = 0;
+
+    List<Rfi> closedRfis = rfiRepository.findAllClosedWithDefinedReceiveDate();
+
+    for (Rfi rfi : closedRfis) {
+      MetricChangeRfi metricOpen = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(rfi.getRfiNum());
+      MetricChangeRfi metricClose = metricChangeRfiRepository.findStatusChangeToClosedByRfiNum(rfi.getRfiNum());
+      if (metricOpen != null && metricClose != null &&
+        metricClose.getDatetime().getTime() - metricOpen.getDatetime().getTime() > MillisecondsInADay) {
+
+        Date openTime = metricOpen.getDatetime();
+        long daysPending = (openTime.getTime() - rfi.getReceiveDate().getTime()) / MillisecondsInADay;
+        totalTimePending += daysPending;
+
+        Date closedTime = metricClose.getDatetime();
+        long daysOpen = (closedTime.getTime() - openTime.getTime()) / MillisecondsInADay;
+        totalTimeOpen += daysOpen;
+        numberRfis++;
+      }
+    }
+
+    if (numberRfis > 0)
+      return new long[]{totalTimeOpen / numberRfis, totalTimePending / numberRfis};
+    return new long[]{0, 0};
   }
 }

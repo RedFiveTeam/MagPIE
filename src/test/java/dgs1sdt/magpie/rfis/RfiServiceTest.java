@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,10 +25,16 @@ public class RfiServiceTest extends BaseIntegrationTest {
   GetsClient getsClient;
 
   @Autowired
-  RfiRepository rfiRepository;
+  MetricController metricController;
 
   @Autowired
   RfiService rfiService;
+
+  @Autowired
+  RfiRepository rfiRepository;
+
+  @Autowired
+  MetricChangeRfiRepository metricChangeRfiRepository;
 
   @Before
   public void clean() {
@@ -95,18 +102,13 @@ public class RfiServiceTest extends BaseIntegrationTest {
     assertEquals(rfiCount + 1, newlyOpenedRfi.getPriority());
   }
 
-  @Autowired
-  MetricController metricController;
-
-  @Autowired
-  MetricChangeRfiRepository metricChangeRfiRepository;
-
   @Test
   public void sendsRfiUpdateMetricIfThereIsAChangeInAnRfi() {
     Date rfi1ltiov = new Date();
 
     Rfi rfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a description");
-    Rfi updatedRfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved description");
+    Rfi updatedRfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved " +
+      "description");
     Rfi rfi2 = new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description");
 
     long rfiUpdateCount = metricChangeRfiRepository.count();
@@ -125,11 +127,15 @@ public class RfiServiceTest extends BaseIntegrationTest {
   @Test
   public void updatesRfisInRepoWithUpdatesFromGets() {
     Date rfiltiov = new Date();
+
     Rfi rfi1 = new Rfi("SDT-0321", "url", "NEW", new Date(), "1 FW", rfiltiov, "USA", "a description");
     Rfi rfi2 = new Rfi("SDT-0322", "url", "OPEN", new Date(), "1 FW", rfiltiov, "CAN", "one description");
 
     rfiRepository.save(rfi1);
     rfiRepository.save(rfi2);
+
+    Timestamp receiveDate1 = rfiRepository.findByRfiNum("SDT-0321").getReceiveDate();
+    Timestamp receiveDate2 = rfiRepository.findByRfiNum("SDT-0322").getReceiveDate();
 
     rfiService.fetchRfisFromUris(new String[]{"UpdatedRfis.xml"});
 
@@ -137,6 +143,8 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
     assertEquals("CLOSED", rfiRepository.findByRfiNum("SDT-0322").getStatus());
 
+    assertEquals(receiveDate1, rfiRepository.findByRfiNum("SDT-0321").getReceiveDate());
+    assertEquals(receiveDate2, rfiRepository.findByRfiNum("SDT-0322").getReceiveDate());
   }
 
   @Test
@@ -148,7 +156,6 @@ public class RfiServiceTest extends BaseIntegrationTest {
       .filter(rfi -> rfi.getStatus().equals("OPEN"))
       .sorted(new SortByAscendingPriority())
       .collect(Collectors.toList());
-
 
     Rfi rfiFirst = savedOpenRfis.get(0);
     Rfi rfiSecond = savedOpenRfis.get(1);
@@ -183,7 +190,5 @@ public class RfiServiceTest extends BaseIntegrationTest {
     assertEquals(2, rfiSecond.getPriority());
     assertEquals(3, rfiThird.getPriority());
     assertEquals(4, rfiFourth.getPriority());
-
-
   }
 }

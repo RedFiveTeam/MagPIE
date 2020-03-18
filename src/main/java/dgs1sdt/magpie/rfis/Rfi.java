@@ -26,6 +26,7 @@ public class Rfi {
   private Timestamp ltiov;
   private String country;
   private int priority;
+  private Timestamp receiveDate;
 
   public Rfi(
     String rfiNum,
@@ -52,6 +53,7 @@ public class Rfi {
     this.country = country;
     this.description = description;
     this.priority = -1;
+    this.receiveDate = new Timestamp(new Date().getTime());
   }
 
   public Rfi(

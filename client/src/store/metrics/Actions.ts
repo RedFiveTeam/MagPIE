@@ -38,9 +38,9 @@ export const postSiteVisit = () => {
       {
         method: 'post',
       },
-    ).catch((reason => {
+    ).catch((reason) => {
       console.log('Failed to post sort click metrics: ' + reason);
-    }));
+    });
   };
 };
 
@@ -56,9 +56,9 @@ export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
         },
         body: JSON.stringify(getsClickRequestModel),
       },
-    ).catch((reason => {
+    ).catch((reason) => {
       console.log('Failed to post GETS click metrics: ' + reason);
-    }));
+    });
   };
 };
 
@@ -73,9 +73,9 @@ export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
       },
       body: JSON.stringify(sortClickRequestModel),
     },
-  ).catch((reason => {
+  ).catch((reason) => {
     console.log('Failed to post sort click metrics: ' + reason);
-  }));
+  });
 };
 
 export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestModel) => {
@@ -89,9 +89,9 @@ export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestMode
       },
       body: JSON.stringify(rfiFetchRequestModel),
     },
-  ).catch((reason => {
+  ).catch((reason) => {
     console.log('Failed to post RFI fetch time metrics: ' + reason);
-  }));
+  });
 };
 
 export const postRefreshClick = () => {
@@ -101,8 +101,17 @@ export const postRefreshClick = () => {
       {
         method: 'post',
       },
-    ).catch((reason => {
+    ).catch((reason) => {
       console.log('Failed to post refresh click metrics: ' + reason);
-    }));
+    });
   };
+};
+
+export const fetchWorkflowTime = () => {
+  return fetch(
+    '/api/metrics/workflow-time',
+    {
+      method: 'get'
+    }
+  )
 };

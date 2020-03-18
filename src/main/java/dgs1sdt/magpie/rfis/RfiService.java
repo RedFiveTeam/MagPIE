@@ -15,9 +15,33 @@ import java.util.stream.Collectors;
 
 @Service
 public class RfiService {
+  @Value("${GETS_URI_OPEN_PENDING}")
+  String getsUriOpenPending;
+  @Value("${GETS_URI_CLOSED}")
+  String getsUriClosed;
   private RfiRepository rfiRepository;
   private GetsClient getsClient;
   private MetricsService metricsService;
+
+  @Autowired
+  public RfiService(RfiRepository rfiRepository,
+                    GetsClient getsClient,
+                    MetricsService metricsService) {
+    this.rfiRepository = rfiRepository;
+    this.getsClient = getsClient;
+    this.metricsService = metricsService;
+  }
+
+  private static List<Rfi> rfisFromElements(NodeList htmlRfis) throws Exception {
+    List<Rfi> rfiList = new ArrayList<>();
+
+    for (int i = 0; i < htmlRfis.getLength(); i++) {
+      Node node = htmlRfis.item(i);
+      rfiList.add(RfiDeserializer.deserialize(node));
+    }
+
+    return rfiList;
+  }
 
   @Autowired
   public void setMetricsService(MetricsService metricsService) {
@@ -32,22 +56,6 @@ public class RfiService {
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
     this.rfiRepository = rfiRepository;
-  }
-
-
-  @Value("${GETS_URI_OPEN_PENDING}")
-  String getsUriOpenPending;
-
-  @Value("${GETS_URI_CLOSED}")
-  String getsUriClosed;
-
-  @Autowired
-  public RfiService(RfiRepository rfiRepository,
-                    GetsClient getsClient,
-                    MetricsService metricsService) {
-    this.rfiRepository = rfiRepository;
-    this.getsClient = getsClient;
-    this.metricsService = metricsService;
   }
 
   @Scheduled(fixedDelay = 60000, initialDelay = 5000)
@@ -137,6 +145,8 @@ public class RfiService {
   private void linkNewRfiToOldRfi(Rfi newRfi, Rfi oldRfi) {
     newRfi.setPriority(oldRfi.getPriority());
     newRfi.setId(oldRfi.getId());
+    if (oldRfi.getReceiveDate() != null)
+      newRfi.setReceiveDate(oldRfi.getReceiveDate());
   }
 
   private boolean hasChanged(Rfi newRfi, Rfi oldRfi) {
@@ -162,16 +172,4 @@ public class RfiService {
 
     return rfisFromElements(nodeList);
   }
-
-  private static List<Rfi> rfisFromElements(NodeList htmlRfis) throws Exception {
-    List<Rfi> rfiList = new ArrayList<>();
-
-    for (int i = 0; i < htmlRfis.getLength(); i++) {
-      Node node = htmlRfis.item(i);
-      rfiList.add(RfiDeserializer.deserialize(node));
-    }
-
-    return rfiList;
-  }
-
 }
