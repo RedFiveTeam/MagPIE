@@ -88,6 +88,8 @@ const MagpieFullLogo: React.FC<MyProps> = (props: MyProps) => {
 export default MagpieFullLogo;
 
 const Wrapper = styled('div')`
+  margin-top: -60px;
+  
   svg {
     filter: drop-shadow(-4px 2px 10px #000000);  
   }

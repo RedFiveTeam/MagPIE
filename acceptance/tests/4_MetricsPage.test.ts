@@ -9,5 +9,5 @@ Scenario ('Should log and display metrics', (I) => {
 
   I.amOnPage('/metrics');
   I.waitForText('GETS URL Clicks: 1', 10);
-  I.waitForText('Site Visits: 24', 10);
+  I.waitForText('Site Visits: 25', 10);
 });

@@ -33,9 +33,20 @@ Scenario ('Should be able to create an account', (I) => {
   I.waitForText('RFI', 10);
 });
 
-Scenario('Should be able to log in to an existing account', (I) =>{
-  I.clearCookie('magpie');
+Scenario('Should not be able to register an existing account', (I) => {
+  I.clearCookie('username');
 
+  I.amOnPage('/');
+  I.waitForText('Don\'t have an account?', 10);
+  I.click('Don\'t have an account?');
+  I.fillField('.sign-up', 'billy.bob.joe');
+  I.pressKey('Tab');
+  I.fillField('.sign-up-verify', 'billy.bob.joe');
+  I.pressKey('Enter');
+  I.waitForText('Account already exists', 10);
+});
+
+Scenario('Should be able to log in to an existing account', (I) =>{
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
   I.fillField('.sign-in', 'billy.bob.joe');

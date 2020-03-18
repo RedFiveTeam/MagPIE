@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import theme from '../../resources/theme';
-import { TextField } from '@material-ui/core';
+import { Input, TextField } from '@material-ui/core';
 import classNames from 'classnames';
 import UserIcon from '../../resources/icons/UserIcon';
 import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
@@ -31,60 +31,215 @@ interface MyProps {
 //   }),
 // );
 
-const cookieValidTimeInMS: number = 24*60*60*1000;
+const cookieValidTimeInMS: number = 24 * 60 * 60 * 1000;
 
 export const LoginDashboard: React.FC<MyProps> = (props) => {
   const [username, setUsername] = useState('');
-  // const classes = useStyles();
+  const [signUpUsername, setSignUpUsername] = useState('');
+  const [signUpUsernameVerify, setSignUpUsernameVerify] = useState('');
+  const [signUp, setSignUp] = useState(false);
+
+  const [signUpError, setSignUpError] = useState('');
+  const [verifyError, setVerifyError] = useState('');
+  const [loginError, setLoginError] = useState(false);
+
   const [, setUserCookie] = useCookies(['username']);
 
-  // setUserCookie('username', 'billy.bob.joe', {});
+  const resetHooks = () => {
+    setUsername('');
+    setSignUpUsername('');
+    setSignUpUsernameVerify('');
+  };
 
-  const login = () => {
-    setUserCookie(
-      'username',
-      username,
-      {expires: new Date(new Date().getTime() + cookieValidTimeInMS)},
+  const postLogin = (userName: string) => {
+    return fetch(
+      '/api/login',
+      {
+        method: 'post',
+        body: userName,
+      },
     );
   };
+
+  const login = () => {
+    postLogin(username)
+      .then(response => handleResponse(response.status))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  };
+
+  const postRegistration = (userName: string) => {
+    return fetch(
+      '/api/login/register',
+      {
+        method: 'post',
+        body: userName,
+      },
+    );
+  };
+
+  const handleResponse = (status: number) => {
+    if (status === 201 || status === 200)
+      setUserCookie('username', signUpUsername, {expires: new Date(new Date().getTime() + cookieValidTimeInMS)});
+    else if (status === 409)
+      setVerifyError('Account already exists');
+    else if (status === 401)
+      setLoginError(true);
+  };
+  const register = () => {
+
+    let errors = signUpError !== '' && verifyError !== '';
+    if (signUpUsername === '') {
+      setSignUpError('Field cannot be empty');
+      errors = true;
+    }
+    if (signUpUsernameVerify === '') {
+      setVerifyError('Field cannot be empty');
+      errors = true;
+    } else if (signUpUsername !== signUpUsernameVerify) {
+      setVerifyError('Does not match');
+      errors = true;
+
+    }
+
+    if (!errors) {
+      setSignUpError('');
+      setVerifyError('');
+      postRegistration(signUpUsername)
+        .then(response => handleResponse(response.status))
+        .catch((reason) => {
+          console.log(reason);
+        });
+    }
+  };
+
+  const checkInvalid = (username: string): boolean => {
+    let validChars = /^[0-9a-zA-Z.]+$/;
+    return !validChars.test(username);
+  };
+
+  const updateSignUpUsername = (event: any) => {
+    let newUsername: string = event.target.value;
+    if (checkInvalid(newUsername) && newUsername !== '')
+      setSignUpError('Invalid input');
+    else
+      setSignUpError('');
+    setSignUpUsername(newUsername);
+  };
+
+  const updateVerifyUsername = (event: any) => {
+    let newUsername: string = event.target.value;
+    if (checkInvalid(newUsername) && newUsername !== '')
+      setVerifyError('Invalid input');
+    else
+      setVerifyError('');
+    setSignUpUsernameVerify(newUsername);
+  };
+
 
   return (
     <div className={props.className}>
       <div className={'login-container'}>
-        <MagpieFullLogo/>
-        <form className={'login-form'}
-              onKeyPress={(e) => {
-                if (e.which === 13) {
-                  login();
-                }
-              }}
-        >
-          <div className={'username-row'}>
-            <UserIcon className={'username-icon'}/>
-            <TextField
-              autoFocus
-              className={classNames('username-input')}
-              value={username}
-              placeholder={'Enter SIPR Email'}
-              InputProps={{
-                disableUnderline: true,
-              }}
-              onChange={(event) => setUsername(event.target.value)}
-            />
-            <div className={'username-suffix'}><span>@mail.smil.mil</span></div>
-          </div>
-          <div
-            className={classNames('no-select', 'submit-button')}
-            onClick={login}
+        <MagpieFullLogo className={'logo'}/>
+        {signUp ?
+          <form className={'sign-up-form'}
+                onKeyPress={(e) => {
+                  if (e.which === 13) {
+                    register();
+                  }
+                }}
           >
-            <span>Sign In</span>
-          </div>
-          <div
-            className={classNames('no-select', 'create-account-button')}
+            <div className={'username-row'}>
+              <UserIcon className={'username-icon'}/>
+              <Input
+                autoFocus
+                required
+                className={classNames('username-input', 'sign-up')}
+                value={signUpUsername}
+                placeholder={'Enter SIPR Email'}
+                disableUnderline
+                onChange={updateSignUpUsername}
+              />
+              <div className={'username-suffix'}><span>@mail.smil.mil</span></div>
+            </div>
+            <div className={'error-message'}><span>{signUpError}</span></div>
+            <div className={'username-row'}>
+              <UserIcon className={'username-icon'}/>
+              <TextField
+                required
+                className={classNames('username-input', 'sign-up-verify')}
+                value={signUpUsernameVerify}
+                placeholder={'Enter SIPR Email'}
+                InputProps={{
+                  disableUnderline: true,
+                }}
+                onChange={updateVerifyUsername}
+              />
+              <div className={'username-suffix'}><span>@mail.smil.mil</span></div>
+            </div>
+            <div className={'error-message'}><span>{verifyError}</span></div>
+            <div
+              className={classNames('no-select', 'submit-button')}
+              onClick={register}
+            >
+              <span>Submit</span>
+            </div>
+            <div
+              className={classNames('no-select', 'create-account-button')}
+              onClick={() => {
+                resetHooks();
+                setSignUp(false);
+              }}
+            >
+              Cancel
+            </div>
+          </form>
+          :
+          <form className={'login-form'}
+                onKeyPress={(e) => {
+                  if (e.which === 13) {
+                    login();
+                  }
+                }}
           >
-            Don't have an account?
-          </div>
-        </form>
+            <div className={'username-row'}>
+              <UserIcon className={'username-icon'}/>
+              <TextField
+                autoFocus
+                className={classNames('username-input')}
+                value={username}
+                placeholder={'Enter SIPR Email'}
+                InputProps={{
+                  disableUnderline: true,
+                }}
+                onChange={(event) => setUsername(event.target.value)}
+              />
+              <div className={'username-suffix'}><span>@mail.smil.mil</span></div>
+            </div>
+            {loginError ?
+              <div className={'error-message'}><span>Account not found</span></div>
+              :
+              null
+            }
+            <div
+              className={classNames('no-select', 'submit-button')}
+              onClick={login}
+            >
+              <span>Sign In</span>
+            </div>
+            <div
+              className={classNames('no-select', 'create-account-button')}
+              onClick={() => {
+                resetHooks();
+                setSignUp(true);
+              }}
+            >
+              Don't have an account?
+            </div>
+          </form>
+        }
+
       </div>
     </div>
   );
@@ -109,6 +264,10 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
     justify-content: center;
   }
   
+  .logo {
+    margin-bottom: 10px;
+  }
+  
   .username-row {
     background: ${theme.color.backgroundInput};
     height: 48px;
@@ -119,7 +278,7 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
     align-items: center;
     padding: 2px 2px 2px 2px;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-bottom: 28px;
   }
   
   .username-icon {
@@ -151,7 +310,6 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
     background: ${theme.color.backgroundInput};
     height: 48px;
     width: 384px;
-    margin-top: 28px;
     margin-bottom: 28px;
     display: flex;
     flex-direction: row;
@@ -173,5 +331,18 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
     :hover {
       text-shadow: 0 0 8px rgba(8, 114, 179, 0.75);
     }
+  }
+  
+  .error-message {
+    height: 28px;
+    margin-top: -28px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 14px;
+    font-size: ${theme.font.sizeRow};
+    font-weight: ${theme.font.weightRow};
+    color: ${theme.color.fontError};
   }
 `;

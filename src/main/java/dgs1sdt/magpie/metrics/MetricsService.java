@@ -38,6 +38,8 @@ import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegment;
 import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegmentRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTarget;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
+import dgs1sdt.magpie.metrics.login.MetricLogin;
+import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTime;
 import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeJson;
 import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeRepository;
@@ -92,6 +94,7 @@ public class MetricsService {
   private MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository;
   private MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
   private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
+  private MetricLoginRepository metricLoginRepository;
 
   @Autowired
   public void setMetricClickGetsRepository(MetricClickGetsRepository metricClickGetsRepository) {
@@ -211,6 +214,11 @@ public class MetricsService {
   @Autowired
   public void setMetricCancelAddSegmentRepository(MetricCancelAddSegmentRepository metricCancelAddSegmentRepository) {
     this.metricCancelAddSegmentRepository = metricCancelAddSegmentRepository;
+  }
+
+  @Autowired
+  public void setMetricLoginRepository(MetricLoginRepository metricLoginRepository) {
+    this.metricLoginRepository = metricLoginRepository;
   }
 
   public long getSiteVisitCount() {
@@ -404,5 +412,9 @@ public class MetricsService {
 
   public MetricCancelAddSegment createCancelAddSegment(long targetId) {
     return metricCancelAddSegmentRepository.save(new MetricCancelAddSegment(targetId));
+  }
+
+  public MetricLogin addLoginMetric(String userName) {
+    return metricLoginRepository.save(new MetricLogin(userName));
   }
 }
