@@ -8,4 +8,6 @@ Scenario ('Should log and display metrics', (I) => {
   I.see('Open');
   I.see('New');
   I.see('0 d');
+  I.waitForText('Avg Targets Created', 10);
+  I.see('3');
 });

@@ -54,6 +54,11 @@ public class MetricController {
     return metricsService.getAverageWorkflowTime();
   }
 
+  @GetMapping(path = "/targets-created-per-week")
+  public int getTargetsCreatedPerWeek() {
+    return metricsService.getAverageTgtCreationsPerWeek();
+  }
+
   @PostMapping(path = "/refresh-click")
   public void addClickRefresh() {
     metricsService.addClickRefresh();

@@ -115,3 +115,12 @@ export const fetchWorkflowTime = () => {
     }
   )
 };
+
+export const fetchTgtsCreatedPerWeek = () => {
+  return fetch(
+    '/api/metrics/targets-created-per-week',
+    {
+      method: 'get'
+    }
+  )
+};

@@ -70,6 +70,7 @@ const theme = {
     sizeRowSmall: '12px',
     sizeRowMedium: '14px',
     sizeMetricsHeader: '20px',
+    sizeBigMetric: '40px'
   },
 
   table: {

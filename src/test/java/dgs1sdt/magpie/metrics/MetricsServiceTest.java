@@ -10,6 +10,7 @@ import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
@@ -230,5 +231,38 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     assertEquals(14, averageWorkflowTimeInDays[0]);
     assertEquals(15, averageWorkflowTimeInDays[1]);
+  }
+
+  @Test
+  public void returnsAvgTargetsPerWeek() {
+    long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
+
+    TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED);
+    MetricCreateTarget metric1 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric2 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric3 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric4 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric5 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric6 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric7 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric8 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric9 = new MetricCreateTarget(1, target);
+    metric1.setTimestamp(new Timestamp(threeWeeksAgo));
+    metric2.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(2)));
+    metric3.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(5)));
+    metric4.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7)));
+    metric5.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7)));
+    metric6.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(8)));
+    metric7.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(11)));
+    metric8.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(14)));
+    metric9.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(19)));
+
+    List<MetricCreateTarget> metrics = new ArrayList<>(Arrays.asList(
+      metric1, metric2, metric3, metric4, metric5, metric6, metric7, metric8, metric9
+    ));
+
+    metricCreateTargetRepository.saveAll(metrics);
+
+    assertEquals(3, metricsService.getAverageTgtCreationsPerWeek());
   }
 }

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import theme from '../../resources/theme';
 import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
-import { fetchWorkflowTime } from '../../store/metrics';
+import { fetchTgtsCreatedPerWeek, fetchWorkflowTime } from '../../store/metrics';
 
 interface MyProps {
   className?: string
@@ -12,11 +12,21 @@ interface MyProps {
 
 export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [workflowTime, setWorkflowTime] = useState([-1, -1]);
+  const [tgtsPerWeek, setTgtsPerWeek] = useState(-1);
 
   useEffect(() => {
     fetchWorkflowTime()
       .then(response => response.json())
       .then(workflowTime => setWorkflowTime(workflowTime))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchTgtsCreatedPerWeek()
+      .then(response => response.json())
+      .then(tgtsPerWeek => setTgtsPerWeek(tgtsPerWeek))
       .catch((reason) => {
         console.log(reason);
       });
@@ -40,6 +50,18 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
                 <span>New</span>
                 <span><b>{workflowTime[1]} d</b></span>
               </div>
+            </div>
+          </div>
+          :
+          null
+        }
+        {tgtsPerWeek > -1 ?
+          <div className={'card'}>
+            <div className={'card-header'}>
+              Avg Targets Created
+            </div>
+            <div className={'card-body'}>
+              <span>{tgtsPerWeek}</span>
             </div>
           </div>
           :
@@ -105,6 +127,8 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
     justify-content: center;
     width: 100%;
     height: 157px;
+    font-size: ${theme.font.sizeBigMetric};
+    font-weight: bold;
   }
   
   .card-row {
@@ -114,5 +138,7 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
     justify-content: space-between;
     padding: 13px 34px 13px 34px;
     width: 100%;
+    font-weight: normal;
+      font-size: ${theme.font.sizeHeader};
   }
 `;

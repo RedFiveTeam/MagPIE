@@ -99,6 +99,8 @@ public class MetricsService {
   private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
   private MetricLoginRepository metricLoginRepository;
 
+  static final long MillisecondsInADay = 86400000L;
+
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
     this.rfiRepository = rfiRepository;
@@ -427,7 +429,6 @@ public class MetricsService {
   }
 
   public long[] getAverageWorkflowTime() {
-    final long MillisecondsInADay = 86400000L;
     int totalTimePending = 0;
     int totalTimeOpen = 0;
     int numberRfis = 0;
@@ -454,5 +455,19 @@ public class MetricsService {
     if (numberRfis > 0)
       return new long[]{totalTimeOpen / numberRfis, totalTimePending / numberRfis};
     return new long[]{0, 0};
+  }
+
+  public int getAverageTgtCreationsPerWeek() {
+    try {
+      long startDate = metricCreateTargetRepository.findAll().get(0).getTimestamp().getTime();
+      long now = new Date().getTime();
+      long numTargetsCreated = metricCreateTargetRepository.findAll().size();
+      int weeksSinceStartDate = Math.round((float) (now - startDate) / (float) (7 * MillisecondsInADay));
+      if (weeksSinceStartDate == 0)
+        weeksSinceStartDate = 1;
+      return (int) (numTargetsCreated / weeksSinceStartDate);
+    } catch (Exception e) {
+      return 0;
+    }
   }
 }
