@@ -154,7 +154,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
               }}
               margin="normal"
               id={'date-picker-dialog' + (props.exploitDate ? props.exploitDate.exploitDate : '')}
-              label=""
+              label="date-picker-dialog"
               format="MM/dd/yyyy"
               placeholder={'MM/DD/YYYY'}
               value={(props.exploitDate ? props.exploitDateDisplay : selectedDate)}

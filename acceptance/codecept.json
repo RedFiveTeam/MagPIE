@@ -3,14 +3,14 @@
   "timeout": 10000,
   "output": "./output",
   "helpers": {
-    "Nightmare": {
+    "Puppeteer": {
       "url": "http://localhost:9090",
       "show": false,
       "openDevTools": false,
-      "restart": true,
+      "restart": false,
       "alwaysOnTop": false,
-      "height": 1080,
-      "width": 1920,
+      "windowSize": "1920x1080px",
+      "waitForNavigation": "networkidle0",
       "switches": {
         "ignore-certificate-errors": true
       }

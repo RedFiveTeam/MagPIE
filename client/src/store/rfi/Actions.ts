@@ -18,8 +18,7 @@ export const reprioritizeRfis = (reprioritizedList: RfiModel[]) => {
 };
 
 export const postRfiPriorityUpdate = (rfis: RfiPriorityPostModel[]) => {
-  return fetch(
-    '/api/rfi/update-priority',
+  return fetch('/api/rfi/update-priority',
     {
       method: 'post',
       headers: {
@@ -28,7 +27,7 @@ export const postRfiPriorityUpdate = (rfis: RfiPriorityPostModel[]) => {
       },
       body: JSON.stringify(rfis),
     }
-  )
+  );
 };
 
 export const fetchRfiPending = () => {

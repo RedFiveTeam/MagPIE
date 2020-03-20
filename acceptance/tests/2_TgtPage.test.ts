@@ -5,7 +5,7 @@ Feature('Tgt Page');
 Before((I) => {
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
-  I.fillField('.sign-in', 'billy.bob.joe');
+  I.fillField('.username-input', 'billy.bob.joe');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
   I.click('.cell--navigate-to-tgt-button');
@@ -54,10 +54,10 @@ Scenario('Should be able to delete and undo delete dates', (I) => {
 
 Scenario('Should be able to add tgts', (I) => {
   I.click('.add-date-button');
-  I.fillField('.MuiInputBase-input', '02012020');
+  I.fillField('input', '02012020');
 
   I.click('.add-tgt-button');
-  I.fillField('.name', 'SDT20-123');
+  I.fillField('.tgt-name-input-new', 'SDT20-123');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Tab');
@@ -81,7 +81,7 @@ Scenario('Should be able to edit tgts', (I) => {
   I.doubleClick('.tgt-name');
   for (let i = 0; i < 3; i++)
     I.pressKey('Backspace');
-  I.fillField('.name', '999');
+  I.fillField('.tgt-name', '999');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1234567890');
   I.pressKey('Enter');
@@ -110,7 +110,7 @@ Scenario('Should be able to edit tgts', (I) => {
 
 Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.click('.add-tgt-button');
-  I.fillField('.name', 'SDT20-999');
+  I.fillField('.tgt-name-input-new', 'SDT20-999');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1111111111');
   I.pressKey('Enter');
@@ -122,7 +122,7 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.dontSee('12QWE1111111111');
 
   I.click('.add-tgt-button');
-  I.fillField('.name', 'SDT21-999');
+  I.fillField('.tgt-name-input-new', 'SDT21-999');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
@@ -130,7 +130,7 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.doubleClick('.tgt-name');
   for (let i = 0; i < 5; i++)
     I.pressKey('Backspace');
-  I.fillField('.name', '1-999');
+  I.fillField('.tgt-name', '1-999');
   I.pressKey('Enter');
 
   I.click('.tgt-dash--header--back-button');

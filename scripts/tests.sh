@@ -6,6 +6,9 @@ function main {
     setup
 
     case "${1}" in
+        anj)
+            acceptanceTests ${@}
+        ;;
         acc|acceptance)
             yarnBuild
             jarBuild
@@ -47,9 +50,9 @@ function acceptanceTests {
     pushd ${BASE_DIR}/acceptance
         yarn install
         if [[ "${PIE_CI}" && "$(lsb_release -crid | grep -i 'Ubuntu')" ]]; then
-            xvfb-run yarn codeceptjs run -o "{ \"helpers\": {\"Nightmare\": {\"url\": \"${REACT_APP_HOST}\"}}}" ${SPECIFIC_TESTS}
+            xvfb-run yarn codeceptjs run -o "{\"helpers\": {\"Puppeteer\": {\"url\": \"${REACT_APP_HOST}\", \"chrome\": {\"args\": [\"--headless\", \"--no-sandbox\"]}}}}" ${SPECIFIC_TESTS}
         else
-            yarn codeceptjs run -o "{ \"helpers\": {\"Nightmare\": {\"url\": \"${REACT_APP_HOST}\"}}}" ${SPECIFIC_TESTS}
+            yarn codeceptjs run -o "{ \"helpers\": {\"Puppeteer\": {\"url\": \"${REACT_APP_HOST}\"}}}" ${SPECIFIC_TESTS}
         fi
 
         if [[ "${?}" == "1" ]]; then

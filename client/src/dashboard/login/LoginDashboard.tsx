@@ -35,8 +35,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
   };
 
   const postLogin = (userName: string) => {
-    return fetch(
-      '/api/login',
+    return fetch('/api/login',
       {
         method: 'post',
         body: userName,
@@ -45,8 +44,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
   };
 
   const postRegistration = (userName: string) => {
-    return fetch(
-      '/api/login/register',
+    return fetch('/api/login/register',
       {
         method: 'post',
         body: userName,

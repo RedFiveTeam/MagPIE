@@ -160,7 +160,8 @@ export const SegmentDivider: React.FC<Props> = props => {
       props.setEdit(-1);
     } else {
       props.setAddSegment(false);
-      postCancelAddSegment(props.target.id);
+      postCancelAddSegment(props.target.id)
+        .catch(reason => console.log(reason));
     }
   };
 

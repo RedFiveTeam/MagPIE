@@ -5,7 +5,7 @@ Feature('Ixn Page');
 Before((I) => {
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
-  I.fillField('.sign-in', 'billy.bob.joe');
+  I.fillField('.username-input', 'billy.bob.joe');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
   I.click('.cell--navigate-to-tgt-button');
@@ -17,7 +17,7 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.fillField('input', '02012020');
 
   I.click('.add-tgt-button');
-  I.fillField('.name', 'SDT20-123');
+  I.fillField('.tgt-name-input-new', 'SDT20-123');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
@@ -279,7 +279,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
 
   //Add target
   I.click('.add-tgt-button');
-  I.fillField('.name', 'SDT20-123');
+  I.fillField('.tgt-name-input-new', 'SDT20-123');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
@@ -306,7 +306,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   //Navigate back and try a delete
   I.click('.ixn-dash--header--back-button');
   I.click('.delete-tgt-button');
-  I.waitForText('Are you sure you want to delete ');
+  I.seeElement(locate('div').withText('All associated data will be erased.'));
   I.click('.modal-no');
 
   I.click('.tgt-dash--header--back-button');
@@ -315,7 +315,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.waitForText('SDT20-123');
 
   I.click('.delete-tgt-button');
-  I.waitForText('Are you sure you want to delete ');
+  I.seeElement(locate('div').withText('All associated data will be erased.'));
   I.click('.modal-yes');
 
   I.click('.tgt-dash--header--back-button');

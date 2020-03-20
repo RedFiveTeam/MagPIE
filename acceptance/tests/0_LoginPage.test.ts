@@ -6,7 +6,7 @@ Scenario ('Should be able to create an account', (I) => {
   //Try to log in without an account
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
-  I.fillField('.sign-in', 'billy.bob.joe');
+  I.fillField('.username-input', 'billy.bob.joe');
   I.pressKey('Enter');
   I.waitForText('Account does not exist');
 
@@ -47,7 +47,7 @@ Scenario('Should not be able to register an existing account', (I) => {
 Scenario('Should be able to log in to an existing account', (I) =>{
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
-  I.fillField('.sign-in', 'billy.bob.joe');
+  I.fillField('.username-input', 'billy.bob.joe');
   I.pressKey('Enter');
 
   I.waitForText('RFI', 10);

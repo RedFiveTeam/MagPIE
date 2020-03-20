@@ -13,6 +13,8 @@ node ('legacy') {
     stage ('Checkout') {
         if(env.BRANCH_NAME == 'acceptance') {
             git url: 'git@gitlab.devops.geointservices.io:dgs1sdt/pie.git', branch: 'acceptance', credentialsId: '0059b60b-fe05-4857-acda-41ada14d0c52', poll: true
+        } else if (env.BRANCH_NAME == 'acceptance-noNightmare') {
+            git url: 'git@gitlab.devops.geointservices.io:dgs1sdt/pie.git', branch: 'acceptance-noNightmare', credentialsId: '0059b60b-fe05-4857-acda-41ada14d0c52', poll: true
         } else if (env.BRANCH_NAME == 'master') {
             git url: 'git@gitlab.devops.geointservices.io:dgs1sdt/pie.git', branch: 'master', credentialsId: '0059b60b-fe05-4857-acda-41ada14d0c52', poll: true
         } else if (env.BRANCH_NAME == 'testFlyway') {
@@ -59,7 +61,7 @@ stage ('Test & Build') {
                    }
                 }
 
-    if(env.BRANCH_NAME == 'acceptance') {
+    if(env.BRANCH_NAME == 'acceptance' || env.BRANCH_NAME == 'acceptance-noNightmare') {
         stage ('Deploy NGA') {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '8e717287-708e-440f-8fa8-17497eac5efb', passwordVariable: 'PCFPass', usernameVariable: 'PCFUser']]) {
                 withEnv(["CF_HOME=${pwd()}"]) {

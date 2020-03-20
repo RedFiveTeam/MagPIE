@@ -33,8 +33,7 @@ export const fetchSiteVisitsGraphWeekSuccess = (body: any) => {
 
 export const postSiteVisit = () => {
   return () => {
-    return fetch(
-      '/api/metrics/site-visit',
+    return fetch('/api/metrics/site-visit',
       {
         method: 'post',
       },
@@ -46,8 +45,7 @@ export const postSiteVisit = () => {
 
 export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
   return () => {
-    return fetch(
-      '/api/metrics/gets-click',
+    return fetch('/api/metrics/gets-click',
       {
         method: 'post',
         headers: {
@@ -63,8 +61,7 @@ export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
 };
 
 export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
-  fetch(
-    '/api/metrics/sort-click',
+  fetch('/api/metrics/sort-click',
     {
       method: 'post',
       headers: {
@@ -79,8 +76,7 @@ export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
 };
 
 export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestModel) => {
-  fetch(
-    '/api/metrics/rfi-fetch',
+  fetch('/api/metrics/rfi-fetch',
     {
       method: 'post',
       headers: {
@@ -96,8 +92,7 @@ export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestMode
 
 export const postRefreshClick = () => {
   return () => {
-    return fetch(
-      '/api/metrics/refresh-click',
+    return fetch('/api/metrics/refresh-click',
       {
         method: 'post',
       },
@@ -108,12 +103,11 @@ export const postRefreshClick = () => {
 };
 
 export const fetchWorkflowTime = () => {
-  return fetch(
-    '/api/metrics/workflow-time',
+  return fetch('/api/metrics/workflow-time',
     {
       method: 'get'
     }
-  )
+  );
 };
 
 export const fetchTgtsCreatedPerWeek = () => {

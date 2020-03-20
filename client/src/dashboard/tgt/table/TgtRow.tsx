@@ -65,7 +65,10 @@ export const TgtRow: React.FC<Props> = props => {
   const handleDeleteClick = () => {
     fetch('/api/ixn/' + props.target.id)
       .then(response => response.json())
-      .then(ixns => checkIxns(IxnDeserializer.deserialize(ixns).length > 0));
+      .then(ixns => checkIxns(IxnDeserializer.deserialize(ixns).length > 0))
+      .catch((reason) => {
+      console.log('Failed to delete: ' + reason);
+    });
   };
 
   const performDelete = () => {

@@ -59,8 +59,7 @@ export const setDatePlaceholder = (show: boolean) => {
 };
 
 export const postExploitDateDelete = (exploitDateId: number) => {
-  return fetch(
-    '/api/targets/dates/delete?exploitDateId=' + exploitDateId,
+  return fetch('/api/targets/dates/delete?exploitDateId=' + exploitDateId,
     {
       method: 'delete',
       headers: {
@@ -72,8 +71,7 @@ export const postExploitDateDelete = (exploitDateId: number) => {
 };
 
 export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
-  return fetch(
-    '/api/targets/dates/post',
+  return fetch('/api/targets/dates/post',
     {
       method: 'post',
       headers: {
@@ -82,12 +80,13 @@ export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
       },
       body: JSON.stringify(exploitDate),
     }
-  );
+  ).catch((reason) => {
+    console.log('Failed to post exploitDate: ' + reason);
+  });
 };
 
 export const postTargetDelete = (tgtId: number) => {
-  return fetch(
-    '/api/targets/delete?targetId=' + tgtId,
+  return fetch('/api/targets/delete?targetId=' + tgtId,
     {
       method: 'delete',
       headers: {
@@ -99,8 +98,7 @@ export const postTargetDelete = (tgtId: number) => {
 };
 
 export const postTarget = (target: TargetPostModel) => {
-  return fetch(
-    '/api/targets/post',
+  return fetch('/api/targets/post',
     {
       method: 'post',
       headers: {
@@ -109,5 +107,7 @@ export const postTarget = (target: TargetPostModel) => {
       },
       body: JSON.stringify(target),
     }
-  );
+  ).catch((reason) => {
+    console.log('Failed to post target: ' + reason);
+  });
 };
