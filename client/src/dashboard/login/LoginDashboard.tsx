@@ -282,6 +282,7 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
   
   input {
     text-align: right;
+    margin-top: 3px;
   }
   
   .username-suffix {

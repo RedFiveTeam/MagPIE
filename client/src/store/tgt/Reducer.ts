@@ -11,7 +11,9 @@ const initState: TgtState = {
   viewTgtPage: false,
   exploitDates: [] as ExploitDateModel[],
   showDatePlaceholder: false,
-  targets: [] as TargetModel[]
+  addTgt: -1,
+  editTgt: -1,
+  targets: [] as TargetModel[],
 };
 
 const reducer: Reducer<TgtState> = (state = initState, action: any) => {
@@ -26,34 +28,68 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
         showDatePlaceholder: false,
         rfi: action.rfi,
         exploitDates: sortedExploitDates,
-        targets: action.targets
+        targets: action.targets,
       };
     case TgtActionTypes.RELOAD_TGT_PAGE:
       sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
       return {
         ...state,
         exploitDates: sortedExploitDates,
-        targets: action.targets
+        targets: action.targets,
       };
     case TgtActionTypes.EXIT_TGT_PAGE:
       return {
         ...state,
-        viewTgtPage: false
+        viewTgtPage: false,
       };
     case TgtActionTypes.UPDATE_EXPLOIT_DATE:
       return {
         ...state,
-        exploitDates: action.exploitDates
+        exploitDates: action.exploitDates,
       };
     case TgtActionTypes.SHOW_DATE_PLACEHOLDER:
       return {
         ...state,
-        showDatePlaceholder: action.showDatePlaceholder
+        showDatePlaceholder: action.showDatePlaceholder,
       };
     case TgtActionTypes.UPDATE_TGT_SUCCESS:
       return {
         ...state,
-        targets: action.targets
+        targets: action.targets,
+      };
+    case TgtActionTypes.UPDATE_TGT_LOCAL:
+      let newTargets = Array.from(state.targets);
+      if (action.target.id > 0) {
+        for (let tgt in newTargets) {
+          if (newTargets[tgt].id === action.target.id) {
+            newTargets[tgt] = action.target;
+            break;
+          }
+        }
+      } else {
+        newTargets.push(action.target);
+      }
+      return {
+        ...state,
+        targets: newTargets,
+        addTgt: -1,
+        editTgt: -1,
+      };
+    case TgtActionTypes.ADD_TGT:
+      return {
+        ...state,
+        addTgt: action.addTgt,
+      };
+    case TgtActionTypes.EDIT_TGT:
+      return {
+        ...state,
+        editTgt: action.editTgt,
+      };
+    case TgtActionTypes.RESET_ADD_EDIT_TGT:
+      return {
+        ...state,
+        addTgt: -1,
+        editTgt: -1,
       };
     default:
       return {...state};

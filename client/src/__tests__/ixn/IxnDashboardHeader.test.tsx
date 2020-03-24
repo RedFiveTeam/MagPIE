@@ -24,12 +24,6 @@ describe("Interactions Header", () => {
     expect(subject.text()).toContain("TGT: SDT20-123");
   });
 
-  it('should display a back button which calls an exit function on click', () => {
-    expect(subject.find('.ixn-dash--header--back-button').exists()).toBeTruthy();
-    subject.find('.ixn-dash--header--back-button').simulate('click');
-    expect(exitSpy).toHaveBeenCalled();
-  });
-
   it('should display the MGRS', () => {
     expect(subject.find('.ixn-dash--header--mgrs').text()).toContain("MGRS: 00ABC1234567890");
   });

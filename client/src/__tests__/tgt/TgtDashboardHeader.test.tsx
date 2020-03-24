@@ -13,6 +13,7 @@ describe('TgtDashboardHeader', () => {
     <TgtDashboardHeader
       exitTgtPage={exitSpy}
       rfi={rfiTest}
+      editing={false}
     />);
 
   it('should display rfi rfiNum header', () => {
@@ -23,5 +24,4 @@ describe('TgtDashboardHeader', () => {
     subject.find('.tgt-dash--header--back-button').simulate('click');
     expect(exitSpy).toHaveBeenCalled();
   });
-
 });

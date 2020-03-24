@@ -40,7 +40,7 @@ describe('RFIRow', () => {
     expect(loadTgtPageSpy).toHaveBeenCalledWith(rfi, true);
   });
 
-  it('navigate to tgt button should be disabled on closed or pending rfis', () => {
+  it('navigate to tgt button should not exist on closed or pending rfis', () => {
     let newRfi = {...rfi, status: RfiStatus.PENDING};
 
     subject = shallow(
@@ -53,8 +53,7 @@ describe('RFIRow', () => {
       />,
     );
 
-    subject.find('.cell--navigate-to-tgt-button').simulate('click');
-    expect(loadTgtPageSpy).not.toHaveBeenCalled();
+    expect(subject.find('.cell--navigate-to-tgt-button').exists()).toBeFalsy();
 
     newRfi = {...rfi, status: RfiStatus.CLOSED};
 
@@ -68,8 +67,7 @@ describe('RFIRow', () => {
       />,
     );
 
-    subject.find('.cell--navigate-to-tgt-button').simulate('click');
-    expect(loadTgtPageSpy).not.toHaveBeenCalled();
+    expect(subject.find('.cell--navigate-to-tgt-button').exists()).toBeFalsy();
   });
 
   it('should display the GETS button', () => {

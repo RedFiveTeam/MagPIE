@@ -40,7 +40,7 @@ describe('TgtDateDivider', () => {
   });
 
   it('should display a dividing line', () => {
-    expect(subject.find('.separator-line').exists()).toBeTruthy();
+    expect(subject.find('.exploit-date-divider--bar').exists()).toBeTruthy();
   });
 
   it('should display a date input with the exploitation date if it exists', () => {

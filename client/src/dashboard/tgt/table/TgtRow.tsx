@@ -67,8 +67,8 @@ export const TgtRow: React.FC<Props> = props => {
       .then(response => response.json())
       .then(ixns => checkIxns(IxnDeserializer.deserialize(ixns).length > 0))
       .catch((reason) => {
-      console.log('Failed to delete: ' + reason);
-    });
+        console.log('Failed to delete: ' + reason);
+      });
   };
 
   const performDelete = () => {
@@ -94,11 +94,18 @@ export const TgtRow: React.FC<Props> = props => {
     }
   };
 
-  const handleDoubleClick = () => {
+  const handleDoubleClick = (event: any) => {
+    let className: String = event.target.className;
     props.setAddEditTarget(Status.EDIT, props.target.id);
     setTimeout(() => {
-      if (props.target)
-        document.getElementById('tgt-name-input-' + props.target.id)!.focus();
+      if (className.includes('name') && document.getElementById('tgt-name-input'))
+        document.getElementById('tgt-name-input')!.focus();
+      if (className.includes('mgrs') && document.getElementById('mgrs-input'))
+        document.getElementById('mgrs-input')!.focus();
+      if (className.includes('notes') && document.getElementById('notes-input'))
+        document.getElementById('notes-input')!.focus();
+      if (className.includes('description') && document.getElementById('description-input'))
+        document.getElementById('description-input')!.focus();
     }, 50);
   };
 
@@ -125,7 +132,7 @@ export const TgtRow: React.FC<Props> = props => {
           </div>
           <div className={'data-cell-container'}>
             <div className={classNames('data-cell', 'notes')}>
-              <div className={'data-overflow'}>
+              <div className={'data-notes'}>
                 {props.target.notes === '' ? '\xa0' : props.target.notes}
               </div>
             </div>
@@ -133,7 +140,7 @@ export const TgtRow: React.FC<Props> = props => {
           </div>
           <div className={'data-cell-container'}>
             <div className={classNames('data-cell', 'description')}>
-              <div className={'data-overflow'}>
+              <div className={'data-description'}>
                 {props.target.description === '' ? '\xa0' : props.target.description}
               </div>
             </div>
@@ -244,10 +251,6 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
     justify-content: center;
     align-items: center;
     max-height: 62px;
-  }
-  
-  .data-overflow {
-    overflow-wrap: break-word;
   }
   
   .data-bottom {

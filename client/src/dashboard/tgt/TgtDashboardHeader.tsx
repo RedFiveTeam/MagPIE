@@ -8,14 +8,24 @@ import theme from '../../resources/theme';
 interface OwnProps {
   exitTgtPage: () => void;
   rfi: RfiModel;
+  editing: boolean;
   className?: string;
 }
 
 export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
+  const handleExitClick = () => {
+    if (props.editing)
+      setTimeout(() => {
+        props.exitTgtPage();
+      }, 300);
+    else
+      props.exitTgtPage();
+  };
+
   return (
     <div className={props.className}>
       <div className={'tgt-dash--header'}>
-        <div className={'tgt-dash--header--back-button'} onClick={props.exitTgtPage}>
+        <div className={'tgt-dash--header--back-button'} onClick={handleExitClick}>
           <StyledBackButtonVector/>
         </div>
         <div className={'tgt-dash--header--rfi-num-container'}>

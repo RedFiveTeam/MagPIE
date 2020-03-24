@@ -8,9 +8,12 @@ export enum TgtActionTypes {
   EXIT_TGT_PAGE = 'EXIT_TGT_PAGE',
   SHOW_DATE_PLACEHOLDER = 'SHOW_DATE_PLACEHOLDER',
   UPDATE_EXPLOIT_DATE = 'UPDATE_EXPLOIT_DATE',
-  UPDATE_TGT_SUCCESS = 'UPDATE_TGT_SUCCESS'
+  UPDATE_TGT_SUCCESS = 'UPDATE_TGT_SUCCESS',
+  UPDATE_TGT_LOCAL = 'UPDATE_TGT_LOCAL',
+  ADD_TGT = 'ADD_TGT',
+  EDIT_TGT = 'EDIT_TGT',
+  RESET_ADD_EDIT_TGT = 'RESET_ADD_EDIT_TGT'
 }
-
 
 export interface TgtState {
   readonly  viewTgtPage: boolean;
@@ -18,4 +21,6 @@ export interface TgtState {
   readonly  exploitDates: ExploitDateModel[];
   readonly  showDatePlaceholder: boolean;
   readonly  targets: TargetModel[];
+  readonly  addTgt: number;
+  readonly  editTgt: number;
 }

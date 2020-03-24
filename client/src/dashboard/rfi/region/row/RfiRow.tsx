@@ -41,15 +41,19 @@ export const RfiRow: React.FC<Props> = props => {
         <StyledRfiRowInformationSection rfi={props.rfi} scrollRegionRef={props.scrollRegionRef}/>
         <div className={classNames('border', 'border-left')}/>
       </div>
-      <div className={classNames('section--middle', 'cell--navigate-to-tgt-button',
-        props.rfi.status !== RfiStatus.OPEN ? 'disabled' : null)}
-           onClick={handleTgtClick}>
-        <div className={'section-button'}>
-          <span>TGTs&nbsp;&nbsp;</span>
-          <StyledTgtPageButtonVector/>
+      {props.rfi.status === RfiStatus.OPEN ?
+        <div className={classNames('section--middle', 'cell--navigate-to-tgt-button',
+          props.rfi.status !== RfiStatus.OPEN ? 'disabled' : null)}
+             onClick={handleTgtClick}>
+          <div className={'section-button'}>
+            <span>TGTs&nbsp;&nbsp;</span>
+            <StyledTgtPageButtonVector/>
+          </div>
+          <div className={classNames('border', 'border-middle')}/>
         </div>
-        <div className={classNames('border', 'border-middle')}/>
-      </div>
+        :
+        null
+      }
       <div className={classNames('section--right')}
            onClick={() => handleGetsClick(props.postGetsClick)}
       >
@@ -170,6 +174,10 @@ export const PendingRfiRow = styled(StyledRfiRow)`
     font-weight: ${theme.font.weightBold};
     background: ${theme.color.backgroundInformation};
   }
+  
+  .section--information {
+    max-width: 1440px;
+  }
 
   .border {
     background: ${theme.color.backgroundAction};
@@ -188,9 +196,13 @@ export const OpenRfiRow = styled(StyledRfiRow)`
 `;
 
 export const ClosedRfiRow = styled(StyledRfiRow)` 
-  .section--information, .section--button {
+  .section--information, .section-button {
     font-weight: ${theme.font.weightRow};
     background: ${theme.color.backgroundInactive};
+  }
+    
+  .section--information {
+    max-width: 1440px;
   }
 
   .border {

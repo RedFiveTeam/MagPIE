@@ -42,6 +42,8 @@ describe('TgtDashboardContainer', () => {
             setDatePlaceholder={setPlaceholderSpy}
             showDatePlaceholder={false}
             targets={[]}
+            addTgt={-1}
+            editTgt={-1}
           />
         </SnackbarProvider>
       </Provider>,
@@ -79,6 +81,8 @@ describe('TgtDashboardContainer', () => {
             setDatePlaceholder={setPlaceholderSpy}
             showDatePlaceholder={false}
             targets={[]}
+            addTgt={-1}
+            editTgt={-1}
           />
         </SnackbarProvider>
       </Provider>,

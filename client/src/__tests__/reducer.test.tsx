@@ -124,6 +124,8 @@ describe('reducer', () => {
       rfi: rfi,
       exploitDates: [],
       targets: [],
+      addTgt: -1,
+      editTgt: -1,
     });
   });
 
@@ -441,29 +443,9 @@ describe('reducer', () => {
         rfi: rfi,
         exploitDates: [exploitDate],
         targets: [],
+        addTgt: -1,
+        editTgt: -1,
       },
     );
   });
-
-  //TODO
-  // it('should post sort click metric', () => {
-  //
-  //   jest.mock('');
-  //   let postSortClickSpy: jest.Mock = jest.fn();
-  //
-  //
-  //   let setupRfis = {
-  //     type: ActionTypes.FETCH_RFI_SUCCESS,
-  //     rfi: multiStatusRfiList
-  //   };
-  //   let state = reducer(undefined, setupRfis);
-  //
-  //   let sortAction = {type: ActionTypes.SORT_RFIS_BY_LTIOV};
-  //
-  //   state = reducer(state, sortAction);
-  //
-  //   expect(postSortClickSpy).toHaveBeenCalled();
-  //   expect(postSortClickSpy).toHaveBeenCalledWith(Field.LTIOV, false);
-  //
-  // });
 });

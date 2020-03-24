@@ -17,7 +17,7 @@ import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel from '../../store/rfi/RfiModel';
 import { postExploitDate, submitPostTarget } from '../../store/tgt/Thunks';
-import { exitTgtPage, setDatePlaceholder } from '../../store/tgt';
+import { addTgt, editTgt, exitTgtPage, resetAddEditTgt, setDatePlaceholder, updateTgtsLocal } from '../../store/tgt';
 import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 
@@ -28,6 +28,8 @@ interface MyProps {
   exitTgtPage: () => void;
   setDatePlaceholder: (show: boolean) => void;
   targets: TargetModel[];
+  addTgt: number;
+  editTgt: number;
   className?: string;
 }
 
@@ -39,13 +41,14 @@ export enum Status {
 
 export const TgtDashboard: React.FC<MyProps> = props => {
   const moment = require('moment');
-  const [addTarget, setAddTarget] = useState(-1); //value is the id of the exploit date that is being added to
-  const [editTarget, setEditTarget] = useState(-1); // value is the id of the tgt that is being edited
   const [addDate, setAddDate] = useState(false);
 
   const dispatch = useDispatch();
 
   const handlePostTarget = (target: TargetPostModel) => {
+    let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
+      target.mgrs, target.notes, target.description, target.status);
+    dispatch(updateTgtsLocal(tgt));
     dispatch(submitPostTarget(target, props.rfi));
   };
 
@@ -56,20 +59,17 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const handleAddEdit = (status: Status, id?: number) => {
     switch (status) {
       case Status.ADD:
-        if (id && addTarget === -1 && editTarget === -1) {
-          setAddTarget(id);
+        if (id && props.addTgt === -1 && props.editTgt === -1) {
+          dispatch(addTgt(id));
         }
         break;
       case Status.EDIT:
-        if (id && addTarget === -1 && editTarget === -1) {
-          setEditTarget(id);
+        if (id && props.addTgt === -1 && props.editTgt === -1) {
+          dispatch(editTgt(id));
         }
         break;
       case Status.VIEW:
-        setTimeout(() => {
-          setAddTarget(-1);
-          setEditTarget(-1);
-        }, 150);
+        dispatch(resetAddEditTgt());
     }
   };
 
@@ -82,29 +82,31 @@ export const TgtDashboard: React.FC<MyProps> = props => {
         exploitDate={exploitDateModel}
         exploitDateDisplay={exploitDateModel.exploitDate.utc().format('D MMM YY')}
         targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
-        editTarget={editTarget}
-        addTgt={addTarget}
+        editTarget={props.editTgt}
+        addTgt={props.addTgt}
         setAddEditTarget={handleAddEdit}
         index={index}
         className={'date-divider--' + moment(exploitDateModel.exploitDate).format('D-MMM-YY')}
         key={index}
-        addingOrEditing={!(addTarget === -1 && editTarget === -1 && !addDate)}
+        addingOrEditing={!(props.addTgt === -1 && props.editTgt === -1 && !addDate)}
         postTarget={handlePostTarget}
         postExploitDate={handlePostExploitDate}
       />,
     );
   }
 
-  let isDisabled = addTarget > 0 || addDate || editTarget > 0;
+  let isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0;
   return (
     <div className={classNames(props.className)}>
       <StyledTgtDashboardHeader
         exitTgtPage={props.exitTgtPage}
         rfi={props.rfi}
+        editing={props.addTgt > 0 || props.editTgt > 0 || addDate}
       />
       <div className={'tgt-dash-body'}>
         {props.exploitDates.length > 0 || props.showDatePlaceholder ?
           <StyledTableHeader
+            className={'tgt-table-header'}
             headers={['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Delete', 'Exploitation']}
           />
           :
@@ -178,6 +180,8 @@ const mapStateToProps = ({tgtState}: ApplicationState) => ({
   exploitDates: tgtState.exploitDates,
   showDatePlaceholder: tgtState.showDatePlaceholder,
   targets: tgtState.targets,
+  addTgt: tgtState.addTgt,
+  editTgt: tgtState.editTgt,
 });
 
 const mapDispatchToProps = {
@@ -208,6 +212,8 @@ export const StyledTgtDashboard = styled(
     display: flex;
     flex-direction: column;
     align-items: center;
+    align-self: center;
+    width: 1316px;
   }
   
   .tgt-dash--rfi-description-container {
@@ -229,6 +235,7 @@ export const StyledTgtDashboard = styled(
     width: 100%;
     color: ${theme.color.fontBackgroundInactive};
     margin-bottom: -32px;
+    margin-top: 56px;
   }
   
   .tgt-dash-add-date-button {
@@ -281,8 +288,13 @@ export const StyledTgtDashboard = styled(
     pointer-events: none;
   }
   
+  .tgt-table-header {
+    padding-right: 15px;
+    align-self: flex-start;
+  }
+  
   .header-cell--name {
-    margin-left: 40px;
+    margin-left: 2px;
     width: 123px;
   }
   
@@ -295,19 +307,21 @@ export const StyledTgtDashboard = styled(
   }
   
   .header-cell--description {
-    width: 429px;
+    width: 425px;
   }
   
   .header-cell--status {
-    width: 128px;
+    width: 110px;
   }
   
   .header-cell--delete {
-    width: 70px;
+    width: 81px;
+    margin-left: 0;
   }
   
   .header-cell--exploitation {
-    width: 128px;
+    width: 81px;
+    margin-left: 0;
   }
   
   .hidden-input {

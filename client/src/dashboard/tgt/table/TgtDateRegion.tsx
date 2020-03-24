@@ -43,6 +43,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
         exploitDate={props.exploitDate}
         setAddEditTarget={props.setAddEditTarget}
         addingOrEditing={props.addingOrEditing}
+        postTarget={props.postTarget}
       />
       :
         <StyledTgtRow
@@ -105,6 +106,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
               exploitDate={props.exploitDate}
               setAddEditTarget={props.setAddEditTarget}
               addingOrEditing={props.addingOrEditing}
+              postTarget={props.postTarget}
             />
             :
             null}

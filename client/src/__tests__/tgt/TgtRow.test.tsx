@@ -5,7 +5,6 @@ import { TgtRow } from '../../dashboard/tgt/table/TgtRow';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
-import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { Status } from '../../dashboard/tgt/TgtDashboard';
 import { TgtInputRow } from '../../dashboard/tgt/table/TgtInputRow';
 import { SnackbarProvider } from 'notistack';
@@ -62,8 +61,7 @@ describe('Target Row', () => {
           target={null}
           key={1}
           className={'class'}
-          submitPostTarget={(target: TargetPostModel, rfi: RfiModel) => {
-          }}
+          postTarget={jest.fn()}
           exploitDate={exploitDate}
           rfi={rfiTest}
           navigateToIxnPage={navToIxnPageSpy}

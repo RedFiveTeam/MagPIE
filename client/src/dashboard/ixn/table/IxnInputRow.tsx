@@ -119,7 +119,8 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   };
 
   const inputExploitAnalyst = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setExploitAnalyst(event.target.value);
+    if (event.target.value.length < 21)
+      setExploitAnalyst(event.target.value);
   };
 
   const inputTime = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -298,11 +299,11 @@ export const IxnInputRow: React.FC<MyProps> = props => {
               handleClick={handleCancelClick}
               className={classNames(
                 'delete-edit-button-container',
-                (props.ixn === null && isBlank) ? 'delete-disabled' : null,)}
+                (props.ixn === null && isBlank) ? 'delete-disabled' : null)}
               buttonClassName={'cancel-edit-ixn-button'}
               title={'Cancel Edit'}
             >
-              <CancelButton />
+              <CancelButton/>
             </DeleteCancelButton>
           </Box>
         </form>

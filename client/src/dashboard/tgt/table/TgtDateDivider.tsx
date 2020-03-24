@@ -3,7 +3,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { Box, createMuiTheme, createStyles, InputAdornment, MuiThemeProvider, Theme } from '@material-ui/core';
+import { createMuiTheme, createStyles, InputAdornment, MuiThemeProvider, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -37,16 +37,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
   },
   root: {
-    height: 60,
+    height: 30,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: 1306,
     maxWidth: 1306,
+    marginBottom: '-18px',
   },
   dateInput: {
-    width: '200px',
+    width: '280px',
     textAlign: 'center',
   },
   separator: {
@@ -77,7 +78,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
   });
 
   const localTheme = createMuiTheme({
-    palette: muiPalette
+    palette: muiPalette,
   });
 
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
@@ -117,7 +118,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
     return new ExploitDatePostModel(
       props.exploitDate ? props.exploitDate.id : null,
       props.rfiId,
-      truncateAndConvertDateToUtc(date)
+      truncateAndConvertDateToUtc(date),
     );
   };
 
@@ -125,8 +126,8 @@ export const TgtDateDivider: React.FC<Props> = props => {
     if (props.exploitDate) {
       enqueueSnackbar('You deleted ' + props.exploitDate!.exploitDate.format('MM/DD/YYYY'), {
         action: (key) => UndoSnackbarAction(key, createExploitDatePostModel(new Date(props.exploitDate!.exploitDate
-            .unix() * 1000)), props.postExploitDate, closeSnackbar, rowClasses.snackbarButton),
-        variant: 'info'
+          .unix() * 1000)), props.postExploitDate, closeSnackbar, rowClasses.snackbarButton),
+        variant: 'info',
       });
       deleteExploitDateById(props.exploitDate.id);
     } else {
@@ -135,43 +136,44 @@ export const TgtDateDivider: React.FC<Props> = props => {
   }
 
   return (
-    <div className={classNames('segment-divider', props.className, classes.root)} key={props.uKey}>
+    <div className={classNames('exploit-date-divider', props.className, classes.root)} key={props.uKey}>
       <MuiThemeProvider theme={localTheme}>
-        <Box className={classes.dateInputField}>
+        <div className={'exploit-date-divider--bar'}/>
+        <div className={'exploit-date-divider--box'}>
           <MuiPickersUtilsProvider
             utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              className={classNames(classes.dateInput, 'newExploitDate-input')}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment onClick={handleDeleteClick} position="start">
-                    <DeleteButtonX
-                      className={'delete-date'}
-                      aria-label="delete date"
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              margin="normal"
-              id={'date-picker-dialog' + (props.exploitDate ? props.exploitDate.exploitDate : '')}
-              label="date-picker-dialog"
-              format="MM/dd/yyyy"
-              placeholder={'MM/DD/YYYY'}
-              value={(props.exploitDate ? props.exploitDateDisplay : selectedDate)}
-              onChange={date => handleChange(date)}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
-              maxDate={new Date()}
-              error={false}
-              helperText={''}
-              autoFocus={props.exploitDate === undefined}
-            />
+            <div className={'date-container'}>
+              <KeyboardDatePicker
+                className={classNames(classes.dateInput, 'newExploitDate-input')}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment onClick={handleDeleteClick} position={'start'}>
+                      <DeleteButtonX
+                        className={'delete-date'}
+                        aria-label={'delete date'}
+                      />
+                    </InputAdornment>
+                  ),
+                  disableUnderline: true,
+                }}
+                margin={'normal'}
+                id={'date-picker-dialog' + (props.exploitDate ? props.exploitDate.exploitDate : '')}
+                label={''}
+                format={'MM/dd/yyyy'}
+                placeholder={'MM/DD/YYYY'}
+                value={(props.exploitDate ? props.exploitDateDisplay : selectedDate)}
+                onChange={date => handleChange(date)}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+                maxDate={new Date()}
+                error={false}
+                helperText={''}
+                autoFocus={props.exploitDate === undefined}
+              />
+            </div>
           </MuiPickersUtilsProvider>
-        </Box>
-        <Box className={classNames(classes.separator, 'separator-line')}>
-          &nbsp;
-        </Box>
+        </div>
         <DeleteConfirmationModal
           deletingItem={props.exploitDate ? props.exploitDate.exploitDate.format('MM/DD/YYYY') : ''}
           display={displayModal}
@@ -194,14 +196,41 @@ export const StyledTgtDateDivider = styled(connect(mapStateToProps, mapDispatchT
   font-weight: ${theme.font.weightBold};
   font-size: ${theme.font.sizeRegion};
   color: ${theme.color.fontPrimary};
-  width: 100%;
-  height: 100%;
- 
-  .separator-line {
-    background: ${theme.color.fontPrimary};
-  }
-
-  .separator-title {
+  
+  input {
     text-align: center;
+  }
+  
+  .delete-date {
+    width: 48px;
+  }
+  
+  .exploit-date-divider--box {
+    width: 306px;
+    height: 30px;
+    background: ${theme.color.backgroundHeader};
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border: ${theme.color.segmentDivider};
+    border: 4px solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: -50px;
+  }
+  
+  .exploit-date-divider--bar {
+    margin-bottom: -4px;
+    width: 1306px;
+    height: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border: ${theme.color.segmentDivider};
+    border: 2px solid;
+  }
+  
+  .date-container {
+    margin-top: -6px;
   }
 `;

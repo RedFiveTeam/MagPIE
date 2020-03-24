@@ -8,7 +8,7 @@ import { Box, MuiThemeProvider, TextField } from '@material-ui/core';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
 import styled from 'styled-components';
 import { crayonBox } from '../../../resources/crayonBox';
-import { deleteTgt, submitPostTarget } from '../../../store/tgt/Thunks';
+import { deleteTgt } from '../../../store/tgt/Thunks';
 import RfiModel from '../../../store/rfi/RfiModel';
 import { RowAction } from '../../../utils';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
@@ -27,7 +27,7 @@ interface MyProps {
   exploitDate: ExploitDateModel;
   rfi: RfiModel;
   setAddEditTarget: (status: Status, id?: number) => void;
-  submitPostTarget: (target: TargetPostModel, rfi: RfiModel) => void;
+  postTarget: (target: TargetPostModel) => void;
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
   deleteTgt: (tgtId: number) => void;
   key: number;
@@ -52,7 +52,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
   const handleAction = () => {
     switch (action) {
       case RowAction.DELETING:
-          props.setAddEditTarget(Status.VIEW);
+        props.setAddEditTarget(Status.VIEW);
         break;
       case RowAction.SUBMITTING:
         validateAllAndSubmit();
@@ -128,11 +128,9 @@ export const TgtInputRow: React.FC<MyProps> = props => {
       setStrongValidateMgrs(mgrsErrorLocal);
     }
     if (!(nameErrorLocal || mgrsErrorLocal)) {
-      props.setAddEditTarget(Status.VIEW);
-      props.submitPostTarget(
+      props.postTarget(
         new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
           notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED),
-        props.rfi,
       );
       setTimeout(() => {
         setName('');
@@ -160,9 +158,22 @@ export const TgtInputRow: React.FC<MyProps> = props => {
     }
   };
 
-  const inputProps = {
-    id: 'tgt-name-input-' + (props.target ? props.target.id.toString() : 'new'),
+  const tgtNameInputProps = {
+    id: 'tgt-name-input',
   };
+
+  const mgrsInputProps = {
+    id: 'mgrs-input',
+  };
+
+  const notesInputProps = {
+    id: 'notes-input',
+  };
+
+  const descriptionInputProps = {
+    id: 'description-input',
+  };
+
 
   return (
     <div className={props.className}>
@@ -192,7 +203,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                 label={props.target ? '' : (nameError ? 'Error' : 'Required')}
                 error={nameError}
                 onChange={inputName}
-                inputProps={inputProps}
+                inputProps={tgtNameInputProps}
                 InputLabelProps={{
                   className: classes.inputLabel,
                 }}
@@ -207,6 +218,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                 label={props.target ? '' : (mgrsError ? 'Error' : 'Required')}
                 error={mgrsError}
                 onChange={inputMgrs}
+                inputProps={mgrsInputProps}
                 InputLabelProps={{
                   className: classes.inputLabel,
                 }}
@@ -220,6 +232,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                 value={notes}
                 label={props.target || notes !== '' ? '' : 'EEI Notes'}
                 onChange={inputNotes}
+                inputProps={notesInputProps}
                 InputLabelProps={{
                   className: classes.inputLabel,
                 }}
@@ -238,6 +251,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                     validateAllAndSubmit();
                   }
                 }}
+                inputProps={descriptionInputProps}
                 InputLabelProps={{
                   className: classes.inputLabel,
                 }}
@@ -282,7 +296,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
 const mapStateToProps = (state: any) => ({});
 
 const mapDispatchToProps = {
-  submitPostTarget: submitPostTarget,
   navigateToIxnPage: navigateToIxnPage,
   deleteTgt: deleteTgt,
 };

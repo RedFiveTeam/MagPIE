@@ -16,10 +16,16 @@ interface Props {
 }
 
 export const IxnDashboardHeader: React.FC<Props> = props => {
-  return(
+  const handleExitClick = () => {
+    setTimeout(() => {
+      props.exitIxnPage();
+    }, 250);
+  };
+
+  return (
     <div className={classNames(props.className)}>
       <div className={'ixn-dash--header'}>
-        <div className={'ixn-dash--header--back-button'} onClick={props.exitIxnPage}>
+        <div className={'ixn-dash--header--back-button'} onClick={handleExitClick}>
           <StyledBackButtonVector/>
         </div>
         <div className={'ixn-dash--header--mgrs-date-container'}>
@@ -43,15 +49,15 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 const mapStateToProps = ({ixnState}: ApplicationState) => ({
-  dateString: ixnState.dateString
+  dateString: ixnState.dateString,
 });
 
 const mapDispatchToProps = {
-  exitIxnPage: exitIxnPage
+  exitIxnPage: exitIxnPage,
 };
 
 export const StyledIxnDashboardHeader = styled(
