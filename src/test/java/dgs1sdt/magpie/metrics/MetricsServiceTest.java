@@ -1,6 +1,8 @@
 package dgs1sdt.magpie.metrics;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
+import dgs1sdt.magpie.ixns.IxnJson;
+import dgs1sdt.magpie.ixns.IxnStatus;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
@@ -10,6 +12,8 @@ import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
+import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
@@ -67,6 +71,9 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   private MetricChangeTargetRepository metricChangeTargetRepository;
 
   @Autowired
+  private MetricCreateIxnRepository metricCreateIxnRepository;
+
+  @Autowired
   private RfiRepository rfiRepository;
 
   @Before
@@ -80,6 +87,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricChangeExploitDateRepository.deleteAll();
     metricCreateTargetRepository.deleteAll();
     metricChangeTargetRepository.deleteAll();
+    metricCreateIxnRepository.deleteAll();
   }
 
   @Test
@@ -264,5 +272,38 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricCreateTargetRepository.saveAll(metrics);
 
     assertEquals(3, metricsService.getAverageTgtCreationsPerWeek());
+  }
+
+  @Test
+  public void returnsAvgIxnsPerWeek() {
+    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
+
+    IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "");
+    MetricCreateIxn metric1 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric2 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric3 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric4 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric5 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric6 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric7 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric8 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric9 = new MetricCreateIxn(1, ixn);
+    metric1.setTimestamp(new Timestamp(twoWeeksAgo));
+    metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
+    metric3.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
+    metric4.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(7)));
+    metric5.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(7)));
+    metric6.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(8)));
+    metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(11)));
+    metric8.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
+    metric9.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(13)));
+
+    List<MetricCreateIxn> metrics = new ArrayList<>(Arrays.asList(
+      metric1, metric2, metric3, metric4, metric5, metric6, metric7, metric8, metric9
+    ));
+
+    metricCreateIxnRepository.saveAll(metrics);
+
+    assertEquals(5, metricsService.getAverageIxnCreationsPerWeek());
   }
 }

@@ -458,14 +458,22 @@ public class MetricsService {
   }
 
   public int getAverageTgtCreationsPerWeek() {
+    return getAveragePerWeek(metricCreateTargetRepository.findAll().get(0).getTimestamp().getTime(),
+      metricCreateTargetRepository.findAll().size());
+  }
+
+  public int getAverageIxnCreationsPerWeek() {
+    return getAveragePerWeek(metricCreateIxnRepository.findAll().get(0).getTimestamp().getTime(),
+      metricCreateIxnRepository.findAll().size());
+  }
+
+  private int getAveragePerWeek(long startDate, long count) {
     try {
-      long startDate = metricCreateTargetRepository.findAll().get(0).getTimestamp().getTime();
       long now = new Date().getTime();
-      long numTargetsCreated = metricCreateTargetRepository.findAll().size();
       int weeksSinceStartDate = Math.round((float) (now - startDate) / (float) (7 * MillisecondsInADay));
       if (weeksSinceStartDate == 0)
         weeksSinceStartDate = 1;
-      return (int) (numTargetsCreated / weeksSinceStartDate);
+      return Math.round((float) count / (float) weeksSinceStartDate);
     } catch (Exception e) {
       return 0;
     }

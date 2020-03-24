@@ -118,3 +118,12 @@ export const fetchTgtsCreatedPerWeek = () => {
     }
   )
 };
+
+export const fetchIxnsCreatedPerWeek = () => {
+  return fetch(
+    '/api/metrics/ixns-created-per-week',
+    {
+      method: 'get'
+    }
+  )
+};

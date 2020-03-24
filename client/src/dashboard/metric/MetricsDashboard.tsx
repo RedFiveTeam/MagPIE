@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import theme from '../../resources/theme';
 import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
-import { fetchTgtsCreatedPerWeek, fetchWorkflowTime } from '../../store/metrics';
+import { fetchIxnsCreatedPerWeek, fetchTgtsCreatedPerWeek, fetchWorkflowTime } from '../../store/metrics';
 
 interface MyProps {
   className?: string
@@ -13,6 +13,7 @@ interface MyProps {
 export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [workflowTime, setWorkflowTime] = useState([-1, -1]);
   const [tgtsPerWeek, setTgtsPerWeek] = useState(-1);
+  const [ixnsPerWeek, setIxnsPerWeek] = useState(-1);
 
   useEffect(() => {
     fetchWorkflowTime()
@@ -27,6 +28,15 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
     fetchTgtsCreatedPerWeek()
       .then(response => response.json())
       .then(tgtsPerWeek => setTgtsPerWeek(tgtsPerWeek))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchIxnsCreatedPerWeek()
+      .then(response => response.json())
+      .then(ixnsPerWeek => setIxnsPerWeek(ixnsPerWeek))
       .catch((reason) => {
         console.log(reason);
       });
@@ -62,6 +72,18 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
             </div>
             <div className={'card-body'}>
               <span>{tgtsPerWeek}</span>
+            </div>
+          </div>
+          :
+          null
+        }
+        {ixnsPerWeek > -1 ?
+          <div className={'card'}>
+            <div className={'card-header'}>
+              Avg Interactions Created
+            </div>
+            <div className={'card-body'}>
+              <span>{ixnsPerWeek}</span>
             </div>
           </div>
           :

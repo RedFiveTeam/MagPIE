@@ -59,6 +59,11 @@ public class MetricController {
     return metricsService.getAverageTgtCreationsPerWeek();
   }
 
+  @GetMapping(path = "/ixns-created-per-week")
+  public int getIxnsCreatedPerWeek() {
+    return metricsService.getAverageIxnCreationsPerWeek();
+  }
+
   @PostMapping(path = "/refresh-click")
   public void addClickRefresh() {
     metricsService.addClickRefresh();
