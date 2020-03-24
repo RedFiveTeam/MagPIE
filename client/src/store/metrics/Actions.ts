@@ -136,3 +136,12 @@ export const fetchGetsClicks = () => {
     }
   )
 };
+
+export const fetchDeletionsPerWeek = () => {
+  return fetch(
+    '/api/metrics/deletions-per-week',
+    {
+      method: 'get'
+    }
+  )
+};

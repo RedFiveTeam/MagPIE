@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.metrics.deleteSegment;
 
+import dgs1sdt.magpie.metrics.createTarget.TimestampMetric;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class MetricDeleteSegment {
+public class MetricDeleteSegment implements TimestampMetric {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;

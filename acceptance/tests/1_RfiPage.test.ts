@@ -9,13 +9,15 @@ Before((I)=> {
   I.pressKey('Enter');
 });
 
-Scenario ('Should see the RFI page', (I) => {
+Scenario ('Should see the RFI page with clickable GETS buttons', (I) => {
     I.waitForText('RFI', 10);
     I.waitForText('20-321', 10);
     I.waitForText('633d', 10);
     I.waitForText('USA', 10);
     I.waitForText('4 FEB 20', 10);
     I.waitForText('hi', 10);
+    I.click('.section--right');
+    I.wait(1);
 });
 
 Scenario ('Should be able to sort by clickin\' Buttons', (I) => {

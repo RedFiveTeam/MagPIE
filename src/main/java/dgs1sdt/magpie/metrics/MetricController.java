@@ -64,6 +64,11 @@ public class MetricController {
     return metricsService.getAverageIxnCreationsPerWeek();
   }
 
+  @GetMapping(path = "/deletions-per-week")
+  public long[] getDeletionsPerWeek() {
+    return metricsService.getAverageDeletionsPerWeek();
+  }
+
   @PostMapping(path = "/refresh-click")
   public void addClickRefresh() {
     metricsService.addClickRefresh();

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import theme from '../../resources/theme';
 import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
 import {
+  fetchDeletionsPerWeek,
   fetchGetsClicks,
   fetchIxnsCreatedPerWeek,
   fetchTgtsCreatedPerWeek,
@@ -20,6 +21,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [tgtsPerWeek, setTgtsPerWeek] = useState(-1);
   const [ixnsPerWeek, setIxnsPerWeek] = useState(-1);
   const [getsClicks, setGetsClicks] = useState([-1, -1]);
+  const [deletions, setDeletions] = useState([-1, -1, -1, -1]);
 
   useEffect(() => {
     fetchWorkflowTime()
@@ -52,6 +54,15 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
     fetchGetsClicks()
       .then(response => response.json())
       .then(getsClicks => setGetsClicks(getsClicks))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchDeletionsPerWeek()
+      .then(response => response.json())
+      .then(deletions => setDeletions(deletions))
       .catch((reason) => {
         console.log(reason);
       });
@@ -117,6 +128,33 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
               <div className={'card-row'}>
                 <span>New</span>
                 <span><b>{getsClicks[1]}</b></span>
+              </div>
+            </div>
+          </div>
+          :
+          null
+        }
+        {deletions[0] > -1 ?
+          <div className={classNames('card', 'deletions')}>
+            <div className={'card-header'}>
+              Avg Deletions
+            </div>
+            <div className={'card-body'}>
+              <div className={classNames('card-row', 'small')}>
+                <span>Dates</span>
+                <span><b>{deletions[0]}</b></span>
+              </div>
+              <div className={classNames('card-row', 'small')}>
+                <span>Targets</span>
+                <span><b>{deletions[1]}</b></span>
+              </div>
+              <div className={classNames('card-row', 'small')}>
+                <span>Segments</span>
+                <span><b>{deletions[2]}</b></span>
+              </div>
+              <div className={classNames('card-row', 'small')}>
+                <span>Interactions</span>
+                <span><b>{deletions[3]}</b></span>
               </div>
             </div>
           </div>
@@ -198,5 +236,10 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
     width: 100%;
     font-weight: normal;
       font-size: ${theme.font.sizeHeader};
+  }
+  
+  .small {
+    font-size: ${theme.font.sizeRegion};
+        padding: 8px 34px 8px 34px;
   }
 `;

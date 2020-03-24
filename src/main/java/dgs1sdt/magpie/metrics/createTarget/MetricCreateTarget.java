@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @Entity
 @NoArgsConstructor
-public class MetricCreateTarget {
+public class MetricCreateTarget implements TimestampMetric {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;

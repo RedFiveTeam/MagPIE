@@ -17,6 +17,14 @@ import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDate;
+import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
+import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
+import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxnRepository;
+import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegment;
+import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegmentRepository;
+import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTarget;
+import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
@@ -43,39 +51,36 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
   @Autowired
   private MetricsService metricsService;
-
-  @Autowired
-  private MetricClickGetsRepository metricClickGetsRepository;
-
-  @Autowired
-  private MetricSiteVisitRepository metricSiteVisitRepository;
-
-  @Autowired
-  private MetricClickSortRepository metricClickSortRepository;
-
-  @Autowired
-  private MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository;
-
-  @Autowired
-  private MetricChangeRfiRepository metricChangeRfiRepository;
-
-  @Autowired
-  private MetricClickRefreshRepository metricClickRefreshRepository;
-
-  @Autowired
-  private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
-
-  @Autowired
-  private MetricCreateTargetRepository metricCreateTargetRepository;
-
-  @Autowired
-  private MetricChangeTargetRepository metricChangeTargetRepository;
-
-  @Autowired
-  private MetricCreateIxnRepository metricCreateIxnRepository;
-
   @Autowired
   private RfiRepository rfiRepository;
+  @Autowired
+  private MetricClickGetsRepository metricClickGetsRepository;
+  @Autowired
+  private MetricSiteVisitRepository metricSiteVisitRepository;
+  @Autowired
+  private MetricClickSortRepository metricClickSortRepository;
+  @Autowired
+  private MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository;
+  @Autowired
+  private MetricChangeRfiRepository metricChangeRfiRepository;
+  @Autowired
+  private MetricClickRefreshRepository metricClickRefreshRepository;
+  @Autowired
+  private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
+  @Autowired
+  private MetricCreateTargetRepository metricCreateTargetRepository;
+  @Autowired
+  private MetricChangeTargetRepository metricChangeTargetRepository;
+  @Autowired
+  private MetricCreateIxnRepository metricCreateIxnRepository;
+  @Autowired
+  private MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
+  @Autowired
+  private MetricDeleteTargetRepository metricDeleteTargetRepository;
+  @Autowired
+  private MetricDeleteSegmentRepository metricDeleteSegmentRepository;
+  @Autowired
+  private MetricDeleteIxnRepository metricDeleteIxnRepository;
 
   @Before
   public void setup() {
@@ -89,6 +94,10 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricCreateTargetRepository.deleteAll();
     metricChangeTargetRepository.deleteAll();
     metricCreateIxnRepository.deleteAll();
+    metricDeleteExploitDateRepository.deleteAll();
+    metricDeleteTargetRepository.deleteAll();
+    metricDeleteSegmentRepository.deleteAll();
+    metricDeleteIxnRepository.deleteAll();
   }
 
   @Test
@@ -197,6 +206,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
   @Test
   public void returnsAverageTimeRfisAreInPendingAndOpen() {
+    assertArrayEquals(new long[]{0, 0}, metricsService.getAverageWorkflowTime());
 
     Rfi rfi1 = new Rfi("SDT20-321", "", "CLOSED", new Date(), "", null, "", "");
     Rfi rfi2 = new Rfi("SDT20-322", "", "CLOSED", new Date(), "", null, "", "");
@@ -214,7 +224,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     //receive date unknown, ignore
     rfi4.setReceiveDate(null);
 
-    rfiRepository.saveAll(new ArrayList<Rfi>(Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5, rfi6)));
+    rfiRepository.saveAll(new ArrayList<>(Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5, rfi6)));
 
     //closed immediately, ignore
     metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-321", new Timestamp(convertDaysToMS(7)), "status", "NEW"
@@ -236,14 +246,13 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-323", new Timestamp(convertDaysToMS(41) + 10000L),
       "status", "OPEN", "CLOSED"));
 
-    long [] averageWorkflowTimeInDays = metricsService.getAverageWorkflowTime();
-
-    assertEquals(14, averageWorkflowTimeInDays[0]);
-    assertEquals(15, averageWorkflowTimeInDays[1]);
+    assertArrayEquals(new long[]{14, 15}, metricsService.getAverageWorkflowTime());
   }
 
   @Test
   public void returnsAvgTargetsPerWeek() {
+    assertEquals(0, metricsService.getAverageTgtCreationsPerWeek());
+
     long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
 
     TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED);
@@ -277,6 +286,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
   @Test
   public void returnsAvgIxnsPerWeek() {
+    assertEquals(0, metricsService.getAverageIxnCreationsPerWeek());
+
     long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
     IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "");
@@ -310,6 +321,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
   @Test
   public void returnsGetsClicksByStatusType() {
+    assertArrayEquals(new long[]{0, 0}, metricsService.getClickGetsCount());
+
     MetricClickGets metric1 = new MetricClickGets(new Date(), "OPEN", "bing.com");
     MetricClickGets metric2 = new MetricClickGets(new Date(), "PENDING", "bing.com");
     MetricClickGets metric3 = new MetricClickGets(new Date(), "OPEN", "bing.com");
@@ -324,5 +337,66 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricClickGetsRepository.saveAll(metrics);
 
     assertArrayEquals(new long[]{2, 3}, metricsService.getClickGetsCount());
+  }
+
+  @Test
+  public void returnsDeletionsByDataType() {
+    assertArrayEquals(new long[]{0, 0, 0, 0}, metricsService.getAverageDeletionsPerWeek());
+
+    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
+
+    MetricDeleteExploitDate metric1 = new MetricDeleteExploitDate(1);
+    MetricDeleteExploitDate metric2 = new MetricDeleteExploitDate(1);
+
+    MetricDeleteTarget metric3 = new MetricDeleteTarget(1);
+    MetricDeleteTarget metric4 = new MetricDeleteTarget(1);
+    MetricDeleteTarget metric5 = new MetricDeleteTarget(1);
+    MetricDeleteTarget metric6 = new MetricDeleteTarget(1);
+
+    MetricDeleteSegment metric7 = new MetricDeleteSegment(1, false);
+
+    MetricDeleteIxn metric8 = new MetricDeleteIxn(1);
+    MetricDeleteIxn metric9 = new MetricDeleteIxn(1);
+    MetricDeleteIxn metric10 = new MetricDeleteIxn(1);
+    MetricDeleteIxn metric11 = new MetricDeleteIxn(1);
+    MetricDeleteIxn metric12 = new MetricDeleteIxn(1);
+    MetricDeleteIxn metric13 = new MetricDeleteIxn(1);
+
+    metric1.setTimestamp(new Timestamp(twoWeeksAgo));
+    metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
+
+    metric3.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
+    metric4.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(4)));
+    metric5.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
+    metric6.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(6)));
+
+    metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
+
+    metric8.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(1)));
+    metric9.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(9)));
+    metric10.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(10)));
+    metric11.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(11)));
+    metric12.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
+    metric13.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(13)));
+
+    List<MetricDeleteExploitDate> exploitDateDeletes = new ArrayList<>(Arrays.asList(
+      metric1, metric2
+    ));
+
+    List<MetricDeleteTarget> targetDeletes = new ArrayList<>(Arrays.asList(
+      metric3, metric4, metric5, metric6
+    ));
+
+    List<MetricDeleteIxn> ixnDeletes = new ArrayList<>(Arrays.asList(
+      metric8, metric9, metric10, metric11, metric12, metric13
+    ));
+
+    metricDeleteExploitDateRepository.saveAll(exploitDateDeletes);
+    metricDeleteTargetRepository.saveAll(targetDeletes);
+    metricDeleteSegmentRepository.save(metric7);
+    metricDeleteIxnRepository.saveAll(ixnDeletes);
+
+    assertArrayEquals(new long[]{1, 2, 1, 3}, metricsService.getAverageDeletionsPerWeek());
+
   }
 }

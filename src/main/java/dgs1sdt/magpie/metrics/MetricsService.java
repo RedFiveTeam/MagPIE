@@ -30,6 +30,7 @@ import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.magpie.metrics.createTarget.TimestampMetric;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDate;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
@@ -72,6 +73,8 @@ import java.util.List;
 
 @Service
 public class MetricsService {
+  static final long MillisecondsInADay = 86400000L;
+
   private RfiRepository rfiRepository;
   private MetricClickGetsRepository metricClickGetsRepository;
   private MetricSiteVisitRepository metricSiteVisitRepository;
@@ -98,8 +101,6 @@ public class MetricsService {
   private MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
   private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
   private MetricLoginRepository metricLoginRepository;
-
-  static final long MillisecondsInADay = 86400000L;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -461,17 +462,26 @@ public class MetricsService {
   }
 
   public int getAverageTgtCreationsPerWeek() {
-    return getAveragePerWeek(metricCreateTargetRepository.findAll().get(0).getTimestamp().getTime(),
-      metricCreateTargetRepository.findAll().size());
+    return getAveragePerWeek(metricCreateTargetRepository.findAll());
   }
 
   public int getAverageIxnCreationsPerWeek() {
-    return getAveragePerWeek(metricCreateIxnRepository.findAll().get(0).getTimestamp().getTime(),
-      metricCreateIxnRepository.findAll().size());
+    return getAveragePerWeek(metricCreateIxnRepository.findAll());
   }
 
-  private int getAveragePerWeek(long startDate, long count) {
+  public long[] getAverageDeletionsPerWeek() {
+    return new long[]{
+      getAveragePerWeek(metricDeleteExploitDateRepository.findAll()),
+      getAveragePerWeek(metricDeleteTargetRepository.findAll()),
+      getAveragePerWeek(metricDeleteSegmentRepository.findAll()),
+      getAveragePerWeek(metricDeleteIxnRepository.findAll())
+    };
+  }
+
+  private int getAveragePerWeek(List<? extends TimestampMetric> metrics) {
     try {
+      long startDate = metrics.get(0).getTimestamp().getTime();
+      long count = metrics.size();
       long now = new Date().getTime();
       int weeksSinceStartDate = Math.round((float) (now - startDate) / (float) (7 * MillisecondsInADay));
       if (weeksSinceStartDate == 0)
