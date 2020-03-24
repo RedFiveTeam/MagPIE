@@ -115,19 +115,6 @@ public class MetricControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void getReturnsGetsClickCount() {
-    metricClickGetsRepository.save(new MetricClickGets(new Date(), "OPEN", "www.google.com"));
-    metricClickGetsRepository.save(new MetricClickGets(new Date(), "OPEN", "www.google.com"));
-    given()
-      .port(port)
-      .when()
-      .get(MetricController.URI + "/gets-clicks")
-      .then()
-      .statusCode(200)
-      .body(equalTo("2"));
-  }
-
-  @Test
   public void postCreatesNewGetsClick() throws Exception {
 
     MetricClickGetsJson metricClickGetsJson = new MetricClickGetsJson(new Date(), "OPEN", "www.google.com");

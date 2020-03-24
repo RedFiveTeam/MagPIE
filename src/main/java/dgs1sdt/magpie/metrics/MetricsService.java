@@ -294,8 +294,11 @@ public class MetricsService {
     this.metricClickRefreshRepository.save(metricClickRefresh);
   }
 
-  public long getClickGetsCount() {
-    return metricClickGetsRepository.count();
+  public long[] getClickGetsCount() {
+    return new long[]{
+      metricClickGetsRepository.findAllByStatus("OPEN").size(),
+      metricClickGetsRepository.findAllByStatus("PENDING").size()
+    };
   }
 
   public MetricClickGets createClickGets(MetricClickGetsJson metricClickGetsJson) {

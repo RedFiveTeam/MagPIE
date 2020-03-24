@@ -127,3 +127,12 @@ export const fetchIxnsCreatedPerWeek = () => {
     }
   )
 };
+
+export const fetchGetsClicks = () => {
+  return fetch(
+    '/api/metrics/gets-clicks',
+    {
+      method: 'get'
+    }
+  )
+};

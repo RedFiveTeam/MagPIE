@@ -10,6 +10,7 @@ import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
+import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
@@ -305,5 +306,23 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricCreateIxnRepository.saveAll(metrics);
 
     assertEquals(5, metricsService.getAverageIxnCreationsPerWeek());
+  }
+
+  @Test
+  public void returnsGetsClicksByStatusType() {
+    MetricClickGets metric1 = new MetricClickGets(new Date(), "OPEN", "bing.com");
+    MetricClickGets metric2 = new MetricClickGets(new Date(), "PENDING", "bing.com");
+    MetricClickGets metric3 = new MetricClickGets(new Date(), "OPEN", "bing.com");
+    MetricClickGets metric4 = new MetricClickGets(new Date(), "PENDING", "bing.com");
+    MetricClickGets metric5 = new MetricClickGets(new Date(), "PENDING", "bing.com");
+    MetricClickGets metric6 = new MetricClickGets(new Date(), "CLOSED", "bing.com");
+
+    List<MetricClickGets> metrics = new ArrayList<>(Arrays.asList(
+      metric1, metric2, metric3, metric4, metric5, metric6
+    ));
+
+    metricClickGetsRepository.saveAll(metrics);
+
+    assertArrayEquals(new long[]{2, 3}, metricsService.getClickGetsCount());
   }
 }

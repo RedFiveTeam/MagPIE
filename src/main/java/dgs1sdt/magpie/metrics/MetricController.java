@@ -45,7 +45,7 @@ public class MetricController {
   }
 
   @GetMapping(path = "/gets-clicks")
-  public long getClickGetsCount() {
+  public long[] getClickGetsCount() {
     return metricsService.getClickGetsCount();
   }
 
