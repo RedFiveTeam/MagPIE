@@ -25,6 +25,8 @@ import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegment;
 import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegmentRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTarget;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
+import dgs1sdt.magpie.metrics.login.MetricLogin;
+import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
@@ -81,6 +83,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   private MetricDeleteSegmentRepository metricDeleteSegmentRepository;
   @Autowired
   private MetricDeleteIxnRepository metricDeleteIxnRepository;
+  @Autowired
+  private MetricLoginRepository metricLoginRepository;
 
   @Before
   public void setup() {
@@ -397,6 +401,41 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricDeleteIxnRepository.saveAll(ixnDeletes);
 
     assertArrayEquals(new long[]{1, 2, 1, 3}, metricsService.getAverageDeletionsPerWeek());
+  }
 
+  @Test
+  public void returnsAverageLoginsPerWeek() {
+    assertEquals(0, metricsService.getAverageUniqueLoginsPerWeek());
+
+    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
+
+    IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "");
+    MetricLogin metric1 = new MetricLogin("billy");
+    MetricLogin metric2 = new MetricLogin("bob");
+    MetricLogin metric3 = new MetricLogin("joe");
+    MetricLogin metric4 = new MetricLogin("billy");
+    MetricLogin metric5 = new MetricLogin("billy");
+    MetricLogin metric6 = new MetricLogin("billy");
+    MetricLogin metric7 = new MetricLogin("bob");
+    MetricLogin metric8 = new MetricLogin("bob");
+    MetricLogin metric9 = new MetricLogin("rob");
+
+    metric1.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(0)));
+    metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
+    metric3.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
+    metric4.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(7)));
+    metric5.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(7)));
+    metric6.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(8)));
+    metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(11)));
+    metric8.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
+    metric9.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(13)));
+
+    List<MetricLogin> metrics = new ArrayList<>(Arrays.asList(
+      metric1, metric2, metric3, metric4, metric5, metric6, metric7, metric8, metric9
+    ));
+
+    metricLoginRepository.saveAll(metrics);
+
+    assertEquals(3, metricsService.getAverageUniqueLoginsPerWeek());
   }
 }

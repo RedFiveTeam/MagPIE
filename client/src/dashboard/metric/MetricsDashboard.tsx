@@ -4,13 +4,8 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import theme from '../../resources/theme';
 import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
-import {
-  fetchDeletionsPerWeek,
-  fetchGetsClicks,
-  fetchIxnsCreatedPerWeek,
-  fetchTgtsCreatedPerWeek,
-  fetchWorkflowTime,
-} from '../../store/metrics';
+import { fetchMetric } from '../../store/metrics';
+import { Metric, MetricCardData, StyledMetricCard } from './MetricsCard';
 
 interface MyProps {
   className?: string
@@ -22,9 +17,10 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [ixnsPerWeek, setIxnsPerWeek] = useState(-1);
   const [getsClicks, setGetsClicks] = useState([-1, -1]);
   const [deletions, setDeletions] = useState([-1, -1, -1, -1]);
+  const [logins, setLogins] = useState(-1);
 
   useEffect(() => {
-    fetchWorkflowTime()
+    fetchMetric('workflow-time')
       .then(response => response.json())
       .then(workflowTime => setWorkflowTime(workflowTime))
       .catch((reason) => {
@@ -33,7 +29,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    fetchTgtsCreatedPerWeek()
+    fetchMetric('targets-created-per-week')
       .then(response => response.json())
       .then(tgtsPerWeek => setTgtsPerWeek(tgtsPerWeek))
       .catch((reason) => {
@@ -42,7 +38,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    fetchIxnsCreatedPerWeek()
+    fetchMetric('ixns-created-per-week')
       .then(response => response.json())
       .then(ixnsPerWeek => setIxnsPerWeek(ixnsPerWeek))
       .catch((reason) => {
@@ -51,7 +47,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    fetchGetsClicks()
+    fetchMetric('gets-clicks')
       .then(response => response.json())
       .then(getsClicks => setGetsClicks(getsClicks))
       .catch((reason) => {
@@ -60,9 +56,18 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    fetchDeletionsPerWeek()
+    fetchMetric('deletions-per-week')
       .then(response => response.json())
       .then(deletions => setDeletions(deletions))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchMetric('logins-per-week')
+      .then(response => response.json())
+      .then(logins => setLogins(logins))
       .catch((reason) => {
         console.log(reason);
       });
@@ -73,91 +78,73 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
       <div className={'metrics-sidebar'}><MagpieFullLogo/></div>
       <div className={'metrics-container'}>
         {workflowTime[0] > -1 ?
-          <div className={classNames('card', 'workflow-time')}>
-            <div className={'card-header'}>
-              Avg RFI Spent in Status
-            </div>
-            <div className={'card-body'}>
-              <div className={'card-row'}>
-                <span>Open</span>
-                <span><b>{workflowTime[0]} d</b></span>
-              </div>
-              <div className={'card-row'}>
-                <span>New</span>
-                <span><b>{workflowTime[1]} d</b></span>
-              </div>
-            </div>
-          </div>
+          <StyledMetricCard
+            data={new MetricCardData('Avg RFI Spent in Status',
+              [
+                new Metric(workflowTime[0] + ' d', 'Open'),
+                new Metric(workflowTime[1] + ' d', 'New'),
+              ])}
+            className={'workflow-time'}
+          />
           :
           null
         }
         {tgtsPerWeek > -1 ?
-          <div className={classNames('card', 'tgts-created')}>
-            <div className={'card-header'}>
-              Avg Targets Created
-            </div>
-            <div className={'card-body'}>
-              <span>{tgtsPerWeek}</span>
-            </div>
-          </div>
+          <StyledMetricCard
+            data={new MetricCardData('Avg Targets Created',
+              [
+                new Metric(tgtsPerWeek),
+              ])}
+            className={'tgts-created'}
+          />
           :
           null
         }
         {ixnsPerWeek > -1 ?
-          <div className={classNames('card', 'ixns-created')}>
-            <div className={'card-header'}>
-              Avg Interactions Created
-            </div>
-            <div className={'card-body'}>
-              <span>{ixnsPerWeek}</span>
-            </div>
-          </div>
+          <StyledMetricCard
+            data={new MetricCardData('Avg Interactions Created',
+              [
+                new Metric(ixnsPerWeek),
+              ])}
+            className={'ixns-created'}
+          />
           :
           null
         }
         {getsClicks[0] > -1 ?
-          <div className={classNames('card', 'gets-clicks')}>
-            <div className={'card-header'}>
-              GETS Clicks
-            </div>
-            <div className={'card-body'}>
-              <div className={'card-row'}>
-                <span>Open</span>
-                <span><b>{getsClicks[0]}</b></span>
-              </div>
-              <div className={'card-row'}>
-                <span>New</span>
-                <span><b>{getsClicks[1]}</b></span>
-              </div>
-            </div>
-          </div>
+          <StyledMetricCard
+            data={new MetricCardData('GETS Clicks',
+              [
+                new Metric(getsClicks[0], 'Open'),
+                new Metric(getsClicks[1], 'New'),
+              ])}
+            className={'gets-clicks'}
+          />
           :
           null
         }
         {deletions[0] > -1 ?
-          <div className={classNames('card', 'deletions')}>
-            <div className={'card-header'}>
-              Avg Deletions
-            </div>
-            <div className={'card-body'}>
-              <div className={classNames('card-row', 'small')}>
-                <span>Dates</span>
-                <span><b>{deletions[0]}</b></span>
-              </div>
-              <div className={classNames('card-row', 'small')}>
-                <span>Targets</span>
-                <span><b>{deletions[1]}</b></span>
-              </div>
-              <div className={classNames('card-row', 'small')}>
-                <span>Segments</span>
-                <span><b>{deletions[2]}</b></span>
-              </div>
-              <div className={classNames('card-row', 'small')}>
-                <span>Interactions</span>
-                <span><b>{deletions[3]}</b></span>
-              </div>
-            </div>
-          </div>
+          <StyledMetricCard
+            data={new MetricCardData('Avg Deletions',
+              [
+                new Metric(deletions[0], 'Dates'),
+                new Metric(deletions[1], 'Targets'),
+                new Metric(deletions[2], 'Segments'),
+                new Metric(deletions[3], 'Interactions'),
+              ])}
+            className={'deletions'}
+          />
+          :
+          null
+        }
+        {logins > -1 ?
+          <StyledMetricCard
+            data={new MetricCardData('Avg Logins',
+              [
+                new Metric(logins),
+              ])}
+            className={'logins'}
+          />
           :
           null
         }
@@ -195,51 +182,7 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
     flex-direction: row;
     justify-content: space-around;
     align-items: flex-start;
+    align-content: flex-start;
     flex-wrap: wrap;
-  }
-  
-  .card {
-    width: 294px;
-    height: 201px;
-    margin: 15px;
-    background-color: ${theme.color.backgroundMetricsCard};
-    box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    padding-top: 12px;
-  }
-  
-  .card-header {
-    color: ${theme.color.fontMetricsHeader};
-    font-size: ${theme.font.sizeMetricsHeader};
-    font-weight: ${theme.font.weightBold};
-    text-align: center;
-    width: 100%;
-  }
-  
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 157px;
-    font-size: ${theme.font.sizeBigMetric};
-    font-weight: bold;
-  }
-  
-  .card-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 13px 34px 13px 34px;
-    width: 100%;
-    font-weight: normal;
-      font-size: ${theme.font.sizeHeader};
-  }
-  
-  .small {
-    font-size: ${theme.font.sizeRegion};
-        padding: 8px 34px 8px 34px;
   }
 `;

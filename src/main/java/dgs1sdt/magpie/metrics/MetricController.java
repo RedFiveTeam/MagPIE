@@ -69,6 +69,11 @@ public class MetricController {
     return metricsService.getAverageDeletionsPerWeek();
   }
 
+  @GetMapping(path = "/logins-per-week")
+  public long getLoginsPerWeek() {
+    return metricsService.getAverageUniqueLoginsPerWeek();
+  }
+
   @PostMapping(path = "/refresh-click")
   public void addClickRefresh() {
     metricsService.addClickRefresh();

@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.metrics.login;
 
+import dgs1sdt.magpie.metrics.createTarget.TimestampMetric;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.Date;
 @Entity
 @Getter
 @NoArgsConstructor
-public class MetricLogin {
+public class MetricLogin implements TimestampMetric {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;

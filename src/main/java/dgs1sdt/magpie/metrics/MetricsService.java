@@ -478,6 +478,28 @@ public class MetricsService {
     };
   }
 
+  public int getAverageUniqueLoginsPerWeek() {
+    if (metricLoginRepository.findAll().size() == 0)
+      return 0;
+
+    long totalUniqueWeeklyLogins = 0;
+    long weeks = 0;
+    Timestamp weekStart = metricLoginRepository.findAll().get(0).getTimestamp();
+    Timestamp weekEnd = new Timestamp(weekStart.getTime() + 7 * MillisecondsInADay);
+
+    while (weekStart.getTime() < new Date().getTime()) {
+      long uniqueLoginsThisWeek = metricLoginRepository.findAllUniqueLoginsDuringWeek(weekStart, weekEnd).size();
+      if (uniqueLoginsThisWeek > 0) {
+        totalUniqueWeeklyLogins += uniqueLoginsThisWeek;
+        weeks++;
+      }
+      weekStart = weekEnd;
+      weekEnd = new Timestamp(weekStart.getTime() + 7 * MillisecondsInADay);
+    }
+
+    return Math.round((float) totalUniqueWeeklyLogins / (float) weeks);
+  }
+
   private int getAveragePerWeek(List<? extends TimestampMetric> metrics) {
     try {
       long startDate = metrics.get(0).getTimestamp().getTime();

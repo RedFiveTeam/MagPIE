@@ -102,46 +102,10 @@ export const postRefreshClick = () => {
   };
 };
 
-export const fetchWorkflowTime = () => {
-  return fetch('/api/metrics/workflow-time',
+export const fetchMetric = (uri: string) => {
+  return fetch('/api/metrics/' + uri,
     {
       method: 'get'
     }
   );
-};
-
-export const fetchTgtsCreatedPerWeek = () => {
-  return fetch(
-    '/api/metrics/targets-created-per-week',
-    {
-      method: 'get'
-    }
-  )
-};
-
-export const fetchIxnsCreatedPerWeek = () => {
-  return fetch(
-    '/api/metrics/ixns-created-per-week',
-    {
-      method: 'get'
-    }
-  )
-};
-
-export const fetchGetsClicks = () => {
-  return fetch(
-    '/api/metrics/gets-clicks',
-    {
-      method: 'get'
-    }
-  )
-};
-
-export const fetchDeletionsPerWeek = () => {
-  return fetch(
-    '/api/metrics/deletions-per-week',
-    {
-      method: 'get'
-    }
-  )
 };
