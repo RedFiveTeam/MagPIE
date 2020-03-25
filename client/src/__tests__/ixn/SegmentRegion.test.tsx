@@ -36,6 +36,8 @@ describe("Segment Region", () => {
       setEditIxn={jest.fn()}
       addingOrEditing={false}
       autofocus={false}
+      collapsed={false}
+      setCollapsed={jest.fn()}
     />
   );
 

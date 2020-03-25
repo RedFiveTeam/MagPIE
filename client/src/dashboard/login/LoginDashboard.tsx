@@ -23,7 +23,7 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
   const [verifyError, setVerifyError] = useState('');
   const [loginError, setLoginError] = useState('');
 
-  const [, setUserCookie] = useCookies(['username']);
+  const [, setUserCookie] = useCookies(['magpie']);
 
   const resetHooks = () => {
     setUsername('');
@@ -65,8 +65,10 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handleResponse = (status: number) => {
-    if (status === 201 || status === 200)
-      setUserCookie('username', signUpUsername, {expires: new Date(new Date().getTime() + cookieValidTimeInMS)});
+    if (status === 201)
+      setUserCookie('magpie', {username: signUpUsername, segments: []}, {expires: new Date(new Date().getTime() + cookieValidTimeInMS)});
+    else if (status === 200)
+      setUserCookie('magpie', {username: username, segments: []}, {expires: new Date(new Date().getTime() + cookieValidTimeInMS)});
     else if (status === 409)
       setVerifyError('Account already exists');
     else if (status === 401)

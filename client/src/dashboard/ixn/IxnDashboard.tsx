@@ -17,6 +17,7 @@ import theme from '../../resources/theme';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledSegmentRegion } from './table/SegmentRegion';
 import IxnModel from '../../store/ixn/IxnModel';
+import { useCookies } from 'react-cookie';
 
 interface Props {
   className?: string
@@ -27,6 +28,8 @@ export const IxnDashboard: React.FC<Props> = props => {
   const [editSegment, setEditSegment] = useState(-1);
   const [editIxn, setEditIxn] = useState(-1);
   const [tgtAnalyst, setTgtAnalyst] = React.useState('');
+
+  const [userCookie, setUserCookie] = useCookies(['magpie']);
 
   const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
@@ -83,6 +86,19 @@ export const IxnDashboard: React.FC<Props> = props => {
     dispatch(deleteSegment(segment));
   };
 
+  const performCollapse = (segmentId: number) => {
+    let segments = userCookie.magpie.segments;
+    if (segments.includes(segmentId))
+      segments.splice(segments.indexOf(segmentId), 1);
+    else
+      segments.push(segmentId);
+    setUserCookie('magpie', {...userCookie.magpie, segments: segments});
+  };
+
+  const handleCollapse = (segmentId: number) => {
+    performCollapse(segmentId);
+  };
+
   function printSegmentRegions(segmentList: SegmentModel[]) {
     return segmentList.map((segment: SegmentModel, index: number) =>
       <StyledSegmentRegion
@@ -103,6 +119,8 @@ export const IxnDashboard: React.FC<Props> = props => {
         setEditIxn={handleEditIxn}
         addingOrEditing={addingOrEditing}
         autofocus={autofocus}
+        collapsed={userCookie.magpie.segments.includes(segment.id)}
+        setCollapsed={handleCollapse}
       />,
     );
   }
@@ -274,7 +292,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   .ixn-row-box {
     min-height: 62px;
     margin-top: 8px;
-    background-color: #464646;
+    background-color: ${theme.color.backgroundInformation};
     display: flex;
     flex-direction: row;
     align-items: center;

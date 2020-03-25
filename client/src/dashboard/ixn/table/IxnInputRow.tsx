@@ -25,6 +25,7 @@ interface MyProps {
   setTgtAnalyst: (tgtAnalyst: string) => void;
   setEditIxn: (ixnId: number) => void;
   autofocus: boolean;
+  setAdding: (adding: boolean) => void;
   className?: string;
 }
 
@@ -121,6 +122,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const inputExploitAnalyst = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length < 21)
       setExploitAnalyst(event.target.value);
+    props.setAdding(!isBlank);
   };
 
   const inputTime = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,24 +134,29 @@ export const IxnInputRow: React.FC<MyProps> = props => {
 
     if (timeInvalidErrorLocal)
       bringElementIntoView('time-invalid-error-' + props.segment.id);
+    props.setAdding(!isBlank);
   };
 
   const inputActivity = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newActivity = event.target.value;
     if (newActivity.charAt(newActivity.length - 1) !== '\n') //Ignore new lines
       setActivity(event.target.value);
+    props.setAdding(!isBlank);
   };
 
   const inputTrackAnalyst = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTrackAnalyst(event.target.value);
+    props.setAdding(!isBlank);
   };
 
   const inputLeadChecker = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLeadChecker(event.target.value);
+    props.setAdding(!isBlank);
   };
 
   const inputFinalChecker = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFinalChecker(event.target.value);
+    props.setAdding(!isBlank);
   };
 
   const timeBlur = () => {
@@ -179,12 +186,12 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     setTimeOutOfBoundsError(timeOutOfBoundsErrorLocal);
 
     if (!timeInvalidErrorLocal && !timeOutOfBoundsErrorLocal) {
+      props.setAdding(false);
       if (props.segment.id) {
         props.postIxn(new IxnModel(props.ixn ? props.ixn.id : null, props.segment.rfiId, props.segment.exploitDateId,
           props.segment.targetId, props.segment.id, exploitAnalyst.trim(), convertTimeStringToMoment(time),
           activity.trim(), '', trackAnalyst.trim(), props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED,
           leadChecker.trim(), finalChecker.trim()));
-
         if (props.ixn === null)
           bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
       }
@@ -198,11 +205,11 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   };
 
   const inputProps = {
-    id: 'ixn-time-' + (props.segment.id) + '-' + (props.ixn !== null ? props.ixn.id!.toString() : 'new'),
+    id: 'ixn-time-' + (props.ixn !== null ? props.ixn.id!.toString() : (props.segment.id) + '-new'),
   };
 
   let isBlank = exploitAnalyst === '' &&
-    time === '' &&
+    (time === '' || time === '__:__:__') &&
     activity === '' &&
     trackAnalyst === '' &&
     leadChecker === '' &&
