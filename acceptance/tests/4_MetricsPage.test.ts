@@ -37,4 +37,14 @@ Scenario ('Should display other metrics', (I) => {
 
   I.waitForText('Avg Logins');
   I.see('1', '.logins');
+
+  I.waitForText('Avg Undo Actions');
+  I.see('Dates', '.undos');
+  I.see('Targets', '.undos');
+  I.see('Segments', '.undos');
+  I.see('Interactions', '.undos');
+  I.see('1', locate('.undos').find('.card-row').at(1));
+  I.see('1', locate('.undos').find('.card-row').at(2));
+  I.see('1', locate('.undos').find('.card-row').at(3));
+  I.see('1', locate('.undos').find('.card-row').at(4));
 });

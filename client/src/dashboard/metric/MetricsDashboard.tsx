@@ -18,6 +18,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [getsClicks, setGetsClicks] = useState([-1, -1]);
   const [deletions, setDeletions] = useState([-1, -1, -1, -1]);
   const [logins, setLogins] = useState(-1);
+  const [undos, setUndos] = useState([-1, -1, -1, -1]);
 
   useEffect(() => {
     fetchMetric('workflow-time')
@@ -68,6 +69,15 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
     fetchMetric('logins-per-week')
       .then(response => response.json())
       .then(logins => setLogins(logins))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchMetric('undos-per-week')
+      .then(response => response.json())
+      .then(undos => setUndos(undos))
       .catch((reason) => {
         console.log(reason);
       });
@@ -144,6 +154,20 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
                 new Metric(logins),
               ])}
             className={'logins'}
+          />
+          :
+          null
+        }
+        {undos[0] > -1 ?
+          <StyledMetricCard
+            data={new MetricCardData('Avg Undo Actions',
+              [
+                new Metric(undos[0], 'Dates'),
+                new Metric(undos[1], 'Targets'),
+                new Metric(undos[2], 'Segments'),
+                new Metric(undos[3], 'Interactions'),
+              ])}
+            className={'undos'}
           />
           :
           null

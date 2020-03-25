@@ -1,7 +1,7 @@
 package dgs1sdt.magpie.metrics.createIxn;
 
 import dgs1sdt.magpie.ixns.IxnJson;
-import dgs1sdt.magpie.metrics.createTarget.TimestampMetric;
+import dgs1sdt.magpie.metrics.TimestampMetric;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

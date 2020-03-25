@@ -30,6 +30,14 @@ import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDelete;
+import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDeleteRepository;
+import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDelete;
+import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDeleteRepository;
+import dgs1sdt.magpie.metrics.undoSegmentDelete.MetricUndoSegmentDelete;
+import dgs1sdt.magpie.metrics.undoSegmentDelete.MetricUndoSegmentDeleteRepository;
+import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDelete;
+import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
@@ -85,6 +93,14 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   private MetricDeleteIxnRepository metricDeleteIxnRepository;
   @Autowired
   private MetricLoginRepository metricLoginRepository;
+  @Autowired
+  private MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
+  @Autowired
+  private MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository;
+  @Autowired
+  private MetricUndoSegmentDeleteRepository metricUndoSegmentDeleteRepository;
+  @Autowired
+  private MetricUndoIxnDeleteRepository metricUndoIxnDeleteRepository;
 
   @Before
   public void setup() {
@@ -102,6 +118,11 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricDeleteTargetRepository.deleteAll();
     metricDeleteSegmentRepository.deleteAll();
     metricDeleteIxnRepository.deleteAll();
+    metricUndoExploitDateDeleteRepository.deleteAll();
+    metricUndoTargetDeleteRepository.deleteAll();
+    metricUndoSegmentDeleteRepository.deleteAll();
+    metricUndoIxnDeleteRepository.deleteAll();
+    metricLoginRepository.deleteAll();
   }
 
   @Test
@@ -437,5 +458,65 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricLoginRepository.saveAll(metrics);
 
     assertEquals(3, metricsService.getAverageUniqueLoginsPerWeek());
+  }
+
+  @Test
+  public void returnsAverageUndosPerWeekByDataType() {
+    assertArrayEquals(new long[]{0, 0, 0, 0}, metricsService.getAverageUndosPerWeek());
+
+    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
+
+    MetricUndoExploitDateDelete metric1 = new MetricUndoExploitDateDelete(1);
+    MetricUndoExploitDateDelete metric2 = new MetricUndoExploitDateDelete(1);
+
+    MetricUndoTargetDelete metric3 = new MetricUndoTargetDelete(1);
+    MetricUndoTargetDelete metric4 = new MetricUndoTargetDelete(1);
+    MetricUndoTargetDelete metric5 = new MetricUndoTargetDelete(1);
+    MetricUndoTargetDelete metric6 = new MetricUndoTargetDelete(1);
+
+    MetricUndoSegmentDelete metric7 = new MetricUndoSegmentDelete(1);
+
+    MetricUndoIxnDelete metric8 = new MetricUndoIxnDelete(1);
+    MetricUndoIxnDelete metric9 = new MetricUndoIxnDelete(1);
+    MetricUndoIxnDelete metric10 = new MetricUndoIxnDelete(1);
+    MetricUndoIxnDelete metric11 = new MetricUndoIxnDelete(1);
+    MetricUndoIxnDelete metric12 = new MetricUndoIxnDelete(1);
+    MetricUndoIxnDelete metric13 = new MetricUndoIxnDelete(1);
+
+    metric1.setTimestamp(new Timestamp(twoWeeksAgo));
+    metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
+
+    metric3.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
+    metric4.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(4)));
+    metric5.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
+    metric6.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(6)));
+
+    metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
+
+    metric8.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(1)));
+    metric9.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(9)));
+    metric10.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(10)));
+    metric11.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(11)));
+    metric12.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
+    metric13.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(13)));
+
+    List<MetricUndoExploitDateDelete> exploitDateUndos = new ArrayList<>(Arrays.asList(
+      metric1, metric2
+    ));
+
+    List<MetricUndoTargetDelete> targetUndos = new ArrayList<>(Arrays.asList(
+      metric3, metric4, metric5, metric6
+    ));
+
+    List<MetricUndoIxnDelete> ixnUndos = new ArrayList<>(Arrays.asList(
+      metric8, metric9, metric10, metric11, metric12, metric13
+    ));
+
+    metricUndoExploitDateDeleteRepository.saveAll(exploitDateUndos);
+    metricUndoTargetDeleteRepository.saveAll(targetUndos);
+    metricUndoSegmentDeleteRepository.save(metric7);
+    metricUndoIxnDeleteRepository.saveAll(ixnUndos);
+
+    assertArrayEquals(new long[]{1, 2, 1, 3}, metricsService.getAverageUndosPerWeek());
   }
 }

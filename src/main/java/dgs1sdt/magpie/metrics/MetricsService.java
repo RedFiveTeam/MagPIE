@@ -30,7 +30,6 @@ import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
-import dgs1sdt.magpie.metrics.createTarget.TimestampMetric;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDate;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
@@ -475,6 +474,15 @@ public class MetricsService {
       getAveragePerWeek(metricDeleteTargetRepository.findAll()),
       getAveragePerWeek(metricDeleteSegmentRepository.findAll()),
       getAveragePerWeek(metricDeleteIxnRepository.findAll())
+    };
+  }
+
+  public long[] getAverageUndosPerWeek() {
+    return new long[]{
+      getAveragePerWeek(metricUndoExploitDateDeleteRepository.findAll()),
+      getAveragePerWeek(metricUndoTargetDeleteRepository.findAll()),
+      getAveragePerWeek(metricUndoSegmentDeleteRepository.findAll()),
+      getAveragePerWeek(metricUndoIxnDeleteRepository.findAll())
     };
   }
 

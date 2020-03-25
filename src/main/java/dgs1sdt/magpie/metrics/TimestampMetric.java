@@ -1,4 +1,4 @@
-package dgs1sdt.magpie.metrics.createTarget;
+package dgs1sdt.magpie.metrics;
 
 import java.sql.Timestamp;
 

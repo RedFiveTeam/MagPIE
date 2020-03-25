@@ -69,6 +69,11 @@ public class MetricController {
     return metricsService.getAverageDeletionsPerWeek();
   }
 
+  @GetMapping(path = "/undos-per-week")
+  public long[] getUndosPerWeek() {
+    return metricsService.getAverageUndosPerWeek();
+  }
+
   @GetMapping(path = "/logins-per-week")
   public long getLoginsPerWeek() {
     return metricsService.getAverageUniqueLoginsPerWeek();

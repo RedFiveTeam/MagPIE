@@ -1,6 +1,6 @@
 package dgs1sdt.magpie.metrics.login;
 
-import dgs1sdt.magpie.metrics.createTarget.TimestampMetric;
+import dgs1sdt.magpie.metrics.TimestampMetric;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
