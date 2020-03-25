@@ -40,6 +40,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
 
   const [nameError, setNameError] = useState(false);
   const [mgrsError, setMgrsError] = useState(false);
+  const [nameConflictError, setNameConflictError] = useState(false);
   //If the user enters a name or MGRS incorrectly once, always check for exact match
   const [strongValidateName, setStrongValidateName] = useState(false);
   const [strongValidateMgrs, setStrongValidateMgrs] = useState(false);
@@ -82,6 +83,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
   }
 
   const inputName = (event: any) => {
+    setNameConflictError(false);
     let newName = event.target.value;
     setName(newName);
     if (strongValidateName) {
@@ -115,6 +117,25 @@ export const TgtInputRow: React.FC<MyProps> = props => {
       setDescription(newDescription);
   };
 
+  const checkTgts = (tgts: TargetModel[]) => {
+    if (tgts.filter((tgt) => tgt.exploitDateId === props.exploitDate.id && tgt.name === name).length > 0
+    && !(props.target && props.target.name === name))
+      setNameConflictError(true);
+    else {
+      props.postTarget(
+        new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
+          notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED),
+      );
+
+      setTimeout(() => {
+        setName('');
+        setMgrs('');
+        setNotes('');
+        setDescription('');
+      }, 500);
+    }
+  };
+
   const validateAllAndSubmit = () => {
     let nameErrorLocal = strongMatchNameError(name);
     let mgrsErrorLocal = strongMatchMgrsError(mgrs);
@@ -128,16 +149,12 @@ export const TgtInputRow: React.FC<MyProps> = props => {
       setStrongValidateMgrs(mgrsErrorLocal);
     }
     if (!(nameErrorLocal || mgrsErrorLocal)) {
-      props.postTarget(
-        new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
-          notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED),
-      );
-      setTimeout(() => {
-        setName('');
-        setMgrs('');
-        setNotes('');
-        setDescription('');
-      }, 500);
+      fetch('/api/targets?rfiId=' + props.rfi.id)
+        .then(response => response.json())
+        .then(tgts => checkTgts(tgts))
+        .catch((reason) => {
+          console.log('Failed to delete: ' + reason);
+        });
     }
 
     setAction(RowAction.NONE);
@@ -283,6 +300,10 @@ export const TgtInputRow: React.FC<MyProps> = props => {
       </Box>
       {nameError ?
         <div className={'input-error-msg'}>Please use the format "OPNYY-###" for TGT name</div>
+        : null
+      }
+      {nameConflictError ?
+        <div className={'input-error-msg'}>Duplicate TGTs under the same date are not allowed.</div>
         : null
       }
       {mgrsError ?

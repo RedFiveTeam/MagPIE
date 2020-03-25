@@ -115,11 +115,12 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.fillField('.mgrs', '12QWE1111111111');
   I.pressKey('Enter');
 
-  //Need to leave page and come back to see changes
-  I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.waitForText('Duplicate TGTs under the same date are not allowed.');
 
-  I.dontSee('12QWE1111111111');
+  I.click('.tgt-dash--header--back-button');
+  I.waitForText('PRI');
+  I.click('.cell--navigate-to-tgt-button');
+  I.waitForText('RFI: 20-325');
 
   I.click('.add-tgt-button');
   I.fillField('.tgt-name-input-new', 'SDT21-999');
@@ -133,10 +134,7 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.fillField('.tgt-name', '1-999');
   I.pressKey('Enter');
 
-  I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
-
-  I.waitForText('SDT20-999', 10);
+  I.waitForText('Duplicate TGTs under the same date are not allowed.');
 });
 
 Scenario('Should be able to delete and undo delete tgts', (I) => {

@@ -325,6 +325,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.click('.modal-no');
 
   I.click('.tgt-dash--header--back-button');
+  I.waitForText('PRI');
   I.click('.cell--navigate-to-tgt-button');
 
   I.waitForText('SDT20-123');

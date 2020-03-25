@@ -40,6 +40,8 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
     case TgtActionTypes.EXIT_TGT_PAGE:
       return {
         ...state,
+        addTgt: -1,
+        editTgt: -1,
         viewTgtPage: false,
       };
     case TgtActionTypes.UPDATE_EXPLOIT_DATE:
