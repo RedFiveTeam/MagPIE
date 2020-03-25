@@ -38,7 +38,7 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
   moment.tz.setDefault('Etc/UTC');
   const classes = snackbarStyle();
 
-  const [userCookie] = useCookies(['username']);
+  const [userCookie] = useCookies(['magpie']);
 
   return (
     <SnackbarProvider
@@ -56,7 +56,7 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
               <Switch>
                 <Route exact path={'/'}
                        render={(props) =>
-                         <StyledDashboardContainer {...props} user={userCookie.username}/>}
+                         <StyledDashboardContainer {...props} user={userCookie.magpie}/>}
                 />
                 <Route exact path={'/metrics'} component={StyledMetricsDashboard}/>
               </Switch>

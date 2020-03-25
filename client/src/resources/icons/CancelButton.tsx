@@ -40,5 +40,6 @@ const Wrapper = styled('div')`
   
     :hover {
       box-shadow: 0 0 6px #FFFFFF;
+    }
  }
 `;

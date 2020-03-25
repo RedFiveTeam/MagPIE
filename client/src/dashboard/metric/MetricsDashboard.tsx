@@ -173,14 +173,6 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
           :
           null
         }
-        {logins > -1 ?
-          <StyledMetricCard
-            data={new MetricCardData('Avg Logins', logins)}
-            className={'logins'}
-          />
-          :
-          null
-        }
         {prioritizations > -1 ?
           <StyledMetricCard
             data={new MetricCardData('Avg Prioritization Actions', prioritizations)}

@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import { StyledTableHeader } from '../../dashboard/components/header/TableHeader';
 import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 import { SnackbarProvider } from 'notistack';
+import { Cookies, CookiesProvider } from 'react-cookie';
 
 let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '');
 
@@ -32,17 +33,21 @@ const mockStore = configureStore(history, initState);
 describe('Interactions Dashboard', () => {
   let subject: ReactWrapper;
   const moment = require('moment');
+  const cookies = new Cookies();
+  cookies.set('magpie', {username: 'billy', segments: []});
 
   beforeEach(() => {
     subject = mount(
       <Provider store={mockStore}>
-        <SnackbarProvider
-          maxSnack={3}
-          autoHideDuration={15000}
-          hideIconVariant
-        >
-          <IxnDashboard/>
-        </SnackbarProvider>
+        <CookiesProvider allCookies={cookies}>
+          <SnackbarProvider
+            maxSnack={3}
+            autoHideDuration={15000}
+            hideIconVariant
+          >
+            <IxnDashboard/>
+          </SnackbarProvider>
+        </CookiesProvider>
       </Provider>,
     );
   });

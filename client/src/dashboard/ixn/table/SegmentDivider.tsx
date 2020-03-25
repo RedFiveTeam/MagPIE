@@ -322,7 +322,7 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 27px;
+    margin-bottom: 10px;
   }
   
   .segment-divider--bar {
@@ -365,6 +365,7 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     align-items: center;
     padding-left: 36px;
     padding-right: 36px;
+    z-index: 2;
   }
   
   .add-segment-form {
