@@ -13,7 +13,7 @@ export class Metric {
 export class MetricCardData {
   constructor(
     public title: string,
-    public metrics: Metric[],
+    public metrics: Metric[] | number,
   ) {}
 }
 
@@ -25,11 +25,12 @@ interface MyProps {
 export const MetricCard: React.FC<MyProps> = (props) => {
 
   function printRows() {
-    return props.data.metrics.map((metric: Metric, index: number) =>
-      props.data.metrics.length === 1 ?
-        <span>{metric.data}</span>
+    return (
+      typeof(props.data.metrics) === 'number' ?
+        <span>{props.data.metrics}</span>
         :
-        props.data.metrics.length < 3 ?
+      props.data.metrics.map((metric: Metric, index: number) =>
+        typeof props.data.metrics !== 'number' && props.data.metrics.length < 3 ?
           <div className={'card-row'}>
             <span>{metric.label}</span>
             <span><b>{metric.data}</b></span>
@@ -39,6 +40,7 @@ export const MetricCard: React.FC<MyProps> = (props) => {
             <span>{metric.label}</span>
             <span><b>{metric.data}</b></span>
           </div>,
+      )
     );
   }
 

@@ -460,11 +460,11 @@ public class MetricsService {
     return new long[]{0, 0};
   }
 
-  public int getAverageTgtCreationsPerWeek() {
+  public long getAverageTgtCreationsPerWeek() {
     return getAveragePerWeek(metricCreateTargetRepository.findAll());
   }
 
-  public int getAverageIxnCreationsPerWeek() {
+  public long getAverageIxnCreationsPerWeek() {
     return getAveragePerWeek(metricCreateIxnRepository.findAll());
   }
 
@@ -486,7 +486,7 @@ public class MetricsService {
     };
   }
 
-  public int getAverageUniqueLoginsPerWeek() {
+  public long getAverageUniqueLoginsPerWeek() {
     if (metricLoginRepository.findAll().size() == 0)
       return 0;
 
@@ -508,7 +508,30 @@ public class MetricsService {
     return Math.round((float) totalUniqueWeeklyLogins / (float) weeks);
   }
 
-  private int getAveragePerWeek(List<? extends TimestampMetric> metrics) {
+  public long getAveragePrioritizationsPerWeek() {
+    if (metricChangeRfiPriorityRepository.findAll().size() == 0)
+      return 0;
+
+    long totalUniqueWeeklyPrioritizations = 0;
+    long weeks = 0;
+    Date weekStart = metricChangeRfiPriorityRepository.findAll().get(0).getDatetime();
+    Date weekEnd = new Timestamp(weekStart.getTime() + 7 * MillisecondsInADay);
+
+    while (weekStart.getTime() < new Date().getTime()) {
+      long uniquePrioritizationsThisWeek = metricChangeRfiPriorityRepository
+        .findAllUniquePrioritizationsDuringWeek(weekStart, weekEnd).size();
+      if (uniquePrioritizationsThisWeek > 0) {
+        totalUniqueWeeklyPrioritizations += uniquePrioritizationsThisWeek;
+        weeks++;
+      }
+      weekStart = weekEnd;
+      weekEnd = new Timestamp(weekStart.getTime() + 7 * MillisecondsInADay);
+    }
+
+    return Math.round((float) totalUniqueWeeklyPrioritizations / (float) weeks);
+  }
+
+  private long getAveragePerWeek(List<? extends TimestampMetric> metrics) {
     try {
       long startDate = metrics.get(0).getTimestamp().getTime();
       long count = metrics.size();

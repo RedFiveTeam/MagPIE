@@ -19,6 +19,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [deletions, setDeletions] = useState([-1, -1, -1, -1]);
   const [logins, setLogins] = useState(-1);
   const [undos, setUndos] = useState([-1, -1, -1, -1]);
+  const [prioritizations, setPrioritizations] = useState(-1);
 
   useEffect(() => {
     fetchMetric('workflow-time')
@@ -83,6 +84,15 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
       });
   }, []);
 
+  useEffect(() => {
+    fetchMetric('prioritizations-per-week')
+      .then(response => response.json())
+      .then(prioritizations => setPrioritizations(prioritizations))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
   return (
     <div className={classNames(props.className, 'metrics-dashboard')}>
       <div className={'metrics-sidebar'}><MagpieFullLogo/></div>
@@ -101,10 +111,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
         }
         {tgtsPerWeek > -1 ?
           <StyledMetricCard
-            data={new MetricCardData('Avg Targets Created',
-              [
-                new Metric(tgtsPerWeek),
-              ])}
+            data={new MetricCardData('Avg Targets Created', tgtsPerWeek)}
             className={'tgts-created'}
           />
           :
@@ -112,10 +119,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
         }
         {ixnsPerWeek > -1 ?
           <StyledMetricCard
-            data={new MetricCardData('Avg Interactions Created',
-              [
-                new Metric(ixnsPerWeek),
-              ])}
+            data={new MetricCardData('Avg Interactions Created', ixnsPerWeek)}
             className={'ixns-created'}
           />
           :
@@ -149,10 +153,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
         }
         {logins > -1 ?
           <StyledMetricCard
-            data={new MetricCardData('Avg Logins',
-              [
-                new Metric(logins),
-              ])}
+            data={new MetricCardData('Avg Logins', logins)}
             className={'logins'}
           />
           :
@@ -168,6 +169,22 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
                 new Metric(undos[3], 'Interactions'),
               ])}
             className={'undos'}
+          />
+          :
+          null
+        }
+        {logins > -1 ?
+          <StyledMetricCard
+            data={new MetricCardData('Avg Logins', logins)}
+            className={'logins'}
+          />
+          :
+          null
+        }
+        {prioritizations > -1 ?
+          <StyledMetricCard
+            data={new MetricCardData('Avg Prioritization Actions', prioritizations)}
+            className={'prioritizations'}
           />
           :
           null

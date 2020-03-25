@@ -55,12 +55,12 @@ public class MetricController {
   }
 
   @GetMapping(path = "/targets-created-per-week")
-  public int getTargetsCreatedPerWeek() {
+  public long getTargetsCreatedPerWeek() {
     return metricsService.getAverageTgtCreationsPerWeek();
   }
 
   @GetMapping(path = "/ixns-created-per-week")
-  public int getIxnsCreatedPerWeek() {
+  public long getIxnsCreatedPerWeek() {
     return metricsService.getAverageIxnCreationsPerWeek();
   }
 
@@ -77,6 +77,11 @@ public class MetricController {
   @GetMapping(path = "/logins-per-week")
   public long getLoginsPerWeek() {
     return metricsService.getAverageUniqueLoginsPerWeek();
+  }
+
+  @GetMapping(path = "/prioritizations-per-week")
+  public long getPrioritizationsPerWeek() {
+    return metricsService.getAveragePrioritizationsPerWeek();
   }
 
   @PostMapping(path = "/refresh-click")
