@@ -74,7 +74,7 @@ export const TgtRow: React.FC<Props> = props => {
   const performDelete = () => {
     enqueueSnackbar('You deleted ' + props.target.name, {
       action: (key) => UndoSnackbarAction(key, {...props.target, targetId: props.target.id},
-        props.postTarget, closeSnackbar, classes.snackbarButton),
+                                          props.postTarget, closeSnackbar, classes.snackbarButton),
       variant: 'info',
     });
     props.deleteTgt(props.target.id);

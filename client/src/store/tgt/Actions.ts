@@ -108,7 +108,7 @@ export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
       body: JSON.stringify(exploitDate),
     },
   ).catch((reason) => {
-    console.log('Failed to post exploitDate: ' + reason);
+    console.log('Failed to post exploit date: ' + reason);
   });
 };
 

@@ -30,6 +30,8 @@ interface MyProps {
   autofocus: boolean;
   collapsed: boolean;
   setCollapsed: (segmentId: number) => void;
+  userName: string;
+  dateString: string;
   className?: string;
 }
 
@@ -66,6 +68,8 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           setTgtAnalyst={props.setTgtAnalyst}
           setEditIxn={props.setEditIxn}
           addingOrEditing={props.addingOrEditing}
+          userName={props.userName}
+          dateString={props.dateString}
         />,
     );
   };

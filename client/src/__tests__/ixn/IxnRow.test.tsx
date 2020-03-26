@@ -9,15 +9,10 @@ import { SnackbarProvider } from 'notistack';
 describe('IxnRow', () => {
   const moment = require('moment');
   let subject: ReactWrapper;
-  let ixn = new IxnModel(1, 1, 1, 1, 1,
-    'Billy Bob',
-    moment(
-      (5 * 3600 +
-        30 * 60 +
-        15) * 1000),
-    'Dudes did stuff',
-    '123-234',
-    '', IxnStatus.NOT_STARTED, '', '');
+  let ixn = new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(
+    (5 * 3600 +
+      30 * 60 +
+      15) * 1000), 'Dudes did stuff', '123-234', '', IxnStatus.NOT_STARTED, '', '', "");
 
   let segment = new SegmentModel(1, 1, 1, 1,
     moment(
@@ -46,6 +41,8 @@ describe('IxnRow', () => {
           setTgtAnalyst={jest.fn()}
           setEditIxn={jest.fn()}
           addingOrEditing={false}
+          dateString={'12DEC12'}
+          userName={'billy'}
         />
       </SnackbarProvider>
     );

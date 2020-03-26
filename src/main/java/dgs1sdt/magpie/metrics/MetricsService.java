@@ -22,6 +22,9 @@ import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefresh;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
+import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
+import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
 import dgs1sdt.magpie.metrics.createExploitDate.MetricCreateExploitDate;
 import dgs1sdt.magpie.metrics.createExploitDate.MetricCreateExploitDateRepository;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
@@ -100,6 +103,7 @@ public class MetricsService {
   private MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
   private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
   private MetricLoginRepository metricLoginRepository;
+  private MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -229,6 +233,11 @@ public class MetricsService {
   @Autowired
   public void setMetricLoginRepository(MetricLoginRepository metricLoginRepository) {
     this.metricLoginRepository = metricLoginRepository;
+  }
+
+  @Autowired
+  public void setMetricClickTrackNarrativeRepository(MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository) {
+    this.metricClickTrackNarrativeRepository = metricClickTrackNarrativeRepository;
   }
 
   public long getSiteVisitCount() {
@@ -543,5 +552,9 @@ public class MetricsService {
     } catch (Exception e) {
       return 0;
     }
+  }
+
+  public MetricClickTrackNarrative createClickTrackNarrative(MetricClickTrackNarrativeJson metricClickTrackNarrativeJson) {
+    return metricClickTrackNarrativeRepository.save(new MetricClickTrackNarrative(metricClickTrackNarrativeJson));
   }
 }

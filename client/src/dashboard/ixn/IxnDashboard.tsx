@@ -12,7 +12,7 @@ import { ExploitationLogButtonVectorSmall } from '../../resources/icons/Exploita
 import { StyledIxnTable } from './table/IxnTable';
 import { StyledSegmentDivider } from './table/SegmentDivider';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
-import { deleteIxn, deleteSegment, updateIxn, updateSegment } from '../../store/ixn';
+import { deleteIxn, deleteSegment, exitIxnPage, updateIxn, updateSegment } from '../../store/ixn';
 import theme from '../../resources/theme';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledSegmentRegion } from './table/SegmentRegion';
@@ -32,9 +32,12 @@ export const IxnDashboard: React.FC<Props> = props => {
   const [userCookie, setUserCookie] = useCookies(['magpie']);
 
   const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
+  const dateString: string = useSelector(({ixnState}: ApplicationState) => ixnState.dateString);
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
   const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
   const autofocus: boolean = useSelector(({ixnState}: ApplicationState) => ixnState.autofocus);
+
+  const moment = require('moment');
 
   let addingOrEditing = addSegment || editSegment > 0 || editIxn > 0;
 
@@ -62,6 +65,12 @@ export const IxnDashboard: React.FC<Props> = props => {
     },
   });
   const dispatch = useDispatch();
+
+  const handleExitIxnPage = () => {
+    setTimeout(() => {
+      dispatch(exitIxnPage());
+    }, 250);
+  };
 
   const handlePostSegment = (segment: SegmentModel) => {
     setAddSegment(false);
@@ -121,6 +130,8 @@ export const IxnDashboard: React.FC<Props> = props => {
         autofocus={autofocus}
         collapsed={userCookie.magpie.segments.includes(segment.id)}
         setCollapsed={handleCollapse}
+        userName={userCookie.magpie.userName}
+        dateString={moment(dateString, "MM/DD/YYYY").format('DDMMMYY').toUpperCase()}
       />,
     );
   }
@@ -129,6 +140,8 @@ export const IxnDashboard: React.FC<Props> = props => {
     <div className={classNames(props.className)}>
       <StyledIxnDashboardHeader
         target={target}
+        dateString={dateString}
+        exitIxnPage={handleExitIxnPage}
       />
       <div className={'ixn-dash-body'}>
         {segments.length > 0 ?
@@ -326,6 +339,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     display: flex;
     align-self: stretch;
     border-left: 4px solid ${theme.color.backgroundBase};
+    padding-left: 4px;
     width: 90px;
     height: inherit;
     flex-direction: row;

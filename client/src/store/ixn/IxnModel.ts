@@ -22,6 +22,7 @@ export default class IxnModel {
     public status: IxnStatus,
     public leadChecker: string,
     public finalChecker: string,
+    public trackNarrative: string,
   ) {
   }
 }

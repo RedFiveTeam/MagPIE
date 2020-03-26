@@ -19,7 +19,8 @@ export class IxnDeserializer {
           json.trackAnalyst,
           json.status,
           json.leadChecker,
-          json.finalChecker
+          json.finalChecker,
+          json.trackNarrative,
         );
       });
     }

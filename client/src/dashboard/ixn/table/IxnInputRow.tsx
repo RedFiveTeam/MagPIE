@@ -15,6 +15,7 @@ import InProgressButton from '../../components/statusButtons/InProgressButton';
 import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiButton';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
 import CancelButton from '../../../resources/icons/CancelButton';
+import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton';
 
 interface MyProps {
   ixn: IxnModel | null;
@@ -100,8 +101,9 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const bringElementIntoView = (elementId: string) => {
     setTimeout(() => {
       let element = document.getElementById(elementId);
-      if (element)
+      if (element) {
         element.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+      }
     }, 450);
   };
 
@@ -120,8 +122,9 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   };
 
   const inputExploitAnalyst = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.length < 21)
+    if (event.target.value.length < 21) {
       setExploitAnalyst(event.target.value);
+    }
     props.setAdding(!isBlank);
   };
 
@@ -132,15 +135,18 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     let timeInvalidErrorLocal = checkTimeInvalid(newTime);
     setTimeInvalidError(timeInvalidErrorLocal);
 
-    if (timeInvalidErrorLocal)
+    if (timeInvalidErrorLocal) {
       bringElementIntoView('time-invalid-error-' + props.segment.id);
+    }
     props.setAdding(!isBlank);
   };
 
   const inputActivity = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newActivity = event.target.value;
     if (newActivity.charAt(newActivity.length - 1) !== '\n') //Ignore new lines
+    {
       setActivity(event.target.value);
+    }
     props.setAdding(!isBlank);
   };
 
@@ -166,8 +172,9 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     let timeOutOfBoundsErrorLocal = checkTimeOutOfBounds(newTime);
     setTimeOutOfBoundsError(timeOutOfBoundsErrorLocal);
 
-    if (timeOutOfBoundsErrorLocal)
+    if (timeOutOfBoundsErrorLocal) {
       bringElementIntoView('time-oob-error-' + props.segment.id);
+    }
   };
 
   function formBlur(event: any) {
@@ -188,12 +195,10 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     if (!timeInvalidErrorLocal && !timeOutOfBoundsErrorLocal) {
       props.setAdding(false);
       if (props.segment.id) {
-        props.postIxn(new IxnModel(props.ixn ? props.ixn.id : null, props.segment.rfiId, props.segment.exploitDateId,
-          props.segment.targetId, props.segment.id, exploitAnalyst.trim(), convertTimeStringToMoment(time),
-          activity.trim(), '', trackAnalyst.trim(), props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED,
-          leadChecker.trim(), finalChecker.trim()));
-        if (props.ixn === null)
+        props.postIxn(new IxnModel(props.ixn ? props.ixn.id : null, props.segment.rfiId, props.segment.exploitDateId, props.segment.targetId, props.segment.id, exploitAnalyst.trim(), convertTimeStringToMoment(time), activity.trim(), '', trackAnalyst.trim(), props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED, leadChecker.trim(), finalChecker.trim(), ''));
+        if (props.ixn === null) {
           bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
+        }
       }
     }
 
@@ -262,7 +267,14 @@ export const IxnInputRow: React.FC<MyProps> = props => {
               />
             </div>
             <div className={classNames(classes.margin, 'track')}>
-              {props.ixn ? props.ixn.track : '\xa0'}
+              {props.ixn && props.ixn.track ?
+                <>
+                  <TrackNarrativeButton className={'no-click'} hasNarrative={props.ixn.trackNarrative !== ''}/>
+                  <span>{props.ixn.track}</span>
+                </>
+                :
+                '\xa0'
+              }
             </div>
             <div className={classes.margin}>
               <TextField
@@ -341,6 +353,18 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightRow};
     line-height: 19px;
+  }
+  
+  .no-click {
+    pointer-events: none;
+  }
+  
+  .track {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 8px 0 8px;
   }
   
   .delete-disabled {

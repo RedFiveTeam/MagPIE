@@ -657,6 +657,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       ",\"status\":\"NOT_STARTED\"" +
       ",\"leadChecker\":\"\"" +
       ",\"finalChecker\":\"\"" +
+      ",\"trackNarrative\":\"\"" +
       "}";
 
     given()
@@ -693,6 +694,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       ",\"status\":\"IN_PROGRESS\"" +
       ",\"leadChecker\":\"\"" +
       ",\"finalChecker\":\"\"" +
+      ",\"trackNarrative\":\"\"" +
       "}";
 
     given()
@@ -729,6 +731,43 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals(ixnId, metric4.getIxnId());
     assertEquals("status", metric4.getField());
     assertEquals("IN_PROGRESS", metric4.getNewData());
+
+    ixnJsonString = "{" +
+      "\"id\":" + ixnId +
+      ",\"rfiId\":" + rfiId +
+      ",\"exploitDateId\":" + exploitDateId +
+      ",\"targetId\":" + targetId +
+      ",\"segmentId\":" + segmentId +
+      ",\"exploitAnalyst\":\"William Robert\"" +
+      ",\"time\":\"1970-01-01T12:15:55.000Z\"" +
+      ",\"activity\":\"Person entered building from right side\"" +
+      ",\"trackAnalyst\":\"William Joseph\"" +
+      ",\"status\":\"IN_PROGRESS\"" +
+      ",\"leadChecker\":\"\"" +
+      ",\"finalChecker\":\"\"" +
+      ",\"trackNarrative\":\"START\\n\\nSome things happened at a specific time.\\n\\nSTOP\"" +
+      "}";
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .body(ixnJsonString)
+      .when()
+      .post(IxnController.URI + "/post")
+      .then()
+      .statusCode(200);
+
+    ixn = ixnRepository.findById(ixnId).get();
+
+    assertEquals("START\n\nSome things happened at a specific time.\n\nSTOP", ixn.getTrackNarrative());
+
+    assertEquals(5, metricChangeIxnRepository.findAll().size());
+
+    MetricChangeIxn metric5 = metricChangeIxnRepository.findAll().get(4);
+
+    assertEquals(ixnId, metric5.getIxnId());
+    assertEquals("track_narrative", metric5.getField());
+    assertEquals("START\n\nSome things happened at a specific time.\n\nSTOP", metric5.getNewData());
   }
 
   @Test
@@ -786,7 +825,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     Ixn ixn = ixnRepository.findAll().get(0);
     IxnJson ixnJson = new IxnJson(ixn.getId(), ixn.getRfiId(), ixn.getExploitDateId(), ixn.getTargetId(), ixn.getSegmentId(),
       ixn.getExploitAnalyst(), ixn.getTime(), ixn.getActivity(), ixn.getTrackAnalyst(), ixn.getStatus(),
-      ixn.getLeadChecker(), ixn.getFinalChecker());
+      ixn.getLeadChecker(), ixn.getFinalChecker(), ixn.getTrackNarrative());
 
     long ixnId = ixn.getId();
 

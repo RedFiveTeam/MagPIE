@@ -170,7 +170,7 @@ export const SegmentDivider: React.FC<Props> = props => {
       enqueueSnackbar('You deleted ' + props.segment!.startTime.format('HH:mm:ss') + 'Z-' +
         props.segment!.endTime.format('HH:mm:ss') + 'Z', {
         action: (key) => UndoSnackbarAction(key, props.segment!, props.postSegment, closeSnackbar,
-          rowClasses.snackbarButton),
+                                            rowClasses.snackbarButton),
         variant: 'info',
       });
       props.deleteSegment(props.segment);

@@ -315,7 +315,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
-    IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "");
+    IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "");
     MetricCreateIxn metric1 = new MetricCreateIxn(1, ixn);
     MetricCreateIxn metric2 = new MetricCreateIxn(1, ixn);
     MetricCreateIxn metric3 = new MetricCreateIxn(1, ixn);
@@ -430,7 +430,6 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
-    IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "");
     MetricLogin metric1 = new MetricLogin("billy");
     MetricLogin metric2 = new MetricLogin("bob");
     MetricLogin metric3 = new MetricLogin("joe");

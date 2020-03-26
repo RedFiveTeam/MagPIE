@@ -22,9 +22,11 @@ public class IxnJson {
   private String status;
   private String leadChecker;
   private String finalChecker;
+  private String trackNarrative;
 
-  public IxnJson(long rfiId, long exploitDateId, long targetId, long segmentId, String exploitAnalyst, Timestamp time
-    , String activity, String trackAnalyst, String status, String leadChecker, String finalChecker) {
+  public IxnJson(long rfiId, long exploitDateId, long targetId, long segmentId, String exploitAnalyst, Timestamp time,
+                 String activity, String trackAnalyst, String status, String leadChecker, String finalChecker,
+                 String trackNarrative) {
     this.rfiId = rfiId;
     this.exploitDateId = exploitDateId;
     this.targetId = targetId;
@@ -36,5 +38,6 @@ public class IxnJson {
     this.status = status;
     this.leadChecker = leadChecker;
     this.finalChecker = finalChecker;
+    this.trackNarrative = trackNarrative;
   }
 }

@@ -26,6 +26,7 @@ describe('IxnDeserializer', () => {
         time: "1970-01-01T12:15:55.000+0000",
         activity: "",
         track: "123-234",
+        trackNarrative: "Some things have happened",
       },
     ];
 
@@ -59,5 +60,6 @@ describe('IxnDeserializer', () => {
     ).utc())).toBeTruthy();
     expect(ixns[1].activity).toEqual("");
     expect(ixns[1].track).toEqual("123-234");
+    expect(ixns[1].trackNarrative).toEqual("Some things have happened");
   });
 });

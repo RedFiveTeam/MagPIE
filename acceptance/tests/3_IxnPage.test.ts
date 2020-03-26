@@ -135,7 +135,7 @@ Scenario('Should be able to edit ixns', (I) => {
   I.dontSee('12:11:33Z');
 });
 
-Scenario('Should be able to assign status and see tracks generate', (I) => {
+Scenario('Should be able to assign status, edit track narratives, and see tracks generate', (I) => {
   I.click('.exploitation');
   I.waitForText('Status', 10);
 
@@ -170,6 +170,45 @@ Scenario('Should be able to assign status and see tracks generate', (I) => {
   I.waitForText('EEI', 10);
   I.dontSee('Completed');
   I.dontSee('123-001');
+});
+
+Scenario('Should be able to write and view track narratives', (I) => {
+  I.click('.exploitation');
+  I.waitForText('Status', 10);
+  I.click('.status-wrapper');
+  I.click('.completed-button');
+  I.click('.track-narrative-button');
+
+  I.waitForText('Copy to Clipboard');
+
+  I.fillField('.track-narrative', '3 already present PERS were in the CY S of BLDG 1. 2 Pers entered the S entrance of BLDG 1 and 1 PERS entered the W entrance of BLDG 2.');
+  I.pressKey('Enter');
+  I.fillField('.track-narrative', '02:11Z - 1 PERS entered the N entrance of BLDG 20 (exited S entrance of BLDG 9 at 02:10:11).');
+
+  I.pressKey('ArrowDown');
+  I.pressKey('ArrowDown');
+  I.pressKey('ArrowDown');
+  I.pressKey('Enter');
+  I.pressKey('Enter');
+
+  I.fillField('.track-narrative', 'Analyst Note: Track stopped due to VEH exiting coverage area.');
+
+  I.click('.save');
+  I.waitForText('Track Narrative Saved');
+  I.dontSee('Copy to Clipboard');
+
+  I.click('.track-narrative-button');
+  I.waitForText('Copy to Clipboard');
+  I.seeInField('.track-narrative-input', '2 Pers entered the S entrance of BLDG 1');
+  I.seeInField('.track-narrative-input', 'Track stopped due to VEH exiting coverage area');
+
+  I.fillField('.track-narrative', 'DO NOT SAVE THIS');
+  I.click('.cancel');
+  I.dontSee('Copy to Clipboard');
+
+  I.click('.track-narrative-button');
+  I.waitForText('Copy to Clipboard');
+  I.dontSeeInField('textarea', 'DO NOT SAVE THIS');
 });
 
 Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {

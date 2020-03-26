@@ -2,6 +2,7 @@ import { MetricsActionTypes } from './Types';
 import GetsClickRequestModel from './GetsClickRequestModel';
 import SortClickRequestModel from './SortClickRequestModel';
 import RfiFetchRequestModel from './RfiFetchRequestModel';
+import { TrackNarrativeClickModel } from './TrackNarrativeClickModel';
 
 export const fetchSiteVisitsSuccess = (body: any) => {
   return {
@@ -100,6 +101,21 @@ export const postRefreshClick = () => {
       console.log('Failed to post refresh click metrics: ' + reason);
     });
   };
+};
+
+export const postTrackNarrativeClick = (metric: TrackNarrativeClickModel) => {
+  fetch('/api/metrics/click-track-narrative',
+        {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(metric),
+        },
+  ).catch((reason) => {
+    console.log('Failed to post track narrative click: ' + reason);
+  });
 };
 
 export const fetchMetric = (uri: string) => {

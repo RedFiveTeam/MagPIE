@@ -1,11 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../../store';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import { TargetModel } from '../../store/tgt/TargetModel';
-import { exitIxnPage } from '../../store/ixn';
 import theme from '../../resources/theme';
 
 interface Props {
@@ -16,16 +13,11 @@ interface Props {
 }
 
 export const IxnDashboardHeader: React.FC<Props> = props => {
-  const handleExitClick = () => {
-    setTimeout(() => {
-      props.exitIxnPage();
-    }, 250);
-  };
 
   return (
     <div className={classNames(props.className)}>
       <div className={'ixn-dash--header'}>
-        <div className={'ixn-dash--header--back-button'} onClick={handleExitClick}>
+        <div className={'ixn-dash--header--back-button'} onClick={props.exitIxnPage}>
           <StyledBackButtonVector/>
         </div>
         <div className={'ixn-dash--header--mgrs-date-container'}>
@@ -52,16 +44,7 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = ({ixnState}: ApplicationState) => ({
-  dateString: ixnState.dateString,
-});
-
-const mapDispatchToProps = {
-  exitIxnPage: exitIxnPage,
-};
-
-export const StyledIxnDashboardHeader = styled(
-  connect(mapStateToProps, mapDispatchToProps)(IxnDashboardHeader))`
+export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   font-size: ${theme.font.sizeRow};
   font-family: ${theme.font.familyRow};
   color: ${theme.color.fontPrimary};

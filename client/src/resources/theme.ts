@@ -52,6 +52,7 @@ const theme = {
     backgroundSidebar: crayonBox.steelBlue,
     backgroundMetricsCard: crayonBox.darkBlue,
     fontMetricsHeader: crayonBox.brightBlue,
+    modalInputBorder: crayonBox.subtlerGray,
   },
 
   font: {

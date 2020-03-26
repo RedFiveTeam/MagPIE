@@ -15,8 +15,8 @@ describe("Segment Region", () => {
   let target: TargetModel = new TargetModel(1, 1, 1, 'WER19-123', '19XCV1234567890', '', '');
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1, moment(0), moment(1));
   let interactions: IxnModel[] = [
-    new IxnModel(1, 1, 1, 1, 1, "Bob", moment(0), "Bob did stuff", "123-123", '', IxnStatus.NOT_STARTED, '', ''),
-    new IxnModel(2, 1, 1, 1, 1, "Bob", moment(0), "Bob did stuff", "123-123", '', IxnStatus.NOT_STARTED, '', ''),
+    new IxnModel(1, 1, 1, 1, 1, 'Bob', moment(0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', ''),
+    new IxnModel(2, 1, 1, 1, 1, 'Bob', moment(0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', ''),
   ];
   subject = shallow(
     <SegmentRegion
@@ -38,6 +38,8 @@ describe("Segment Region", () => {
       autofocus={false}
       collapsed={false}
       setCollapsed={jest.fn()}
+      dateString={'12DEC12'}
+      userName={'billy'}
     />
   );
 

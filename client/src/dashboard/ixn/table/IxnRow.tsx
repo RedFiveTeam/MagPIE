@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import IxnModel, { IxnStatus } from '../../../store/ixn/IxnModel';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
@@ -14,6 +15,10 @@ import { rowStyles } from '../../../resources/theme';
 import { useSnackbar } from 'notistack';
 import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
 import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
+import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton';
+import { TrackNarrativeModal } from './TrackNarrativeModal';
+import { postTrackNarrativeClick } from '../../../store/metrics';
+import { TrackNarrativeClickModel } from '../../../store/metrics/TrackNarrativeClickModel';
 
 interface MyProps {
   ixn: IxnModel;
@@ -24,6 +29,8 @@ interface MyProps {
   setTgtAnalyst: (tgtAnalyst: string) => void;
   setEditIxn: (ixnId: number) => void;
   addingOrEditing: boolean;
+  userName: string;
+  dateString: string;
   className?: string;
 }
 
@@ -40,11 +47,12 @@ const HtmlTooltip = withStyles((theme: Theme) => ({
 export const IxnRow: React.FC<MyProps> = props => {
   const classes = rowStyles();
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+  const [displayTrackNarrative, setDisplayTrackNarrative] = useState(false);
 
   const handleDeleteClick = () => {
     enqueueSnackbar('Interaction deleted', {
       action: (key) => UndoSnackbarAction(key, props.ixn, props.postIxn, closeSnackbar, classes.snackbarButton),
-      variant: 'info'
+      variant: 'info',
     });
     props.deleteIxn(props.ixn);
   };
@@ -56,6 +64,25 @@ export const IxnRow: React.FC<MyProps> = props => {
   const submitStatusChange = (status: IxnStatus) => {
     let ixn: IxnModel = {...props.ixn, status: status};
     props.postIxn(ixn);
+  };
+
+  const handleSubmitTrackNarrative = (trackNarrative: string) => {
+    let ixn: IxnModel = {...props.ixn, trackNarrative: trackNarrative};
+    props.postIxn(ixn);
+  };
+
+  const handleTrackNarrativeClick = () => {
+    postTrackNarrativeClick(new TrackNarrativeClickModel(props.ixn.id!, props.userName));
+    setDisplayTrackNarrative(true);
+
+    setTimeout(() => {
+      if (props.ixn.trackNarrative === '') {
+        let element = document.getElementById('track-narrative-' + props.ixn.id);
+        if (element instanceof HTMLTextAreaElement) {
+          element.setSelectionRange(16, 16);
+        }
+      }
+    }, 100);
   };
 
   return (
@@ -75,7 +102,15 @@ export const IxnRow: React.FC<MyProps> = props => {
           {props.ixn.activity ? props.ixn.activity : '\xa0'}
         </div>
         <div className={classNames('ixn-data-cell', 'track', 'no-underline')}>
-          {props.ixn.track ? props.ixn.track : '\xa0'}
+          {props.ixn.track ?
+            <>
+              <div className={'track-narrative-button'} onClick={handleTrackNarrativeClick}><TrackNarrativeButton
+                hasNarrative={false}/></div>
+              <span>{props.ixn.track}</span>
+            </>
+            :
+            '\xa0'
+          }
         </div>
         <div className={classNames('ixn-data-cell', 'track-analyst', 'name')}>
           {props.ixn.trackAnalyst ? props.ixn.trackAnalyst : '\xa0'}
@@ -120,9 +155,16 @@ export const IxnRow: React.FC<MyProps> = props => {
           buttonClassName={'delete-ixn-button'}
           title={'Delete Interaction'}
         >
-          <StyledDeleteButtonTrashcan />
+          <StyledDeleteButtonTrashcan/>
         </DeleteCancelButton>
       </Box>
+      <TrackNarrativeModal
+        display={displayTrackNarrative}
+        setDisplay={setDisplayTrackNarrative}
+        ixn={props.ixn}
+        submitTrackNarrative={handleSubmitTrackNarrative}
+        dateString={props.dateString}
+      />
     </div>
   );
 };
@@ -135,7 +177,26 @@ export const StyledIxnRow = styled(IxnRow)`
     border-bottom: 1px solid #FFFFFF;
   }
   
+  .track {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 8px 0 8px;
+  }
+  
   .no-underline {
     border:none;
+  }
+  
+  .track-narrative-input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 917px;
+    height: 534px;
+    border: 2px aliceblue;
+    border-radius: 5px;
   }
 `;

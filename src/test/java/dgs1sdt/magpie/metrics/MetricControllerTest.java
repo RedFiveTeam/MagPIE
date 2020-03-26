@@ -6,10 +6,12 @@ import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepositor
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
-import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
+import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
+import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeJson;
 import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeRepository;
@@ -61,6 +63,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
 
+  @Autowired
+  private MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository;
+
   @Before
   public void setup() {
     metricClickGetsRepository.deleteAll();
@@ -72,6 +77,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricChangeExploitDateRepository.deleteAll();
     metricCreateTargetRepository.deleteAll();
     metricChangeTargetRepository.deleteAll();
+    metricClickTrackNarrativeRepository.deleteAll();
   }
 
   @Test
@@ -183,5 +189,26 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .statusCode(200);
 
     assertEquals(5, metricCancelAddSegmentRepository.findAll().get(0).getTargetId());
+  }
+
+  @Test
+  public void postCreatesNewClickTrackNarrativeMetric() throws Exception {
+    MetricClickTrackNarrativeJson metricJson = new MetricClickTrackNarrativeJson(5, "billy.bob.joe");
+
+    final String json = objectMapper.writeValueAsString(metricJson);
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(MetricController.URI + "/click-track-narrative")
+      .then()
+      .statusCode(200);
+
+    MetricClickTrackNarrative metric = metricClickTrackNarrativeRepository.findAll().get(0);
+
+    assertEquals(5, metric.getIxnId());
+    assertEquals("billy.bob.joe", metric.getUserName());
   }
 }

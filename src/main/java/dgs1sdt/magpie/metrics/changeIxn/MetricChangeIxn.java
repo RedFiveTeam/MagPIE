@@ -53,6 +53,9 @@ public class MetricChangeIxn {
       case "final_checker":
         newData = newIxn.getFinalChecker();
         break;
+      case "track_narrative":
+        newData = newIxn.getTrackNarrative();
+        break;
       default:
         throw new Exception();
     }

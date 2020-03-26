@@ -8,7 +8,7 @@ export const crayonBox = {
   lessDarkGray: '#393939',
   steelGray: '#464646',
   subtleGray: '#575757',
-  subtlerGray: '#5C5C5C',
+  subtlerGray: '#5F5F5F',
   warmGray: '#6F6E6C',
   blueGray: '#66666e',
   blueGrayLight: 'rgba(102, 102, 110, 0.5)',

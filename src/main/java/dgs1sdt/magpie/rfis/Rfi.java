@@ -102,7 +102,8 @@ public class Rfi {
       if (!this.ltiov.equals(otherRfi.ltiov))
         diff.add("ltiov");
     } catch (NullPointerException e) {
-      diff.add("ltiov");
+      if (otherRfi.ltiov != null)
+        diff.add("ltiov");
     }
 
     try {
