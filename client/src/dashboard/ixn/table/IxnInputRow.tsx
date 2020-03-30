@@ -269,7 +269,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
             <div className={classNames(classes.margin, 'track')}>
               {props.ixn && props.ixn.track ?
                 <>
-                  <TrackNarrativeButton className={'no-click'} hasNarrative={props.ixn.trackNarrative !== ''}/>
+                  <TrackNarrativeButton className={'no-click'} hasNarrative={false}/>
                   <span>{props.ixn.track}</span>
                 </>
                 :

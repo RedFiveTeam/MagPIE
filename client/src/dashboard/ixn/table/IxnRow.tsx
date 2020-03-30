@@ -19,6 +19,7 @@ import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton'
 import { TrackNarrativeModal } from './TrackNarrativeModal';
 import { postTrackNarrativeClick } from '../../../store/metrics';
 import { TrackNarrativeClickModel } from '../../../store/metrics/TrackNarrativeClickModel';
+import TextTooltip from '../../components/TextTooltip';
 
 interface MyProps {
   ixn: IxnModel;
@@ -104,8 +105,11 @@ export const IxnRow: React.FC<MyProps> = props => {
         <div className={classNames('ixn-data-cell', 'track', 'no-underline')}>
           {props.ixn.track ?
             <>
-              <div className={'track-narrative-button'} onClick={handleTrackNarrativeClick}><TrackNarrativeButton
-                hasNarrative={false}/></div>
+              <TextTooltip title={'Track Narrative'}>
+                <div className={'track-narrative-button'} onClick={handleTrackNarrativeClick}>
+                  <TrackNarrativeButton hasNarrative={false}/>
+                </div>
+              </TextTooltip>
               <span>{props.ixn.track}</span>
             </>
             :
@@ -158,13 +162,16 @@ export const IxnRow: React.FC<MyProps> = props => {
           <StyledDeleteButtonTrashcan/>
         </DeleteCancelButton>
       </Box>
-      <TrackNarrativeModal
-        display={displayTrackNarrative}
-        setDisplay={setDisplayTrackNarrative}
-        ixn={props.ixn}
-        submitTrackNarrative={handleSubmitTrackNarrative}
-        dateString={props.dateString}
-      />
+      {displayTrackNarrative ?
+        <TrackNarrativeModal
+          setDisplay={setDisplayTrackNarrative}
+          ixn={props.ixn}
+          submitTrackNarrative={handleSubmitTrackNarrative}
+          dateString={props.dateString}
+        />
+        :
+        null
+      }
     </div>
   );
 };

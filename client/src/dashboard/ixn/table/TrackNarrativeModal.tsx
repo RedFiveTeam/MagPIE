@@ -10,7 +10,6 @@ import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../../components/InformationalSnackbar';
 
 interface MyProps {
-  display: boolean;
   setDisplay: (display: boolean) => void;
   ixn: IxnModel;
   submitTrackNarrative: (trackNarrative: string) => void;
@@ -146,13 +145,15 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
     <Modal
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
-      open={props.display}
+      open
       onClose={() => props.setDisplay(false)}
       style={{
         top: '50%',
         left: '50%',
       }}
       className={classNames('delete-modal', classes.modal)}
+      disableBackdropClick
+      disableEscapeKeyDown
     >
       <div className={classes.modalBody}>
         <form className={classNames('track-narrative-form')}

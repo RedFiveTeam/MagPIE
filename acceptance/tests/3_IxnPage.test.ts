@@ -181,9 +181,11 @@ Scenario('Should be able to write and view track narratives', (I) => {
 
   I.waitForText('Copy to Clipboard');
 
-  I.fillField('.track-narrative', '3 already present PERS were in the CY S of BLDG 1. 2 Pers entered the S entrance of BLDG 1 and 1 PERS entered the W entrance of BLDG 2.');
+  I.fillField('.track-narrative', '3 already present PERS were in the CY S of BLDG 1. 2 Pers entered the S entrance of ' +
+    'BLDG 1 and 1 PERS entered the W entrance of BLDG 2.');
   I.pressKey('Enter');
-  I.fillField('.track-narrative', '02:11Z - 1 PERS entered the N entrance of BLDG 20 (exited S entrance of BLDG 9 at 02:10:11).');
+  I.fillField('.track-narrative', '02:11Z - 1 PERS entered the N entrance of BLDG 20 (exited S entrance of BLDG 9 at ' +
+    '02:10:11).');
 
   I.pressKey('ArrowDown');
   I.pressKey('ArrowDown');
@@ -208,7 +210,7 @@ Scenario('Should be able to write and view track narratives', (I) => {
 
   I.click('.track-narrative-button');
   I.waitForText('Copy to Clipboard');
-  I.dontSeeInField('textarea', 'DO NOT SAVE THIS');
+  I.dontSeeInField('.track-narrative-input', 'DO NOT SAVE THIS');
 });
 
 Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
