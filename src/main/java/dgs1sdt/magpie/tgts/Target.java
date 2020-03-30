@@ -9,8 +9,6 @@ import java.util.ArrayList;
 @Data
 @Entity
 @NoArgsConstructor
-@Getter
-@Setter
 @AllArgsConstructor
 @Table(name = "data_target")
 public class Target {
@@ -25,6 +23,8 @@ public class Target {
   private String notes;
   private String description;
   private String status;
+  @Column(length = 65535)
+  private String hourlyRollup;
   private Timestamp deleted;
 
   public Target(long rfiId, long exploitDateId, TargetJson targetJson) {
@@ -35,6 +35,7 @@ public class Target {
     this.notes = targetJson.getNotes();
     this.description = targetJson.getDescription();
     this.status = TargetStatus.NOT_STARTED;
+    this.hourlyRollup = "";
   }
 
   public Target(TargetJson editTarget) {
@@ -46,6 +47,7 @@ public class Target {
     this.notes = editTarget.getNotes();
     this.description = editTarget.getDescription();
     this.status = editTarget.getStatus();
+    this.hourlyRollup = editTarget.getHourlyRollup();
   }
 
   public ArrayList<String> Compare(TargetJson other) throws NullPointerException {
@@ -83,6 +85,13 @@ public class Target {
       diff.add("status");
     }
 
+    try {
+      if (!this.hourlyRollup.equals(other.getHourlyRollup())) {
+        diff.add("rollup");
+      }
+    } catch (NullPointerException e) {
+      diff.add("rollup");
+    }
 
     return diff;
   }

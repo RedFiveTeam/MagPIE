@@ -5,7 +5,7 @@ Feature('RFI Page');
 Before((I)=> {
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
-  I.fillField('.username-input', 'billy.bob.joe');
+  I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
 });
 

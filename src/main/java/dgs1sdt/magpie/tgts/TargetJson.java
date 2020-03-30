@@ -5,8 +5,6 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class TargetJson {
   private long targetId;
   private long rfiId;
@@ -16,6 +14,7 @@ public class TargetJson {
   private String notes;
   private String description;
   private String status;
+  private String hourlyRollup;
 
   public TargetJson(long rfiId, long exploitDateId, String name, String mgrs, String notes, String description) {
     this.rfiId = rfiId;
@@ -25,5 +24,6 @@ public class TargetJson {
     this.notes = notes;
     this.description = description;
     this.status = TargetStatus.NOT_STARTED;
+    this.hourlyRollup = "";
   }
 }

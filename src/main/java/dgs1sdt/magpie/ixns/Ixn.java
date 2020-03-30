@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 @Data
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "data_ixn")
 public class Ixn {

@@ -4,7 +4,7 @@ import { mount, ReactWrapper } from 'enzyme';
 import { IxnDashboard } from '../../dashboard/ixn/IxnDashboard';
 import { StyledIxnDashboardHeader } from '../../dashboard/ixn/IxnDashboardHeader';
 import { StyledIxnTable } from '../../dashboard/ixn/table/IxnTable';
-import { TargetModel } from '../../store/tgt/TargetModel';
+import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import configureStore from '../../configureStore';
 import { initStore } from '../../setupEnzyme';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
@@ -14,7 +14,7 @@ import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 import { SnackbarProvider } from 'notistack';
 import { Cookies, CookiesProvider } from 'react-cookie';
 
-let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '');
+let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '', TargetStatus.NOT_STARTED, '');
 
 const initState = {
   ...initStore,

@@ -124,7 +124,7 @@ export const TgtInputRow: React.FC<MyProps> = props => {
     else {
       props.postTarget(
         new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
-          notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED),
+                            notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED, ''),
       );
 
       setTimeout(() => {

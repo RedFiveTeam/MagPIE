@@ -4,7 +4,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { TgtDateRegion } from '../../dashboard/tgt/table/TgtDateRegion';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
-import { TargetModel } from '../../store/tgt/TargetModel';
+import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import { StyledTgtRow } from '../../dashboard/tgt/table/TgtRow';
 import { Status } from '../../dashboard/tgt/TgtDashboard';
 import { StyledTgtInputRow } from '../../dashboard/tgt/table/TgtInputRow';
@@ -16,9 +16,9 @@ describe("Target Date Region", () => {
   let exploitDate = new ExploitDateModel(1, 1, moment(new Date));
   let targets: TargetModel[] =
     [
-      new TargetModel(1, 1, 1, 'ASD12-123', '12QWE1231231231', '', ''),
-      new TargetModel(1, 1, 1, 'ASD12-124', '12QWE1231231232', '', ''),
-      new TargetModel(1, 1, 1, 'ASD12-125', '12QWE1231231233', '', ''),
+      new TargetModel(1, 1, 1, 'ASD12-123', '12QWE1231231231', '', '', TargetStatus.NOT_STARTED, ''),
+      new TargetModel(1, 1, 1, 'ASD12-124', '12QWE1231231232', '', '', TargetStatus.NOT_STARTED, ''),
+      new TargetModel(1, 1, 1, 'ASD12-125', '12QWE1231231233', '', '', TargetStatus.NOT_STARTED, ''),
     ];
   let addEditSpy: jest.Mock;
 

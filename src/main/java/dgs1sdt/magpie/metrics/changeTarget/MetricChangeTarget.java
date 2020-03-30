@@ -46,6 +46,9 @@ public class MetricChangeTarget {
       case "status":
         newData = newTarget.getStatus();
         break;
+      case "rollup":
+        newData = newTarget.getHourlyRollup();
+        break;
       default:
         throw new Exception();
     }

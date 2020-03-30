@@ -18,6 +18,7 @@ public class TargetTest {
       "Notes",
       "Description",
       TargetStatus.NOT_STARTED,
+      "",
       null
     );
 

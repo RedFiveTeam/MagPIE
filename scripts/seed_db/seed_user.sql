@@ -3,4 +3,4 @@ TRUNCATE TABLE data_user;
 SET FOREIGN_KEY_CHECKS=1;
 
 insert into data_user (user_name) values
-                                         ('SDT_Test_Please_Ignore');
+                                         ('Sdt.Test');

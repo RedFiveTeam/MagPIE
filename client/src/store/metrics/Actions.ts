@@ -3,6 +3,7 @@ import GetsClickRequestModel from './GetsClickRequestModel';
 import SortClickRequestModel from './SortClickRequestModel';
 import RfiFetchRequestModel from './RfiFetchRequestModel';
 import { TrackNarrativeClickModel } from './TrackNarrativeClickModel';
+import { RollupClickModel } from './RollupClickModel';
 
 export const fetchSiteVisitsSuccess = (body: any) => {
   return {
@@ -115,6 +116,21 @@ export const postTrackNarrativeClick = (metric: TrackNarrativeClickModel) => {
         },
   ).catch((reason) => {
     console.log('Failed to post track narrative click: ' + reason);
+  });
+};
+
+export const postRollupClick = (metric: RollupClickModel) => {
+  fetch('/api/metrics/click-rollup',
+        {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(metric),
+        },
+  ).catch((reason) => {
+    console.log('Failed to post rollup click: ' + reason);
   });
 };
 

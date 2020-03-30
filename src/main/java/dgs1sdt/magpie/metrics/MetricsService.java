@@ -22,6 +22,9 @@ import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefresh;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
+import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
+import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupRepository;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
@@ -104,6 +107,7 @@ public class MetricsService {
   private MetricCancelAddSegmentRepository metricCancelAddSegmentRepository;
   private MetricLoginRepository metricLoginRepository;
   private MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository;
+  private MetricClickRollupRepository metricClickRollupRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -238,6 +242,11 @@ public class MetricsService {
   @Autowired
   public void setMetricClickTrackNarrativeRepository(MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository) {
     this.metricClickTrackNarrativeRepository = metricClickTrackNarrativeRepository;
+  }
+
+  @Autowired
+  public void setMetricClickRollupRepository(MetricClickRollupRepository metricClickRollupRepository) {
+    this.metricClickRollupRepository = metricClickRollupRepository;
   }
 
   public long getSiteVisitCount() {
@@ -556,5 +565,9 @@ public class MetricsService {
 
   public MetricClickTrackNarrative createClickTrackNarrative(MetricClickTrackNarrativeJson metricClickTrackNarrativeJson) {
     return metricClickTrackNarrativeRepository.save(new MetricClickTrackNarrative(metricClickTrackNarrativeJson));
+  }
+
+  public MetricClickRollup createClickRollup(MetricClickRollupJson metricClickRollupJson) {
+    return metricClickRollupRepository.save(new MetricClickRollup(metricClickRollupJson));
   }
 }

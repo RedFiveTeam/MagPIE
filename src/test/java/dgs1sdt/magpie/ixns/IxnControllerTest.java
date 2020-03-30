@@ -809,12 +809,12 @@ public class IxnControllerTest extends BaseIntegrationTest {
     target2Id = targetRepository.findAll().get(1).getId();
 
     targetController.postTarget(new TargetJson(target2Id, rfiId, exploitDate2Id, "SDT12-234", "12WQE1231231231", "",
-      "", TargetStatus.IN_PROGRESS));
+      "", TargetStatus.IN_PROGRESS, ""));
 
     assertEquals("123-001", ixnRepository.findAll().get(0).getTrack());
 
     targetController.postTarget(new TargetJson(target2Id, rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "",
-      "", TargetStatus.IN_PROGRESS));
+      "", TargetStatus.IN_PROGRESS, ""));
 
     assertEquals("123-003", ixnRepository.findAll().get(0).getTrack());
   }

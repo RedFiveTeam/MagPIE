@@ -1,5 +1,5 @@
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
-import { TargetModel } from '../../store/tgt/TargetModel';
+import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import {
   exitTgtPage,
   fetchDatesAndTargetsSuccess,
@@ -57,7 +57,7 @@ describe("Tgt actions tests", ()=>{
   });
 
   it('should return a proper UPDATE_TGT_SUCCESS action object', () => {
-    let tgt = new TargetModel(1, 1, 1, 'SDT12-123', '12QWE1231231231', '', '');
+    let tgt = new TargetModel(1, 1, 1, 'SDT12-123', '12QWE1231231231', '', '', TargetStatus.NOT_STARTED, '');
     let action: any = updateTgtSuccess([tgt]);
     expect(action).toEqual({
       type: TgtActionTypes.UPDATE_TGT_SUCCESS,

@@ -11,8 +11,10 @@ export class TargetModel {
     public exploitDateId: number,
     public name: string,
     public mgrs: string,
-    public notes: string | null,
-    public description: string | null,
-    public status: TargetStatus = TargetStatus.NOT_STARTED) {
+    public notes: string|null,
+    public description: string|null,
+    public status: TargetStatus = TargetStatus.NOT_STARTED,
+    public hourlyRollup: string,
+  ) {
   }
 }

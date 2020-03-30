@@ -2,11 +2,11 @@ import '../../setupEnzyme';
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { IxnDashboardHeader } from '../../dashboard/ixn/IxnDashboardHeader';
-import { TargetModel } from '../../store/tgt/TargetModel';
+import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 
 describe("Interactions Header", () => {
   let subject: ShallowWrapper;
-  let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '');
+  let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '', TargetStatus.NOT_STARTED, '');
   let exitSpy: jest.Mock;
 
   beforeEach(() => {
@@ -16,6 +16,8 @@ describe("Interactions Header", () => {
         target={target}
         exitIxnPage={exitSpy}
         dateString={"08/14/2020"}
+        disableRollupButton={false}
+        showRollup={jest.fn()}
       />
     );
   });

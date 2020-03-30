@@ -47,7 +47,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
 
   const handlePostTarget = (target: TargetPostModel) => {
     let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
-      target.mgrs, target.notes, target.description, target.status);
+                              target.mgrs, target.notes, target.description, target.status, '');
     dispatch(updateTgtsLocal(tgt));
     dispatch(submitPostTarget(target, props.rfi));
   };

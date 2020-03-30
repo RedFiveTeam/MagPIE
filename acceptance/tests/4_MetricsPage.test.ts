@@ -36,7 +36,7 @@ Scenario ('Should display other metrics', (I) => {
   I.see('3', locate('.deletions').find('.card-row').at(4));
 
   I.waitForText('Avg Logins');
-  I.see('1', '.logins');
+  I.see('2', '.logins');
 
   I.waitForText('Avg Undo Actions');
   I.see('Dates', '.undos');

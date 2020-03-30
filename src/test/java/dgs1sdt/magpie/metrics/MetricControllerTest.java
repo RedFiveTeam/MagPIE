@@ -9,6 +9,9 @@ import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
+import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
+import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupRepository;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
@@ -66,6 +69,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository;
 
+  @Autowired
+  private MetricClickRollupRepository metricClickRollupRepository;
+
   @Before
   public void setup() {
     metricClickGetsRepository.deleteAll();
@@ -78,6 +84,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricCreateTargetRepository.deleteAll();
     metricChangeTargetRepository.deleteAll();
     metricClickTrackNarrativeRepository.deleteAll();
+    metricClickRollupRepository.deleteAll();
   }
 
   @Test
@@ -209,6 +216,27 @@ public class MetricControllerTest extends BaseIntegrationTest {
     MetricClickTrackNarrative metric = metricClickTrackNarrativeRepository.findAll().get(0);
 
     assertEquals(5, metric.getIxnId());
+    assertEquals("billy.bob.joe", metric.getUserName());
+  }
+
+  @Test
+  public void postCreatesNewClickRollupMetric() throws Exception {
+    MetricClickRollupJson metricJson = new MetricClickRollupJson(5, "billy.bob.joe");
+
+    final String json = objectMapper.writeValueAsString(metricJson);
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(MetricController.URI + "/click-rollup")
+      .then()
+      .statusCode(200);
+
+    MetricClickRollup metric = metricClickRollupRepository.findAll().get(0);
+
+    assertEquals(5, metric.getTargetId());
     assertEquals("billy.bob.joe", metric.getUserName());
   }
 }

@@ -3,6 +3,8 @@ package dgs1sdt.magpie.metrics;
 import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegment;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
+import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
+import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTime;
@@ -119,5 +121,10 @@ public class MetricController {
   @PostMapping(path = "/click-track-narrative")
   public MetricClickTrackNarrative createClickTrackNarrative(@Valid @RequestBody MetricClickTrackNarrativeJson metricClickTrackNarrativeJson) {
     return metricsService.createClickTrackNarrative(metricClickTrackNarrativeJson);
+  }
+
+  @PostMapping(path = "/click-rollup")
+  public MetricClickRollup createClickRollup(@Valid @RequestBody MetricClickRollupJson metricClickRollupJson) {
+    return metricsService.createClickRollup(metricClickRollupJson);
   }
 }

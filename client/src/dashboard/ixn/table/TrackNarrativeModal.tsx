@@ -1,9 +1,8 @@
-import { createStyles, Modal, TextField, Theme } from '@material-ui/core';
+import { Modal, TextField } from '@material-ui/core';
 import classNames from 'classnames';
 import * as React from 'react';
 import { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import theme, { rowStyles } from '../../../resources/theme';
+import { longInputStyles, rowStyles } from '../../../resources/theme';
 import IxnModel from '../../../store/ixn/IxnModel';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useSnackbar } from 'notistack';
@@ -16,111 +15,16 @@ interface MyProps {
   dateString: string;
 }
 
-const useStyles = makeStyles((localTheme: Theme) => createStyles(
-  {
-    modal: {
-      marginLeft: -471,
-      marginTop: -301,
-      width: 942,
-      height: 602,
-    },
-    modalBody: {
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      fontFamily: theme.font.familyHeader,
-      fontWeight: theme.font.weightMedium,
-      fontSize: theme.font.sizeRegion,
-      lineHeight: '21px',
-      color: theme.color.deleteButton,
-      textAlign: 'center',
-      outline: 'none',
-      backgroundColor: theme.color.backgroundModal,
-      borderRadius: 8,
-      borderColor: theme.color.buttonOnBlack,
-      borderWidth: 2,
-      borderStyle: 'solid',
-      padding: '8px',
-    },
-    modalConfirmation: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: 162,
-    },
-    modalYes: {
-      cursor: 'pointer',
-      fontSize: theme.font.sizeHeader,
-      color: theme.color.fontBackgroundInactive,
-      '&:hover': {
-        color: theme.color.deleteButton,
-        textShadow: '0px 0px 4px #FFFFFF',
-      },
-    },
-    modalNo: {
-      cursor: 'pointer',
-      fontSize: theme.font.sizeHeader,
-      '&:hover': {
-        textShadow: '0px 0px 4px #FFFFFF',
-      },
-    },
-    modalTextfield: {
-      width: 900,
-    },
-    modalTextfieldReadonlyContainer: {
-      overflowWrap: 'break-word',
-      overflowY: 'auto',
-    },
-    modalTextfieldReadonly: {
-      width: 900,
-      height: 525,
-      textAlign: 'left',
-      whiteSpace: 'pre-wrap',
-    },
-    modalInputContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      width: 917,
-      height: 534,
-      border: '1px solid ' + theme.color.modalInputBorder,
-      borderRadius: 8,
-    },
-    buttonSection: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: '100%',
-      height: 'available',
-    },
-    copyToClipboard: {
-      fontSize: theme.font.sizeRow,
-      cursor: 'pointer',
-      width: 128,
-      '&:hover': {
-        textShadow: '0px 0px 4px #FFFFFF',
-      },
-    },
-    spacer: {
-      width: 128,
-    },
-  }));
-
-
 export const TrackNarrativeModal: React.FC<MyProps> = props => {
-  const classes = useStyles();
+  const classes = longInputStyles();
+  const rowClasses = rowStyles();
+
   const [trackNarrative, setTrackNarrative] = useState(
     props.ixn.trackNarrative === '' ?
       props.dateString + '\n\nSTART\n\n\n\nSTOP'
       :
       props.ixn.trackNarrative,
   );
-
-  const rowClasses = rowStyles();
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 

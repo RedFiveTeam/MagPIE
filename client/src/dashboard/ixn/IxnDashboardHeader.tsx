@@ -4,12 +4,16 @@ import classNames from 'classnames';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import theme from '../../resources/theme';
+import { Box } from '@material-ui/core';
+import RollupIcon from '../../resources/icons/RollupIcon';
 
 interface Props {
   exitIxnPage: () => void;
-  target: TargetModel
-  dateString: string
-  className?: string
+  target: TargetModel;
+  dateString: string;
+  disableRollupButton: boolean;
+  showRollup: () => void;
+  className?: string;
 }
 
 export const IxnDashboardHeader: React.FC<Props> = props => {
@@ -26,6 +30,34 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
           </div>
           <div className={'ixn-dash--header--date'}>
             Date: {props.dateString}
+          </div>
+        </div>
+        <div className={'rollup-button-container'}>
+          <div className={classNames('rollup-button', props.disableRollupButton ? 'disabled' : null)}
+               onClick={props.showRollup}
+          >
+            <Box
+              className={'rollup-box no-select'}
+              height={32}
+              width={123}
+              border={2}
+              borderRadius={16}
+              borderColor={theme.color.buttonAddDate}
+              bgcolor={theme.color.backgroundModal}
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
+              paddingRight={0.25}
+              paddingLeft={1.25}
+              zIndex={1000}
+              color={theme.color.fontPrimary}
+              fontSize={12}
+              fontWeight={'bold'}
+            >
+              Export Rollups
+              <RollupIcon/>
+            </Box>
           </div>
         </div>
         <div className={'ixn-dash--header--tgt-name-container'}>
@@ -110,5 +142,20 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   
   .ixn-dash--header--filler {
     width: 60px;
+  }
+  
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  .rollup-button {
+    cursor: pointer;
+  }
+  
+  .rollup-box {
+    :hover {
+      box-shadow: 0 0 6px #FFFFFF;
+    }
   }
 `;

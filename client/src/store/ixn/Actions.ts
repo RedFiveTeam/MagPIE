@@ -4,6 +4,8 @@ import { SegmentModel } from '../tgtSegment/SegmentModel';
 import { SegmentDeserializer } from './SegmentDeserializer';
 import IxnModel from './IxnModel';
 import { IxnDeserializer } from './IxnDeserializer';
+import { TargetPostModel } from '../tgt/TargetPostModel';
+import { postTarget } from '../tgt';
 
 export const loadIxnPage = (target: TargetModel | null, dateString: string | null, segments: SegmentModel[], ixns: IxnModel[], autofocus: boolean) => {
   if (target) {
@@ -28,6 +30,19 @@ export const exitIxnPage = () => {
   return {
     type: IxnActionTypes.EXIT_IXN_PAGE,
   };
+};
+
+export const saveRollup = (newTarget: TargetPostModel, dateString: string) => {
+  return (dispatch: any) => {
+    postTarget(newTarget)
+      .then(response => fetch('/api/targets?rfiId=' + newTarget.rfiId))
+      .then(response => response.json())
+      .then((targets: TargetModel[]) => dispatch(navigateToIxnPage(targets.find((target) => target.id ===
+        newTarget.targetId)!, dateString)))
+      .catch((reason => {
+        console.log(reason);
+      }));
+  }
 };
 
 export const navigateToIxnPage = (target: TargetModel, dateString: string) => {
@@ -160,11 +175,6 @@ export const postIxn = (ixn: IxnModel) => {
     console.log('Failed to post ixn: ' + reason);
   });
 };
-
-// TODO: This is the test case that is causing ERROR: only absolute urls are supported, it is called by
-//  client/src/__tests__/ixn/SegmentDivider.test.tsx
-//  the function that causes the error is found at
-//  client/src/dashboard/ixn/table/SegmentDivider.tsx LINE: 163
 
 export const postCancelAddSegment = (targetId: number) => {
   return fetch('/api/metrics/cancel-add-segment/' + targetId,

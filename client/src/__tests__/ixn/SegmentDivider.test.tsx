@@ -1,7 +1,7 @@
 import '../../setupEnzyme';
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import { TargetModel } from '../../store/tgt/TargetModel';
+import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import { SegmentDivider } from '../../dashboard/ixn/table/SegmentDivider';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { SnackbarProvider } from 'notistack';
@@ -10,7 +10,7 @@ describe('Segment Divider', () => {
   const moment = require('moment');
   let subject: ReactWrapper;
   let submitSegmentSpy: jest.Mock = jest.fn();
-  let target: TargetModel = new TargetModel(1, 1, 1, 'SDT12-123', '12QWE1231231231', 'These are the notes', 'This is a description');
+  let target: TargetModel = new TargetModel(1, 1, 1, 'SDT12-123', '12QWE1231231231', 'These are the notes', 'This is a description', TargetStatus.NOT_STARTED, '');
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1,
     moment.unix(
       12 * 3600 + //HH
@@ -24,6 +24,7 @@ describe('Segment Divider', () => {
     ).utc(),
   );
   let deleteSegmentSpy: jest.Mock = jest.fn();
+  console.log = jest.fn();
 
   beforeEach(() => {
     subject = mount(

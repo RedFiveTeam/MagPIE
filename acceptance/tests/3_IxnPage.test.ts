@@ -5,7 +5,7 @@ Feature('Ixn Page');
 Before((I) => {
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
-  I.fillField('.username-input', 'billy.bob.joe');
+  I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
   I.click('.cell--navigate-to-tgt-button');
@@ -213,6 +213,42 @@ Scenario('Should be able to write and view track narratives', (I) => {
   I.dontSeeInField('.track-narrative-input', 'DO NOT SAVE THIS');
 });
 
+Scenario('Should be able to write and view rollups', (I) => {
+  I.click('.exploitation');
+  I.waitForText('Status', 10);
+  I.click('.rollup-button');
+
+  I.waitForText('Copy to Clipboard');
+  I.seeInField('.rollup-input', 'Activity Rollup (SDT20-123)');
+  I.seeInField('.rollup-input', '01FEB20');
+  I.seeInField('.rollup-input', '1200Z - 1230Z:');
+  I.seeInField('.rollup-input', 'Note:');
+
+  I.see('12:00:00Z');
+  I.see('12:30:40Z');
+  I.see('12:10:30Z');
+  I.see('Person entered tgt from right side');
+  I.see('12:15:00Z');
+
+  I.fillField('.rollup', 'Some things happened within this half hour block of time');
+
+  I.click('.save');
+  I.waitForText('Rollup Saved');
+  I.dontSee('Copy to Clipboard');
+
+  I.click('.rollup-button');
+  I.waitForText('Copy to Clipboard');
+  I.seeInField('.rollup-input', 'Some things happened within this half hour block of time');
+
+  I.fillField('.rollup', 'DO NOT SAVE THIS');
+  I.click('.cancel');
+  I.dontSee('Copy to Clipboard');
+
+  I.click('.rollup-button');
+  I.waitForText('Copy to Clipboard');
+  I.dontSeeInField('.rollup-input', 'DO NOT SAVE THIS');
+});
+
 Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
@@ -304,7 +340,7 @@ Scenario('Should be able to delete segments and undo segment delete', (I) => {
   I.pressKey('Enter');
   I.waitForText('12:00:00Z');
   I.waitForText('12:30:40Z');
-  
+
   I.fillField('.exploit-analyst', 'Billy Bob Joe');
   I.pressKey('Tab');
   I.fillField('.time', '121');
