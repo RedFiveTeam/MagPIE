@@ -16,6 +16,8 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.click('.add-date-button');
   I.fillField('input', '02012020');
 
+  I.waitForText('TGT Name', 10);
+
   I.click('.add-tgt-button');
   I.fillField('.tgt-name-input-new', 'SDT20-123');
   I.pressKey('Tab');
