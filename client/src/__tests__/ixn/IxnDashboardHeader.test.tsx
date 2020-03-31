@@ -6,18 +6,21 @@ import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 
 describe("Interactions Header", () => {
   let subject: ShallowWrapper;
-  let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '', TargetStatus.NOT_STARTED, '');
+  let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '',
+                               TargetStatus.NOT_STARTED, '', '');
   let exitSpy: jest.Mock;
+  let showRollupSpy: jest.Mock;
 
   beforeEach(() => {
    exitSpy = jest.fn();
+   showRollupSpy = jest.fn();
     subject = shallow(
       <IxnDashboardHeader
         target={target}
         exitIxnPage={exitSpy}
         dateString={"08/14/2020"}
         disableRollupButton={false}
-        showRollup={jest.fn()}
+        showRollup={showRollupSpy}
       />
     );
   });
@@ -39,4 +42,19 @@ describe("Interactions Header", () => {
     expect(subject.find('.ixn-dash--header--date').text()).toContain("08/14/2020");
   });
 
+  it('should display the export rollups button and execute the callback on click when not disabled', () => {
+    expect(subject.find('.rollup-button').text()).toContain('Export Rollups');
+    subject.find('.rollup-button').simulate('click');
+    subject = shallow(
+      <IxnDashboardHeader
+        target={target}
+        exitIxnPage={exitSpy}
+        dateString={"08/14/2020"}
+        disableRollupButton={true}
+        showRollup={showRollupSpy}
+      />
+    );
+    subject.find('.rollup-button').simulate('click');
+    expect(showRollupSpy).toHaveBeenCalledTimes(1);
+  });
 });

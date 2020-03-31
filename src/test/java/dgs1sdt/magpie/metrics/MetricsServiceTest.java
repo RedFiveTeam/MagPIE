@@ -194,6 +194,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       "This is an old description",
       TargetStatus.NOT_STARTED,
       "",
+      "",
       null
     );
     TargetJson newTarget = new TargetJson(
@@ -281,7 +282,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
 
-    TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "");
+    TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "", "");
     MetricCreateTarget metric1 = new MetricCreateTarget(1, target);
     MetricCreateTarget metric2 = new MetricCreateTarget(1, target);
     MetricCreateTarget metric3 = new MetricCreateTarget(1, target);

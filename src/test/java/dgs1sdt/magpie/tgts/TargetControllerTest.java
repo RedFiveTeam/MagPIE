@@ -460,6 +460,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "These are some RAD supercool EEI notes",
       "This is a different description",
       TargetStatus.NOT_STARTED,
+      "",
       "");
 
     targetController.postTarget(targetEditJson);
@@ -495,9 +496,10 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "These are some RAD supercool EEI notes",
       "This is a different description",
       TargetStatus.NOT_STARTED,
-      "This is a rollup");
+      "This is a rollup",
+      "");
 
-    final String json = objectMapper.writeValueAsString(targetEditJson);
+    String json = objectMapper.writeValueAsString(targetEditJson);
 
     given()
       .port(port)
@@ -518,8 +520,44 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     MetricChangeTarget metric3 = metricChangeTargetRepository.findAll().get(2);
     assertEquals(targetId, metric3.getTargetId());
-    assertEquals("rollup", metric3.getField());
+    assertEquals("hourly_rollup", metric3.getField());
     assertEquals("This is a rollup", metric3.getNewData());
+
+    targetEditJson = new TargetJson(
+      targetId,
+      rfiId,
+      exploitDateId,
+      "SDT20-123",
+      "12ABC1234567890",
+      "These are some RAD supercool EEI notes",
+      "This is a different description",
+      TargetStatus.NOT_STARTED,
+      "This is a rollup",
+      "This is an \"All Callouts\" rollup");
+
+    json = objectMapper.writeValueAsString(targetEditJson);
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(TargetController.URI + "/post")
+      .then()
+      .statusCode(200);
+
+    target = targetRepository.findAll().get(0);
+
+    assertEquals(1, targetRepository.findAll().size());
+
+    assertEquals("This is an \"All Callouts\" rollup", target.getAllCallouts());
+
+    assertEquals(4, metricChangeTargetRepository.findAll().size());
+
+    MetricChangeTarget metric4 = metricChangeTargetRepository.findAll().get(3);
+    assertEquals(targetId, metric4.getTargetId());
+    assertEquals("all_callouts", metric4.getField());
+    assertEquals("This is an \"All Callouts\" rollup", metric4.getNewData());
   }
 
   @Test
@@ -565,6 +603,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "These are some different notes for the EEI",
       "This is a description that's also different",
       TargetStatus.NOT_STARTED,
+      "",
       "");
 
     targetController.postTarget(updatedTargetJson);
@@ -611,6 +650,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       ",\"description\":" + "\"" + targetJson.getDescription() + "\"" +
       ",\"status\":\"IN_PROGRESS\"" +
       ",\"hourlyRollup\":\"\"" +
+      ",\"allCallouts\":\"\"" +
       "}";
 
     given()
@@ -636,6 +676,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       ",\"description\":" + "\"" + targetJson.getDescription() + "\"" +
       ",\"status\":\"COMPLETED\"" +
       ",\"hourlyRollup\":\"\"" +
+      ",\"allCallouts\":\"\"" +
       "}";
 
     given()
@@ -670,7 +711,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     Target target = targetRepository.findAll().get(0);
     TargetJson targetJson = new TargetJson(target.getId(), target.getRfiId(), target.getExploitDateId(),
       target.getName(), target.getMgrs(), target.getNotes(), target.getDescription(), target.getStatus(),
-      target.getHourlyRollup());
+      target.getHourlyRollup(), target.getAllCallouts());
 
     long targetId = target.getId();
 

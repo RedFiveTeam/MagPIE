@@ -26,6 +26,7 @@
 tmp/acceptance.log
 /client/yarn-error.log
 /target/
+/artifacts/
 
 ### Acceptance output images/node_modules ###
 /acceptance/output/

@@ -25,6 +25,8 @@ public class Target {
   private String status;
   @Column(length = 65535)
   private String hourlyRollup;
+  @Column(length = 65535)
+  private String allCallouts;
   private Timestamp deleted;
 
   public Target(long rfiId, long exploitDateId, TargetJson targetJson) {
@@ -36,6 +38,7 @@ public class Target {
     this.description = targetJson.getDescription();
     this.status = TargetStatus.NOT_STARTED;
     this.hourlyRollup = "";
+    this.allCallouts = "";
   }
 
   public Target(TargetJson editTarget) {
@@ -48,6 +51,7 @@ public class Target {
     this.description = editTarget.getDescription();
     this.status = editTarget.getStatus();
     this.hourlyRollup = editTarget.getHourlyRollup();
+    this.allCallouts = editTarget.getAllCallouts();
   }
 
   public ArrayList<String> Compare(TargetJson other) throws NullPointerException {
@@ -87,10 +91,18 @@ public class Target {
 
     try {
       if (!this.hourlyRollup.equals(other.getHourlyRollup())) {
-        diff.add("rollup");
+        diff.add("hourly_rollup");
       }
     } catch (NullPointerException e) {
-      diff.add("rollup");
+      diff.add("hourly_rollup");
+    }
+
+    try {
+      if (!this.allCallouts.equals(other.getAllCallouts())) {
+        diff.add("all_callouts");
+      }
+    } catch (NullPointerException e) {
+      diff.add("all_callouts");
     }
 
     return diff;

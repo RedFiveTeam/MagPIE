@@ -3,6 +3,8 @@ package dgs1sdt.magpie.metrics;
 import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegment;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
+import dgs1sdt.magpie.metrics.clickImport.MetricClickImport;
+import dgs1sdt.magpie.metrics.clickImport.MetricClickImportJson;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
@@ -88,24 +90,9 @@ public class MetricController {
     return metricsService.getAveragePrioritizationsPerWeek();
   }
 
-  @PostMapping(path = "/refresh-click")
-  public void addClickRefresh() {
-    metricsService.addClickRefresh();
-  }
-
   @PostMapping(path = "/site-visit")
   public void addSiteVisit() {
     metricsService.addSiteVisit();
-  }
-
-  @PostMapping(path = "/gets-click")
-  public MetricClickGets createClickGets(@Valid @RequestBody MetricClickGetsJson metricClickGetsJson) {
-    return metricsService.createClickGets(metricClickGetsJson);
-  }
-
-  @PostMapping(path = "/sort-click")
-  public MetricClickSort createClickSort(@Valid @RequestBody MetricClickSortJson metricClickSortJson) {
-    return metricsService.createClickSort(metricClickSortJson);
   }
 
   @PostMapping(path = "/rfi-fetch")
@@ -116,6 +103,26 @@ public class MetricController {
   @PostMapping(path = "/cancel-add-segment/{targetId}")
   public MetricCancelAddSegment createCancelAddSegment(@PathVariable("targetId") long targetId) {
     return metricsService.createCancelAddSegment(targetId);
+  }
+
+  @PostMapping(path = "/click-refresh")
+  public void addClickRefresh() {
+    metricsService.addClickRefresh();
+  }
+
+  @PostMapping(path = "/click-gets")
+  public MetricClickGets createClickGets(@Valid @RequestBody MetricClickGetsJson metricClickGetsJson) {
+    return metricsService.createClickGets(metricClickGetsJson);
+  }
+
+  @PostMapping(path = "/click-import")
+  public MetricClickImport createClickImport(@Valid @RequestBody MetricClickImportJson metricClickImportJson) {
+    return metricsService.createClickImport(metricClickImportJson);
+  }
+
+  @PostMapping(path = "/click-sort")
+  public MetricClickSort createClickSort(@Valid @RequestBody MetricClickSortJson metricClickSortJson) {
+    return metricsService.createClickSort(metricClickSortJson);
   }
 
   @PostMapping(path = "/click-track-narrative")

@@ -12,7 +12,8 @@ import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 describe("Segment Region", () => {
   const moment = require('moment');
   let subject: ShallowWrapper;
-  let target: TargetModel = new TargetModel(1, 1, 1, 'WER19-123', '19XCV1234567890', '', '', TargetStatus.NOT_STARTED, '');
+  let target: TargetModel = new TargetModel(1, 1, 1, 'WER19-123', '19XCV1234567890', '', '', TargetStatus.NOT_STARTED,
+                                            '', '');
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1, moment(0), moment(1));
   let interactions: IxnModel[] = [
     new IxnModel(1, 1, 1, 1, 1, 'Bob', moment(0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', ''),

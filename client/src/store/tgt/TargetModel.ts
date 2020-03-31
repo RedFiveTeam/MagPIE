@@ -15,6 +15,7 @@ export class TargetModel {
     public description: string|null,
     public status: TargetStatus = TargetStatus.NOT_STARTED,
     public hourlyRollup: string,
-  ) {
+    public allCallouts: string,
+    ) {
   }
 }

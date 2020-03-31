@@ -15,6 +15,7 @@ public class TargetJson {
   private String description;
   private String status;
   private String hourlyRollup;
+  private String allCallouts;
 
   public TargetJson(long rfiId, long exploitDateId, String name, String mgrs, String notes, String description) {
     this.rfiId = rfiId;
@@ -25,5 +26,6 @@ public class TargetJson {
     this.description = description;
     this.status = TargetStatus.NOT_STARTED;
     this.hourlyRollup = "";
+    this.allCallouts = "";
   }
 }

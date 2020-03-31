@@ -8,6 +8,9 @@ import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepositor
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
+import dgs1sdt.magpie.metrics.clickImport.MetricClickImport;
+import dgs1sdt.magpie.metrics.clickImport.MetricClickImportJson;
+import dgs1sdt.magpie.metrics.clickImport.MetricClickImportRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
@@ -72,6 +75,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricClickRollupRepository metricClickRollupRepository;
 
+  @Autowired
+  private MetricClickImportRepository metricClickImportRepository;
+
   @Before
   public void setup() {
     metricClickGetsRepository.deleteAll();
@@ -85,6 +91,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricChangeTargetRepository.deleteAll();
     metricClickTrackNarrativeRepository.deleteAll();
     metricClickRollupRepository.deleteAll();
+    metricClickImportRepository.deleteAll();
   }
 
   @Test
@@ -120,7 +127,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     given()
       .port(port)
       .when()
-      .post(MetricController.URI + "/refresh-click")
+      .post(MetricController.URI + "/click-refresh")
       .then()
       .statusCode(200);
 
@@ -140,7 +147,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .contentType("application/json")
       .body(json)
       .when()
-      .post(MetricController.URI + "/gets-click")
+      .post(MetricController.URI + "/click-gets")
       .then()
       .statusCode(200);
 
@@ -158,7 +165,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .contentType("application/json")
       .body(json)
       .when()
-      .post(MetricController.URI + "/sort-click")
+      .post(MetricController.URI + "/click-sort")
       .then()
       .statusCode(200);
 
@@ -237,6 +244,28 @@ public class MetricControllerTest extends BaseIntegrationTest {
     MetricClickRollup metric = metricClickRollupRepository.findAll().get(0);
 
     assertEquals(5, metric.getTargetId());
+    assertEquals("billy.bob.joe", metric.getUserName());
+  }
+
+  @Test
+  public void postCreatesNewClickImportMetric() throws Exception {
+    MetricClickImportJson metricJson = new MetricClickImportJson(5, 12, "billy.bob.joe");
+
+    final String json = objectMapper.writeValueAsString(metricJson);
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(MetricController.URI + "/click-import")
+      .then()
+      .statusCode(200);
+
+    MetricClickImport metric = metricClickImportRepository.findAll().get(0);
+
+    assertEquals(5, metric.getTargetId());
+    assertEquals(12, metric.getIxnsImported());
     assertEquals("billy.bob.joe", metric.getUserName());
   }
 }

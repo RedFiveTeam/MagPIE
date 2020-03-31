@@ -221,14 +221,47 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.waitForText('Copy to Clipboard');
   I.seeInField('.rollup-input', 'Activity Rollup (SDT20-123)');
   I.seeInField('.rollup-input', '01FEB20');
-  I.seeInField('.rollup-input', '1200Z - 1230Z:');
   I.seeInField('.rollup-input', 'Note:');
-
   I.see('12:00:00Z');
   I.see('12:30:40Z');
   I.see('12:10:30Z');
   I.see('Person entered tgt from right side');
   I.see('12:15:00Z');
+
+  I.click(locate('.import-checkbox').at(2));
+  I.click('.import-rollup-button');
+  I.wait(1);
+  I.seeInField('.rollup-input', '12:15:00Z -');
+
+  I.click(locate('.import-checkbox').at(1));
+  I.click('.import-rollup-button');
+  I.wait(1);
+  I.seeInField('.rollup-input', '12:10:30Z - Person entered tgt from right side\n\n12:15:00Z -');
+
+  I.click('.save');
+  I.waitForText('Rollup Saved');
+  I.dontSee('Copy to Clipboard');
+
+  I.click('.rollup-button');
+  I.waitForText('Copy to Clipboard');
+  I.seeInField('.rollup-input', '12:10:30Z - Person entered tgt from right side\n\n12:15:00Z -');
+
+  I.fillField('.rollup', 'DO NOT SAVE THIS');
+  I.click('.cancel');
+  I.dontSee('Copy to Clipboard');
+
+  I.click('.rollup-button');
+  I.waitForText('Copy to Clipboard');
+  I.dontSeeInField('.rollup-input', 'DO NOT SAVE THIS');
+
+  I.click('.rollup-mode-toggle-button');
+  I.wait(1);
+
+  I.seeInField('.rollup-input', 'Activity Rollup (SDT20-123)');
+  I.seeInField('.rollup-input', '01FEB20');
+  I.seeInField('.rollup-input', '1200Z - 1230Z:');
+  I.seeInField('.rollup-input', 'Note:');
+  I.dontSeeInField('.rollup-input', '12:10:30Z - Person entered tgt from right side\n\n12:15:00Z -');
 
   I.fillField('.rollup', 'Some things happened within this half hour block of time');
 
@@ -238,6 +271,11 @@ Scenario('Should be able to write and view rollups', (I) => {
 
   I.click('.rollup-button');
   I.waitForText('Copy to Clipboard');
+  I.seeInField('.rollup-input', '12:10:30Z - Person entered tgt from right side\n\n12:15:00Z -');
+
+  I.click('.rollup-mode-toggle-button');
+  I.wait(1);
+
   I.seeInField('.rollup-input', 'Some things happened within this half hour block of time');
 
   I.fillField('.rollup', 'DO NOT SAVE THIS');
@@ -246,6 +284,10 @@ Scenario('Should be able to write and view rollups', (I) => {
 
   I.click('.rollup-button');
   I.waitForText('Copy to Clipboard');
+
+  I.click('.rollup-mode-toggle-button');
+  I.wait(1);
+
   I.dontSeeInField('.rollup-input', 'DO NOT SAVE THIS');
 });
 

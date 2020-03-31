@@ -40,7 +40,7 @@ const theme = {
     backgroundToolTip: crayonBox.lightGray,
     inProgress: crayonBox.stoplightYellow,
     complete: crayonBox.stoplightGreen,
-    buttonAddDate: crayonBox.brightBlue,
+    primaryButton: crayonBox.brightBlue,
     buttonRowDisabled: crayonBox.subtleGray,
     buttonDoesNotMeetEei: crayonBox.tomatoRed,
     fontActive: crayonBox.notEggWhite,
@@ -85,7 +85,7 @@ const theme = {
 const muiPalette = createPalette({
   type: 'dark',
   primary: {
-    main: theme.color.buttonAddDate,
+    main: theme.color.primaryButton,
   },
 });
 

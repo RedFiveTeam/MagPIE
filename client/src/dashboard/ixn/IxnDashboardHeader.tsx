@@ -34,7 +34,7 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
         </div>
         <div className={'rollup-button-container'}>
           <div className={classNames('rollup-button', props.disableRollupButton ? 'disabled' : null)}
-               onClick={props.showRollup}
+               onClick={() => {if (!props.disableRollupButton) props.showRollup()}}
           >
             <Box
               className={'rollup-box no-select'}
@@ -42,7 +42,7 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
               width={123}
               border={2}
               borderRadius={16}
-              borderColor={theme.color.buttonAddDate}
+              borderColor={theme.color.primaryButton}
               bgcolor={theme.color.backgroundModal}
               display="flex"
               flexDirection="row"

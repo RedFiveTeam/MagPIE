@@ -47,7 +47,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
 
   const handlePostTarget = (target: TargetPostModel) => {
     let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
-                              target.mgrs, target.notes, target.description, target.status, '');
+                              target.mgrs, target.notes, target.description, target.status, '', '');
     dispatch(updateTgtsLocal(tgt));
     dispatch(submitPostTarget(target, props.rfi));
   };
@@ -255,7 +255,7 @@ export const StyledTgtDashboard = styled(
   
   .add-date-button {
     cursor: pointer;
-    background-color: ${theme.color.buttonAddDate};
+    background-color: ${theme.color.primaryButton};
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     
     :hover {
@@ -265,7 +265,7 @@ export const StyledTgtDashboard = styled(
   
   .add-date-button-disabled {
     pointer-events: none; !important;
-    background-color: ${theme.color.buttonAddDate};
+    background-color: ${theme.color.primaryButton};
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 
     opacity: 0.5;

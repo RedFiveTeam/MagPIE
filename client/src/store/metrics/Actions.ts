@@ -4,6 +4,7 @@ import SortClickRequestModel from './SortClickRequestModel';
 import RfiFetchRequestModel from './RfiFetchRequestModel';
 import { TrackNarrativeClickModel } from './TrackNarrativeClickModel';
 import { RollupClickModel } from './RollupClickModel';
+import { ImportClickModel } from './ImportClickModel';
 
 export const fetchSiteVisitsSuccess = (body: any) => {
   return {
@@ -47,7 +48,7 @@ export const postSiteVisit = () => {
 
 export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
   return () => {
-    return fetch('/api/metrics/gets-click',
+    return fetch('/api/metrics/click-gets',
       {
         method: 'post',
         headers: {
@@ -63,7 +64,7 @@ export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
 };
 
 export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
-  fetch('/api/metrics/sort-click',
+  fetch('/api/metrics/click-sort',
     {
       method: 'post',
       headers: {
@@ -94,7 +95,7 @@ export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestMode
 
 export const postRefreshClick = () => {
   return () => {
-    return fetch('/api/metrics/refresh-click',
+    return fetch('/api/metrics/click-refresh',
       {
         method: 'post',
       },
@@ -131,6 +132,21 @@ export const postRollupClick = (metric: RollupClickModel) => {
         },
   ).catch((reason) => {
     console.log('Failed to post rollup click: ' + reason);
+  });
+};
+
+export const postImportClick = (metric: ImportClickModel) => {
+  fetch('/api/metrics/click-import',
+        {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(metric),
+        },
+  ).catch((reason) => {
+    console.log('Failed to post import click: ' + reason);
   });
 };
 

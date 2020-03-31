@@ -57,7 +57,7 @@ export const TgtRow: React.FC<Props> = props => {
   const submitStatusChange = (status: TargetStatus) => {
     let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
                                                          props.target.name, props.target.mgrs, props.target.notes,
-                                                         props.target.description, status, '');
+                                                         props.target.description, status, '', '');
     props.postTarget(
       newTarget,
     );

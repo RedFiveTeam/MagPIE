@@ -16,9 +16,9 @@ describe("Target Date Region", () => {
   let exploitDate = new ExploitDateModel(1, 1, moment(new Date));
   let targets: TargetModel[] =
     [
-      new TargetModel(1, 1, 1, 'ASD12-123', '12QWE1231231231', '', '', TargetStatus.NOT_STARTED, ''),
-      new TargetModel(1, 1, 1, 'ASD12-124', '12QWE1231231232', '', '', TargetStatus.NOT_STARTED, ''),
-      new TargetModel(1, 1, 1, 'ASD12-125', '12QWE1231231233', '', '', TargetStatus.NOT_STARTED, ''),
+      new TargetModel(1, 1, 1, 'ASD12-123', '12QWE1231231231', '', '', TargetStatus.NOT_STARTED, '', ''),
+      new TargetModel(1, 1, 1, 'ASD12-124', '12QWE1231231232', '', '', TargetStatus.NOT_STARTED, '', ''),
+      new TargetModel(1, 1, 1, 'ASD12-125', '12QWE1231231233', '', '', TargetStatus.NOT_STARTED, '', ''),
     ];
   let addEditSpy: jest.Mock;
 

@@ -73,7 +73,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
   const muiPalette = createPalette({
     type: 'dark',
     primary: {
-      main: theme.color.buttonAddDate,
+      main: theme.color.primaryButton,
     },
   });
 

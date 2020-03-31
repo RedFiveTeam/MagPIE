@@ -20,6 +20,9 @@ import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
+import dgs1sdt.magpie.metrics.clickImport.MetricClickImport;
+import dgs1sdt.magpie.metrics.clickImport.MetricClickImportJson;
+import dgs1sdt.magpie.metrics.clickImport.MetricClickImportRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefresh;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
@@ -108,6 +111,7 @@ public class MetricsService {
   private MetricLoginRepository metricLoginRepository;
   private MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository;
   private MetricClickRollupRepository metricClickRollupRepository;
+  private MetricClickImportRepository metricClickImportRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -247,6 +251,11 @@ public class MetricsService {
   @Autowired
   public void setMetricClickRollupRepository(MetricClickRollupRepository metricClickRollupRepository) {
     this.metricClickRollupRepository = metricClickRollupRepository;
+  }
+
+  @Autowired
+  public void setMetricClickImportRepository(MetricClickImportRepository metricClickImportRepository) {
+    this.metricClickImportRepository = metricClickImportRepository;
   }
 
   public long getSiteVisitCount() {
@@ -569,5 +578,9 @@ public class MetricsService {
 
   public MetricClickRollup createClickRollup(MetricClickRollupJson metricClickRollupJson) {
     return metricClickRollupRepository.save(new MetricClickRollup(metricClickRollupJson));
+  }
+
+  public MetricClickImport createClickImport(MetricClickImportJson metricClickImportJson) {
+    return metricClickImportRepository.save(new MetricClickImport(metricClickImportJson));
   }
 }

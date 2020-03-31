@@ -19,6 +19,7 @@ public class TargetTest {
       "Description",
       TargetStatus.NOT_STARTED,
       "",
+      "",
       null
     );
 
@@ -35,7 +36,7 @@ public class TargetTest {
 
 
     target2 = new TargetJson(
-1, 1,
+      1, 1,
       "SDT20-123",
       "12QWE1231231231",
       "New Notes",
@@ -46,7 +47,7 @@ public class TargetTest {
     assertArrayEquals(expected, target1.Compare(target2).toArray());
 
     target2 = new TargetJson(
-1, 1,
+      1, 1,
       "SDT21-123",
       "12QWE1231231232",
       "",
