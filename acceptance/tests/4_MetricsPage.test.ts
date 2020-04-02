@@ -50,4 +50,7 @@ Scenario ('Should display other metrics', (I) => {
 
   I.waitForText('Avg Prioritization Actions');
   I.see('0', '.prioritizations');
+
+  I.waitForText('LTIOVs Met');
+  I.see('0%', '.ltiovs-met')
 });

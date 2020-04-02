@@ -49,9 +49,6 @@ import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTarget;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.magpie.metrics.login.MetricLogin;
 import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
-import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTime;
-import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeJson;
-import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSort;
@@ -87,7 +84,6 @@ public class MetricsService {
   private MetricClickGetsRepository metricClickGetsRepository;
   private MetricSiteVisitRepository metricSiteVisitRepository;
   private MetricClickSortRepository metricClickSortRepository;
-  private MetricRfiFetchTimeRepository metricRfiFetchTimeRepository;
   private MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository;
   private MetricChangeRfiRepository metricChangeRfiRepository;
   private MetricClickRefreshRepository metricClickRefreshRepository;
@@ -131,11 +127,6 @@ public class MetricsService {
   @Autowired
   public void setMetricClickSortRepository(MetricClickSortRepository metricClickSortRepository) {
     this.metricClickSortRepository = metricClickSortRepository;
-  }
-
-  @Autowired
-  public void setMetricRfiFetchTimeRepository(MetricRfiFetchTimeRepository metricRfiFetchTimeRepository) {
-    this.metricRfiFetchTimeRepository = metricRfiFetchTimeRepository;
   }
 
   @Autowired
@@ -345,14 +336,6 @@ public class MetricsService {
       metricClickSortJson.getOrder()
     );
     return this.metricClickSortRepository.save(metricClickSort);
-  }
-
-  public MetricRfiFetchTime createRfiFetchTime(MetricRfiFetchTimeJson metricRfiFetchTimeJson) {
-    MetricRfiFetchTime metricRfiFetchTime = new MetricRfiFetchTime(
-      new Date(metricRfiFetchTimeJson.getStartTime()),
-      new Date(metricRfiFetchTimeJson.getEndTime())
-    );
-    return this.metricRfiFetchTimeRepository.save(metricRfiFetchTime);
   }
 
   public List<MetricChangeRfiPriority> addChangeRfiPriority(List<MetricChangeRfiPriority> metricChangeRfiPriorities) {
@@ -582,5 +565,27 @@ public class MetricsService {
 
   public MetricClickImport createClickImport(MetricClickImportJson metricClickImportJson) {
     return metricClickImportRepository.save(new MetricClickImport(metricClickImportJson));
+  }
+
+  public int getLtiovMetPercentage() {
+    List<Rfi> closedRfis = rfiRepository.findAllClosed();
+    int totalRfis = 0;
+    int completedBeforeLtiov = 0;
+
+    for (Rfi rfi : closedRfis) {
+      MetricChangeRfi metricOpen = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(rfi.getRfiNum());
+      MetricChangeRfi metricClose = metricChangeRfiRepository.findStatusChangeToClosedByRfiNum(rfi.getRfiNum());
+      Timestamp rfiLtiov = rfi.getLtiov();
+
+      if (metricOpen != null && metricClose != null &&
+        metricClose.getDatetime().getTime() - metricOpen.getDatetime().getTime() > MillisecondsInADay) {
+        if(rfiLtiov == null || metricClose.getDatetime().before(rfiLtiov)) {
+          completedBeforeLtiov++;
+        }
+        totalRfis++;
+      }
+    }
+
+    return Math.round(((float) completedBeforeLtiov / (float) totalRfis) * 100);
   }
 }

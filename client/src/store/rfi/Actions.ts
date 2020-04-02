@@ -2,9 +2,7 @@ import { RfiActionTypes } from './Types';
 import { RfiDeserializer } from './RfiDeserializer';
 import RfiModel from "./RfiModel";
 import { Field } from '../sort/SortKeyModel';
-import RfiFetchRequestModel from '../metrics/RfiFetchRequestModel';
 import RfiPriorityPostModel from './RfiPriorityPostModel';
-import { postRfiFetchTimeMetric } from '../metrics';
 
 export const sortRfis = (field: Field) => {
   return {type: RfiActionTypes.SORT_RFIS, field: field}
@@ -36,9 +34,8 @@ export const fetchRfiPending = () => {
   }
 };
 
-export const fetchRfiSuccess = (rfis: any, startTime: number) => {
+export const fetchRfiSuccess = (rfis: any) => {
   let rfiList = RfiDeserializer.deserialize(rfis);
-  postRfiFetchTimeMetric(new RfiFetchRequestModel(startTime, new Date().getTime()));
   return {
     type: RfiActionTypes.FETCH_RFI_SUCCESS,
     rfis: rfiList

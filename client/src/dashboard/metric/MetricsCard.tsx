@@ -13,7 +13,7 @@ export class Metric {
 export class MetricCardData {
   constructor(
     public title: string,
-    public metrics: Metric[] | number,
+    public metrics: Metric[] | number | string,
   ) {}
 }
 
@@ -26,7 +26,7 @@ export const MetricCard: React.FC<MyProps> = (props) => {
 
   function printRows() {
     return (
-      typeof(props.data.metrics) === 'number' ?
+      typeof(props.data.metrics) === 'number' || typeof(props.data.metrics) === 'string' ?
         <span>{props.data.metrics}</span>
         :
       props.data.metrics.map((metric: Metric, index: number) =>

@@ -19,8 +19,6 @@ import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
-import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeJson;
-import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
@@ -56,9 +54,6 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Autowired
   private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
-
-  @Autowired
-  private MetricRfiFetchTimeRepository metricRfiFetchTimeRepository;
 
   @Autowired
   private MetricCreateTargetRepository metricCreateTargetRepository;
@@ -170,26 +165,6 @@ public class MetricControllerTest extends BaseIntegrationTest {
       .statusCode(200);
 
     assertEquals(1, metricClickSortRepository.count());
-  }
-
-  @Test
-  public void postCreatesNewRfiFetchTimeMetric() throws Exception {
-    MetricRfiFetchTimeJson metricRfiFetchTimeJson = new MetricRfiFetchTimeJson(12345L, 12350L);
-
-    final String json = objectMapper.writeValueAsString(metricRfiFetchTimeJson);
-
-    given()
-      .port(port)
-      .contentType("application/json")
-      .body(json)
-      .when()
-      .post(MetricController.URI + "/rfi-fetch")
-      .then()
-      .statusCode(200);
-
-    assertEquals(1, metricRfiFetchTimeRepository.findAll().size());
-
-
   }
 
   @Test

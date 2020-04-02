@@ -11,4 +11,6 @@ public interface RfiRepository extends JpaRepository<Rfi, Long> {
 
   @Query("SELECT rfi FROM Rfi rfi WHERE rfi.status = 'CLOSED' AND rfi.receiveDate IS NOT NULL")
   List<Rfi> findAllClosedWithDefinedReceiveDate();
+  @Query("SELECT rfi FROM Rfi rfi WHERE rfi.status = 'CLOSED'")
+  List<Rfi> findAllClosed();
 }

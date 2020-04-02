@@ -104,6 +104,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
   @Before
   public void setup() {
+    rfiRepository.deleteAll();
     metricClickGetsRepository.deleteAll();
     metricSiteVisitRepository.deleteAll();
     metricClickSortRepository.deleteAll();
@@ -118,11 +119,11 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricDeleteTargetRepository.deleteAll();
     metricDeleteSegmentRepository.deleteAll();
     metricDeleteIxnRepository.deleteAll();
+    metricLoginRepository.deleteAll();
     metricUndoExploitDateDeleteRepository.deleteAll();
     metricUndoTargetDeleteRepository.deleteAll();
     metricUndoSegmentDeleteRepository.deleteAll();
     metricUndoIxnDeleteRepository.deleteAll();
-    metricLoginRepository.deleteAll();
   }
 
   @Test
@@ -282,7 +283,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
 
-    TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "", "");
+    TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "",
+      "");
     MetricCreateTarget metric1 = new MetricCreateTarget(1, target);
     MetricCreateTarget metric2 = new MetricCreateTarget(1, target);
     MetricCreateTarget metric3 = new MetricCreateTarget(1, target);
@@ -545,8 +547,50 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       new MetricChangeRfiPriority("ABC-00125", 2, 3, date4),
       new MetricChangeRfiPriority("ABC-00126", 3, 4, date4),
       new MetricChangeRfiPriority("ABC-00127", 4, 5, date4)
-      )));
+    )));
 
     assertEquals(2, metricsService.getAveragePrioritizationsPerWeek());
+  }
+
+  @Test
+  public void returnsPercentageOfRfisThatMeetLTIOV() {
+    assertEquals(0, metricsService.getLtiovMetPercentage());
+
+    Rfi rfi1 = new Rfi("SDT20-321", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(30)), "", "");
+    Rfi rfi2 = new Rfi("SDT20-322", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(20)), "", "");
+    Rfi rfi3 = new Rfi("SDT20-323", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(35)), "", "");
+    Rfi rfi4 = new Rfi("SDT20-324", "", "CLOSED", new Date(), "", null, "", "");
+
+    //status is not closed, ignore
+    Rfi rfi5 = new Rfi("SDT20-325", "", "NEW", new Date(), "", null, "", "");
+    Rfi rfi6 = new Rfi("SDT20-326", "", "OPEN", new Date(), "", null, "", "");
+
+    rfiRepository.saveAll(new ArrayList<>(Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5, rfi6)));
+
+    //closed immediately, ignore
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-321", new Timestamp(convertDaysToMS(7)), "status", "NEW"
+      , "OPEN"));
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-321", new Timestamp(convertDaysToMS(7) + 10000L),
+      "status", "OPEN", "CLOSED"));
+
+    //Closed before LTIOV
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-322", new Timestamp(convertDaysToMS(10)), "status",
+      "NEW", "OPEN"));
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-322", new Timestamp(convertDaysToMS(17) + 10000L),
+      "status", "OPEN", "CLOSED"));
+
+    //Closed after LTIOV
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-323", new Timestamp(convertDaysToMS(20)), "status",
+      "NEW", "OPEN"));
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-323", new Timestamp(convertDaysToMS(41) + 10000L),
+      "status", "OPEN", "CLOSED"));
+
+    //No LTIOV
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-324", new Timestamp(convertDaysToMS(20)), "status",
+      "NEW", "OPEN"));
+    metricChangeRfiRepository.save(new MetricChangeRfi("SDT20-324", new Timestamp(convertDaysToMS(41) + 10000L),
+      "status", "OPEN", "CLOSED"));
+
+    assertEquals(67, metricsService.getLtiovMetPercentage());
   }
 }

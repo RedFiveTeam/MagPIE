@@ -20,6 +20,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [logins, setLogins] = useState(-1);
   const [undos, setUndos] = useState([-1, -1, -1, -1]);
   const [prioritizations, setPrioritizations] = useState(-1);
+  const [ltiovsMet, setLtiovsMet] = useState(-1);
 
   useEffect(() => {
     fetchMetric('workflow-time')
@@ -88,6 +89,15 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
     fetchMetric('prioritizations-per-week')
       .then(response => response.json())
       .then(prioritizations => setPrioritizations(prioritizations))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchMetric('percent-rfis-met-ltiov')
+      .then(response => response.json())
+      .then(ltiovsMet => setLtiovsMet(ltiovsMet))
       .catch((reason) => {
         console.log(reason);
       });
@@ -177,6 +187,14 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
           <StyledMetricCard
             data={new MetricCardData('Avg Prioritization Actions', prioritizations)}
             className={'prioritizations'}
+          />
+          :
+          null
+        }
+        {ltiovsMet > -1 ?
+          <StyledMetricCard
+            data={new MetricCardData('LTIOVs Met', ltiovsMet + '%')}
+            className={'ltiovs-met'}
           />
           :
           null

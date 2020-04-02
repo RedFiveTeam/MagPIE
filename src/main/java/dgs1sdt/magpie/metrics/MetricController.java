@@ -9,8 +9,6 @@ import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
-import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTime;
-import dgs1sdt.magpie.metrics.rfiFetchTime.MetricRfiFetchTimeJson;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSort;
 import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,14 +88,14 @@ public class MetricController {
     return metricsService.getAveragePrioritizationsPerWeek();
   }
 
+  @GetMapping(path = "/percent-rfis-met-ltiov")
+  public int getLtiovMetPercentage() {
+    return metricsService.getLtiovMetPercentage();
+  }
+
   @PostMapping(path = "/site-visit")
   public void addSiteVisit() {
     metricsService.addSiteVisit();
-  }
-
-  @PostMapping(path = "/rfi-fetch")
-  public MetricRfiFetchTime createRfiFetchTime(@Valid @RequestBody MetricRfiFetchTimeJson metricRfiFetchTimeJson) {
-    return metricsService.createRfiFetchTime(metricRfiFetchTimeJson);
   }
 
   @PostMapping(path = "/cancel-add-segment/{targetId}")

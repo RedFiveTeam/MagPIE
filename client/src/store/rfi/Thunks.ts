@@ -5,12 +5,11 @@ import { Field, SortKeyModel } from '../sort/SortKeyModel';
 import { fetchRfiPending, fetchRfiSuccess, fetchRfiUpdating, postRfiPriorityUpdate, reprioritizeRfis } from './Actions';
 
 export const fetchRfis = () => {
-  let startTime: number = new Date().getTime();
   return (dispatch: any) => {
     return fetch('/api/rfi')
       .then(dispatch(fetchRfiPending()))
       .then(response => response.json())
-      .then(rfis => dispatch(fetchRfiSuccess(rfis, startTime)))
+      .then(rfis => dispatch(fetchRfiSuccess(rfis)))
       .catch((reason => {console.log("Failed to fetch RFIs: " + reason)}));
   }
 };

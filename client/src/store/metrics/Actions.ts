@@ -1,7 +1,6 @@
 import { MetricsActionTypes } from './Types';
 import GetsClickRequestModel from './GetsClickRequestModel';
 import SortClickRequestModel from './SortClickRequestModel';
-import RfiFetchRequestModel from './RfiFetchRequestModel';
 import { TrackNarrativeClickModel } from './TrackNarrativeClickModel';
 import { RollupClickModel } from './RollupClickModel';
 import { ImportClickModel } from './ImportClickModel';
@@ -75,21 +74,6 @@ export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
     },
   ).catch((reason) => {
     console.log('Failed to post sort click metrics: ' + reason);
-  });
-};
-
-export const postRfiFetchTimeMetric = (rfiFetchRequestModel: RfiFetchRequestModel) => {
-  fetch('/api/metrics/rfi-fetch',
-    {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(rfiFetchRequestModel),
-    },
-  ).catch((reason) => {
-    console.log('Failed to post RFI fetch time metrics: ' + reason);
   });
 };
 
