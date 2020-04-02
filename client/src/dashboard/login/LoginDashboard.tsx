@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import UserIcon from '../../resources/icons/UserIcon';
 import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
 import { useCookies } from 'react-cookie';
+import { Page } from '../../utils';
 
 interface MyProps {
   className?: string;
@@ -66,10 +67,10 @@ export const LoginDashboard: React.FC<MyProps> = (props) => {
 
   const handleResponse = (status: number) => {
     if (status === 201)
-      setUserCookie('magpie', {userName: signUpUsername, segments: []},
+      setUserCookie('magpie', {userName: signUpUsername, segments: [], viewState: {page: Page.RFI, id: -1}},
                     {expires: new Date(new Date().getTime() + cookieValidTimeInMS)});
     else if (status === 200)
-      setUserCookie('magpie', {userName: username, segments: []},
+      setUserCookie('magpie', {userName: username, segments: [], viewState: {page: Page.RFI, id: -1}},
                     {expires: new Date(new Date().getTime() + cookieValidTimeInMS)});
     else if (status === 409)
       setVerifyError('Account already exists');

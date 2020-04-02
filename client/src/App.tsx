@@ -14,6 +14,7 @@ import { createStyles } from '@material-ui/core';
 import { SnackbarProvider } from 'notistack';
 import { useCookies } from 'react-cookie';
 import { StyledMetricsDashboard } from './dashboard/metric/MetricsDashboard';
+import { Cookie } from './utils';
 
 interface AppProps {
   store: Store<ApplicationState>;
@@ -39,6 +40,7 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
   const classes = snackbarStyle();
 
   const [userCookie] = useCookies(['magpie']);
+  let cookie: Cookie | undefined = userCookie.magpie;
 
   return (
     <SnackbarProvider
@@ -56,7 +58,7 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
               <Switch>
                 <Route exact path={'/'}
                        render={(props) =>
-                         <StyledDashboardContainer {...props} user={userCookie.magpie}/>}
+                         <StyledDashboardContainer {...props} cookie={cookie}/>}
                 />
                 <Route exact path={'/metrics'} component={StyledMetricsDashboard}/>
               </Switch>

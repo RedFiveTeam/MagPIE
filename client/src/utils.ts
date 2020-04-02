@@ -28,3 +28,20 @@ export enum RowAction {
   DELETING,
   SUBMITTING
 }
+
+export enum Page {
+  RFI = 'RFI_PAGE',
+  TGT = 'TGT_PAGE',
+  IXN = 'IXN_PAGE'
+}
+
+interface ViewState {
+  page: Page;
+  id: number;
+}
+
+export interface Cookie {
+  userName: string;
+  segments: number[];
+  viewState: ViewState
+}

@@ -12,17 +12,19 @@ import { fetchLocalUpdate, fetchRfis } from '../store/rfi/Thunks';
 import { postSiteVisit } from '../store/metrics';
 import { loadTgtPage } from '../store/tgt/Thunks';
 import { StyledLoginDashboard } from './login/LoginDashboard';
+import { Cookie, Page } from '../utils';
+import { navigateToIxnPage } from '../store/ixn';
 
 interface Props {
   fetchRfis: () => void;
   postSiteVisit: () => Promise<any>;
   fetchLocalUpdate: () => void;
   loadTgtPage: (rfi: RfiModel, firstLoad: boolean) => void;
-  rfi: RfiModel | undefined;
+  rfi: RfiModel|undefined;
   loading: boolean;
   viewTgtPage: boolean;
   viewIxnPage: boolean;
-  user: string | undefined;
+  cookie: Cookie | undefined;
   className?: string;
 }
 
@@ -39,27 +41,31 @@ export class DashboardContainer extends React.Component<Props, any> {
 
     this.props.postSiteVisit()
       .catch((reason => {
-        console.log('Failed to post sort click metric: ' + reason);
+        console.log('Failed to post site visit metric: ' + reason);
       }));
     this.props.fetchRfis();
   }
 
   private refreshRfis() {
-    if (!this.props.loading && !this.props.viewTgtPage)
+    if (!this.props.loading && !this.props.viewTgtPage) {
       this.props.fetchLocalUpdate();
+    }
   }
 
   private refreshTgts() {
-    if (this.props.viewTgtPage && !this.props.viewIxnPage && this.props.rfi)
+    if (this.props.viewTgtPage && !this.props.viewIxnPage && this.props.rfi) {
       this.props.loadTgtPage(this.props.rfi, false);
+    }
   }
 
   render() {
-    if (this.props.user === undefined)
+    if (this.props.cookie === undefined) {
       return <StyledLoginDashboard/>;
+    }
 
-    if (this.props.loading)
+    if (this.props.loading) {
       return <StyledLoadingScreen/>;
+    }
 
     if (this.props.viewIxnPage) {
       return <StyledIxnDashboard/>;
@@ -67,6 +73,13 @@ export class DashboardContainer extends React.Component<Props, any> {
 
     if (this.props.viewTgtPage) {
       return <StyledTgtDashboard/>;
+    }
+
+    if (this.props.cookie.viewState.page !== Page.RFI) {
+      //set up some state!
+      if (this.props.cookie.viewState.page === Page.TGT) {
+
+      }
     }
 
     return (
@@ -89,6 +102,7 @@ const mapDispatchToProps = {
   postSiteVisit: postSiteVisit,
   fetchLocalUpdate: fetchLocalUpdate,
   loadTgtPage: loadTgtPage,
+  navigateToIxnPage: navigateToIxnPage,
 };
 
 export const StyledDashboardContainer = styled(
