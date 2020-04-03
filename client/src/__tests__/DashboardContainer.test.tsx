@@ -2,7 +2,6 @@ import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { StyledTgtDashboard } from '../dashboard/tgt/TgtDashboard';
 import { StyledRfiDashboard } from '../dashboard/rfi/RfiDashboard';
-import '../setupEnzyme';
 import { StyledIxnDashboard } from '../dashboard/ixn/IxnDashboard';
 import { DashboardContainer } from '../dashboard/DashboardContainer';
 import { StyledLoadingScreen } from '../dashboard/components/loading/LoadingScreen';

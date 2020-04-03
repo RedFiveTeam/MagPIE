@@ -1,6 +1,5 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import '../../setupEnzyme';
 import { RfiStatus } from '../../store/rfi/RfiModel';
 import { RfiRowButtonSection } from '../../dashboard/rfi/region/row/RfiRowButtonSection';
 

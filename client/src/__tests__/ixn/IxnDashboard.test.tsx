@@ -1,4 +1,3 @@
-import '../../setupEnzyme';
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { IxnDashboard } from '../../dashboard/ixn/IxnDashboard';
@@ -6,7 +5,6 @@ import { StyledIxnDashboardHeader } from '../../dashboard/ixn/IxnDashboardHeader
 import { StyledIxnTable } from '../../dashboard/ixn/table/IxnTable';
 import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import configureStore from '../../configureStore';
-import { initStore } from '../../setupEnzyme';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { Provider } from 'react-redux';
 import { StyledTableHeader } from '../../dashboard/components/header/TableHeader';
@@ -17,6 +15,7 @@ import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledMiniSegmentRegion } from '../../dashboard/ixn/rollup/MiniSegmentRegion';
 import { StyledMiniSegmentDivider } from '../../dashboard/ixn/rollup/MiniSegmentDivider';
 import { StyledMiniIxnRow } from '../../dashboard/ixn/rollup/MiniIxnRow';
+import { initStore } from '../../../setupTests';
 
 let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '',
                              TargetStatus.NOT_STARTED, '', '');

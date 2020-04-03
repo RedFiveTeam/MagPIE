@@ -1,5 +1,4 @@
 import { TgtDashboard } from '../../dashboard/tgt/TgtDashboard';
-import '../../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
@@ -8,7 +7,7 @@ import { SnackbarProvider } from 'notistack';
 import { Provider } from 'react-redux';
 import configureStore from '../../configureStore';
 import { StyledTgtDateDivider } from '../../dashboard/tgt/table/TgtDateDivider';
-import { initStore } from '../../setupTests';
+import { initStore } from '../../../setupTests';
 
 const initState = {
   ...initStore

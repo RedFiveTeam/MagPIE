@@ -1,4 +1,3 @@
-import '../../setupEnzyme';
 import { shallow } from 'enzyme';
 import { TgtDashboardHeader } from '../../dashboard/tgt/TgtDashboardHeader';
 import * as React from 'react';

@@ -1,13 +1,15 @@
-import { configure } from 'enzyme';
+// @ts-ignore
+import Enzyme from 'enzyme';
+//@ts-ignore
 import EnzymeAdapter from 'enzyme-adapter-react-16';
-import { ApplicationState } from './store';
-import { ixnInitState } from './store/ixn/Reducer';
-import { rfiInitState } from './store/rfi';
-import { tgtInitState } from './store/tgt';
-import { metricsInitState } from './store/metrics';
+import { ApplicationState } from './src/store';
+import { ixnInitState } from './src/store/ixn/Reducer';
+import { rfiInitState } from './src/store/rfi';
+import { tgtInitState } from './src/store/tgt';
+import { metricsInitState } from './src/store/metrics';
 import { RouterState } from 'connected-react-router';
 
-configure({adapter: new EnzymeAdapter()});
+Enzyme.configure({adapter: new EnzymeAdapter()});
 
 const initRouter: RouterState =
   {
@@ -17,7 +19,7 @@ const initRouter: RouterState =
       state: 'S',
       hash: 'Hash',
     },
-    action: 'PUSH'
+    action: 'PUSH',
   };
 
 export const initStore: ApplicationState = {

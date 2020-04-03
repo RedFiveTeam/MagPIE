@@ -1,4 +1,3 @@
-import '../../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { TgtRow } from '../../dashboard/tgt/table/TgtRow';

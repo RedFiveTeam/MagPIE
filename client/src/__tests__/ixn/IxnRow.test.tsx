@@ -1,4 +1,3 @@
-import '../../setupEnzyme';
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { IxnRow } from '../../dashboard/ixn/table/IxnRow';

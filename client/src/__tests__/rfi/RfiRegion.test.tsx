@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import '../../setupEnzyme';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { RfiRegion } from '../../dashboard/rfi/region/RfiRegion';
 import { StyledRfiRegionDivider } from '../../dashboard/rfi/region/RfiRegionDivider';

@@ -1,4 +1,3 @@
-import '../../setupEnzyme';
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';

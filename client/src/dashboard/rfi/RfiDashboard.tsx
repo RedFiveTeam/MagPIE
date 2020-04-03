@@ -35,6 +35,7 @@ function openRfis(rfis: RfiModel[], scrollRegionRef: any, sortKey: SortKeyModel)
       <Draggable draggableId={rfi.rfiNum} index={index} key={rfi.rfiNum}>
         {(provided, snapshot) => {
           return (
+          // @ts-ignore
             <div
               {...provided.draggableProps}
               {...provided.dragHandleProps}

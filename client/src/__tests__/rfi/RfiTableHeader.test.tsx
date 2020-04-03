@@ -1,4 +1,3 @@
-import '../../setupEnzyme';
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import '../setupEnzyme';
 import { mount, ReactWrapper } from 'enzyme';
 import { TableHeader } from '../dashboard/components/header/TableHeader';
 

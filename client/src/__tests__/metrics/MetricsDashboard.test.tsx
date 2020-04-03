@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import '../../setupEnzyme';
 import { MetricsDashboard } from '../../dashboard/metric/MetricsDashboard';
 import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
 
