@@ -36,8 +36,9 @@ public class TargetController {
   }
 
   @PostMapping(path = "/post")
-  public void postTarget(@Valid @RequestBody TargetJson targetJson) {
-    targetService.postTarget(targetJson);
+  public void postTarget(@Valid @RequestBody TargetJson targetJson, @RequestParam(name = "userName", defaultValue =
+    "") String userName) {
+    targetService.postTarget(targetJson, userName);
   }
 
   @PostMapping(path = "/dates/post")

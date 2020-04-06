@@ -22,14 +22,18 @@ public class MetricChangeIxn implements TimestampMetric {
   @Column(length = 65535)
   private String newData;
 
+  private String userName;
+
   public MetricChangeIxn(
     String field,
     IxnJson newIxn,
-    Timestamp timestamp
+    Timestamp timestamp,
+    String userName
   ) throws Exception {
     this.ixnId = newIxn.getId();
     this.field = field;
     this.timestamp = timestamp;
+    this.userName = userName.toLowerCase();
 
     switch (field) {
       case "exploit_analyst":

@@ -27,8 +27,9 @@ public class MetricCreateTarget implements TimestampMetric {
   private String notes;
   private String description;
   private Timestamp timestamp;
+  private String userName;
 
-  public MetricCreateTarget(long targetId, TargetJson target) {
+  public MetricCreateTarget(long targetId, TargetJson target, String userName) {
     this.rfiId = target.getRfiId();
     this.exploitDateId = target.getExploitDateId();
     this.targetId = targetId;
@@ -37,5 +38,6 @@ public class MetricCreateTarget implements TimestampMetric {
     this.notes = target.getNotes();
     this.description = target.getDescription();
     this.timestamp = new Timestamp(new Date().getTime());
+    this.userName = userName.toLowerCase();
   }
 }

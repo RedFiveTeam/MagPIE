@@ -19,6 +19,6 @@ public class User {
   private String userName;
 
   public User(String userName) {
-    this.userName = userName;
+    this.userName = userName.toLowerCase();
   }
 }

@@ -87,11 +87,11 @@ public class TargetService {
     return dates;
   }
 
-  public void postTarget(TargetJson targetJson) {
+  public void postTarget(TargetJson targetJson, String userName) {
     if (targetJson.getTargetId() > 0) {
-      editTarget(targetJson);
+      editTarget(targetJson, userName);
     } else {
-      addTarget(targetJson);
+      addTarget(targetJson, userName);
     }
   }
 
@@ -212,7 +212,7 @@ public class TargetService {
     }
   }
 
-  private void addTarget(TargetJson targetJson) {
+  private void addTarget(TargetJson targetJson, String userName) {
     long exploitDateId = targetJson.getExploitDateId();
 
     Target target = new Target(targetJson.getRfiId(), exploitDateId, targetJson);
@@ -225,7 +225,7 @@ public class TargetService {
         if (exploitDateRepository.findById(exploitDateId).isPresent()) {
           long lastTargetId = targetRepository.findAll().get(targetRepository.findAll().size() - 1).getId();
 
-          metricsService.addCreateTarget(lastTargetId, targetJson);
+          metricsService.addCreateTarget(lastTargetId, targetJson, userName);
         } else {
           System.err.println("Error finding exploit date by id: " + exploitDateId);
         }
@@ -235,7 +235,7 @@ public class TargetService {
     }
   }
 
-  private void editTarget(TargetJson targetJson) {
+  private void editTarget(TargetJson targetJson, String userName) {
     if (targetRepository.findById(targetJson.getTargetId()).isPresent()) {
       long exploitDateId = targetRepository.findById(targetJson.getTargetId()).get().getExploitDateId();
       if (exploitDateRepository.findById(exploitDateId).isPresent()) {
@@ -254,7 +254,7 @@ public class TargetService {
           this.metricsService.addUndoTargetDelete(oldTarget.getId());
           newTarget.setDeleted(null);
         } else {
-          this.metricsService.addChangeTarget(oldTarget, targetJson);
+          this.metricsService.addChangeTarget(oldTarget, targetJson, userName);
         }
 
         targetRepository.save(newTarget);

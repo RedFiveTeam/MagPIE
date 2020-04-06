@@ -124,8 +124,8 @@ export const postTargetDelete = (tgtId: number) => {
   );
 };
 
-export const postTarget = (target: TargetPostModel) => {
-  return fetch('/api/targets/post',
+export const postTarget = (target: TargetPostModel, userName: string) => {
+  return fetch('/api/targets/post?userName=' + userName,
     {
       method: 'post',
       headers: {

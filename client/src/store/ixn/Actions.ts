@@ -32,9 +32,9 @@ export const exitIxnPage = () => {
   };
 };
 
-export const saveRollup = (newTarget: TargetPostModel, dateString: string) => {
+export const saveRollup = (newTarget: TargetPostModel, dateString: string, userName: string) => {
   return (dispatch: any) => {
-    postTarget(newTarget)
+    postTarget(newTarget, userName)
       .then(response => fetch('/api/targets?rfiId=' + newTarget.rfiId))
       .then(response => response.json())
       .then((targets: TargetModel[]) => dispatch(navigateToIxnPage(targets.find((target) => target.id ===
@@ -66,9 +66,9 @@ export const updateSegment = (segment: SegmentModel) => {
   };
 };
 
-export const updateIxn = (ixn: IxnModel) => {
+export const updateIxn = (ixn: IxnModel, userName: string) => {
   return (dispatch: any) => {
-    postIxn(ixn)
+    postIxn(ixn, userName)
       .then(response => fetchSegments(ixn.targetId))
       .then(segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments), !ixn.id)))
       .catch((reason) => {
@@ -161,8 +161,8 @@ export const postSegment = (segment: SegmentModel) => {
   });
 };
 
-export const postIxn = (ixn: IxnModel) => {
-  return fetch('/api/ixn/post',
+export const postIxn = (ixn: IxnModel, userName: string) => {
+  return fetch('/api/ixn/post?userName=' + userName,
     {
       method: 'post',
       headers: {

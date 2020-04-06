@@ -246,7 +246,16 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson);
+    String json = objectMapper.writeValueAsString(targetJson);
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(TargetController.URI + "/post?userName=William.Robert.Joseph")
+      .then()
+      .statusCode(200);
 
     Target target = targetRepository.findAll().get(0);
 
@@ -257,7 +266,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals("These are some EEI notes", target.getNotes());
     assertEquals("This is a description", target.getDescription());
 
-
     targetJson = new TargetJson(
       rfiId,
       exploitDateId,
@@ -267,7 +275,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a unique description"
     );
 
-    targetController.postTarget(targetJson);
+    targetController.postTarget(targetJson, "billy.bob.joe");
     assertEquals(1, targetRepository.findAll().size());
 
     assertEquals(1, metricCreateTargetRepository.findAll().size());
@@ -277,6 +285,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals(target.getRfiId(), metric.getRfiId());
     assertEquals(target.getExploitDateId(), metric.getExploitDateId());
     assertEquals(target.getId(), metric.getTargetId());
+    assertEquals("william.robert.joseph", metric.getUserName());
   }
 
   @Test
@@ -366,8 +375,8 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson1);
-    targetController.postTarget(targetJson2);
+    targetController.postTarget(targetJson1, "billy.bob.joe");
+    targetController.postTarget(targetJson2, "billy.bob.joe");
 
     long id = exploitDateRepository.findAll().get(0).getId();
 
@@ -398,7 +407,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson);
+    targetController.postTarget(targetJson, "billy.bob.joe");
     long targetId = targetRepository.findAll().get(0).getId();
 
     assertEquals(0, targetController.deleteTarget(targetId).size());
@@ -409,7 +418,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertEquals(0, targetController.getTargets(rfiId).size());
 
-    targetController.postTarget(targetJson);
+    targetController.postTarget(targetJson, "billy.bob.joe");
     targetId = targetRepository.findAll().get(1).getId();
 
     given()
@@ -447,8 +456,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-
-    targetController.postTarget(targetJson);
+    targetController.postTarget(targetJson, "billy.bob.joe");
     long targetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, "SDT20-123").getId();
 
     TargetJson targetEditJson = new TargetJson(
@@ -462,8 +470,17 @@ public class TargetControllerTest extends BaseIntegrationTest {
       TargetStatus.NOT_STARTED,
       "",
       "");
+    String json = objectMapper.writeValueAsString(targetEditJson);
 
-    targetController.postTarget(targetEditJson);
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(TargetController.URI + "/post?userName=William.robert.joseph")
+      .then()
+      .statusCode(200);
+
     Target target = targetRepository.findAll().get(0);
 
     assertEquals(1, targetRepository.findAll().size());
@@ -483,9 +500,11 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals(targetId, metric1.getTargetId());
     assertEquals("notes", metric1.getField());
     assertEquals("These are some RAD supercool EEI notes", metric1.getNewData());
+    assertEquals("william.robert.joseph", metric1.getUserName());
     assertEquals(targetId, metric2.getTargetId());
     assertEquals("description", metric2.getField());
     assertEquals("This is a different description", metric2.getNewData());
+    assertEquals("william.robert.joseph", metric2.getUserName());
 
     targetEditJson = new TargetJson(
       targetId,
@@ -499,7 +518,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a rollup",
       "");
 
-    String json = objectMapper.writeValueAsString(targetEditJson);
+    json = objectMapper.writeValueAsString(targetEditJson);
 
     given()
       .port(port)
@@ -589,8 +608,8 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson);
-    targetController.postTarget(targetJsonConflict);
+    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(targetJsonConflict, "billy.bob.joe");
 
     long targetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, "SDT20-123").getId();
 
@@ -606,7 +625,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "",
       "");
 
-    targetController.postTarget(updatedTargetJson);
+    targetController.postTarget(updatedTargetJson, "billy.bob.joe");
 
     assertEquals("SDT20-123", targetRepository.findById(targetId).get().getName());
 
@@ -633,7 +652,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson);
+    targetController.postTarget(targetJson, "billy.bob.joe");
 
     Target target = targetRepository.findAll().get(0);
     long targetId = target.getId();
@@ -719,7 +738,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     targetController.deleteTarget(targetId);
 
-    targetController.postTarget(targetJson);
+    targetController.postTarget(targetJson, "billy.bob.joe");
 
     assertEquals(numTargets, targetRepository.findAll().size());
     assertEquals(1, metricUndoTargetDeleteRepository.findAll().size());
@@ -739,7 +758,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
 
-    targetController.postTarget(targetJson);
+    targetController.postTarget(targetJson, "billy.bob.joe");
 
     long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetName).getId();
 
@@ -798,7 +817,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
 
-    targetController.postTarget(targetJson);
+    targetController.postTarget(targetJson, "billy.bob.joe");
 
     long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetName).getId();
 

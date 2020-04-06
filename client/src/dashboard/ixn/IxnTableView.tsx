@@ -75,7 +75,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
     setTimeout(() => {
       setEditIxn(-1);
     }, 300);
-    dispatch(updateIxn(ixn));
+    dispatch(updateIxn(ixn, props.userName));
   };
 
   const handleDeleteIxn = (ixn: IxnModel) => {

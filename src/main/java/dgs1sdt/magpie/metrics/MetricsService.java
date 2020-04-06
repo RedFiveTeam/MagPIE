@@ -350,8 +350,8 @@ public class MetricsService {
     return this.metricChangeExploitDateRepository.save(new MetricChangeExploitDate(exploitDate));
   }
 
-  public MetricCreateTarget addCreateTarget(long targetId, TargetJson target) {
-    return this.metricCreateTargetRepository.save(new MetricCreateTarget(targetId, target));
+  public MetricCreateTarget addCreateTarget(long targetId, TargetJson target, String userName) {
+    return this.metricCreateTargetRepository.save(new MetricCreateTarget(targetId, target, userName));
   }
 
   public MetricDeleteExploitDate addDeleteExploitDate(long exploitDateId) {
@@ -362,7 +362,7 @@ public class MetricsService {
     return this.metricDeleteTargetRepository.save(new MetricDeleteTarget(targetId));
   }
 
-  public List<MetricChangeTarget> addChangeTarget(Target oldTarget, TargetJson newTarget) {
+  public List<MetricChangeTarget> addChangeTarget(Target oldTarget, TargetJson newTarget, String userName) {
     List<MetricChangeTarget> metrics = new ArrayList<>();
     Timestamp now = new Timestamp(new Date().getTime());
     for (String field : oldTarget.Compare(newTarget)) {
@@ -370,7 +370,8 @@ public class MetricsService {
         MetricChangeTarget changeTarget = new MetricChangeTarget(
           field,
           newTarget,
-          now
+          now,
+          userName
         );
         metrics.add(changeTarget);
       } catch (Exception e) {
@@ -392,20 +393,20 @@ public class MetricsService {
     return metricDeleteSegmentRepository.save(new MetricDeleteSegment(segmentId, hadIxns));
   }
 
-  public MetricCreateIxn addCreateIxn(long ixnId, IxnJson ixn) {
-    return metricCreateIxnRepository.save(new MetricCreateIxn(ixnId, ixn));
+  public MetricCreateIxn addCreateIxn(long ixnId, IxnJson ixn, String userName) {
+    return metricCreateIxnRepository.save(new MetricCreateIxn(ixnId, ixn, userName));
   }
 
   public MetricDeleteIxn addDeleteIxn(long ixnId) {
     return metricDeleteIxnRepository.save(new MetricDeleteIxn(ixnId));
   }
 
-  public List<MetricChangeIxn> addChangeIxn(IxnJson newIxn, Ixn oldIxn) {
+  public List<MetricChangeIxn> addChangeIxn(IxnJson newIxn, Ixn oldIxn, String userName) {
     List<MetricChangeIxn> metrics = new ArrayList<>();
     Timestamp now = new Timestamp(new Date().getTime());
     for (String field : oldIxn.Compare(newIxn)) {
       try {
-        metrics.add(new MetricChangeIxn(field, newIxn, now));
+        metrics.add(new MetricChangeIxn(field, newIxn, now, userName));
       } catch (Exception e) {
         System.err.println("Error creating change ixn metric with unknown field: " + field);
       }

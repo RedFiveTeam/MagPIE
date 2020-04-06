@@ -18,6 +18,7 @@ import { postRollupClick } from '../../store/metrics';
 import { RollupClickModel } from '../../store/metrics/RollupClickModel';
 import { RollupMode, StyledRollupView } from './RollupView';
 import { IxnTableView } from './IxnTableView';
+import { Cookie } from '../../utils';
 
 interface Props {
   className?: string
@@ -35,7 +36,8 @@ export const IxnDashboard: React.FC<Props> = props => {
   const [tgtAnalyst, setTgtAnalyst] = useState('');
   const [rollupMode, setRollupMode] = useState(false);
 
-  const [cookie, setCookie] = useCookies(['magpie']);
+  const [cookies, setCookies] = useCookies(['magpie']);
+  let cookie: Cookie = cookies.magpie;
 
   const rowClasses = rowStyles();
 
@@ -51,25 +53,25 @@ export const IxnDashboard: React.FC<Props> = props => {
   const dispatch = useDispatch();
 
   const handleCollapse = (segmentId: number) => {
-    let segments = cookie.magpie.segments;
+    let segments = cookie.segments;
     if (segments.includes(segmentId)) {
       segments.splice(segments.indexOf(segmentId), 1);
     } else {
       segments.push(segmentId);
     }
-    setCookie('magpie', {...cookie.magpie, segments: segments});
+    setCookies('magpie', {...cookie, segments: segments});
   };
 
   const handleExitIxnPage = () => {
     setTimeout(() => {
-      setCookie('magpie', {...cookie.magpie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
+      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
       dispatch(exitIxnPage());
     }, 250);
   };
 
   const handleShowRollup = () => {
     setRollupMode(true);
-    postRollupClick(new RollupClickModel(target.id, cookie.magpie.userName));
+    postRollupClick(new RollupClickModel(target.id, cookie.userName));
   };
 
   const handleExitRollupMode = () => {
@@ -86,7 +88,7 @@ export const IxnDashboard: React.FC<Props> = props => {
       newTarget = new TargetPostModel(target.id, target.rfiId, target.exploitDateId, target.name, target.mgrs,
                                       target.notes, target.description, target.status, rollup, target.allCallouts);
     }
-    dispatch(saveRollup(newTarget, dateString));
+    dispatch(saveRollup(newTarget, dateString, cookie.userName));
     displaySnackbar('Rollup Saved');
   };
 
@@ -113,7 +115,7 @@ export const IxnDashboard: React.FC<Props> = props => {
             exitRollupMode={handleExitRollupMode}
             saveRollup={handleSaveRollup}
             displaySnackbar={handleDisplaySnackbar}
-            userName={cookie.magpie.userName}
+            userName={cookie.userName}
           />
           :
           <IxnTableView
@@ -123,9 +125,9 @@ export const IxnDashboard: React.FC<Props> = props => {
             autofocus={autofocus}
             tgtAnalyst={tgtAnalyst}
             setTgtAnalyst={setTgtAnalyst}
-            collapsedSegments={cookie.magpie.segments}
+            collapsedSegments={cookie.segments}
             collapse={handleCollapse}
-            userName={cookie.magpie.userName}
+            userName={cookie.userName}
             dateString={moment(dateString, 'MM/DD/YYYY').format('DDMMMYY').toUpperCase()}
           />
       }

@@ -34,8 +34,9 @@ public class MetricCreateIxn implements TimestampMetric {
   private String finalChecker;
 
   private Timestamp timestamp;
+  private String userName;
 
-  public MetricCreateIxn(long ixnId, IxnJson ixn) {
+  public MetricCreateIxn(long ixnId, IxnJson ixn, String userName) {
     this.rfiId = ixn.getRfiId();
     this.exploitDateId = ixn.getExploitDateId();
     this.targetId = ixn.getTargetId();
@@ -48,5 +49,6 @@ public class MetricCreateIxn implements TimestampMetric {
     this.leadChecker = ixn.getLeadChecker();
     this.finalChecker = ixn.getFinalChecker();
     this.timestamp = new Timestamp(new Date().getTime());
+    this.userName = userName.toLowerCase();
   }
 }

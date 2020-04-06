@@ -39,8 +39,8 @@ public class IxnController {
   }
 
   @PostMapping(path = "/post")
-  public void postIxn(@Valid @RequestBody IxnJson ixnJson) {
-    ixnService.postIxn(ixnJson);
+  public void postIxn(@Valid @RequestBody IxnJson ixnJson, @RequestParam(name="userName", defaultValue = "") String userName) {
+    ixnService.postIxn(ixnJson, userName);
   }
 
   @DeleteMapping(path = "/{ixnId}")

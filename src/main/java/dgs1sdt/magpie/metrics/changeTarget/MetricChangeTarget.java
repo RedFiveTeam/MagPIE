@@ -22,14 +22,18 @@ public class MetricChangeTarget implements TimestampMetric {
   @Column(length = 65535)
   private String newData;
 
+  private String userName;
+
   public MetricChangeTarget(
     String field,
     TargetJson newTarget,
-    Timestamp now
+    Timestamp now,
+    String userName
   ) throws Exception {
     this.targetId = newTarget.getTargetId();
     this.field = field;
     this.timestamp = now;
+    this.userName = userName.toLowerCase();
 
     switch (field) {
       case "name":

@@ -36,8 +36,8 @@ public class LoginController {
 
   @PostMapping
   public ResponseEntity login(@Valid @RequestBody String userName) {
-    if (userRepository.findByUserName(userName) != null) {
-      metricsService.addLoginMetric(userName);
+    if (userRepository.findByUserName(userName.toLowerCase()) != null) {
+      metricsService.addLoginMetric(userName.toLowerCase());
       return new ResponseEntity(HttpStatus.OK);
     }
     return new ResponseEntity(HttpStatus.UNAUTHORIZED);
@@ -45,11 +45,11 @@ public class LoginController {
 
   @PostMapping(path = "/register")
   public ResponseEntity registerNewUser(@Valid @RequestBody String userName) {
-    if (userRepository.findByUserName(userName) != null) {
+    if (userRepository.findByUserName(userName.toLowerCase()) != null) {
       return new ResponseEntity(HttpStatus.CONFLICT);
     }
     userRepository.save(new User(userName));
-    metricsService.addLoginMetric(userName);
+    metricsService.addLoginMetric(userName.toLowerCase());
     return new ResponseEntity(HttpStatus.CREATED);
   }
 }

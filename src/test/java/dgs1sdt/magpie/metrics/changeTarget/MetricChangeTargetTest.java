@@ -21,10 +21,10 @@ public class MetricChangeTargetTest {
 
     Timestamp now = new Timestamp(new Date().getTime());
 
-    MetricChangeTarget metric1 = new MetricChangeTarget("name", target2, now);
-    MetricChangeTarget metric2 = new MetricChangeTarget("mgrs", target2, now);
-    MetricChangeTarget metric3 = new MetricChangeTarget("notes", target2, now);
-    MetricChangeTarget metric4 = new MetricChangeTarget("description", target2, now);
+    MetricChangeTarget metric1 = new MetricChangeTarget("name", target2, now, "billy.bob.joe");
+    MetricChangeTarget metric2 = new MetricChangeTarget("mgrs", target2, now, "billy.bob.joe");
+    MetricChangeTarget metric3 = new MetricChangeTarget("notes", target2, now, "billy.bob.joe");
+    MetricChangeTarget metric4 = new MetricChangeTarget("description", target2, now, "billy.bob.joe");
 
     assertEquals("name", metric1.getField());
     assertEquals("SDT20-124", metric1.getNewData());

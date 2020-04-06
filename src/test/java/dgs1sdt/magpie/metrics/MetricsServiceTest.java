@@ -220,7 +220,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       "And an improved description"
     );
 
-    metricsService.addChangeTarget(oldTarget, newTarget);
+    metricsService.addChangeTarget(oldTarget, newTarget, "bbj");
     assertEquals(4, metricChangeTargetRepository.findAll().size());
 
     MetricChangeTarget name = metricChangeTargetRepository.findAll()
@@ -298,15 +298,15 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "",
       "");
-    MetricCreateTarget metric1 = new MetricCreateTarget(1, target);
-    MetricCreateTarget metric2 = new MetricCreateTarget(1, target);
-    MetricCreateTarget metric3 = new MetricCreateTarget(1, target);
-    MetricCreateTarget metric4 = new MetricCreateTarget(1, target);
-    MetricCreateTarget metric5 = new MetricCreateTarget(1, target);
-    MetricCreateTarget metric6 = new MetricCreateTarget(1, target);
-    MetricCreateTarget metric7 = new MetricCreateTarget(1, target);
-    MetricCreateTarget metric8 = new MetricCreateTarget(1, target);
-    MetricCreateTarget metric9 = new MetricCreateTarget(1, target);
+    MetricCreateTarget metric1 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric2 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric3 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric4 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric5 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric6 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric7 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric8 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric9 = new MetricCreateTarget(1, target, "billy.bob.joe");
     metric1.setTimestamp(new Timestamp(threeWeeksAgo));
     metric2.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(2)));
     metric3.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(5)));
@@ -333,15 +333,15 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
     IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "");
-    MetricCreateIxn metric1 = new MetricCreateIxn(1, ixn);
-    MetricCreateIxn metric2 = new MetricCreateIxn(1, ixn);
-    MetricCreateIxn metric3 = new MetricCreateIxn(1, ixn);
-    MetricCreateIxn metric4 = new MetricCreateIxn(1, ixn);
-    MetricCreateIxn metric5 = new MetricCreateIxn(1, ixn);
-    MetricCreateIxn metric6 = new MetricCreateIxn(1, ixn);
-    MetricCreateIxn metric7 = new MetricCreateIxn(1, ixn);
-    MetricCreateIxn metric8 = new MetricCreateIxn(1, ixn);
-    MetricCreateIxn metric9 = new MetricCreateIxn(1, ixn);
+    MetricCreateIxn metric1 = new MetricCreateIxn(1, ixn, "guy");
+    MetricCreateIxn metric2 = new MetricCreateIxn(1, ixn, "guy");
+    MetricCreateIxn metric3 = new MetricCreateIxn(1, ixn, "guy");
+    MetricCreateIxn metric4 = new MetricCreateIxn(1, ixn, "guy");
+    MetricCreateIxn metric5 = new MetricCreateIxn(1, ixn, "guy");
+    MetricCreateIxn metric6 = new MetricCreateIxn(1, ixn, "guy");
+    MetricCreateIxn metric7 = new MetricCreateIxn(1, ixn, "guy");
+    MetricCreateIxn metric8 = new MetricCreateIxn(1, ixn, "guy");
+    MetricCreateIxn metric9 = new MetricCreateIxn(1, ixn, "guy");
     metric1.setTimestamp(new Timestamp(twoWeeksAgo));
     metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
     metric3.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
@@ -576,27 +576,42 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metric1.setTimestamp(new Timestamp(twoWeeksAgo));
     metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
 
-    TargetJson targetJson1 = new TargetJson(1, 1, 1, "SDT12-123", "12ASD1231231231", "notes", "description", TargetStatus.NOT_STARTED, "", "");
-    TargetJson targetJson2 = new TargetJson(2, 1, 1, "SDT12-123", "12ASD1231231231", "notes", "description", TargetStatus.NOT_STARTED, "", "");
-    MetricChangeTarget metric3 = new MetricChangeTarget("mgrs", targetJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
-    MetricChangeTarget metric4 = new MetricChangeTarget("description", targetJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
-    MetricChangeTarget metric5 = new MetricChangeTarget("name", targetJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
-    MetricChangeTarget metric6 = new MetricChangeTarget("notes", targetJson2, new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
-    MetricChangeTarget metric60 = new MetricChangeTarget("notes", targetJson2, new Timestamp(twoWeeksAgo + convertDaysToMS(13)));
+    TargetJson targetJson1 = new TargetJson(1, 1, 1, "SDT12-123", "12ASD1231231231", "notes", "description",
+      TargetStatus.NOT_STARTED, "", "");
+    TargetJson targetJson2 = new TargetJson(2, 1, 1, "SDT12-123", "12ASD1231231231", "notes", "description",
+      TargetStatus.NOT_STARTED, "", "");
+    MetricChangeTarget metric3 = new MetricChangeTarget("mgrs", targetJson1,
+      new Timestamp(twoWeeksAgo + convertDaysToMS(3)), "billy.bob.joe");
+    MetricChangeTarget metric4 = new MetricChangeTarget("description", targetJson1,
+      new Timestamp(twoWeeksAgo + convertDaysToMS(3)), "billy.bob.joe");
+    MetricChangeTarget metric5 = new MetricChangeTarget("name", targetJson1,
+      new Timestamp(twoWeeksAgo + convertDaysToMS(12)), "billy.bob.joe");
+    MetricChangeTarget metric6 = new MetricChangeTarget("notes", targetJson2,
+      new Timestamp(twoWeeksAgo + convertDaysToMS(12)), "billy.bob.joe");
+    MetricChangeTarget metric60 = new MetricChangeTarget("notes", targetJson2,
+      new Timestamp(twoWeeksAgo + convertDaysToMS(13)), "billy.bob.joe");
 
-    MetricChangeSegment metric7 = new MetricChangeSegment(new SegmentJson(1, 1, 1, 1, new Timestamp(123), new Timestamp(234)));
+    MetricChangeSegment metric7 = new MetricChangeSegment(new SegmentJson(1, 1, 1, 1, new Timestamp(123),
+      new Timestamp(234)));
     metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
 
     IxnJson ixnJson1 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
     IxnJson ixnJson2 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
     IxnJson ixnJson3 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
-    MetricChangeIxn metric8 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
-    MetricChangeIxn metric9 = new MetricChangeIxn("activity", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
-    MetricChangeIxn metric10 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(4)));
-    MetricChangeIxn metric11 = new MetricChangeIxn("time", ixnJson2, new Timestamp(twoWeeksAgo + convertDaysToMS(4)));
-    MetricChangeIxn metric12 = new MetricChangeIxn("time", ixnJson3, new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
-    MetricChangeIxn metric13 = new MetricChangeIxn("activity", ixnJson3, new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
-    MetricChangeIxn metric14 = new MetricChangeIxn("time", ixnJson3, new Timestamp(twoWeeksAgo + convertDaysToMS(13)));
+    MetricChangeIxn metric8 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)),
+      "guy");
+    MetricChangeIxn metric9 = new MetricChangeIxn("activity", ixnJson1,
+      new Timestamp(twoWeeksAgo + convertDaysToMS(3)), "guy");
+    MetricChangeIxn metric10 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(4)),
+      "guy");
+    MetricChangeIxn metric11 = new MetricChangeIxn("time", ixnJson2, new Timestamp(twoWeeksAgo + convertDaysToMS(4)),
+      "guy");
+    MetricChangeIxn metric12 = new MetricChangeIxn("time", ixnJson3, new Timestamp(twoWeeksAgo + convertDaysToMS(12)),
+      "guy");
+    MetricChangeIxn metric13 = new MetricChangeIxn("activity", ixnJson3,
+      new Timestamp(twoWeeksAgo + convertDaysToMS(12)), "guy");
+    MetricChangeIxn metric14 = new MetricChangeIxn("time", ixnJson3, new Timestamp(twoWeeksAgo + convertDaysToMS(13)),
+      "guy");
 
     List<MetricChangeExploitDate> exploitDateChanges = new ArrayList<>(Arrays.asList(
       metric1, metric2

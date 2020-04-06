@@ -20,6 +20,8 @@ import { postExploitDate, submitPostTarget } from '../../store/tgt/Thunks';
 import { addTgt, editTgt, exitTgtPage, resetAddEditTgt, setDatePlaceholder, updateTgtsLocal } from '../../store/tgt';
 import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
+import { useCookies } from 'react-cookie';
+import { Cookie } from '../../utils';
 
 interface MyProps {
   rfi: RfiModel;
@@ -43,13 +45,16 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const moment = require('moment');
   const [addDate, setAddDate] = useState(false);
 
+  const [cookies] = useCookies(['magpie']);
+  let cookie: Cookie = cookies.magpie;
+
   const dispatch = useDispatch();
 
   const handlePostTarget = (target: TargetPostModel) => {
     let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
                               target.mgrs, target.notes, target.description, target.status, '', '');
     dispatch(updateTgtsLocal(tgt));
-    dispatch(submitPostTarget(target, props.rfi));
+    dispatch(submitPostTarget(target, props.rfi, cookie.userName));
   };
 
   const handlePostExploitDate = (date: ExploitDatePostModel) => {

@@ -106,13 +106,13 @@ public class IxnService {
     }
   }
 
-  public void postIxn(IxnJson ixnJson) {
+  public void postIxn(IxnJson ixnJson, String userName) {
     Ixn ixn = new Ixn(ixnJson);
 
     if (ixnJson.getId() > 0) {
       ixn.setId(ixnJson.getId());
       if (ixnRepository.findById(ixnJson.getId()).isPresent()) {
-        this.metricsService.addChangeIxn(ixnJson, ixnRepository.findById(ixnJson.getId()).get());
+        this.metricsService.addChangeIxn(ixnJson, ixnRepository.findById(ixnJson.getId()).get(), userName);
         ixnRepository.save(ixn);
       } else {
         this.metricsService.addUndoIxnDelete(ixnJson.getId());
@@ -121,7 +121,7 @@ public class IxnService {
     } else {
       ixnRepository.save(ixn);
       long lastIxnId = ixnRepository.findAll().get(ixnRepository.findAll().size() - 1).getId();
-      this.metricsService.addCreateIxn(lastIxnId, ixnJson);
+      this.metricsService.addCreateIxn(lastIxnId, ixnJson, userName);
     }
 
     assignTracks(ixnJson.getRfiId(), targetRepository.findById(ixnJson.getTargetId()).get().getName());
