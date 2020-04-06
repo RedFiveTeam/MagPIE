@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import RfiModel from '../../store/rfi/RfiModel';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import theme from '../../resources/theme';
+import { useCookies } from 'react-cookie';
 
 interface OwnProps {
   exitTgtPage: () => void;
@@ -13,7 +14,10 @@ interface OwnProps {
 }
 
 export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
+  const [cookie, setCookie] = useCookies(['magpie']);
+
   const handleExitClick = () => {
+    setCookie('magpie', {...cookie.magpie, viewState: {rfiId: undefined, tgtId: undefined}});
     if (props.editing)
       setTimeout(() => {
         props.exitTgtPage();

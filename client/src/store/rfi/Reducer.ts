@@ -41,6 +41,8 @@ const reducer: Reducer<RfiState> = (state = initState, action: any) => {
   let newSortKey: SortKeyModel;
 
   switch (action.type) {
+    case RfiActionTypes.LOAD_SUCCESS:
+      return {...state, loading: false};
     case RfiActionTypes.FETCH_RFI_PENDING:
       return {...state, loading: true};
     case RfiActionTypes.FETCH_RFI_SUCCESS:
@@ -49,7 +51,6 @@ const reducer: Reducer<RfiState> = (state = initState, action: any) => {
         ...state,
         ...filterRfis(sortedRfis),
         rfis: sortedRfis,
-        loading: false
       };
     case RfiActionTypes.FETCH_RFI_UPDATE:
       sortedRfis = RfiSorter.sort(action.rfis, state.sortKey);
@@ -57,7 +58,6 @@ const reducer: Reducer<RfiState> = (state = initState, action: any) => {
         ...state,
         ...filterRfis(sortedRfis),
         rfis: sortedRfis,
-        loading: false
       };
     case RfiActionTypes.REPRIORITIZE_RFIS:
       let newRfis: RfiModel[] = [].concat(action.reprioritizedList);

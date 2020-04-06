@@ -35,7 +35,7 @@ export const IxnDashboard: React.FC<Props> = props => {
   const [tgtAnalyst, setTgtAnalyst] = useState('');
   const [rollupMode, setRollupMode] = useState(false);
 
-  const [userCookie, setUserCookie] = useCookies(['magpie']);
+  const [cookie, setCookie] = useCookies(['magpie']);
 
   const rowClasses = rowStyles();
 
@@ -51,24 +51,25 @@ export const IxnDashboard: React.FC<Props> = props => {
   const dispatch = useDispatch();
 
   const handleCollapse = (segmentId: number) => {
-    let segments = userCookie.magpie.segments;
+    let segments = cookie.magpie.segments;
     if (segments.includes(segmentId)) {
       segments.splice(segments.indexOf(segmentId), 1);
     } else {
       segments.push(segmentId);
     }
-    setUserCookie('magpie', {...userCookie.magpie, segments: segments});
+    setCookie('magpie', {...cookie.magpie, segments: segments});
   };
 
   const handleExitIxnPage = () => {
     setTimeout(() => {
+      setCookie('magpie', {...cookie.magpie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
       dispatch(exitIxnPage());
     }, 250);
   };
 
   const handleShowRollup = () => {
     setRollupMode(true);
-    postRollupClick(new RollupClickModel(target.id, userCookie.magpie.userName));
+    postRollupClick(new RollupClickModel(target.id, cookie.magpie.userName));
   };
 
   const handleExitRollupMode = () => {
@@ -112,7 +113,7 @@ export const IxnDashboard: React.FC<Props> = props => {
             exitRollupMode={handleExitRollupMode}
             saveRollup={handleSaveRollup}
             displaySnackbar={handleDisplaySnackbar}
-            userName={userCookie.magpie.userName}
+            userName={cookie.magpie.userName}
           />
           :
           <IxnTableView
@@ -122,9 +123,9 @@ export const IxnDashboard: React.FC<Props> = props => {
             autofocus={autofocus}
             tgtAnalyst={tgtAnalyst}
             setTgtAnalyst={setTgtAnalyst}
-            collapsedSegments={userCookie.magpie.segments}
+            collapsedSegments={cookie.magpie.segments}
             collapse={handleCollapse}
-            userName={userCookie.magpie.userName}
+            userName={cookie.magpie.userName}
             dateString={moment(dateString, 'MM/DD/YYYY').format('DDMMMYY').toUpperCase()}
           />
       }

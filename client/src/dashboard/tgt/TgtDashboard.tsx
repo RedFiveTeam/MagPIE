@@ -75,23 +75,23 @@ export const TgtDashboard: React.FC<MyProps> = props => {
 
   function printDates(dates: ExploitDateModel[]) {
     return dates.map((exploitDateModel: ExploitDateModel, index: number) =>
-      <StyledTgtDateSection
-        rfi={props.rfi}
-        addDate={addDate}
-        setAddDate={setAddDate}
-        exploitDate={exploitDateModel}
-        exploitDateDisplay={exploitDateModel.exploitDate.utc().format('D MMM YY')}
-        targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
-        editTarget={props.editTgt}
-        addTgt={props.addTgt}
-        setAddEditTarget={handleAddEdit}
-        index={index}
-        className={'date-divider--' + moment(exploitDateModel.exploitDate).format('D-MMM-YY')}
-        key={index}
-        addingOrEditing={!(props.addTgt === -1 && props.editTgt === -1 && !addDate)}
-        postTarget={handlePostTarget}
-        postExploitDate={handlePostExploitDate}
-      />,
+                       <StyledTgtDateSection
+                         rfi={props.rfi}
+                         addDate={addDate}
+                         setAddDate={setAddDate}
+                         exploitDate={exploitDateModel}
+                         exploitDateDisplay={exploitDateModel.exploitDate.utc().format('D MMM YY')}
+                         targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
+                         editTarget={props.editTgt}
+                         addTgt={props.addTgt}
+                         setAddEditTarget={handleAddEdit}
+                         index={index}
+                         className={'date-divider--' + moment(exploitDateModel.exploitDate).format('D-MMM-YY')}
+                         key={index}
+                         addingOrEditing={!(props.addTgt === -1 && props.editTgt === -1 && !addDate)}
+                         postTarget={handlePostTarget}
+                         postExploitDate={handlePostExploitDate}
+                       />,
     );
   }
 
@@ -137,8 +137,9 @@ export const TgtDashboard: React.FC<MyProps> = props => {
               setAddDate(true);
               setTimeout(() => {
                 let scrollToLocation = document.getElementById('tgt-table-scrollable-region');
-                if (scrollToLocation !== null)
+                if (scrollToLocation !== null) {
                   scrollToLocation!.scrollTo(0, scrollToLocation!.scrollHeight);
+                }
               }, 50);
             }}
             display='flex'

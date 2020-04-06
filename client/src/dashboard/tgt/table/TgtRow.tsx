@@ -23,6 +23,7 @@ import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import { useSnackbar } from 'notistack';
 import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
 import { DeleteCancelButton } from '../../ixn/table/DeleteCancelButton';
+import { useCookies } from 'react-cookie';
 
 interface Props {
   target: TargetModel;
@@ -51,6 +52,7 @@ export const TgtRow: React.FC<Props> = props => {
   const classes = rowStyles();
 
   const [displayModal, setDisplayModal] = useState(false);
+  const [cookie, setCookie] = useCookies(['magpie']);
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
@@ -91,6 +93,7 @@ export const TgtRow: React.FC<Props> = props => {
 
   const handleIxnClick = () => {
     if (props.target !== null) {
+      setCookie('magpie', {...cookie.magpie, viewState: {rfiId: props.target.rfiId, tgtId: props.target.id}});
       props.navigateToIxnPage(props.target, props.exploitDate.exploitDate.format('MM/DD/YYYY'));
     }
   };

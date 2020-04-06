@@ -10,6 +10,7 @@ import { postGetsClick } from '../../../../store/metrics';
 import theme from '../../../../resources/theme';
 import { StyledTgtPageButtonVector } from '../../../../resources/icons/TgtPageButtonVector';
 import { StyledExternalLinkVector } from '../../../../resources/icons/ExternalLinkVector';
+import { useCookies } from 'react-cookie';
 
 interface Props {
   rfi: RfiModel;
@@ -21,9 +22,11 @@ interface Props {
 }
 
 export const RfiRow: React.FC<Props> = props => {
+  const [cookie, setCookie] = useCookies(['magpie']);
 
   function handleTgtClick() {
     if (props.rfi.status === RfiStatus.OPEN)
+      setCookie('magpie', {...cookie.magpie, viewState: {rfiId: props.rfi.id, tgtId: undefined}});
       props.loadTgtPage(props.rfi, true);
   }
 

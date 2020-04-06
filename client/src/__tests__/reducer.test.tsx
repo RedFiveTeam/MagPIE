@@ -74,13 +74,13 @@ describe('reducer', () => {
     expect(
       rfiReducer(undefined, mockAction),
     ).toEqual({
-      rfis: [],
-      sortKey: new SortKeyModel(Field.PRIORITY, true),
-      pendingRfis: [],
-      openRfis: [],
-      closedRfis: [],
-      loading: true,
-    });
+                rfis: [],
+                sortKey: new SortKeyModel(Field.PRIORITY, true),
+                pendingRfis: [],
+                openRfis: [],
+                closedRfis: [],
+                loading: true,
+              });
   });
 
   it('should handle FETCH_SUCCESS', () => {
@@ -98,13 +98,13 @@ describe('reducer', () => {
     expect(
       rfiReducer(undefined, mockAction),
     ).toEqual({
-      rfis: sortedRfis,
-      sortKey: new SortKeyModel(Field.PRIORITY, true),
-      pendingRfis: [],
-      openRfis: sortedRfis,
-      closedRfis: [],
-      loading: false,
-    });
+                rfis: sortedRfis,
+                sortKey: new SortKeyModel(Field.PRIORITY, true),
+                pendingRfis: [],
+                openRfis: sortedRfis,
+                closedRfis: [],
+                loading: true,
+              });
   });
 
   it('should handle NAVIGATE_TO_TGT_PAGE', () => {
@@ -119,14 +119,14 @@ describe('reducer', () => {
     expect(
       tgtReducer(undefined, mockAction),
     ).toEqual({
-      viewTgtPage: true,
-      showDatePlaceholder: false,
-      rfi: rfi,
-      exploitDates: [],
-      targets: [],
-      addTgt: -1,
-      editTgt: -1,
-    });
+                viewTgtPage: true,
+                showDatePlaceholder: false,
+                rfi: rfi,
+                exploitDates: [],
+                targets: [],
+                addTgt: -1,
+                editTgt: -1,
+              });
   });
 
   it('should sort by rfiNum and flip the sort key', () => {
@@ -319,13 +319,44 @@ describe('reducer', () => {
     expect(
       rfiReducer(state, refreshRfis),
     ).toEqual({
-      rfis: sortedRfis,
-      sortKey: new SortKeyModel(Field.LTIOV, true),
-      pendingRfis: [],
-      openRfis: sortedRfis,
-      closedRfis: [],
-      loading: false,
-    });
+                rfis: sortedRfis,
+                sortKey: new SortKeyModel(Field.LTIOV, true),
+                pendingRfis: [],
+                openRfis: sortedRfis,
+                closedRfis: [],
+                loading: true,
+              });
+  });
+
+  it('should handle LOAD_SUCCESS', () => {
+    let mockAction = {
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
+      rfis: singleStatusRfiList,
+    };
+
+    let sortedRfis = [
+      new RfiModel(2, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi', 1, 0, 0),
+      new RfiModel(1, '19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 2, 0, 0),
+      new RfiModel(3, '19-003', '', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 3, 0, 0),
+    ];
+
+    let state = rfiReducer(undefined, mockAction);
+
+    let mockAction2 = {
+      type: RfiActionTypes.LOAD_SUCCESS,
+    };
+
+    expect(
+      rfiReducer(state, mockAction2),
+    ).toEqual(
+      {
+        rfis: sortedRfis,
+        sortKey: new SortKeyModel(Field.PRIORITY, true),
+        pendingRfis: [],
+        openRfis: sortedRfis,
+        closedRfis: [],
+        loading: false,
+      });
   });
 
   it('should handle loadIxnPage', () => {
@@ -353,13 +384,13 @@ describe('reducer', () => {
 
     expect(state)
       .toEqual({
-        viewIxnPage: true,
-        target: target,
-        segments: segments,
-        dateString: '11/14/2020',
-        ixns: ixns,
-        autofocus: false,
-      });
+                 viewIxnPage: true,
+                 target: target,
+                 segments: segments,
+                 dateString: '11/14/2020',
+                 ixns: ixns,
+                 autofocus: false,
+               });
 
     let newSegments = [
       new SegmentModel(1, 1, 1, 1, moment(123), moment(456)),
@@ -382,12 +413,12 @@ describe('reducer', () => {
 
     expect(state)
       .toEqual({
-        viewIxnPage: true,
-        target: target,
-        segments: newSegments,
-        dateString: '11/14/2020',
-        ixns: newIxns,
-      });
+                 viewIxnPage: true,
+                 target: target,
+                 segments: newSegments,
+                 dateString: '11/14/2020',
+                 ixns: newIxns,
+               });
   });
 
   it('should handle EXIT_IXN_PAGE', () => {
@@ -409,13 +440,13 @@ describe('reducer', () => {
 
     expect(state)
       .toEqual({
-        viewIxnPage: false,
-        target: target,
-        dateString: '11/11/2011',
-        segments: [],
-        ixns: [],
-        autofocus: false
-      });
+                 viewIxnPage: false,
+                 target: target,
+                 dateString: '11/11/2011',
+                 segments: [],
+                 ixns: [],
+                 autofocus: false,
+               });
   });
 
   it('should handle UPDATE_TGT_SUCCESS', () => {

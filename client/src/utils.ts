@@ -29,15 +29,9 @@ export enum RowAction {
   SUBMITTING
 }
 
-export enum Page {
-  RFI = 'RFI_PAGE',
-  TGT = 'TGT_PAGE',
-  IXN = 'IXN_PAGE'
-}
-
 interface ViewState {
-  page: Page;
-  id: number;
+  rfiId: number|undefined;
+  tgtId: number|undefined;
 }
 
 export interface Cookie {

@@ -4,6 +4,10 @@ import RfiModel from "./RfiModel";
 import { Field } from '../sort/SortKeyModel';
 import RfiPriorityPostModel from './RfiPriorityPostModel';
 
+export const loadSuccess = () => {
+  return {type: RfiActionTypes.LOAD_SUCCESS}
+};
+
 export const sortRfis = (field: Field) => {
   return {type: RfiActionTypes.SORT_RFIS, field: field}
 };

@@ -6,10 +6,16 @@ import { StyledIxnDashboard } from '../dashboard/ixn/IxnDashboard';
 import { DashboardContainer } from '../dashboard/DashboardContainer';
 import { StyledLoadingScreen } from '../dashboard/components/loading/LoadingScreen';
 import { StyledLoginDashboard } from '../dashboard/login/LoginDashboard';
+import RfiModel, { RfiStatus } from '../store/rfi/RfiModel';
+import { ExploitDateModel } from '../store/tgt/ExploitDateModel';
+import { TargetModel, TargetStatus } from '../store/tgt/TargetModel';
 
 describe('WorkflowContainer', () => {
+  const moment = require ('moment');
   let subject: ShallowWrapper;
-
+  let rfi = new RfiModel(1, "DGS1-SDT-2020-00321", "google.com", RfiStatus.OPEN, "", undefined, "USA", "", 1, 1, 0);
+  let exploitDate = new ExploitDateModel(1, 1, moment(123456));
+  let tgt = new TargetModel(1, 1, 1, "SDT12-123", "12ASD1231231231", "", "", TargetStatus.IN_PROGRESS, "", "");
 
   it('should display a login page when not logged in', () => {
     subject = shallow(
@@ -22,7 +28,12 @@ describe('WorkflowContainer', () => {
         viewTgtPage={false}
         viewIxnPage={false}
         rfi={undefined}
-        user={undefined}
+        cookie={undefined}
+        navigateToIxnPage={jest.fn()}
+        loadSuccess={jest.fn()}
+        tgts={[]}
+        exploitDates={[]}
+        rfis={[]}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeTruthy();
@@ -42,7 +53,12 @@ describe('WorkflowContainer', () => {
         viewTgtPage={false}
         viewIxnPage={false}
         rfi={undefined}
-        user={'billy.bob.joe'}
+        cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
+        navigateToIxnPage={jest.fn()}
+        loadSuccess={jest.fn()}
+        tgts={[]}
+        exploitDates={[]}
+        rfis={[]}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeTruthy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
@@ -61,8 +77,13 @@ describe('WorkflowContainer', () => {
         loading={false}
         viewTgtPage={false}
         viewIxnPage={false}
-        rfi={undefined}
-        user={'billy.bob.joe'}
+        rfi={rfi}
+        cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
+        navigateToIxnPage={jest.fn()}
+        loadSuccess={jest.fn()}
+        tgts={[]}
+        exploitDates={[]}
+        rfis={[rfi]}
       />);
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
@@ -82,8 +103,13 @@ describe('WorkflowContainer', () => {
         loading={false}
         viewTgtPage={true}
         viewIxnPage={false}
-        rfi={undefined}
-        user={'billy.bob.joe'}
+        rfi={rfi}
+        cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
+        navigateToIxnPage={jest.fn()}
+        loadSuccess={jest.fn()}
+        tgts={[tgt]}
+        exploitDates={[exploitDate]}
+        rfis={[rfi]}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
@@ -102,8 +128,13 @@ describe('WorkflowContainer', () => {
         loading={false}
         viewTgtPage={true}
         viewIxnPage={true}
-        rfi={undefined}
-        user={'billy.bob.joe'}
+        rfi={rfi}
+        cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
+        navigateToIxnPage={jest.fn()}
+        loadSuccess={jest.fn()}
+        tgts={[tgt]}
+        exploitDates={[exploitDate]}
+        rfis={[rfi]}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();

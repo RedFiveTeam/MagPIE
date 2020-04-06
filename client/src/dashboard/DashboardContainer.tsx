@@ -12,19 +12,27 @@ import { fetchLocalUpdate, fetchRfis } from '../store/rfi/Thunks';
 import { postSiteVisit } from '../store/metrics';
 import { loadTgtPage } from '../store/tgt/Thunks';
 import { StyledLoginDashboard } from './login/LoginDashboard';
-import { Cookie, Page } from '../utils';
+import { Cookie } from '../utils';
 import { navigateToIxnPage } from '../store/ixn';
+import { TargetModel } from '../store/tgt/TargetModel';
+import { ExploitDateModel } from '../store/tgt/ExploitDateModel';
+import { loadSuccess } from '../store/rfi';
 
 interface Props {
   fetchRfis: () => void;
   postSiteVisit: () => Promise<any>;
   fetchLocalUpdate: () => void;
   loadTgtPage: (rfi: RfiModel, firstLoad: boolean) => void;
+  navigateToIxnPage: (target: TargetModel, dateString: string) => void;
+  loadSuccess: () => void;
   rfi: RfiModel|undefined;
+  rfis: RfiModel[];
+  tgts: TargetModel[];
+  exploitDates: ExploitDateModel[];
   loading: boolean;
   viewTgtPage: boolean;
   viewIxnPage: boolean;
-  cookie: Cookie | undefined;
+  cookie: Cookie|undefined;
   className?: string;
 }
 
@@ -63,6 +71,34 @@ export class DashboardContainer extends React.Component<Props, any> {
       return <StyledLoginDashboard/>;
     }
 
+    //navigate to tgt page by rfi id
+    if (this.props.cookie.viewState.rfiId && !(this.props.viewTgtPage)) {
+      while (this.props.rfis === []) {
+      }
+      let tgtRfi: RfiModel|undefined = this.props.rfis.find(
+        (rfi) => rfi.id === this.props.cookie!.viewState.rfiId);
+      if (tgtRfi) {
+        this.props.loadTgtPage(tgtRfi, true);
+      }
+    }
+    //navigate to ixn page by tgt id
+    else if (this.props.cookie.viewState.tgtId && !(this.props.viewIxnPage)) {
+      while (this.props.tgts === []) {
+      }
+      let ixnTgt: TargetModel|undefined = this.props.tgts.find(
+        (tgt) => tgt.id === this.props.cookie!.viewState.tgtId);
+
+      if (ixnTgt) {
+        let ixnDate: ExploitDateModel|undefined = this.props.exploitDates.find(
+          (date) => date.id === ixnTgt!.exploitDateId);
+        if (ixnDate) {
+          this.props.navigateToIxnPage(ixnTgt, ixnDate.exploitDate.format('MM/DD/YYYY'));
+        }
+      }
+    } else if (this.props.loading) {
+      this.props.loadSuccess();
+    }
+
     if (this.props.loading) {
       return <StyledLoadingScreen/>;
     }
@@ -73,13 +109,6 @@ export class DashboardContainer extends React.Component<Props, any> {
 
     if (this.props.viewTgtPage) {
       return <StyledTgtDashboard/>;
-    }
-
-    if (this.props.cookie.viewState.page !== Page.RFI) {
-      //set up some state!
-      if (this.props.cookie.viewState.page === Page.TGT) {
-
-      }
     }
 
     return (
@@ -95,6 +124,9 @@ const mapStateToProps = ({rfiState, tgtState, ixnState}: ApplicationState) => ({
   viewTgtPage: tgtState.viewTgtPage,
   viewIxnPage: ixnState.viewIxnPage,
   rfi: tgtState.rfi,
+  rfis: rfiState.rfis,
+  tgts: tgtState.targets,
+  exploitDates: tgtState.exploitDates,
 });
 
 const mapDispatchToProps = {
@@ -103,6 +135,7 @@ const mapDispatchToProps = {
   fetchLocalUpdate: fetchLocalUpdate,
   loadTgtPage: loadTgtPage,
   navigateToIxnPage: navigateToIxnPage,
+  loadSuccess: loadSuccess,
 };
 
 export const StyledDashboardContainer = styled(
