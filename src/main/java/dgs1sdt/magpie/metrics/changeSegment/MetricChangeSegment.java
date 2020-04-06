@@ -1,6 +1,7 @@
 package dgs1sdt.magpie.metrics.changeSegment;
 
 import dgs1sdt.magpie.ixns.SegmentJson;
+import dgs1sdt.magpie.metrics.TimestampMetric;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class MetricChangeSegment {
+public class MetricChangeSegment implements TimestampMetric {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

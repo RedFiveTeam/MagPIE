@@ -3,11 +3,17 @@ package dgs1sdt.magpie.metrics;
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.ixns.IxnJson;
 import dgs1sdt.magpie.ixns.IxnStatus;
+import dgs1sdt.magpie.ixns.SegmentJson;
+import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDate;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
+import dgs1sdt.magpie.metrics.changeIxn.MetricChangeIxn;
+import dgs1sdt.magpie.metrics.changeIxn.MetricChangeIxnRepository;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
+import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegment;
+import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegmentRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
@@ -43,6 +49,7 @@ import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.TargetStatus;
+import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +91,10 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   @Autowired
   private MetricCreateIxnRepository metricCreateIxnRepository;
   @Autowired
+  private MetricChangeIxnRepository metricChangeIxnRepository;
+  @Autowired
+  private MetricChangeSegmentRepository metricChangeSegmentRepository;
+  @Autowired
   private MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
   @Autowired
   private MetricDeleteTargetRepository metricDeleteTargetRepository;
@@ -115,6 +126,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricCreateTargetRepository.deleteAll();
     metricChangeTargetRepository.deleteAll();
     metricCreateIxnRepository.deleteAll();
+    metricChangeIxnRepository.deleteAll();
+    metricChangeSegmentRepository.deleteAll();
     metricDeleteExploitDateRepository.deleteAll();
     metricDeleteTargetRepository.deleteAll();
     metricDeleteSegmentRepository.deleteAll();
@@ -550,6 +563,59 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     )));
 
     assertEquals(2, metricsService.getAveragePrioritizationsPerWeek());
+  }
+
+  @Test
+  public void returnsEditsByDataType() throws Exception {
+    assertArrayEquals(new long[]{0, 0, 0, 0}, metricsService.getAverageDeletionsPerWeek());
+
+    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14) + 10000L;
+
+    MetricChangeExploitDate metric1 = new MetricChangeExploitDate(new ExploitDateJson(1, 1, new Timestamp(23456)));
+    MetricChangeExploitDate metric2 = new MetricChangeExploitDate(new ExploitDateJson(1, 1, new Timestamp(45678)));
+    metric1.setTimestamp(new Timestamp(twoWeeksAgo));
+    metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
+
+    TargetJson targetJson1 = new TargetJson(1, 1, 1, "SDT12-123", "12ASD1231231231", "notes", "description", TargetStatus.NOT_STARTED, "", "");
+    TargetJson targetJson2 = new TargetJson(2, 1, 1, "SDT12-123", "12ASD1231231231", "notes", "description", TargetStatus.NOT_STARTED, "", "");
+    MetricChangeTarget metric3 = new MetricChangeTarget("mgrs", targetJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
+    MetricChangeTarget metric4 = new MetricChangeTarget("description", targetJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
+    MetricChangeTarget metric5 = new MetricChangeTarget("name", targetJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
+    MetricChangeTarget metric6 = new MetricChangeTarget("notes", targetJson2, new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
+    MetricChangeTarget metric60 = new MetricChangeTarget("notes", targetJson2, new Timestamp(twoWeeksAgo + convertDaysToMS(13)));
+
+    MetricChangeSegment metric7 = new MetricChangeSegment(new SegmentJson(1, 1, 1, 1, new Timestamp(123), new Timestamp(234)));
+    metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
+
+    IxnJson ixnJson1 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
+    IxnJson ixnJson2 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
+    IxnJson ixnJson3 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
+    MetricChangeIxn metric8 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
+    MetricChangeIxn metric9 = new MetricChangeIxn("activity", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)));
+    MetricChangeIxn metric10 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(4)));
+    MetricChangeIxn metric11 = new MetricChangeIxn("time", ixnJson2, new Timestamp(twoWeeksAgo + convertDaysToMS(4)));
+    MetricChangeIxn metric12 = new MetricChangeIxn("time", ixnJson3, new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
+    MetricChangeIxn metric13 = new MetricChangeIxn("activity", ixnJson3, new Timestamp(twoWeeksAgo + convertDaysToMS(12)));
+    MetricChangeIxn metric14 = new MetricChangeIxn("time", ixnJson3, new Timestamp(twoWeeksAgo + convertDaysToMS(13)));
+
+    List<MetricChangeExploitDate> exploitDateChanges = new ArrayList<>(Arrays.asList(
+      metric1, metric2
+    ));
+
+    List<MetricChangeTarget> targetChanges = new ArrayList<>(Arrays.asList(
+      metric3, metric4, metric5, metric6, metric60
+    ));
+
+    List<MetricChangeIxn> ixnChanges = new ArrayList<>(Arrays.asList(
+      metric8, metric9, metric10, metric11, metric12, metric13, metric14
+    ));
+
+    metricChangeExploitDateRepository.saveAll(exploitDateChanges);
+    metricChangeTargetRepository.saveAll(targetChanges);
+    metricChangeSegmentRepository.save(metric7);
+    metricChangeIxnRepository.saveAll(ixnChanges);
+
+    assertArrayEquals(new long[]{1, 2, 1, 2}, metricsService.getAverageEditsPerWeek());
   }
 
   @Test

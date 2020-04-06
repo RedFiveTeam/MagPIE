@@ -496,6 +496,39 @@ public class MetricsService {
     };
   }
 
+  public long[] getAverageEditsPerWeek() {
+    List<MetricChangeTarget> tgtEdits = new ArrayList<>();
+    for (MetricChangeTarget metric : metricChangeTargetRepository.findAll()) {
+      try {
+        MetricChangeTarget lastMetric = tgtEdits.get(tgtEdits.size() - 1);
+        if (!(metric.getTimestamp().equals(lastMetric.getTimestamp()) && metric.getTargetId() == lastMetric.getTargetId())) {
+          tgtEdits.add(metric);
+        }
+      } catch (Exception e) {
+        tgtEdits.add(metric);
+      }
+    }
+
+    List<MetricChangeIxn> ixnEdits = new ArrayList<>();
+    for (MetricChangeIxn metric : metricChangeIxnRepository.findAll()) {
+      try {
+        MetricChangeIxn lastMetric = ixnEdits.get(ixnEdits.size() - 1);
+        if (!(metric.getTimestamp().equals(lastMetric.getTimestamp()) && metric.getIxnId() == lastMetric.getIxnId())) {
+          ixnEdits.add(metric);
+        }
+      } catch (Exception e) {
+        ixnEdits.add(metric);
+      }
+    }
+
+    return new long[]{
+      getAveragePerWeek(metricChangeExploitDateRepository.findAll()),
+      getAveragePerWeek(tgtEdits),
+      getAveragePerWeek(metricChangeSegmentRepository.findAll()),
+      getAveragePerWeek(ixnEdits)
+    };
+  }
+
   public long getAverageUniqueLoginsPerWeek() {
     if (metricLoginRepository.findAll().size() == 0)
       return 0;

@@ -19,6 +19,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [deletions, setDeletions] = useState([-1, -1, -1, -1]);
   const [logins, setLogins] = useState(-1);
   const [undos, setUndos] = useState([-1, -1, -1, -1]);
+  const [edits, setEdits] = useState([-1, -1, -1, -1]);
   const [prioritizations, setPrioritizations] = useState(-1);
   const [ltiovsMet, setLtiovsMet] = useState(-1);
 
@@ -80,6 +81,15 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
     fetchMetric('undos-per-week')
       .then(response => response.json())
       .then(undos => setUndos(undos))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchMetric('edits-per-week')
+      .then(response => response.json())
+      .then(edits => setEdits(edits))
       .catch((reason) => {
         console.log(reason);
       });
@@ -179,6 +189,20 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
                 new Metric(undos[3], 'Interactions'),
               ])}
             className={'undos'}
+          />
+          :
+          null
+        }
+        {edits[0] > -1 ?
+          <StyledMetricCard
+            data={new MetricCardData('Avg Edits',
+              [
+                new Metric(edits[0], 'Dates'),
+                new Metric(edits[1], 'Targets'),
+                new Metric(edits[2], 'Segments'),
+                new Metric(edits[3], 'Interactions'),
+              ])}
+            className={'edits'}
           />
           :
           null
