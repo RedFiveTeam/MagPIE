@@ -367,9 +367,9 @@ describe('reducer', () => {
     ];
     let ixns = [
       new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(124), 'People have done a thing', '123-234', '',
-                   IxnStatus.NOT_STARTED, '', '', ''),
+                   IxnStatus.NOT_STARTED, '', '', '', ''),
       new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(568), 'People have done another thing', '123-456', '',
-                   IxnStatus.NOT_STARTED, '', '', ''),
+                   IxnStatus.NOT_STARTED, '', '', '', ''),
     ];
 
     let navToIxnPage = {
@@ -398,9 +398,12 @@ describe('reducer', () => {
     ];
 
     let newIxns = [
-      new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(124), 'People have done a thing', '123-234', '', IxnStatus.NOT_STARTED, '', '', ''),
-      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(568), 'People have done another thing', '123-456', '', IxnStatus.NOT_STARTED, '', '', ''),
-      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(569), 'People have done a different thing', '123-456', '', IxnStatus.NOT_STARTED, '', '', ''),
+      new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(124), 'People have done a thing', '123-234', '',
+                   IxnStatus.NOT_STARTED, '', '', '', ''),
+      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(568), 'People have done another thing', '123-456', '',
+                   IxnStatus.NOT_STARTED, '', '', '', ''),
+      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(569), 'People have done a different thing', '123-456', '',
+                   IxnStatus.NOT_STARTED, '', '', '', ''),
     ];
 
     let reloadIxnPage = {

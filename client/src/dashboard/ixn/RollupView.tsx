@@ -147,7 +147,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
         let timeString = match.substr(0, 8);
         let activityString = match.substring(12, match.length - 1);
         allIxns.push(new IxnModel(0, 0, 0, 0, 0, '', convertTimeStringToMoment(timeString), activityString, '', '',
-                                  IxnStatus.NOT_STARTED, '', '', ''));
+                                  IxnStatus.NOT_STARTED, '', '', '', ''));
       }
     }
 

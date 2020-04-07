@@ -213,6 +213,26 @@ Scenario('Should be able to write and view track narratives', (I) => {
   I.dontSeeInField('.track-narrative-input', 'DO NOT SAVE THIS');
 });
 
+Scenario('Should be able to write and view ixn notes', (I) => {
+  I.click('.exploitation');
+  I.waitForText('TGT: SDT20-123', 10);
+
+  I.click('.note-button');
+  I.wait(1);
+  I.fillField('.note-input', 'These are some notes about an ixn');
+  I.pressKey('Enter');
+
+  I.click('.ixn-dash--header--back-button');
+  I.waitForText('RFI:');
+  I.click('.exploitation');
+  I.waitForText('TGT: SDT20-123', 10);
+  I.dontSee('These are some notes about an ixn');
+
+  I.click('.note-button');
+  I.wait(1);
+  I.seeInField('.note-input', 'These are some notes about an ixn');
+});
+
 Scenario('Should be able to write and view rollups', (I) => {
   I.click('.exploitation');
   I.waitForText('Status', 10);
@@ -296,6 +316,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.waitForText('TGT: SDT20-123', 10);
 
   //Delete first ixn
+  I.moveCursorTo('.ixn-row-box', 10, 10);
   I.click('.delete-ixn-button');
 
   I.click('.ixn-dash--header--back-button');
@@ -305,6 +326,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.dontSee('Person entered tgt from right side');
 
   //Delete second ixn and undo
+  I.moveCursorTo('.ixn-row-box', 10, 10);
   I.click('.delete-ixn-button');
 
   I.waitForText('Interaction deleted', 10);
@@ -318,6 +340,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.waitForText('Person entered tgt from right side', 10);
 
   //Delete second ixn
+  I.moveCursorTo('.ixn-row-box', 10, 10);
   I.click('.delete-ixn-button');
 
   I.click('.ixn-dash--header--back-button');

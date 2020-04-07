@@ -21,6 +21,7 @@ export class IxnDeserializer {
           json.leadChecker,
           json.finalChecker,
           json.trackNarrative,
+          json.note,
         );
       });
     }

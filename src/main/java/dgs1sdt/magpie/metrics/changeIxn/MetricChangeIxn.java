@@ -60,6 +60,9 @@ public class MetricChangeIxn implements TimestampMetric {
       case "track_narrative":
         newData = newIxn.getTrackNarrative();
         break;
+      case "note":
+        newData = newIxn.getNote();
+        break;
       default:
         throw new Exception();
     }

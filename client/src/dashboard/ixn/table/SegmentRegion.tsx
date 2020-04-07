@@ -32,6 +32,8 @@ interface MyProps {
   setCollapsed: (segmentId: number) => void;
   userName: string;
   dateString: string;
+  addNote: number;
+  setAddNote: (ixnId: number) => void;
   className?: string;
 }
 
@@ -44,7 +46,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
       ixns.push(null); //input row--mapped to force a re-render
 
     return ixns.map((ixn: IxnModel | null, index: number) =>
-      ixn === null || props.editIxn === ixn.id ?
+                      (ixn === null || props.editIxn === ixn.id || props.addNote === ixn.id) ?
         <StyledIxnInputRow
           ixn={ixn}
           key={index}
@@ -56,7 +58,10 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           setEditIxn={props.setEditIxn}
           autofocus={props.autofocus}
           setAdding={setAdding}
-        />
+          disabled={ixn === null && (props.addNote > 0 || props.editIxn > 0)}
+          addingNote={ixn !== null && props.addNote === ixn.id}
+          setAddNote={props.setAddNote}
+          />
         :
         <StyledIxnRow
           ixn={ixn}
@@ -70,6 +75,8 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           addingOrEditing={props.addingOrEditing}
           userName={props.userName}
           dateString={props.dateString}
+          setAddNote={props.setAddNote}
+          disabled={props.addNote > 0 || props.editIxn > 0}
         />,
     );
   };
@@ -126,7 +133,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
 export const StyledSegmentRegion = styled(SegmentRegion)`
   display:flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   padding-bottom: 20px;
   
   .expand-collapse {

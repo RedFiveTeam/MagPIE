@@ -202,7 +202,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     width: 106px;
   }
   
-  .header-cell--activity {
+  .header-cell--callout {
     width: 414px;
   }
   
@@ -236,6 +236,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     font-weight: normal;
     margin-bottom: 9px;
     padding-right: 7px;
+    align-self: flex-start;
   }
   
   .name {
@@ -259,12 +260,12 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     width: 110px;
   }
   
-  .delete-edit-button-container {
+  .note-edit-button-container {
     display: flex;
     align-self: stretch;
     border-left: 4px solid ${theme.color.backgroundBase};
     padding-left: 4px;
-    width: 90px;
+    width: 68px;
     height: inherit;
     flex-direction: row;
     justify-content: center;

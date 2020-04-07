@@ -9,7 +9,7 @@ export enum IxnStatus {
 
 export default class IxnModel {
   constructor(
-    public id: number | null,
+    public id: number|null,
     public rfiId: number,
     public exploitDateId: number,
     public targetId: number,
@@ -23,6 +23,7 @@ export default class IxnModel {
     public leadChecker: string,
     public finalChecker: string,
     public trackNarrative: string,
+    public note: string,
   ) {
   }
 }

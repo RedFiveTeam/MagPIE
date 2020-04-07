@@ -12,11 +12,11 @@ export const DeleteCancelButton: React.FC<DeleteButtonProps> = props => {
 
 
   return (
-    <div className={props.className}>
+    <div className={props.className}
+         onClick={props.handleClick}
+    >
       <TextTooltip title={props.title}>
-        <div className={props.buttonClassName}
-             onClick={props.handleClick}
-        >
+        <div className={props.buttonClassName}>
           {props.children}
         </div>
       </TextTooltip>

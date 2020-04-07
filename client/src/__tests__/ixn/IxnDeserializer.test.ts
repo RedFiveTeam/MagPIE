@@ -27,6 +27,7 @@ describe('IxnDeserializer', () => {
         activity: "",
         track: "123-234",
         trackNarrative: "Some things have happened",
+        note: "these are some notes"
       },
     ];
 
@@ -61,5 +62,6 @@ describe('IxnDeserializer', () => {
     expect(ixns[1].activity).toEqual("");
     expect(ixns[1].track).toEqual("123-234");
     expect(ixns[1].trackNarrative).toEqual("Some things have happened");
+    expect(ixns[1].note).toEqual("these are some notes");
   });
 });

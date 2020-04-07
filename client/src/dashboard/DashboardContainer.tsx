@@ -67,7 +67,7 @@ export class DashboardContainer extends React.Component<Props, any> {
   }
 
   render() {
-    if (this.props.cookie === undefined) {
+    if (this.props.cookie === undefined || this.props.cookie.viewState === undefined) {
       return <StyledLoginDashboard/>;
     }
 

@@ -11,7 +11,7 @@ describe('IxnRow', () => {
   let ixn = new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(
     (5 * 3600 +
       30 * 60 +
-      15) * 1000), 'Dudes did stuff', '123-234', '', IxnStatus.NOT_STARTED, '', '', "");
+      15) * 1000), 'Dudes did stuff', '123-234', '', IxnStatus.NOT_STARTED, '', '', "", "");
 
   let segment = new SegmentModel(1, 1, 1, 1,
     moment(
@@ -23,8 +23,10 @@ describe('IxnRow', () => {
         30 * 60 +
         15) * 1000),
   );
+  let setInputNoteSpy: jest.Mock;
 
-  it('should display the info given to it', () => {
+  beforeEach(() => {
+    setInputNoteSpy = jest.fn();
     subject = mount(
       <SnackbarProvider
         maxSnack={3}
@@ -42,13 +44,23 @@ describe('IxnRow', () => {
           addingOrEditing={false}
           dateString={'12DEC12'}
           userName={'billy'}
+          setAddNote={setInputNoteSpy}
+          disabled={false}
         />
       </SnackbarProvider>
     );
+  });
 
+  it('should display the info given to it', () => {
     expect(subject.find('.exploit-analyst').text()).toContain('Billy Bob');
     expect(subject.find('.time').text()).toContain('05:30:15Z');
     expect(subject.find('.activity').text()).toContain('Dudes did stuff');
     expect(subject.find('.track').text()).toContain('123-234');
+  });
+
+  it('should call the add ixn notes function', () => {
+    expect(subject.find('.note-input').exists()).toBeFalsy();
+    subject.find('.note-button').simulate('click');
+    expect(setInputNoteSpy).toHaveBeenCalledWith(ixn.id);
   });
 });

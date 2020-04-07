@@ -32,6 +32,7 @@ public class Ixn {
 
   @Column(length = 65535)
   private String trackNarrative;
+  private String note;
 
   public Ixn(long rfiId, long exploitDateId, long targetId, long segmentId, String exploitAnalyst, Timestamp time,
              String activity, String track, String trackAnalyst, String status, String leadChecker,
@@ -49,6 +50,7 @@ public class Ixn {
     this.leadChecker = leadChecker;
     this.finalChecker = finalChecker;
     this.trackNarrative = "";
+    this.note = "";
   }
 
   public Ixn(IxnJson ixnJson) {
@@ -65,6 +67,7 @@ public class Ixn {
     this.leadChecker = ixnJson.getLeadChecker();
     this.finalChecker = ixnJson.getFinalChecker();
     this.trackNarrative = ixnJson.getTrackNarrative();
+    this.note = ixnJson.getNote();
   }
 
   public ArrayList<String> Compare(IxnJson other) throws NullPointerException {
@@ -132,6 +135,14 @@ public class Ixn {
       }
     } catch (NullPointerException e) {
       diff.add("track_narrative");
+    }
+
+    try {
+      if (!this.note.equals(other.getNote())) {
+        diff.add("note");
+      }
+    } catch (NullPointerException e) {
+      diff.add("note");
     }
 
     return diff;

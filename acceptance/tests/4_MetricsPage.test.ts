@@ -56,7 +56,7 @@ Scenario ('Should display other metrics', (I) => {
   I.see('1', locate('.edits').find('.card-row').at(1));
   I.see('3', locate('.edits').find('.card-row').at(2));
   I.see('1', locate('.edits').find('.card-row').at(3));
-  I.see('6', locate('.edits').find('.card-row').at(4));
+  I.see('7', locate('.edits').find('.card-row').at(4));
 
   I.waitForText('Avg Prioritization Actions');
   I.see('0', '.prioritizations');

@@ -14,11 +14,11 @@ import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
 import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiButton';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
-import CancelButton from '../../../resources/icons/CancelButton';
 import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton';
+import CancelButtonSmall from '../../../resources/icons/CancelButtonSmall';
 
 interface MyProps {
-  ixn: IxnModel | null;
+  ixn: IxnModel|null;
   segment: SegmentModel;
   postIxn: (ixn: IxnModel) => void;
   deleteIxn: (ixn: IxnModel) => void;
@@ -27,11 +27,14 @@ interface MyProps {
   setEditIxn: (ixnId: number) => void;
   autofocus: boolean;
   setAdding: (adding: boolean) => void;
+  disabled: boolean;
+  addingNote: boolean;
+  setAddNote: (ixnId: number) => void;
   className?: string;
 }
 
 interface TextMaskCustomProps {
-  inputRef: (ref: HTMLInputElement | null) => void;
+  inputRef: (ref: HTMLInputElement|null) => void;
 }
 
 function IxnTimeTextMask(props: TextMaskCustomProps) {
@@ -60,6 +63,8 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const [leadChecker, setLeadChecker] = React.useState(props.ixn ? props.ixn.leadChecker : '');
   const [finalChecker, setFinalChecker] = React.useState(props.ixn ? props.ixn.finalChecker : '');
 
+  const [note, setNote] = useState(props.ixn ? props.ixn.note : '');
+
   const [timeInvalidError, setTimeInvalidError] = React.useState(false);
   const [timeOutOfBoundsError, setTimeOutOfBoundsError] = React.useState(false);
   const [action, setAction] = useState(RowAction.NONE);
@@ -75,6 +80,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
       case RowAction.DELETING:
         if (props.ixn) {
           props.setEditIxn(-1);
+          props.setAddNote(-1);
           resetAction();
         } else {
           setExploitAnalyst('');
@@ -165,6 +171,14 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     props.setAdding(!isBlank);
   };
 
+  const inputNote = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let newNote = event.target.value;
+    if (newNote.charAt(newNote.length - 1) !== '\n') //Ignore new lines
+    {
+      setNote(event.target.value);
+    }
+  };
+
   const timeBlur = () => {
     let newTime = time.replace(/_/g, '0');
     setTime(newTime);
@@ -195,7 +209,11 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     if (!timeInvalidErrorLocal && !timeOutOfBoundsErrorLocal) {
       props.setAdding(false);
       if (props.segment.id) {
-        props.postIxn(new IxnModel(props.ixn ? props.ixn.id : null, props.segment.rfiId, props.segment.exploitDateId, props.segment.targetId, props.segment.id, exploitAnalyst.trim(), convertTimeStringToMoment(time), activity.trim(), '', trackAnalyst.trim(), props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED, leadChecker.trim(), finalChecker.trim(), ''));
+        props.postIxn(new IxnModel(props.ixn ? props.ixn.id : null, props.segment.rfiId, props.segment.exploitDateId,
+                                   props.segment.targetId, props.segment.id, exploitAnalyst.trim(),
+                                   convertTimeStringToMoment(time), activity.trim(), '', trackAnalyst.trim(),
+                                   props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED, leadChecker.trim(),
+                                   finalChecker.trim(), props.ixn ? props.ixn.trackNarrative : '', note.trim()));
         if (props.ixn === null) {
           bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
         }
@@ -233,7 +251,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
         >
           <Box
             borderRadius={8}
-            className={'ixn-row-box'}
+            className={classNames('ixn-row-box', props.disabled ? 'disabled' : null, props.addingNote ? 'dark-bg' : null)}
           >
             <div className={classes.margin}>
               <TextField
@@ -317,14 +335,32 @@ export const IxnInputRow: React.FC<MyProps> = props => {
             <DeleteCancelButton
               handleClick={handleCancelClick}
               className={classNames(
-                'delete-edit-button-container',
-                (props.ixn === null && isBlank) ? 'delete-disabled' : null)}
+                'note-edit-button-container',
+                ((props.ixn === null && isBlank) ? 'delete-disabled' : null),
+                (props.addingNote ? 'note-button-extended' : null),
+              )}
               buttonClassName={'cancel-edit-ixn-button'}
               title={'Cancel Edit'}
             >
-              <CancelButton/>
+              <CancelButtonSmall/>
             </DeleteCancelButton>
           </Box>
+          {props.addingNote ?
+            <div className={'note-container'}>
+              <TextField
+                multiline
+                className={classNames('note')}
+                value={note}
+                onChange={inputNote}
+                autoFocus
+                inputProps={{
+                  className: 'note-input',
+                }}
+              />
+            </div>
+            :
+            null
+          }
         </form>
       </ThemeProvider>
       {timeOutOfBoundsError ?
@@ -378,5 +414,51 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
         fill: ${theme.color.buttonRowDisabled};
       }
     }
+  }
+  
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+    
+  .note{
+    width: 100%;
+  }
+  
+  .note-input {
+    font-size: ${theme.font.sizeRegion};
+    font-weight: ${theme.font.weightMedium};
+  }
+  
+  .note-button-extended {
+    border-top-right-radius: 8px;
+    width: 75px !important;
+    margin-right: -8px;
+    background-color: ${theme.color.backgroundInformation};
+    margin-bottom: -8px;
+    padding-right: 7px;
+    padding-bottom: 8px;
+    z-index: 1;
+    flex-grow: 0 !important;
+    align-self: stretch !important;
+  }
+  
+  .note-container {
+    width: 1476px;
+    min-height: 62px;
+    border-radius: 8px 0 8px 8px;
+    background-color: ${theme.color.backgroundInformation};
+    margin: -4px 0 8px 0;
+    padding: 8px;
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 50 !important;
+    position: relative;
+  }
+    
+  .dark-bg {
+    background-color: ${theme.color.backgroundInput} !important;
   }
 `;

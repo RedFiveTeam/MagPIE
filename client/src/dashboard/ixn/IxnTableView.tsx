@@ -13,6 +13,9 @@ import { TargetModel } from '../../store/tgt/TargetModel';
 import IxnModel from '../../store/ixn/IxnModel';
 import { deleteIxn, deleteSegment, updateIxn, updateSegment } from '../../store/ixn';
 import { useDispatch } from 'react-redux';
+import { DismissSnackbarAction } from '../components/InformationalSnackbar';
+import { useSnackbar } from 'notistack';
+import { rowStyles } from '../../resources/theme';
 
 interface MyProps {
   target: TargetModel;
@@ -32,6 +35,10 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
   const [addSegment, setAddSegment] = useState(false);
   const [editSegment, setEditSegment] = useState(-1);
   const [editIxn, setEditIxn] = useState(-1);
+  const [addNote, setAddNote] = useState(-1);
+
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+  const classes = rowStyles();
 
   const theme = createMuiTheme(
     {
@@ -45,21 +52,29 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
       },
     });
 
-  let addingOrEditing = addSegment || editSegment > 0 || editIxn > 0;
+  let addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0;
 
   const dispatch = useDispatch();
 
   const handleEditSegment = (segmentId: number) => {
-    if (!addSegment && editSegment < 0) {
+    if (!addingOrEditing) {
       setEditSegment(segmentId);
     }
   };
 
   const handleEditIxn = (ixnId: number) => {
-    if (!addSegment && editSegment < 0 && editIxn < 0) {
+    if (!addingOrEditing) {
       setEditIxn(ixnId);
     } else if (ixnId < 0) {
       setEditIxn(-1);
+    }
+  };
+
+  const handleAddNote = (ixnId: number) => {
+    if (!addingOrEditing) {
+      setAddNote(ixnId);
+    } else if (ixnId < 0) {
+      setAddNote(-1);
     }
   };
 
@@ -72,8 +87,15 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
   };
 
   const handlePostIxn = (ixn: IxnModel) => {
+    if (addNote > 0) {
+      enqueueSnackbar('Analyst Note Saved.', {
+        action: (key) => DismissSnackbarAction(key, closeSnackbar, classes.snackbarButton),
+        variant: 'info',
+      });
+    }
     setTimeout(() => {
       setEditIxn(-1);
+      setAddNote(-1);
     }, 300);
     dispatch(updateIxn(ixn, props.userName));
   };
@@ -111,6 +133,8 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
           setCollapsed={props.collapse}
           userName={props.userName}
           dateString={props.dateString}
+          addNote={addNote}
+          setAddNote={handleAddNote}
         />,
     );
   }

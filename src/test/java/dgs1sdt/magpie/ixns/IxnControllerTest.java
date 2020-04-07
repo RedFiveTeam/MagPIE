@@ -210,7 +210,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
           10 * 60 +
           55)
           * 1000),
-      "Person entered building from right", "Billy Joe", IxnStatus.NOT_STARTED, "", "", "");
+      "Person entered building from right", "Billy Joe", IxnStatus.NOT_STARTED, "", "", "", "");
 
     String json = objectMapper.writeValueAsString(ixnJson);
 
@@ -646,7 +646,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
         15 * 60 +
         55)
         * 1000
-    ), "Person entered building from right side", "William Joseph", IxnStatus.NOT_STARTED, "", "", "");
+    ), "Person entered building from right side", "William Joseph", IxnStatus.NOT_STARTED, "", "", "", "");
 
     String json = objectMapper.writeValueAsString(ixnJson);
 
@@ -735,6 +735,29 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals(ixnId, metric5.getIxnId());
     assertEquals("track_narrative", metric5.getField());
     assertEquals("START\n\nSome things happened at a specific time.\n\nSTOP", metric5.getNewData());
+
+    ixnJson.setNote("This is a note");
+
+    json = objectMapper.writeValueAsString(ixnJson);
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .body(json)
+      .when()
+      .post(IxnController.URI + "/post")
+      .then()
+      .statusCode(200);
+
+    ixn = ixnRepository.findById(ixnId).get();
+
+    assertEquals("This is a note", ixn.getNote());
+
+    MetricChangeIxn metric6 = metricChangeIxnRepository.findAll().get(5);
+
+    assertEquals(ixnId, metric6.getIxnId());
+    assertEquals("note", metric6.getField());
+    assertEquals("This is a note", metric6.getNewData());
   }
 
   @Test
@@ -791,9 +814,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
     setupIxns();
     Ixn ixn = ixnRepository.findAll().get(0);
     IxnJson ixnJson = new IxnJson(ixn.getId(), ixn.getRfiId(), ixn.getExploitDateId(), ixn.getTargetId(),
-      ixn.getSegmentId(),
-      ixn.getExploitAnalyst(), ixn.getTime(), ixn.getActivity(), ixn.getTrackAnalyst(), ixn.getStatus(),
-      ixn.getLeadChecker(), ixn.getFinalChecker(), ixn.getTrackNarrative());
+      ixn.getSegmentId(), ixn.getExploitAnalyst(), ixn.getTime(), ixn.getActivity(), ixn.getTrackAnalyst(),
+      ixn.getStatus(), ixn.getLeadChecker(), ixn.getFinalChecker(), ixn.getTrackNarrative(), ixn.getNote());
 
     long ixnId = ixn.getId();
 

@@ -332,7 +332,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
-    IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "");
+    IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
     MetricCreateIxn metric1 = new MetricCreateIxn(1, ixn, "guy");
     MetricCreateIxn metric2 = new MetricCreateIxn(1, ixn, "guy");
     MetricCreateIxn metric3 = new MetricCreateIxn(1, ixn, "guy");
@@ -595,9 +595,9 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       new Timestamp(234)));
     metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
 
-    IxnJson ixnJson1 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
-    IxnJson ixnJson2 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
-    IxnJson ixnJson3 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "");
+    IxnJson ixnJson1 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+    IxnJson ixnJson2 = new IxnJson(2, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+    IxnJson ixnJson3 = new IxnJson(3, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
     MetricChangeIxn metric8 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)),
       "guy");
     MetricChangeIxn metric9 = new MetricChangeIxn("activity", ixnJson1,
@@ -630,7 +630,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricChangeSegmentRepository.save(metric7);
     metricChangeIxnRepository.saveAll(ixnChanges);
 
-    assertArrayEquals(new long[]{1, 2, 1, 2}, metricsService.getAverageEditsPerWeek());
+    assertArrayEquals(new long[]{1, 2, 1, 3}, metricsService.getAverageEditsPerWeek());
   }
 
   @Test
