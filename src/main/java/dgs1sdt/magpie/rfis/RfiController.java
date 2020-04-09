@@ -66,7 +66,6 @@ public class RfiController {
 
   @GetMapping
   public List<RfiGet> getAllRfis() {
-    log.trace("Returning RFIs to client");
     List<Rfi> rfis = this.rfiService.fetchRfisFromRepo();
     List<RfiGet> rfiGetList = new ArrayList<>();
 
