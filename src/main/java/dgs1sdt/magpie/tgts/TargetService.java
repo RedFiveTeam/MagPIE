@@ -7,6 +7,7 @@ import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class TargetService {
   private MetricsService metricsService;
   private RfiRepository rfiRepository;
@@ -99,7 +101,7 @@ public class TargetService {
     Rfi rfi = rfiRepository.findRfiById(exploitDateJson.getRfiId());
     if (rfi == null) {
       // Failback in case there is no rfi associated with the provided rfiId
-      System.err.println("Error posting exploit date: RFI with id " + exploitDateJson.getRfiId() +
+      log.error("Error posting exploit date: RFI with id " + exploitDateJson.getRfiId() +
         " not found");
       return new ArrayList<>();
     }
@@ -158,7 +160,7 @@ public class TargetService {
 
       return this.getTargets(target.getRfiId());
     } else {
-      System.err.println("Error deleting target: could not find target with id " + targetId);
+      log.error("Error deleting target: could not find target with id " + targetId);
       return new ArrayList<>();
     }
   }
@@ -172,7 +174,7 @@ public class TargetService {
 
       targetRepository.deleteById(targetId);
     } else {
-      System.err.println("Error deleting target: Could not find target by id " + targetId);
+      log.error("Error deleting target: Could not find target by id " + targetId);
     }
   }
 
@@ -191,7 +193,7 @@ public class TargetService {
       exploitDateRepository.save(exploitDate);
       return this.getExploitDates(exploitDate.getRfiId());
     } else {
-      System.err.println("Error deleting exploit date: Could not find exploit Date by id " + exploitDateId);
+      log.error("Error deleting exploit date: Could not find exploit Date by id " + exploitDateId);
       return new ArrayList<>();
     }
   }
@@ -208,7 +210,7 @@ public class TargetService {
       metricsService.addDeleteExploitDate(exploitDateId);
       exploitDateRepository.deleteById(exploitDateId);
     } else {
-      System.err.println("Error deleting exploit date: Could not find exploit Date by id " + exploitDateId);
+      log.error("Error deleting exploit date: Could not find exploit Date by id " + exploitDateId);
     }
   }
 
@@ -227,10 +229,10 @@ public class TargetService {
 
           metricsService.addCreateTarget(lastTargetId, targetJson, userName);
         } else {
-          System.err.println("Error finding exploit date by id: " + exploitDateId);
+          log.error("Error finding exploit date by id: " + exploitDateId);
         }
       } else {
-        System.err.println("Error finding rfi by id: " + targetJson.getRfiId());
+        log.error("Error finding rfi by id: " + targetJson.getRfiId());
       }
     }
   }
@@ -265,10 +267,10 @@ public class TargetService {
         }
 
       } else
-        System.err.println("Error updating target: Could not find exploit date by id " + exploitDateId);
+        log.error("Error updating target: Could not find exploit date by id " + exploitDateId);
 
     } else
-      System.err.println("Error updating target: Could not find target by id " + targetJson.getTargetId());
+      log.error("Error updating target: Could not find target by id " + targetJson.getTargetId());
   }
 
   public List<Target> getDeletedTargets() {

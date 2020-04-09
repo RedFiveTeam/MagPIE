@@ -4,6 +4,7 @@ import dgs1sdt.magpie.ixns.IxnService;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.magpie.tgts.TargetService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(RfiController.URI)
+@Slf4j
 public class RfiController {
   public static final String URI = "/api/rfi";
 
@@ -64,6 +66,7 @@ public class RfiController {
 
   @GetMapping
   public List<RfiGet> getAllRfis() {
+    log.trace("Returning RFIs to client");
     List<Rfi> rfis = this.rfiService.fetchRfisFromRepo();
     List<RfiGet> rfiGetList = new ArrayList<>();
 
@@ -97,7 +100,7 @@ public class RfiController {
         rfis.add(rfiToUpdate);
 
       } else {
-        System.err.println("Updating priority on previously unknown RFI " + rfiPriorityJson.getRfiNum());
+        log.error("Updating priority on previously unknown RFI " + rfiPriorityJson.getRfiNum());
       }
     }
 

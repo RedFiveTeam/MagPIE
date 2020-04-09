@@ -2,6 +2,7 @@ package dgs1sdt.magpie.rfis;
 
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class RfiService {
   @Value("${GETS_URI_OPEN_PENDING}")
   String getsUriOpenPending;
@@ -60,7 +62,7 @@ public class RfiService {
 
   @Scheduled(fixedDelay = 60000, initialDelay = 5000)
   public void fetchRfisFromGets() {
-    System.out.println("Fetching from GETS");
+    log.trace("Fetching from GETS");
     String[] uris = {getsUriOpenPending, getsUriClosed};
     fetchRfisFromUris(uris);
   }
@@ -69,7 +71,7 @@ public class RfiService {
     try {
       this.updateRepoFromGets(uris);
     } catch (Exception e) {
-      System.err.println("Error fetching from GETS: " + e.getMessage());
+      log.error("Error fetching from GETS: " + e.getMessage());
     }
     this.updatePrioritiesInRepo(rfiRepository);
   }
@@ -107,7 +109,6 @@ public class RfiService {
 
   private void updateRepoFromGets(String[] uris) throws Exception {
     for (String uri : uris) {
-      System.out.println(uri);
       updateAndSaveRfis(
         marshallDocumentToRfis(
           getsClient.rfiResponseDocument(uri)
@@ -127,10 +128,10 @@ public class RfiService {
   private void createOrUpdateRfi(Rfi newRfi, Date currDate) {
     Rfi oldRfi = rfiRepository.findByRfiNum(newRfi.getRfiNum());
     if (existsInRepo(oldRfi)) {
-      System.out.println("Received previously found RFI: " + oldRfi.getRfiNum());
+      log.trace("Received previously found RFI: " + oldRfi.getRfiNum());
       linkNewRfiToOldRfi(newRfi, oldRfi);
       if (hasChanged(newRfi, oldRfi)) {
-        System.out.println("It has updates.");
+        log.trace("It has updates.");
         postUpdateMetrics(newRfi, currDate, oldRfi);
       }
     }

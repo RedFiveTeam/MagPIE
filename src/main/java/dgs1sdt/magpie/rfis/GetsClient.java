@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.rfis;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
+@Slf4j
 public class GetsClient {
   @Value("${GETS_REQUEST_TIME_FRAME_IN_DAYS}")
   private int requestDays;
@@ -35,7 +37,7 @@ public class GetsClient {
       }
       stream = new URL(uri).openStream();
     }
-    System.out.println("Fetching from: " + uri);
+    log.trace("Fetching from: " + uri);
     return db.parse(stream);
   }
 }

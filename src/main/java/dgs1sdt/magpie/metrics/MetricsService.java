@@ -67,6 +67,7 @@ import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +78,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class MetricsService {
   static final long MillisecondsInADay = 86400000L;
 
@@ -375,7 +377,7 @@ public class MetricsService {
         );
         metrics.add(changeTarget);
       } catch (Exception e) {
-        System.err.println("Error creating change target metric with unknown field: " + field);
+        log.error("Error creating change target metric with unknown field: " + field);
       }
     }
     return metricChangeTargetRepository.saveAll(metrics);
@@ -408,7 +410,7 @@ public class MetricsService {
       try {
         metrics.add(new MetricChangeIxn(field, newIxn, now, userName));
       } catch (Exception e) {
-        System.err.println("Error creating change ixn metric with unknown field: " + field);
+        log.error("Error creating change ixn metric with unknown field: " + field);
       }
     }
     return metricChangeIxnRepository.saveAll(metrics);

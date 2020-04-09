@@ -5,6 +5,7 @@ import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetRepository;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class IxnService {
   private MetricsService metricsService;
   private ExploitDateRepository exploitDateRepository;
@@ -97,7 +99,7 @@ public class IxnService {
 
         segmentRepository.save(newSegment);
       } else {
-        System.err.println("Error editing segment: could not find segment with id " + segmentJson.getId());
+        log.error("Error editing segment: could not find segment with id " + segmentJson.getId());
       }
     } else {
       segmentRepository.save(newSegment);
@@ -136,7 +138,7 @@ public class IxnService {
 
       assignTracks(ixn.getRfiId(), targetRepository.findById(ixn.getTargetId()).get().getName());
     } else {
-      System.err.println("Could not find ixn to delete with id " + ixnId);
+      log.error("Could not find ixn to delete with id " + ixnId);
     }
   }
 
@@ -146,7 +148,7 @@ public class IxnService {
       ixnRepository.deleteAll(ixns);
       segmentRepository.deleteById(segmentId);
     } else {
-      System.err.println("Error deleting segment: could not find segment with id " + segmentId);
+      log.error("Error deleting segment: could not find segment with id " + segmentId);
     }
   }
 
@@ -164,7 +166,7 @@ public class IxnService {
 
       assignTracks(segment.getRfiId(), targetRepository.findById(segment.getTargetId()).get().getName());
     } else {
-      System.err.println("Error deleting segment: could not find segment with id " + segmentId);
+      log.error("Error deleting segment: could not find segment with id " + segmentId);
     }
   }
 
