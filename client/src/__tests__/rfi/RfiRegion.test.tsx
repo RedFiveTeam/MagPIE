@@ -3,7 +3,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { RfiRegion } from '../../dashboard/rfi/region/RfiRegion';
 import { StyledRfiRegionDivider } from '../../dashboard/rfi/region/RfiRegionDivider';
-import { RfiRow } from '../../dashboard/rfi/region/row/RfiRow';
+import { RfiRow } from '../../dashboard/rfi/region/RfiRow';
 
 describe('Region', () => {
   let rows: any[];
@@ -17,24 +17,24 @@ describe('Region', () => {
         key={'1'}
         scrollRegionRef={{}}
         index={0}
-        loadTgtPage={jest.fn()}
-        postGetsClick={jest.fn()}
+        selected={false}
+        selectRfi={jest.fn()}
       />,
       <RfiRow
         rfi={new RfiModel(2, '19-004', 'url', RfiStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi', -1, 0, 0)}
         key={'2'}
         scrollRegionRef={{}}
         index={1}
-        loadTgtPage={jest.fn()}
-        postGetsClick={jest.fn()}
+        selected={false}
+        selectRfi={jest.fn()}
       />,
       <RfiRow
         rfi={new RfiModel(3, '19-003', 'url', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', -1, 0, 0)}
         key={'3'}
         scrollRegionRef={{}}
         index={2}
-        loadTgtPage={jest.fn()}
-        postGetsClick={jest.fn()}
+        selected={false}
+        selectRfi={jest.fn()}
       />,
     ];
     subject = shallow(

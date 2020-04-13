@@ -1,11 +1,8 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import ActiveUpperSortButtonVector from '../../resources/icons/ActiveUpperSortButton';
-import LowerSortButtonVector from '../../resources/icons/LowerSortButton';
-import UpperSortButtonVector from '../../resources/icons/UpperSortButton';
-import ActiveLowerSortButtonVector from '../../resources/icons/ActiveLowerSortButton';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
 import { RfiTableHeaderCell } from '../../dashboard/rfi/rfiDashboardTableHeader/RfiTableHeaderCell';
+import SortButtonVector from '../../resources/icons/SortButtonVector';
 
 describe('HeaderCell', () => {
   let subject: ShallowWrapper;
@@ -33,10 +30,10 @@ describe('HeaderCell', () => {
   });
 
   it('should display appropriate sort icons when order is different', () => {
-    expect(subject.find(ActiveUpperSortButtonVector).exists()).toBeTruthy();
-    expect(subject.find(UpperSortButtonVector).exists()).toBeFalsy();
-    expect(subject.find(ActiveLowerSortButtonVector).exists()).toBeFalsy();
-    expect(subject.find(LowerSortButtonVector).exists()).toBeTruthy();
+    expect(subject.find(SortButtonVector).at(0).prop('ascending')).toBe(true);
+    expect(subject.find(SortButtonVector).at(0).prop('active')).toBe(true);
+    expect(subject.find(SortButtonVector).at(1).prop('ascending')).toBe(false);
+    expect(subject.find(SortButtonVector).at(1).prop('active')).toBe(false);
     subject = shallow(
       <RfiTableHeaderCell
         text={'title'}
@@ -45,9 +42,9 @@ describe('HeaderCell', () => {
         field={Field.PRIORITY}
       />
     );
-    expect(subject.find(ActiveUpperSortButtonVector).exists()).toBeFalsy();
-    expect(subject.find(UpperSortButtonVector).exists()).toBeTruthy();
-    expect(subject.find(ActiveLowerSortButtonVector).exists()).toBeTruthy();
-    expect(subject.find(LowerSortButtonVector).exists()).toBeFalsy();
+    expect(subject.find(SortButtonVector).at(0).prop('ascending')).toBe(true);
+    expect(subject.find(SortButtonVector).at(0).prop('active')).toBe(false);
+    expect(subject.find(SortButtonVector).at(1).prop('ascending')).toBe(false);
+    expect(subject.find(SortButtonVector).at(1).prop('active')).toBe(true);
   });
 });

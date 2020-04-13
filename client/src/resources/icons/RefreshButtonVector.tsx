@@ -2,11 +2,11 @@ import * as React from 'react';
 import theme from '../theme';
 import styled from 'styled-components';
 
-const pathD = 'M7.5 0C3.85925 0 0.825112 2.59444 0.143737 6.03515H2.22565C2.86713 3.72195 4.98254 2.02149 7.5 ' +
-  '2.02149C9.01336 2.02149 10.3809 2.63643 11.3709 3.62915L8.96485 6.03515H15V0L12.8027 2.19726C11.4457 0.839763 ' +
-  '9.57123 0 7.5 0ZM0 8.96485V15L2.19726 12.8027C3.55433 14.1602 5.42878 15 7.5 15C11.1407 15 14.1749 12.4056 ' +
-  '14.8563 8.96485H12.7744C12.1329 11.278 10.0175 12.9785 7.5 12.9785C5.98664 12.9785 4.61908 12.3636 3.62915 ' +
-  '11.3709L6.03515 8.96485H0Z';
+const pathD = 'M10.2985 0C5.29927 0 1.13299 3.55028 0.197371 8.25863H3.05612C3.93695 5.09319 6.84169 2.76625 10.2985' +
+  ' 2.76625C12.3766 2.76625 14.2544 3.60774 15.6137 4.9662L12.3099 8.25863H20.597V0L17.5799 3.00678C15.7164 1.14915 ' +
+  '13.1426 0 10.2985 0ZM0 12.2677V20.5263L3.01714 17.5195C4.88057 19.3772 7.45444 20.5263 10.2985 20.5263C15.2977 20' +
+  '.5263 19.464 16.976 20.3996 12.2677H17.5409C16.6601 15.4331 13.7553 17.7601 10.2985 17.7601C8.22046 17.7601 6.342' +
+  '61 16.9186 4.98331 15.5601L8.28707 12.2677H0Z';
 
 interface MyProps {
   className?: string;
@@ -16,14 +16,14 @@ const RefreshButtonVector = (props: MyProps) => {
   return (
     <div className={props.className}>
       <svg
-        width="15"
-        height="15"
-        viewBox="0 0 15 15"
+        width="21"
+        height="21"
+        viewBox="0 0 21 21"
         fill="none"
         xmlns="http://www.w3.org/2000/svg">
         <path
           d={pathD}
-          fill={theme.color.buttonInactive}
+          fill={theme.color.primaryButton}
         />
       </svg>
     </div>
@@ -31,11 +31,15 @@ const RefreshButtonVector = (props: MyProps) => {
 };
 
 export const StyledRefreshButtonVector = styled(RefreshButtonVector)`
- svg {
-   :hover {
-     filter: drop-shadow(0 0px 4px #FFFFFF);
-   }
- }
+  cursor: pointer;
+  
+  svg {
+    filter: drop-shadow(0 0px 4px #000);
+    
+    :hover {
+      filter: drop-shadow(0 0px 4px #FFFFFF);
+    }
+  }
 `;
 
 export default RefreshButtonVector;

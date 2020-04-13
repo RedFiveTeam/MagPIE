@@ -22,7 +22,7 @@ import { postCancelAddSegment } from '../../../store/ixn';
 
 interface Props {
   target: TargetModel;
-  segment: SegmentModel | null;
+  segment: SegmentModel|null;
   postSegment: (segment: SegmentModel) => void;
   postIxn: (ixn: IxnModel) => void;
   deleteSegment: (segment: SegmentModel) => void;
@@ -33,8 +33,8 @@ interface Props {
   className?: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles(
+  {
     root: {
       '& > *': {
         margin: theme.spacing(1),
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface TextMaskCustomProps {
-  inputRef: (ref: HTMLInputElement | null) => void;
+  inputRef: (ref: HTMLInputElement|null) => void;
 }
 
 function SegmentTextMask(props: TextMaskCustomProps) {
@@ -70,10 +70,10 @@ export const SegmentDivider: React.FC<Props> = props => {
   const classes = useStyles();
   const rowClasses = rowStyles();
 
-  const [segmentStartString, setSegmentStartString] = React.useState(props.segment ?
-    props.segment.startTime.format('HH:mm:ss') : '__:__:__');
-  const [segmentEndString, setSegmentEndString] = React.useState(props.segment ?
-    props.segment.endTime.format('HH:mm:ss') : '__:__:__');
+  const [segmentStartString, setSegmentStartString] =
+    React.useState(props.segment ? props.segment.startTime.format('HH:mm:ss') : '__:__:__');
+  const [segmentEndString, setSegmentEndString] =
+    React.useState(props.segment ? props.segment.endTime.format('HH:mm:ss') : '__:__:__');
   const [segmentStartError, setSegmentStartError] = React.useState(false);
   const [segmentEndError, setSegmentEndError] = React.useState(false);
   const [displayModal, setDisplayModal] = React.useState(false);
@@ -89,10 +89,11 @@ export const SegmentDivider: React.FC<Props> = props => {
   useEffect(() => {
     switch (action) {
       case (RowAction.DELETING):
-        if (props.editing)
+        if (props.editing) {
           handleCancel();
-        else
+        } else {
           handleDelete();
+        }
         resetAction();
         break;
       case (RowAction.SUBMITTING):
@@ -149,10 +150,11 @@ export const SegmentDivider: React.FC<Props> = props => {
   };
 
   const handleDeleteClick = () => {
-    if (props.hasIxns)
+    if (props.hasIxns) {
       setDisplayModal(true);
-    else
+    } else {
       setAction(RowAction.DELETING);
+    }
   };
 
   const handleCancel = () => {
@@ -168,11 +170,11 @@ export const SegmentDivider: React.FC<Props> = props => {
   const handleDelete = () => {
     if (props.segment !== null) {
       enqueueSnackbar('You deleted ' + props.segment!.startTime.format('HH:mm:ss') + 'Z-' +
-        props.segment!.endTime.format('HH:mm:ss') + 'Z', {
-        action: (key) => UndoSnackbarAction(key, props.segment!, props.postSegment, closeSnackbar,
-                                            rowClasses.snackbarButton),
-        variant: 'info',
-      });
+                        props.segment!.endTime.format('HH:mm:ss') + 'Z', {
+                        action: (key) => UndoSnackbarAction(key, props.segment!, props.postSegment,
+                                                            closeSnackbar, rowClasses.snackbarButton),
+                        variant: 'info',
+                      });
       props.deleteSegment(props.segment);
     } else {
       props.setAddSegment(false);
@@ -181,8 +183,9 @@ export const SegmentDivider: React.FC<Props> = props => {
   };
 
   const handleEditClick = () => {
-    if (props.segment && props.segment.id)
+    if (props.segment && props.segment.id) {
       props.setEdit(props.segment.id);
+    }
   };
 
   const handleBlur = (event: any) => {
@@ -325,15 +328,6 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     margin-bottom: 10px;
   }
   
-  .segment-divider--bar {
-    margin-bottom: -4px;
-    width: 1500px;
-    height: 4px;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border: ${theme.color.segmentDivider};
-    border: 2px solid;
-  }
   
   .segment-value {
     width: 72px;
@@ -351,14 +345,23 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     justify-content: center;
   }
   
+  .segment-divider--bar {
+    margin-bottom: -4px;
+    width: 1500px;
+    height: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background: radial-gradient(800px, ${theme.color.regionDividerPrimary}, ${theme.color.regionDividerSecondary});
+    z-index: 2;
+  }
+  
   .segment-divider--box {
     width: 306px;
     height: 30px;
-    background: ${theme.color.backgroundHeader};
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
-    border: ${theme.color.segmentDivider};
-    border: 4px solid;
+    border: 4px solid ${theme.color.regionDividerPrimary};
+    background: ${theme.color.backgroundBase};
     display: flex;
     flex-direction: row;
     justify-content: center;

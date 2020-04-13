@@ -8,7 +8,7 @@ Before((I) => {
   I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
   I.waitForText('RFI:', 10);
 });
 
@@ -25,7 +25,7 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.pressKey('Enter');
 
   I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
@@ -98,8 +98,8 @@ Scenario('Should be able to see Tgt and Ixn counts on the RFI page', (I) => {
 
   I.waitForText('TGTs', 10);
   I.see('IXNs');
-  I.see('1', locate('.region--prioritized').find('.cell--tgtCount').at(1));
-  I.see('2', locate('.region--prioritized').find('.cell--ixnCount').at(1));
+  I.see('1', locate('.region--prioritized').find('.cell--count').at(1));
+  I.see('2', locate('.region--prioritized').find('.cell--count').at(2));
 });
 
 Scenario('Should be able to edit ixns', (I) => {
@@ -432,7 +432,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.fillField('input', '02012020');
   I.click('.tgt-dash--header--back-button');
   I.waitForText('PRI');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
 
   //Add target
@@ -470,7 +470,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
 
   I.click('.tgt-dash--header--back-button');
   I.waitForText('PRI');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
   I.waitForText('SDT20-123');
 
@@ -479,7 +479,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.click('.modal-yes');
 
   I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
   I.waitForText('RFI:');
   I.dontSee('12QWE1231231231');

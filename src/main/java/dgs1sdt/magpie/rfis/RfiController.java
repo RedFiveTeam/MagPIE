@@ -135,4 +135,9 @@ public class RfiController {
 //    Tell front end that reprioritization was successful
     return true;
   }
+
+  @GetMapping(path = "/refresh")
+  public void refreshFromGets() {
+    rfiService.fetchRfisFromGets();
+  }
 }

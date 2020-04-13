@@ -322,4 +322,14 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals(0, rfi.getTgtCount());
   }
+
+  @Test
+  public void refreshesFromGets() {
+    given()
+      .port(port)
+      .when()
+      .get(RfiController.URI + "/refresh")
+      .then()
+      .statusCode(200);
+  }
 }

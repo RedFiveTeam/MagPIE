@@ -30,8 +30,8 @@ function filterRfisByStatus(rfis: RfiModel[], status: RfiStatus) {
 
 function filterRfis(sortedRfis: RfiModel[]) {
   return {
-    pendingRfis: filterRfisByStatus(sortedRfis, RfiStatus.PENDING),
     openRfis: filterRfisByStatus(sortedRfis, RfiStatus.OPEN),
+    pendingRfis: filterRfisByStatus(sortedRfis, RfiStatus.PENDING),
     closedRfis: filterRfisByStatus(sortedRfis, RfiStatus.CLOSED),
   }
 }

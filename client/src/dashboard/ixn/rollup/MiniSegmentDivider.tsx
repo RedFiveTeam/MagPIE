@@ -51,7 +51,7 @@ export const StyledMiniSegmentDivider = styled(MiniSegmentDivider)`
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    border: ${theme.color.segmentDivider};
+    border: ${theme.color.regionDividerPrimary};
     border: 2px solid;
   }
   
@@ -69,7 +69,7 @@ export const StyledMiniSegmentDivider = styled(MiniSegmentDivider)`
     background: ${theme.color.backgroundHeader};
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
-    border: ${theme.color.segmentDivider};
+    border: ${theme.color.regionDividerPrimary};
     border: 4px solid;
     display: flex;
     flex-direction: row;

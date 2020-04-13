@@ -27,7 +27,7 @@ const ExternalLinkVector = (props: MyProps) => {
       >
         <path
           d={pathD}
-          fill={theme.color.buttonInactive}
+          fill={theme.color.primaryButton}
         />
       </svg>
     </div>

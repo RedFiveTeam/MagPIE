@@ -1,0 +1,178 @@
+import * as React from 'react';
+import styled from 'styled-components';
+import classNames from 'classnames';
+import RfiModel, { RfiStatus } from '../../../store/rfi/RfiModel';
+import theme from '../../../resources/theme';
+import IconDnDBurger from '../../../resources/icons/DnDBurgerVector';
+import { formatRfiNum } from '../../../utils';
+
+interface Props {
+  rfi: RfiModel;
+  scrollRegionRef: any;
+  selectRfi: (rfiId: number) => void;
+  selected: boolean;
+  index?: number;
+  prioritizing?: boolean;
+  className?: string;
+}
+
+export const RfiRow: React.FC<Props> = props => {
+
+  return (
+    <div className={props.className} id={'rfi-row-' + props.rfi.id}>
+      <div
+        className={classNames('rfi-row', props.selected ? 'selected' : null)}
+        key={props.rfi.rfiNum}
+        onClick={() => props.selectRfi(props.rfi.id)}
+      >
+        {props.rfi.priority > -1 && props.rfi.status === 'OPEN' ? props.prioritizing ?
+          <div className={classNames('cell', 'cell--pri', 'prioritizing')}>
+            <IconDnDBurger/>
+            <span className={'priority'}>{props.rfi.priority}</span>
+          </div>
+          :
+          <div className={classNames('cell', 'cell--pri', 'not-prioritizing')}>
+            <IconDnDBurger/>
+            <span className={'priority'}>{props.rfi.priority}</span>
+          </div>
+          :
+          <div className={classNames('cell', 'cell--pri', 'not-prioritizing')}>
+            <IconDnDBurger/>
+            <span className={'priority'}>-</span>
+          </div>
+        }
+        <span className={classNames('cell', 'cell--rfi-num')}>
+        {formatRfiNum(props.rfi.rfiNum)}
+      </span>
+        <span className={classNames('cell', 'cell--country')}>
+          {props.rfi.country}
+        </span>
+        <span className={classNames('cell', 'cell--customer')}>
+          <div>{props.rfi.customer}</div>
+      </span>
+        <span className={classNames('cell', 'cell--ltiov')}>
+            {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format('D MMM YY').toUpperCase()}
+      </span>
+        <span className={classNames('cell', 'cell--count')}>
+          {props.rfi.status === RfiStatus.PENDING ? '-' : props.rfi.tgtCount}
+      </span>
+        <span className={classNames('cell', 'cell--count')}>
+          {props.rfi.status === RfiStatus.PENDING ? '-' : props.rfi.ixnCount}
+      </span>
+      </div>
+    </div>
+  );
+};
+
+export const StyledRfiRow = styled(RfiRow)`
+  .rfi-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 509px;
+    font-size: ${theme.font.sizeRow};
+    font-weight: ${theme.font.weightBold};
+    color: ${theme.color.fontActive};
+    border-radius: 8px;
+    margin-bottom: 8px;
+    height: 62px;
+    white-space: nowrap;
+    cursor: pointer;
+    background-color: ${theme.color.backgroundInformation};
+    margin-left: 4px;
+    
+    :hover {
+      box-shadow: 0 0 4px #FFF;
+    }
+  }
+  
+  .selected {
+    background-color: ${theme.color.backgroundFocus};
+  }
+  
+  .cell--pri {
+    width: 61px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+  
+  .prioritizing {
+    cursor: grab;
+  }
+  
+  .not-prioritizing {
+    svg {
+      opacity: 0;
+    }
+  }
+  
+  .cell--rfi-num {
+    width: 60px;
+  }
+  
+  .cell--country {
+    width: 45px;
+  }
+  
+  .cell--customer {
+    width: 90px;
+  }
+  
+  .cell--customer div {
+    width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .cell--ltiov {
+    width: 80px;
+  }
+  
+  .cell--count {
+    width: 30px;
+  }
+`;
+
+export const PendingRfiRow = styled(StyledRfiRow)` 
+  .section--information, .section--button {
+    font-weight: ${theme.font.weightBold};
+    background: ${theme.color.backgroundInformation};
+  }
+  
+  .section--information {
+    max-width: 1440px;
+  }
+
+  .border {
+    background: ${theme.color.backgroundAction};
+  }
+`;
+
+export const OpenRfiRow = styled(StyledRfiRow)` 
+  .section--information, .section--button {
+    font-weight: ${theme.font.weightRow};
+    background: ${theme.color.backgroundInformation};
+  }
+
+  .border {
+    background: ${theme.color.backgroundAssigned};
+  }
+`;
+
+export const ClosedRfiRow = styled(StyledRfiRow)` 
+  .section--information, .section-button {
+    font-weight: ${theme.font.weightRow};
+    background: ${theme.color.backgroundInactive};
+  }
+    
+  .section--information {
+    max-width: 1440px;
+  }
+
+  .border {
+    background: ${theme.color.backgroundInactive};
+  }
+`;

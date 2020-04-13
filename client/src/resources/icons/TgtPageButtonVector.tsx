@@ -29,11 +29,11 @@ const TgtPageButtonVector = (props: MyProps) => {
           fillRule={'evenodd'}
           clipRule={'evenodd'}
           d={pathD1}
-          fill={theme.color.buttonInactive}
+          fill={theme.color.primaryButton}
         />
         <path
           d={pathD2}
-          fill={theme.color.buttonInactive}
+          fill={theme.color.primaryButton}
         />
       </svg>
     </div>

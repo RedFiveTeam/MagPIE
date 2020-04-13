@@ -208,16 +208,15 @@ export const StyledTgtDateDivider = styled(connect(mapStateToProps, mapDispatchT
   .exploit-date-divider--box {
     width: 306px;
     height: 30px;
-    background: ${theme.color.backgroundHeader};
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
-    border: ${theme.color.segmentDivider};
-    border: 4px solid;
+    border: 4px solid ${theme.color.regionDividerPrimary};
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     margin-bottom: -50px;
+    z-index: 1;
   }
   
   .exploit-date-divider--bar {
@@ -226,8 +225,8 @@ export const StyledTgtDateDivider = styled(connect(mapStateToProps, mapDispatchT
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    border: ${theme.color.segmentDivider};
-    border: 2px solid;
+    background: radial-gradient(800px, ${theme.color.regionDividerPrimary}, ${theme.color.regionDividerSecondary});
+    z-index: 2;
   }
   
   .date-container {

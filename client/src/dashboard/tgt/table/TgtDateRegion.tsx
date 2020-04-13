@@ -82,8 +82,8 @@ export const TgtDateRegion: React.FC<Props> = props => {
             width={110}
             border={2}
             borderRadius={16}
-            borderColor={theme.color.backgroundAction}
-            bgcolor={theme.color.backgroundStatus}
+            borderColor={theme.color.primaryButton}
+            bgcolor={theme.color.backgroundModal}
             onClick={() => props.setAddEditTarget(Status.ADD, props.exploitDate.id)}
             display='flex'
             flexDirection='row'

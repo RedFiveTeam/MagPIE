@@ -8,7 +8,7 @@ Before((I) => {
   I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
   I.waitForText('RFI: 20-325', 10);
 });
 
@@ -44,7 +44,7 @@ Scenario('Should be able to delete and undo delete dates', (I) => {
   I.click('UNDO');
 
   I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
   I.waitForText('RFI: 20-325', 10);
   I.seeElement(locate('input').withAttr({value: '02/09/2020'}));
   I.click('.delete-date');
@@ -67,7 +67,7 @@ Scenario('Should be able to add tgts', (I) => {
   I.pressKey('Enter');
 
   I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
   I.waitForText('SDT20-123', 10);
   I.seeElement('.add-tgt-button');
@@ -88,7 +88,7 @@ Scenario('Should be able to edit tgts', (I) => {
 
   //Need to leave page and come back to see changes
   I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
   I.waitForText('SDT20-999', 10);
   I.see('12QWE1234567890');
@@ -102,7 +102,7 @@ Scenario('Should be able to edit tgts', (I) => {
   I.click('.cancel-edit-tgt-button');
 
   I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
   I.waitForText('SDT20-999', 10);
   I.dontSee('12QWE0987654321');
@@ -119,7 +119,7 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
 
   I.click('.tgt-dash--header--back-button');
   I.waitForText('PRI');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
   I.waitForText('RFI: 20-325');
 
   I.click('.add-tgt-button');
@@ -146,12 +146,12 @@ Scenario('Should be able to delete and undo delete tgts', (I) => {
 
   //Need to leave page and come back to see changes
   I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
   I.click('.delete-tgt-button');
 
   I.click('.tgt-dash--header--back-button');
-  I.click('.cell--navigate-to-tgt-button');
+  I.click('.navigate-to-tgt-button');
 
   I.dontSeeElement('.tgt-form-box');
   I.click('.delete-date');

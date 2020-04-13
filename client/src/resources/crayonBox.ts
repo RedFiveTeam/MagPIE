@@ -2,7 +2,7 @@ export const crayonBox = {
   pitchBlack: '#000000',
   tarBlack: '#010102',
   lightBlack: '#040404',
-  coolBlack: '#041319',
+  coolBlack: '#041319',//
   softMetal: '#202020',
   darkGray: '#323232',
   lessDarkGray: '#393939',
@@ -11,6 +11,7 @@ export const crayonBox = {
   subtlerGray: '#5F5F5F',
   warmGray: '#6F6E6C',
   blueGray: '#66666e',
+  blueBlueGray: '#444B50',//
   blueGrayLight: 'rgba(102, 102, 110, 0.5)',
   mediumGray: '#838383',
   mediumMediumLightGray: '#8D8D8D',
@@ -31,9 +32,12 @@ export const crayonBox = {
   forestGreen: '#204110',
   stoplightGreen: '#01734F',
   darkBlue: '#0C2028',
-  steelBlue: '#243237',
+  steelBlue: '#243237',//
   mediumBlue: '#1C455C',
+  mediumBlueGray: '#3C535B',//
+  mediumMediumBrightBlue: '#0A6EAA',//
   mediumBrightBlue: '#0872B3',
   brightBlue: '#1E98E5',
+  skyBlueGreen: '#6FB6CF',//
   skyBlue: '#82BFF9',
 };

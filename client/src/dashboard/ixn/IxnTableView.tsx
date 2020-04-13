@@ -1,21 +1,20 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledIxnTable } from './table/IxnTable';
 import { StyledSegmentDivider } from './table/SegmentDivider';
-import { Box, createMuiTheme } from '@material-ui/core';
-import { crayonBox } from '../../resources/crayonBox';
+import { Box } from '@material-ui/core';
 import classNames from 'classnames';
 import { ExploitationLogButtonVectorSmall } from '../../resources/icons/ExploitationLogButtonVector';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { StyledSegmentRegion } from './table/SegmentRegion';
-import { useState } from 'react';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import IxnModel from '../../store/ixn/IxnModel';
 import { deleteIxn, deleteSegment, updateIxn, updateSegment } from '../../store/ixn';
 import { useDispatch } from 'react-redux';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { useSnackbar } from 'notistack';
-import { rowStyles } from '../../resources/theme';
+import theme, { rowStyles } from '../../resources/theme';
 
 interface MyProps {
   target: TargetModel;
@@ -39,18 +38,6 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const classes = rowStyles();
-
-  const theme = createMuiTheme(
-    {
-      palette: {
-        primary: {
-          main: crayonBox.skyBlue,
-        },
-        secondary: {
-          main: '#323232',
-        },
-      },
-    });
 
   let addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0;
 
@@ -174,8 +161,8 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
           width={160}
           border={2}
           borderRadius={21}
-          borderColor={crayonBox.safetyOrange}
-          bgcolor={theme.palette.secondary.main}
+          borderColor={theme.color.primaryButton}
+          bgcolor={theme.color.backgroundModal}
           display="flex"
           flexDirection="row"
           alignItems="center"

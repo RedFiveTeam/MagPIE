@@ -42,13 +42,13 @@ describe('reducer', () => {
     closedRfi1 = new RfiModel(5, '19-005', '', RfiStatus.CLOSED, '733 ABW', moment.utc('2019-12-04'), 'CAN', 'hi', -1, 0, 0);
 
     sortedById = [openRfi1, openRfi2, pendingRfi1, pendingRfi2, closedRfi1];
-    reverseById = [pendingRfi2, pendingRfi1, openRfi2, openRfi1, closedRfi1];
+    reverseById = [openRfi2, openRfi1, pendingRfi2, pendingRfi1, closedRfi1];
     sortedByCustomer = [openRfi1, openRfi2, pendingRfi2, pendingRfi1, closedRfi1];
-    reverseByCustomer = [pendingRfi1, pendingRfi2, openRfi2, openRfi1, closedRfi1];
-    sortedByCountry = [pendingRfi2, openRfi2, pendingRfi1, openRfi1, closedRfi1];
-    reverseByCountry = [openRfi1, pendingRfi1, openRfi2, pendingRfi2, closedRfi1];
-    sortedByLtiov = [openRfi1, pendingRfi2, openRfi2, pendingRfi1, closedRfi1];
-    reverseByLtiov = [pendingRfi1, openRfi2, pendingRfi2, openRfi1, closedRfi1];
+    reverseByCustomer = [openRfi2, openRfi1, pendingRfi1, pendingRfi2, closedRfi1];
+    sortedByCountry = [openRfi2, openRfi1, pendingRfi2, pendingRfi1, closedRfi1];
+    reverseByCountry = [openRfi1, openRfi2, pendingRfi1, pendingRfi2, closedRfi1];
+    sortedByLtiov = [openRfi1, openRfi2, pendingRfi2, pendingRfi1, closedRfi1];
+    reverseByLtiov = [openRfi2, openRfi1, pendingRfi1, pendingRfi2, closedRfi1];
 
     singleStatusRfiList = [
       new RfiModel(1, '19-001', '', RfiStatus.OPEN, '1 FW', moment.utc('2019-12-01'), 'USA', 'hi', 2, 0, 0),

@@ -11,9 +11,8 @@ interface Props {
 export const RfiRegionDivider: React.FC<Props> = props => {
   return (
     <div className={classNames('region-divider', 'pending', props.className)}>
-      <span className={classNames('separator-line', 'left')}/>
-      <span className={classNames('separator-title')}>{props.regionTitle.toUpperCase()}</span>
-      <span className={classNames('separator-line', 'right')}/>
+      <div className={'region-divider--bar'}/>
+      <div className={classNames('region-divider--box')}>{props.regionTitle.toUpperCase()}</div>
     </div>
   )
 };
@@ -25,23 +24,33 @@ export const StyledRfiRegionDivider = styled(RfiRegionDivider)`
   font-size: ${theme.font.sizeRegion};
   color: ${theme.color.fontPrimary};
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 4px;
   
-  .separator-line {
-    flex-grow: 1;
+  .region-divider--bar {
+    margin-bottom: -4px;
+    width: 509px;
     height: 4px;
-    border-radius: 4px;
-    background: ${theme.color.fontPrimary};
-    margin-top: 22px;
-    margin-bottom: 8px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background: radial-gradient(300px, ${theme.color.regionDividerPrimary}, ${theme.color.regionDividerSecondary});
+    z-index: 2;
   }
   
-  .separator-title {
-    margin-left: 2px;
-    margin-right: 2px;
-    text-align: center;
+  .region-divider--box {
+    width: 228px;
+    height: 25px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border: 4px solid ${theme.color.regionDividerPrimary};
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-left: 36px;
+    padding-right: 36px;
+    z-index: 1;
   }
 `;

@@ -8,10 +8,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const theme = {
   color: {
-    backgroundBase: crayonBox.softMetal,
+    backgroundBase: crayonBox.coolBlack,//
     fontPrimary: crayonBox.eggWhite,
     fontAction: crayonBox.tarBlack,
-    backgroundInformation: crayonBox.steelGray,
+    backgroundInformation: crayonBox.steelBlue,//
     backgroundInactive: crayonBox.blueGrayLight,
     backgroundAction: crayonBox.safetyOrange,
     backgroundAssigned: crayonBox.notEggWhite,
@@ -21,7 +21,7 @@ const theme = {
     fontLoading: crayonBox.lightGray,
     fontInactive: crayonBox.mediumMediumLightGray,
     fontBackgroundInactive: crayonBox.mediumGray,
-    buttonInactive: crayonBox.notEggWhite,
+    buttonInactive: crayonBox.mediumBlueGray,//
     buttonActive: crayonBox.softMetal,
     buttonBackgroundActive: crayonBox.pitchBlack,
     showLessBackground: crayonBox.subtleGray,
@@ -33,14 +33,15 @@ const theme = {
     deleteButton: crayonBox.straightWhite,
     borderModal: crayonBox.darkRed,
     deleteButtonFocus: crayonBox.brightRed,
-    backgroundHeader: crayonBox.pitchBlack,
+    backgroundHeader: crayonBox.steelBlue,//
     buttonOnBlack: crayonBox.straightWhite,
-    segmentDivider: crayonBox.mediumLightGray,
+    regionDividerPrimary: crayonBox.mediumMediumBrightBlue,//
+    regionDividerSecondary: crayonBox.blueBlueGray,//
     fontToolTip: crayonBox.softMetal,
     backgroundToolTip: crayonBox.lightGray,
     inProgress: crayonBox.stoplightYellow,
     complete: crayonBox.stoplightGreen,
-    primaryButton: crayonBox.brightBlue,
+    primaryButton: crayonBox.brightBlue,//
     buttonRowDisabled: crayonBox.subtleGray,
     buttonDoesNotMeetEei: crayonBox.tomatoRed,
     fontActive: crayonBox.notEggWhite,
@@ -53,6 +54,8 @@ const theme = {
     backgroundMetricsCard: crayonBox.darkBlue,
     fontMetricsHeader: crayonBox.brightBlue,
     modalInputBorder: crayonBox.subtlerGray,
+    fontHeader: crayonBox.skyBlueGreen,//
+    backgroundFocus: crayonBox.mediumBlueGray,//
   },
 
   font: {

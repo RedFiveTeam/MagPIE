@@ -2,25 +2,25 @@
 
 Feature('RFI Page');
 
-Before((I)=> {
+Before((I) => {
   I.amOnPage('/');
   I.waitForText('Don\'t have an account?', 10);
   I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
 });
 
-Scenario ('Should see the RFI page with clickable GETS buttons', (I) => {
-    I.waitForText('RFI', 10);
-    I.waitForText('20-321', 10);
-    I.waitForText('633d', 10);
-    I.waitForText('USA', 10);
-    I.waitForText('4 FEB 20', 10);
-    I.waitForText('hi', 10);
-    I.click('.section--right');
-    I.wait(1);
+Scenario('Should see the RFI page with clickable GETS buttons', (I) => {
+  I.waitForText('20-325', 10);
+  I.see('RFI');
+  I.see('633d');
+  I.see('USA');
+  I.see('4 FEB 20');
+  I.see('RFI Description');
+  I.click('.gets-button');
+  I.wait(1);
 });
 
-Scenario ('Should be able to sort by clickin\' Buttons', (I) => {
+Scenario('Should be able to sort by clicking buttons', (I) => {
   I.waitForText('20-321', 10);
 
   I.see('-', locate('.region--new').find('.rfi-row').at(1));
@@ -38,16 +38,10 @@ Scenario ('Should be able to sort by clickin\' Buttons', (I) => {
   I.see('HQ ACC', locate('.region--new').find('.rfi-row').at(1));
 });
 
-Scenario ('Should expand and collapse descriptions', (I) => {
+Scenario('Should be able to select RFIs and see descriptions', (I) => {
   I.waitForText('RFI', 10);
-  // @ts-ignore
-  I.seeElement('.see-more', locate('.region--prioritized').find('.rfi-row').at(1));
-  I.dontSee('See less');
-
-  I.click('.see-more');
-  I.dontSeeElement(locate('.region--prioritized').find('.rfi-row').at(1).find('.see-more'));
-
-  I.click('.see-less');
-  I.wait(1);
-  I.dontSee('See less');
+  I.see('RFI Description');
+  I.see('Lorem ipsum dolor sit amet');
+  I.click(locate('.rfi-row').at(2));
+  I.waitForText('in culpa qui officia deserunt mollit anim id es laborum.')
 });

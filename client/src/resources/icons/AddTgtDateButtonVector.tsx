@@ -18,12 +18,10 @@ const AddTgtDateButtonVector = () => {
         fillRule="evenodd"
         clipRule="evenodd"
         d={pathD}
-        fill={theme.color.buttonInactive}
+        fill={theme.color.fontActive}
       />
     </svg>
   );
 };
 
 export default AddTgtDateButtonVector;
-
-
