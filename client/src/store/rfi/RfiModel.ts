@@ -13,12 +13,13 @@ export default class RfiModel {
     public getsUrl: string,
     public status: RfiStatus = RfiStatus.PENDING,
     public customer: string,
-    public ltiov: Moment | undefined,
+    public ltiov: Moment|undefined,
     public country: string,
     public description: string,
+    public justification: string,
     public priority: number,
     public tgtCount: number,
-    public ixnCount: number
+    public ixnCount: number,
   ) {
   }
 }

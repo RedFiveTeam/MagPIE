@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 public class RfiGet {
   private long id;
   private String description;
+  private String justification;
   private String rfiNum;
   private String getsUrl;
   private String status;
@@ -24,6 +25,7 @@ public class RfiGet {
   public RfiGet(Rfi rfi, long tgtCount, long ixnCount) {
     this.id = rfi.getId();
     this.description = rfi.getDescription();
+    this.justification = rfi.getJustification();
     this.rfiNum = rfi.getRfiNum();
     this.getsUrl = rfi.getGetsUrl();
     this.status = rfi.getStatus();

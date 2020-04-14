@@ -13,7 +13,7 @@ import { TargetModel, TargetStatus } from '../store/tgt/TargetModel';
 describe('WorkflowContainer', () => {
   const moment = require ('moment');
   let subject: ShallowWrapper;
-  let rfi = new RfiModel(1, "DGS1-SDT-2020-00321", "google.com", RfiStatus.OPEN, "", undefined, "USA", "", 1, 1, 0);
+  let rfi = new RfiModel(1, 'DGS1-SDT-2020-00321', 'google.com', RfiStatus.OPEN, '', undefined, 'USA', '', 'Just a fiction', 1, 1, 0);
   let exploitDate = new ExploitDateModel(1, 1, moment(123456));
   let tgt = new TargetModel(1, 1, 1, "SDT12-123", "12ASD1231231231", "", "", TargetStatus.IN_PROGRESS, "", "");
 

@@ -8,7 +8,7 @@ import ExternalLinkVector from '../../resources/icons/ExternalLinkVector';
 describe('RFI description container', () => {
   let subject: ShallowWrapper;
   const moment = require('moment');
-  let rfi = new RfiModel(1, 'id', 'url', RfiStatus.OPEN, 'customer', moment(), 'country', 'hi', -1, 12, 345);
+  let rfi = new RfiModel(1, 'id', 'url', RfiStatus.OPEN, 'customer', moment(), 'country', 'hi', 'Just a fiction', -1, 12, 345);
   let postGetsClickSpy: jest.Mock;
   let loadTgtPageSpy: jest.Mock;
   window.open = jest.fn();
@@ -26,9 +26,11 @@ describe('RFI description container', () => {
     );
   });
 
-  it('should display RFI description', () => {
-    expect(subject.find('.header').text()).toContain('RFI Description');
-    expect(subject.find('.text-body').text()).toContain('hi');
+  it('should display RFI description and justification', () => {
+    expect(subject.find('.header').at(0).text()).toContain('RFI Description');
+    expect(subject.find('.text-body').at(0).text()).toContain('hi');
+    expect(subject.find('.header').at(1).text()).toContain('Justification');
+    expect(subject.find('.text-body').at(1).text()).toContain('Just a fiction');
   });
 
   it('should have a button that navigates to the TGT page', () => {

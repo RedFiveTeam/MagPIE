@@ -18,6 +18,8 @@ public class Rfi {
 
   @Column(length = 65535)
   private String description;
+  @Column(length = 65535)
+  private String justification;
   private String rfiNum;
   private String getsUrl;
   private String status;
@@ -36,7 +38,8 @@ public class Rfi {
     String customer,
     Date ltiov,
     String country,
-    String description
+    String description,
+    String justification
   ) {
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
@@ -54,6 +57,7 @@ public class Rfi {
     this.description = description;
     this.priority = -1;
     this.receiveDate = new Timestamp(new Date().getTime());
+    this.justification = justification;
   }
 
   public Rfi(
@@ -65,6 +69,7 @@ public class Rfi {
     Date ltiov,
     String country,
     String description,
+    String justification,
     int priority
   ) {
     this.getsUrl = getsUrl;
@@ -75,6 +80,7 @@ public class Rfi {
     this.ltiov = new Timestamp(ltiov.getTime());
     this.country = country;
     this.description = description;
+    this.justification = justification;
     this.priority = priority;
   }
 
@@ -118,6 +124,13 @@ public class Rfi {
         diff.add("description");
     } catch (NullPointerException e) {
       diff.add("description");
+    }
+
+    try {
+      if (!this.justification.equals(otherRfi.justification))
+        diff.add("justification");
+    } catch (NullPointerException e) {
+      diff.add("justification");
     }
 
     return diff;

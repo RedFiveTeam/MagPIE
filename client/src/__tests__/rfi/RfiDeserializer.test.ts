@@ -13,6 +13,8 @@ describe('RFIDeserializer', () => {
         customer: 'customer',
         ltiov: '2020-11-20T00:00:00.000+0000',
         country: 'country',
+        description: 'A description',
+        justification: 'A wild justification appears!',
         priority: -1,
         tgtCount: 50,
         ixnCount: 5462789
@@ -25,6 +27,8 @@ describe('RFIDeserializer', () => {
         customer: 'customer',
         ltiov: null,
         country: 'country',
+        description: 'A description',
+        justification: 'A wild justification appears!',
         priority: 7,
         tgtCount: 2,
         ixnCount: 0
@@ -36,6 +40,8 @@ describe('RFIDeserializer', () => {
     expect(rfis[0].getsUrl).toBe('getsUrl');
     expect(rfis[0].status).toBe(RfiStatus.PENDING);
     expect(rfis[0].customer).toBe('customer');
+    expect(rfis[0].description).toBe('A description');
+    expect(rfis[0].justification).toBe('A wild justification appears!');
     expect(rfis[0].country).toBe('country');
     expect(rfis[0].priority).toBe(-1);
     expect(rfis[0].tgtCount).toBe(50);

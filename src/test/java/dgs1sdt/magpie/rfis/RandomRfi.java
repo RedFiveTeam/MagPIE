@@ -149,6 +149,7 @@ public class RandomRfi {
       this.ltiov,
       this.country,
       this.description,
+      "This is a justifiction",
       this.priority
     );
     this.randomize();

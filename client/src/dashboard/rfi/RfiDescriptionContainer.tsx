@@ -54,6 +54,8 @@ export const RfiDescriptionContainer: React.FC<MyProps> = ({rfi, loadTgtPage, po
       <div className={'body'}>
         <span className={'header'}>RFI Description</span>
         <span className={'text-body'}>{rfi ? rfi.description : null}</span>
+        <span className={'header'}>Justification</span>
+        <span className={'text-body'}>{rfi ? rfi.justification : null}</span>
       </div>
     </div>
   );
@@ -129,7 +131,7 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
   
   .header {
     color: ${theme.color.fontHeader};
-    margin-bottom: 8px;
+    margin: 8px 0;
   }
   
   .text-body {

@@ -2,7 +2,13 @@
   <RFIList>
     <getsrfi:RequestForInformation id="DGS-1-SDT-2020-00327">
       <getsrfi:Request id="DGS-1-SDT-2020-00327">
-        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</getsrfi:requestText>
+        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+          eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum.
+        </getsrfi:requestText>
+        <getsrfi:justification>This is a justification.</getsrfi:justification>
         <gets:url>http://www.yahoo.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-10-16T01:21:27Z</gets:lastUpdate>
@@ -22,7 +28,13 @@
     </getsrfi:RequestForInformation>
     <getsrfi:RequestForInformation id="DGS-1-SDT-2020-00328">
       <getsrfi:Request id="DGS-1-SDT-2020-00328">
-        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</getsrfi:requestText>
+        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+          eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum.
+        </getsrfi:requestText>
+        <getsrfi:justification>This is a justification.</getsrfi:justification>
         <gets:url>http://www.aol.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-10-30T14:21:28Z</gets:lastUpdate>
@@ -43,7 +55,20 @@
     </getsrfi:RequestForInformation>
     <getsrfi:RequestForInformation id="DGS-1-SDT-2020-00329">
       <getsrfi:Request id="DGS-1-SDT-2020-00329">
-        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</getsrfi:requestText><gets:url>http://www.msn.com</gets:url><getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization><gets:lastUpdate>2018-03-16T14:21:29Z</gets:lastUpdate><getsrfi:RequestingPOC><gets:unit>1 FW</gets:unit></getsrfi:RequestingPOC><gets:CountryCodeList><gets:iso1366trigraph>MEX</gets:iso1366trigraph></gets:CountryCodeList></getsrfi:Request><getsrfi:ResponseList><getsrfi:Response id="DGS-1-SDT-2020-00329" orgid="633 ABW">
+        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</getsrfi:requestText>
+        <getsrfi:justification>This is a justification.</getsrfi:justification>
+        <gets:url>http://www.msn.com</gets:url>
+        <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
+        <gets:lastUpdate>2018-03-16T14:21:29Z</gets:lastUpdate>
+        <getsrfi:RequestingPOC>
+          <gets:unit>1 FW</gets:unit>
+        </getsrfi:RequestingPOC>
+        <gets:CountryCodeList>
+          <gets:iso1366trigraph>MEX</gets:iso1366trigraph>
+        </gets:CountryCodeList>
+      </getsrfi:Request>
+      <getsrfi:ResponseList>
+        <getsrfi:Response id="DGS-1-SDT-2020-00329" orgid="633 ABW">
           <gets:producerOrganizationID>633 ABW</gets:producerOrganizationID>
           <getsrfi:responseStatus>OPEN</getsrfi:responseStatus>
         </getsrfi:Response>
@@ -55,7 +80,13 @@
     </getsrfi:RequestForInformation>
     <getsrfi:RequestForInformation id="DGS-1-SDT-2020-00330">
       <getsrfi:Request id="DGS-1-SDT-2020-00330">
-        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</getsrfi:requestText>
+        <getsrfi:requestText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+          eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum.
+        </getsrfi:requestText>
+        <getsrfi:justification>This is a justification.</getsrfi:justification>
         <gets:url>http://www.ask.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2017-10-01T14:21:30Z</gets:lastUpdate>

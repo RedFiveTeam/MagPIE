@@ -53,6 +53,11 @@ public class MetricChangeRfi {
         this.newData = newRfi.getDescription();
         break;
 
+      case "justification":
+        this.oldData = oldRfi.getJustification();
+        this.newData = newRfi.getJustification();
+        break;
+
       case "country":
         this.oldData = oldRfi.getCountry();
         this.newData = newRfi.getCountry();
@@ -64,13 +69,11 @@ public class MetricChangeRfi {
         } else {
           this.oldData = oldRfi.getLtiov().toString();
         }
-
         if (newRfi.getLtiov() == null) {
           this.newData = "not set";
         } else {
           this.newData = newRfi.getLtiov().toString();
         }
-
         break;
 
       case "customer":

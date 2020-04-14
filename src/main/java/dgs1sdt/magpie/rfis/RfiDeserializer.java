@@ -20,7 +20,8 @@ public class RfiDeserializer {
       getStringFromElement(element, "gets:unit"),
       getLtiov(element),
       getStringFromElement(element, "gets:iso1366trigraph"),
-      getStringFromElement(element, "getsrfi:requestText")
+      getStringFromElement(element, "getsrfi:requestText"),
+      getStringFromElement(element, "getsrfi:justification")
     );
 
     Timestamp receiveDate = getReceiveDate(element);

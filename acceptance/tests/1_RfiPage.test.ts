@@ -42,6 +42,8 @@ Scenario('Should be able to select RFIs and see descriptions', (I) => {
   I.waitForText('RFI', 10);
   I.see('RFI Description');
   I.see('Lorem ipsum dolor sit amet');
+  I.see('Justification');
+  I.see('This is a justification.');
   I.click(locate('.rfi-row').at(2));
   I.waitForText('in culpa qui officia deserunt mollit anim id es laborum.')
 });

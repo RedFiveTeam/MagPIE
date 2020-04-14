@@ -2,7 +2,6 @@ package dgs1sdt.magpie.tgts;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.ixns.*;
-import dgs1sdt.magpie.metrics.MetricController;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDate;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
@@ -161,7 +160,8 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
   @Test
   public void addsExploitDatesCorrectly() throws Exception {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a " +
+      "justifiction"));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     ExploitDateJson exploitDateJson = new ExploitDateJson(
       rfiId,
@@ -188,7 +188,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
   @Test
   public void returnsExploitDates() throws Exception {
 
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
 
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
 
@@ -228,7 +228,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
   @Test
   public void addsNewTargets() throws Exception {
-    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
     long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
     exploitDateRepository.save(new ExploitDate(
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
@@ -293,7 +293,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     Timestamp oldDate = new Timestamp(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     Timestamp newDate = new Timestamp(new SimpleDateFormat("MM/dd/yyyy").parse("11/12/2020").getTime());
 
-    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
     long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
     exploitDateRepository.save(new ExploitDate(
       oldDate,
@@ -324,7 +324,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
   @Test
   public void deletesExploitDates() throws Exception {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
 
     ExploitDateJson exploitDateJson = new ExploitDateJson(
@@ -349,7 +349,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
   @Test
   public void deletesExploitDatesWithTargets() throws Exception {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     exploitDateRepository.save(new ExploitDate(
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
@@ -389,7 +389,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
   @Test
   public void deletesTargets() throws Exception {
-    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
     long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
     exploitDateRepository.save(new ExploitDate(
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
@@ -438,7 +438,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
   @Test
   public void editsTargets() throws Exception {
-    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
     long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
     exploitDateRepository.save(new ExploitDate(
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
@@ -581,7 +581,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
   @Test
   public void doesNotUpdateTargetIfTheNameAlreadyExists() throws Exception {
-    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "")); //toChange
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "", "This is a justifiction")); //toChange
     long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
     exploitDateRepository.save(new ExploitDate(
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
@@ -634,7 +634,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
   @Test
   public void shouldChangeTargetStatusAndCreateMetric() throws Exception {
-    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
     long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
     exploitDateRepository.save(new ExploitDate(
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
@@ -826,7 +826,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
   }
 
   private void setupIxns() throws Exception {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", ""));
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));

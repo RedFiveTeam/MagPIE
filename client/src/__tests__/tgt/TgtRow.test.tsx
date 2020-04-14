@@ -15,7 +15,7 @@ describe('Target Row', () => {
                                             'This is a description', TargetStatus.NOT_STARTED, '', '');
   let rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse',
                              moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
-                             42, 0, 0);
+                             'Just a fiction', 42, 0, 0);
   let exploitDate = new ExploitDateModel(1, 1, moment('2019-11-20').utc());
   let deleteSpy: jest.Mock;
   let navToIxnPageSpy: jest.Mock;

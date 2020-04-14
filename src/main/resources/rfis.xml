@@ -3,6 +3,7 @@
     <getsrfi:RequestForInformation id="DGS-1-SDT-2020-00321">
       <getsrfi:Request id="DGS-1-SDT-2020-00321">
         <getsrfi:requestText>hello rfi</getsrfi:requestText>
+        <getsrfi:justification>This is a justification.</getsrfi:justification>
         <gets:url>http://www.google.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-05T14:21:21Z</gets:lastUpdate>
@@ -34,6 +35,7 @@
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id es
           laborum.
         </getsrfi:requestText>
+        <getsrfi:justification>This is a justification.</getsrfi:justification>
         <gets:url>http://www.yahoo.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <getsrfi:receiveDate>2019-11-11T14:21:22Z</getsrfi:receiveDate>
