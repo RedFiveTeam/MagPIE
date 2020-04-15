@@ -321,7 +321,7 @@ export const StyledTgtDashboard = styled(
   }
   
   .header-cell--delete {
-    width: 81px;
+    width: 78px;
     margin-left: 0;
   }
   

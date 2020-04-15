@@ -384,8 +384,9 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightRow};
     line-height: 19px;
-    margin-top: -24px;
-    margin-bottom: 5px;
+    margin-top: -10px;
+    margin-bottom: -9px;
+    z-index: 3;
   }
   
   .zulu {

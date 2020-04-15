@@ -137,7 +137,7 @@ export const StyledSegmentRegion = styled(SegmentRegion)`
   padding-bottom: 20px;
   
   .expand-collapse {
-    width: 100%;
+    width: 1500px;
     margin-top: -28px;
     height: 28px;
     z-index: 1;

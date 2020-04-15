@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import TextTooltip from '../../dashboard/components/TextTooltip';
 
 const pathD1 = 'M7.69868 7.59204L8.62034 6.84342L16.0317 15.9678L15.11 16.7164L7.69868 7.59204Z';
 const pathD2 = 'M8.34592 6.50601L7.42426 7.25463L6.87528 6.57875L7.79693 5.83013L8.34592 6.50601';
@@ -25,7 +24,6 @@ export const NoteButton: React.FC<MyProps> = (props: MyProps) => {
         :
         null
       }
-      <TextTooltip title={'Delete Callout'}>
         <svg
           width='23'
           height='23'
@@ -52,7 +50,6 @@ export const NoteButton: React.FC<MyProps> = (props: MyProps) => {
             fill={'white'}
           />
         </svg>
-      </TextTooltip>
       {props.hasNote ?
         <svg className={'blue-circle'} width="6" height="6" viewBox="0 0 6 6" fill="none"
              xmlns="http://www.w3.org/2000/svg">

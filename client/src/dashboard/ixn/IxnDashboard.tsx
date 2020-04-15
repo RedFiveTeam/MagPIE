@@ -203,13 +203,13 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .header-cell--callout {
-    width: 414px;
+    width: 405px;
   }
   
   .header-cell--id {
     text-align: center;
-    padding-left: 10px;
-    width: 83px;
+    padding-left: 5px;
+    width: 92px;
   }
   
   .header-cell--status {

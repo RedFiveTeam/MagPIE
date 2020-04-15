@@ -46,6 +46,8 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
   const handleEditSegment = (segmentId: number) => {
     if (!addingOrEditing) {
       setEditSegment(segmentId);
+    } else if (segmentId < 0) {
+      setEditSegment(-1);
     }
   };
 

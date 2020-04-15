@@ -98,7 +98,17 @@ export const IxnRow: React.FC<MyProps> = props => {
     <div className={props.className} id={'ixn-row-' + props.segment.id + '-' + props.ixn.id}>
       <HtmlTooltip
         title={<div className={'delete-container'}><MiniTrashcanButton onClick={handleDeleteClick} className={'delete-ixn-button'}/></div>}
-        placement={'right-start'}
+        placement={'bottom-end'}
+        PopperProps={{
+          popperOptions: {
+            modifiers: {
+              offset: {
+                enabled: true,
+                offset: '45px, -35px',
+              },
+            },
+          },
+        }}
         interactive
         disableHoverListener={props.addingOrEditing}
         leaveDelay={100}
@@ -196,7 +206,7 @@ export const IxnRow: React.FC<MyProps> = props => {
 export const StyledIxnRow = styled(IxnRow)`
   display: flex;
   overflow: hidden;
-  padding-right: 50px;
+  //padding-right: 50px;
   flex-direction: column;
 
  .ixn-data-cell {
@@ -232,5 +242,13 @@ export const StyledIxnRow = styled(IxnRow)`
   .disabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+  
+  .note-edit-button-container {
+    padding-bottom: 4px;
+  }
+  
+  .delete-container {
+    //margin-left: 1500px;
   }
 `;
