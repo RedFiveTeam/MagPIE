@@ -80,19 +80,24 @@ public class RfiController {
 
   //  Return value: whether the passed priority change results in a valid priority list
   @PostMapping(path = "/update-priority")
-  public boolean updatePriority(@Valid @RequestBody RfiPriorityJson[] rfiPriorityJsons) {
+  public boolean updatePriority(@Valid @RequestBody RfiPriorityJson[] rfiPriorityJsons,
+                                @RequestParam(value="undo", defaultValue="") String undo,
+                                @RequestParam(value="userName", defaultValue="") String userName) {
+
     List<Rfi> rfis = new ArrayList<>();
     List<MetricChangeRfiPriority> metrics = new ArrayList<>();
 
     List<Rfi> repoRfis = rfiRepository.findAll();
     repoRfis.removeIf(rfi -> rfi.getPriority() < 1 || !rfi.getStatus().equals("OPEN"));
 
+    Date now = new Date();
+
     for (RfiPriorityJson rfiPriorityJson : rfiPriorityJsons) {
       Rfi rfiToUpdate = rfiRepository.findByRfiNum(rfiPriorityJson.getRfiNum());
       if (rfiToUpdate != null) {
         metrics.add(
           new MetricChangeRfiPriority(rfiToUpdate.getRfiNum(), rfiToUpdate.getPriority(),
-            rfiPriorityJson.getPriority(), new Date())
+            rfiPriorityJson.getPriority(), userName, now)
         );
 
         rfiToUpdate.setPriority(rfiPriorityJson.getPriority());
@@ -129,7 +134,14 @@ public class RfiController {
         return false;
 
 //    Add metrics and save pri updates
-    metricsService.addChangeRfiPriority(metrics);
+    Rfi undoRfi = rfiRepository.findByRfiNum(undo);
+
+    if (undoRfi != null) {
+      metricsService.addUndoChangeRfiPriority(undoRfi.getId(), userName);
+    } else {
+      metricsService.addChangeRfiPriority(metrics);
+    }
+
     rfiRepository.saveAll(repoRfis);
 
 //    Tell front end that reprioritization was successful

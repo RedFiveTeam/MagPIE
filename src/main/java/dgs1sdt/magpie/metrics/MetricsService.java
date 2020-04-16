@@ -54,6 +54,8 @@ import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriority;
+import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriorityRepository;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDelete;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDeleteRepository;
 import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDelete;
@@ -110,6 +112,7 @@ public class MetricsService {
   private MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository;
   private MetricClickRollupRepository metricClickRollupRepository;
   private MetricClickImportRepository metricClickImportRepository;
+  private MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -249,6 +252,11 @@ public class MetricsService {
   @Autowired
   public void setMetricClickImportRepository(MetricClickImportRepository metricClickImportRepository) {
     this.metricClickImportRepository = metricClickImportRepository;
+  }
+
+  @Autowired
+  public void setMetricUndoChangeRfiPriorityRepository(MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository) {
+    this.metricUndoChangeRfiPriorityRepository = metricUndoChangeRfiPriorityRepository;
   }
 
   public long getSiteVisitCount() {
@@ -422,6 +430,10 @@ public class MetricsService {
 
   public MetricUndoIxnDelete addUndoIxnDelete(long ixnId) {
     return metricUndoIxnDeleteRepository.save(new MetricUndoIxnDelete(ixnId));
+  }
+
+  public MetricUndoChangeRfiPriority addUndoChangeRfiPriority(long rfiId, String userName) {
+    return metricUndoChangeRfiPriorityRepository.save(new MetricUndoChangeRfiPriority(rfiId, userName));
   }
 
   public MetricUndoSegmentDelete addUndoSegmentDelete(long segmentId) {

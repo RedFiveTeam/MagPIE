@@ -16,8 +16,9 @@ import { postGetsClick } from '../../store/metrics';
 import { StyledRefreshButtonVector } from '../../resources/icons/RefreshButtonVector';
 import TextTooltip from '../components/TextTooltip';
 import { useSnackbar } from 'notistack';
-import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
-import { formatRfiNum } from '../../utils';
+import { PriorityUndoSnackbarAction } from '../components/UndoSnackbarAction';
+import { Cookie, formatRfiNum } from '../../utils';
+import { useCookies } from 'react-cookie';
 
 interface MyProps {
   className?: string;
@@ -32,6 +33,8 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const classes = rowStyles();
+  const [cookies] = useCookies(['magpie']);
+  let cookie: Cookie = cookies.magpie;
 
   let [refreshing, setRefreshing] = useState(false);
 
@@ -54,9 +57,9 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
 
   const dispatch = useDispatch();
 
-  const handleReorderUndo = (rfiList: RfiModel[]) => {
+  const handleReorderUndo = (rfiList: RfiModel[], rfiNum: string) => {
     dispatch(reprioritizeRfis(rfiList));
-    postRfiPriorityUpdate(rfiList)
+    postRfiPriorityUpdate(rfiList, `?undo=${rfiNum}&userName=${cookie.userName}`)
       .then(response => response.json()).catch((reason) => {
       console.log(reason);
     })
@@ -67,15 +70,21 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
       });
   };
 
-  const handleReorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number) => {
-    let originalPriority: RfiModel[] = copyRfis(rfiList)
-      .filter((rfi) => rfi.status === RfiStatus.OPEN);
-    dispatch(reorderRfis(rfiList, rfiId, newIndex));
-    enqueueSnackbar('RFI ' + formatRfiNum(rfiId) + ' Prioritized', {
-      action: (key) => UndoSnackbarAction(key, originalPriority, handleReorderUndo, closeSnackbar,
-                                          classes.snackbarButton),
-      variant: 'info',
-    });
+  const handleReorderRfis = (rfiList: RfiModel[], rfiNum: string, newIndex: number) => {
+    let rfi = rfiList.find((rfi) => rfi.rfiNum === rfiNum);
+    if (rfi) {
+      let oldIndex = rfiList.indexOf(rfi);
+      if (oldIndex !== newIndex) {
+        let originalPriority: RfiModel[] = copyRfis(rfiList)
+          .filter((rfi) => rfi.status === RfiStatus.OPEN);
+        dispatch(reorderRfis(rfiList, rfiNum, newIndex, cookie.userName));
+        enqueueSnackbar('RFI ' + formatRfiNum(rfiNum) + ' Prioritized', {
+          action: (key) => PriorityUndoSnackbarAction(key, originalPriority, handleReorderUndo, closeSnackbar,
+                                                      classes.snackbarButton, rfiNum),
+          variant: 'info',
+        });
+      }
+    }
   };
 
   const handleSortRfis = (field: Field) => {

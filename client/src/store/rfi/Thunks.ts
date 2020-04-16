@@ -23,7 +23,7 @@ export const fetchLocalUpdate = () => {
   }
 };
 
-export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number) => {
+export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number, userName: string) => {
   //clone rfiList
   let reprioritizedList: RfiModel[] = Object.assign([], rfiList);
 
@@ -58,7 +58,7 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
   //Try to post updates; if they are invalid, reload page instead
   return (dispatch: any) => {
     dispatch(reprioritizeRfis(reprioritizedList));
-    postRfiPriorityUpdate(postRfis)
+    postRfiPriorityUpdate(postRfis, `?userName=${userName}`)
       .then(response => response.json()).catch((reason) => {
       console.log(reason)
     })

@@ -3,10 +3,13 @@ package dgs1sdt.magpie.rfis;
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.ixns.*;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
+import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
+import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriority;
+import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriorityRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetController;
 import dgs1sdt.magpie.tgts.TargetJson;
@@ -21,6 +24,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +53,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
   MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
   MetricDeleteTargetRepository metricDeleteTargetRepository;
   MetricChangeTargetRepository metricChangeTargetRepository;
+  MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository;
+  MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository;
 
   @Autowired
   SegmentRepository segmentRepository;
@@ -107,6 +113,16 @@ public class RfiControllerTest extends BaseIntegrationTest {
   @Autowired
   public void setMetricChangeTargetRepository(MetricChangeTargetRepository metricChangeTargetRepository) {
     this.metricChangeTargetRepository = metricChangeTargetRepository;
+  }
+
+  @Autowired
+  public void setMetricChangeRfiPriorityRepository(MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository) {
+    this.metricChangeRfiPriorityRepository = metricChangeRfiPriorityRepository;
+  }
+
+  @Autowired
+  public void setMetricUndoChangeRfiPriorityRepository(MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository) {
+    this.metricUndoChangeRfiPriorityRepository = metricUndoChangeRfiPriorityRepository;
   }
 
   @Before
@@ -181,7 +197,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void checksPriorityChangeLegality() {
+  public void checksPriorityChangeLegality() throws Exception {
     Rfi rfi2 = new Rfi("id2", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 1);
     Rfi rfi3 = new Rfi("id3", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 2);
     Rfi rfi1 = new Rfi("id1", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 3);
@@ -206,15 +222,26 @@ public class RfiControllerTest extends BaseIntegrationTest {
       new RfiPriorityJson("id3", 3)
     };
 
-    assertTrue(rfiController.updatePriority(rfiJsons));
+    String json = objectMapper.writeValueAsString(rfiJsons);
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(json)
+      .when()
+      .post(RfiController.URI + "/update-priority?userName=billy.bob.joe")
+      .then()
+      .statusCode(200);
+
     assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
+    assertEquals("billy.bob.joe", metricChangeRfiPriorityRepository.findAll().get(0).getUserName());
 
     rfiJsons = new RfiPriorityJson[]{
       new RfiPriorityJson("id1", 2),
       new RfiPriorityJson("id3", 3)
     };
 
-    assertFalse(rfiController.updatePriority(rfiJsons));
+    assertFalse(rfiController.updatePriority(rfiJsons, "", "billy.bob.joe"));
     assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
     assertEquals(3, rfiRepository.findByRfiNum("id3").getPriority());
 
@@ -224,7 +251,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
       new RfiPriorityJson("id1", 4)
     };
 
-    assertFalse(rfiController.updatePriority(rfiJsons));
+    assertFalse(rfiController.updatePriority(rfiJsons, "", "billy.bob.joe"));
     assertEquals(1, rfiRepository.findByRfiNum("id1").getPriority());
     assertEquals(2, rfiRepository.findByRfiNum("id2").getPriority());
     assertEquals(3, rfiRepository.findByRfiNum("id3").getPriority());
@@ -253,26 +280,39 @@ public class RfiControllerTest extends BaseIntegrationTest {
     long target2Id = targetRepository.findAll().get(1).getId();
 
 
-    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id, new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id,
+      new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
     long segment1Id = segmentRepository.findAll().get(0).getId();
 
-    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate2Id, target2Id, new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate2Id, target2Id,
+      new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
     long segment2Id = segmentRepository.findAll().get(1).getId();
 
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-003
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-004
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-005
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-003
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-004
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-005
 
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", ""));  //123-001
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-002
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", ""));  //123-001
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-002
 
     //Another RFI
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00339", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00339", "", "", new Date(), "", new Date(), "", "", "This is a " +
+      "justifiction"));
     rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00339").getId();
     exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));
@@ -288,23 +328,35 @@ public class RfiControllerTest extends BaseIntegrationTest {
     targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
     target2Id = targetRepository.findAll().get(1).getId();
 
-    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id, new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id,
+      new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
     segment1Id = segmentRepository.findAll().get(0).getId();
 
-    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate2Id, target2Id, new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
+    segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate2Id, target2Id,
+      new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
     segment2Id = segmentRepository.findAll().get(1).getId();
 
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-003
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-004
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-005
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-003
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-004
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-005
 
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", ""));  //123-001
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
-    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-002
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", ""));  //123-001
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+    ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-002
 
     RfiGet rfi = rfiController.getAllRfis().get(0);
 
@@ -332,5 +384,42 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .get(RfiController.URI + "/refresh")
       .then()
       .statusCode(200);
+  }
+
+  @Test
+  public void postCreatesNewUndoRfiPrioritizationMetric() throws Exception {
+    Rfi rfi1 = new Rfi("ABC-0321", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 1);
+    Rfi rfi2 = new Rfi("ABC-0322", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 2);
+    Rfi rfi3 = new Rfi("ABC-0323", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 3);
+
+    rfiRepository.saveAll(Arrays.asList(rfi1, rfi2, rfi3));
+
+    RfiPriorityJson[] list = {new RfiPriorityJson("ABC-0322", 1), new RfiPriorityJson("ABC-0321", 2)};
+
+    String jsonString = objectMapper.writeValueAsString(list);
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .body(jsonString)
+      .when()
+      .post(RfiController.URI + "/update-priority?undo=ABC-0321&userName=billy.bob.joe")
+      .then()
+      .statusCode(200);
+
+    rfi1 = rfiRepository.findByRfiNum("ABC-0321");
+    rfi2 = rfiRepository.findByRfiNum("ABC-0322");
+    rfi3 = rfiRepository.findByRfiNum("ABC-0323");
+
+    assertEquals(2, rfi1.getPriority());
+    assertEquals(1, rfi2.getPriority());
+    assertEquals(3, rfi3.getPriority());
+
+    assertEquals(1, metricUndoChangeRfiPriorityRepository.findAll().size());
+
+    MetricUndoChangeRfiPriority metric = metricUndoChangeRfiPriorityRepository.findAll().get(0);
+
+    assertEquals(rfi1.getId(), metric.getRfiId());
+    assertEquals("billy.bob.joe", metric.getUserName());
   }
 }

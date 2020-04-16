@@ -141,8 +141,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
   @Test
   public void createsNewPriorityChangeMetric() {
-    MetricChangeRfiPriority metricChangeRfiPriority1 = new MetricChangeRfiPriority("20-001", 1, 2, new Date());
-    MetricChangeRfiPriority metricChangeRfiPriority2 = new MetricChangeRfiPriority("20-002", 2, 1, new Date());
+    MetricChangeRfiPriority metricChangeRfiPriority1 = new MetricChangeRfiPriority("20-001", 1, 2, "q", new Date());
+    MetricChangeRfiPriority metricChangeRfiPriority2 = new MetricChangeRfiPriority("20-002", 2, 1, "q", new Date());
 
     List<MetricChangeRfiPriority> priChanges = new ArrayList<>();
     priChanges.add(metricChangeRfiPriority1);
@@ -543,23 +543,23 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     Date date3 = new Date(new Date().getTime() - convertDaysToMS(5));
     Date date4 = new Date(new Date().getTime() - convertDaysToMS(1));
     metricChangeRfiPriorityRepository.saveAll(new ArrayList<>(Arrays.asList(
-      new MetricChangeRfiPriority("ABC-00123", 5, 1, date1),
-      new MetricChangeRfiPriority("ABC-00124", 1, 2, date1),
-      new MetricChangeRfiPriority("ABC-00125", 2, 3, date1),
-      new MetricChangeRfiPriority("ABC-00126", 3, 4, date1),
-      new MetricChangeRfiPriority("ABC-00127", 4, 5, date1),
+      new MetricChangeRfiPriority("ABC-00123", 5, 1, "q", date1),
+      new MetricChangeRfiPriority("ABC-00124", 1, 2, "q", date1),
+      new MetricChangeRfiPriority("ABC-00125", 2, 3, "q", date1),
+      new MetricChangeRfiPriority("ABC-00126", 3, 4, "q", date1),
+      new MetricChangeRfiPriority("ABC-00127", 4, 5, "q", date1),
 
-      new MetricChangeRfiPriority("ABC-00123", 1, 2, date2),
-      new MetricChangeRfiPriority("ABC-00124", 2, 1, date2),
+      new MetricChangeRfiPriority("ABC-00123", 1, 2, "q", date2),
+      new MetricChangeRfiPriority("ABC-00124", 2, 1, "q", date2),
 
-      new MetricChangeRfiPriority("ABC-00124", 4, 2, date3),
-      new MetricChangeRfiPriority("ABC-00125", 2, 3, date3),
-      new MetricChangeRfiPriority("ABC-00126", 3, 4, date3),
+      new MetricChangeRfiPriority("ABC-00124", 4, 2, "q", date3),
+      new MetricChangeRfiPriority("ABC-00125", 2, 3, "q", date3),
+      new MetricChangeRfiPriority("ABC-00126", 3, 4, "q", date3),
 
-      new MetricChangeRfiPriority("ABC-00124", 5, 2, date4),
-      new MetricChangeRfiPriority("ABC-00125", 2, 3, date4),
-      new MetricChangeRfiPriority("ABC-00126", 3, 4, date4),
-      new MetricChangeRfiPriority("ABC-00127", 4, 5, date4)
+      new MetricChangeRfiPriority("ABC-00124", 5, 2, "q", date4),
+      new MetricChangeRfiPriority("ABC-00125", 2, 3, "q", date4),
+      new MetricChangeRfiPriority("ABC-00126", 3, 4, "q", date4),
+      new MetricChangeRfiPriority("ABC-00127", 4, 5, "q", date4)
     )));
 
     assertEquals(2, metricsService.getAveragePrioritizationsPerWeek());

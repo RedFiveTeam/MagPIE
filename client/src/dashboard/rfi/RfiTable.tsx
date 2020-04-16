@@ -14,7 +14,7 @@ interface Props {
   pendingRfis: RfiModel[];
   openRfis: RfiModel[];
   closedRfis: RfiModel[];
-  reorderRfis: (rfiList: RfiModel[], rfiId: string, newIndex: number) => void;
+  reorderRfis: (rfiList: RfiModel[], rfiNum: string, newIndex: number) => void;
   sortKey: SortKeyModel;
   selectRfi: (rfiId: number) => void;
   selectedRfiId: number;

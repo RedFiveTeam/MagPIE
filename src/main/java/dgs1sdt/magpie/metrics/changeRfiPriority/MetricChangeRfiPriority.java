@@ -19,12 +19,14 @@ public class MetricChangeRfiPriority {
   private String rfiNum;
   private int oldPri;
   private int newPri;
+  private String userName;
   private Date datetime;
 
-  public MetricChangeRfiPriority(String rfiNum, int oldPri, int newPri, Date datetime) {
+  public MetricChangeRfiPriority(String rfiNum, int oldPri, int newPri, String userName, Date datetime) {
     this.rfiNum = rfiNum;
     this.oldPri = oldPri;
     this.newPri = newPri;
+    this.userName = userName;
     this.datetime = datetime;
   }
 }
