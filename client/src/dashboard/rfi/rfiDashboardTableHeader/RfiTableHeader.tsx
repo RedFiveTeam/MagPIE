@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledHeaderCell } from './RfiTableHeaderCell';
-import { StyledUnsortableTableHeaderCell } from './UnsortableTableHeaderCell';
 import { Field, SortKeyModel } from '../../../store/sort/SortKeyModel';
 import theme from '../../../resources/theme';
 
@@ -20,49 +19,55 @@ export const RfiTableHeader: React.FC<Props> = props => {
 
   return (
     <div className={classNames('header', props.className)}>
-        <StyledHeaderCell
-          text={'PRI'}
-          sort={() => props.sortRfis(Field.PRIORITY)}
-          field={Field.PRIORITY}
-          className={'header-cell--pri'}
-          sortKey={props.sortKey}
-        />
-        <StyledHeaderCell
-          text={'RFI'}
-          sort={() => props.sortRfis(Field.RFINUM)}
-          field={Field.RFINUM}
-          className={'header-cell--rfi-num'}
-          sortKey={props.sortKey}
-        />
-        <StyledHeaderCell
-          text={'CC'}
-          sort={() => props.sortRfis(Field.COUNTRY)}
-          field={Field.COUNTRY}
-          className={'header-cell--country'}
-          sortKey={props.sortKey}
-        />
-        <StyledHeaderCell
-          text={'Customer'}
-          sort={() => props.sortRfis(Field.CUSTOMER)}
-          field={Field.CUSTOMER}
-          className={'header-cell--customer'}
-          sortKey={props.sortKey}
-        />
-        <StyledHeaderCell
-          text={'LTIOV'}
-          sort={() => props.sortRfis(Field.LTIOV)}
-          field={Field.LTIOV}
-          className={'header-cell--ltiov'}
-          sortKey={props.sortKey}
-        />
-        <StyledUnsortableTableHeaderCell
-          text={'TGTs'}
-          className={'header-cell--count'}
-        />
-        <StyledUnsortableTableHeaderCell
-          text={'IXNs'}
-          className={'header-cell--count'}
-        />
+      <StyledHeaderCell
+        text={'PRI'}
+        sort={() => props.sortRfis(Field.PRIORITY)}
+        field={Field.PRIORITY}
+        className={'header-cell--pri'}
+        sortKey={props.sortKey}
+      />
+      <StyledHeaderCell
+        text={'RFI'}
+        sort={() => props.sortRfis(Field.RFINUM)}
+        field={Field.RFINUM}
+        className={'header-cell--rfi-num'}
+        sortKey={props.sortKey}
+      />
+      <StyledHeaderCell
+        text={'CC'}
+        sort={() => props.sortRfis(Field.COUNTRY)}
+        field={Field.COUNTRY}
+        className={'header-cell--country'}
+        sortKey={props.sortKey}
+      />
+      <StyledHeaderCell
+        text={'Customer'}
+        sort={() => props.sortRfis(Field.CUSTOMER)}
+        field={Field.CUSTOMER}
+        className={'header-cell--customer'}
+        sortKey={props.sortKey}
+      />
+      <StyledHeaderCell
+        text={'LTIOV'}
+        sort={() => props.sortRfis(Field.LTIOV)}
+        field={Field.LTIOV}
+        className={'header-cell--ltiov'}
+        sortKey={props.sortKey}
+      />
+      <StyledHeaderCell
+        text={'TGTs'}
+        sort={() => props.sortRfis(Field.TGTS)}
+        field={Field.TGTS}
+        className={'header-cell--count'}
+        sortKey={props.sortKey}
+      />
+      <StyledHeaderCell
+        text={'IXNs'}
+        sort={() => props.sortRfis(Field.IXNS)}
+        field={Field.IXNS}
+        className={'header-cell--count'}
+        sortKey={props.sortKey}
+      />
     </div>
   );
 };

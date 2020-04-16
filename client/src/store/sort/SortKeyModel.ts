@@ -3,10 +3,12 @@ export enum Field {
   LTIOV = 'LTIOV',
   RFINUM = 'RFINUM',
   CUSTOMER = 'CUSTOMER',
-  COUNTRY = 'COUNTRY'
+  COUNTRY = 'COUNTRY',
+  TGTS = 'TGTS',
+  IXNS = 'IXNS',
 }
 
-export class SortKeyModel{
+export class SortKeyModel {
   constructor(public field: Field, public defaultOrder: boolean) {
   }
 }

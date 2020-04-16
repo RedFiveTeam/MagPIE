@@ -40,6 +40,22 @@ export class RfiSorter {
                 sortDescendingCountry(open).concat(sortDescendingCountry(pending))
             ).concat(closed)
           );
+        case Field.TGTS:
+          return (
+            (sortKey.defaultOrder ?
+                sortAscendingTgts(open).concat(sortAscendingTgts(pending))
+                :
+                sortDescendingTgts(open).concat(sortDescendingTgts(pending))
+            ).concat(closed)
+          );
+        case Field.IXNS:
+          return (
+            (sortKey.defaultOrder ?
+                sortAscendingIxns(open).concat(sortAscendingIxns(pending))
+                :
+                sortDescendingIxns(open).concat(sortDescendingIxns(pending))
+            ).concat(closed)
+          );
         default:
           return (
             (sortKey.defaultOrder ?
@@ -99,6 +115,30 @@ function sortDescendingCountry(rfis: RfiModel[]) {
 function sortAscendingCountry(rfis: RfiModel[]) {
   return rfis.sort(function (a, b) {
     return a.country < b.country ? -1 : 1;
+  });
+}
+
+function sortDescendingTgts(rfis: RfiModel[]) {
+  return rfis.sort(function (a, b) {
+    return a.tgtCount === b.tgtCount ? 0 : a.tgtCount > b.tgtCount ? -1 : 1;
+  });
+}
+
+function sortAscendingTgts(rfis: RfiModel[]) {
+  return rfis.sort(function (a, b) {
+    return a.tgtCount === b.tgtCount ? 0 : a.tgtCount < b.tgtCount ? -1 : 1;
+  });
+}
+
+function sortDescendingIxns(rfis: RfiModel[]) {
+  return rfis.sort(function (a, b) {
+    return a.ixnCount === b.ixnCount ? 0 : a.ixnCount > b.ixnCount ? -1 : 1;
+  });
+}
+
+function sortAscendingIxns(rfis: RfiModel[]) {
+  return rfis.sort(function (a, b) {
+    return a.ixnCount === b.ixnCount ? 0 : a.ixnCount < b.ixnCount ? -1 : 1;
   });
 }
 

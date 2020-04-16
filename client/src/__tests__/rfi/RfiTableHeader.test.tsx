@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
 import { StyledHeaderCell } from '../../dashboard/rfi/rfiDashboardTableHeader/RfiTableHeaderCell';
 import { RfiTableHeader } from '../../dashboard/rfi/rfiDashboardTableHeader/RfiTableHeader';
-import { StyledUnsortableTableHeaderCell } from '../../dashboard/rfi/rfiDashboardTableHeader/UnsortableTableHeaderCell';
 
 
 describe('RfiTableHeader', () => {
@@ -19,7 +18,6 @@ describe('RfiTableHeader', () => {
   });
 
   it('should render a header for each field', () => {
-    expect(subject.find(StyledHeaderCell).length).toBe(5);
-    expect(subject.find(StyledUnsortableTableHeaderCell).length).toBe(2);
+    expect(subject.find(StyledHeaderCell).length).toBe(7);
   });
 });
