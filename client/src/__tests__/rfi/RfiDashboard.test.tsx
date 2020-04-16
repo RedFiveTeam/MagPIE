@@ -6,6 +6,7 @@ import { StyledRfiDescriptionContainer } from '../../dashboard/rfi/RfiDescriptio
 import { Provider } from 'react-redux';
 import { initStore } from '../../../setupTests';
 import configureStore from '../../configureStore';
+import { SnackbarProvider } from 'notistack';
 
 //@ts-ignore
 const mockStore = configureStore(history, initStore);
@@ -14,11 +15,12 @@ describe('RFI table', () => {
   let subject: ReactWrapper;
 
 
-
   beforeEach(() => {
     subject = mount(
       <Provider store={mockStore}>
-        <RfiDashboard/>
+        <SnackbarProvider>
+          <RfiDashboard/>
+        </SnackbarProvider>
       </Provider>,
     );
   });

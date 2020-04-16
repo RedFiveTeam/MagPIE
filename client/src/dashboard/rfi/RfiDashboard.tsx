@@ -2,19 +2,22 @@ import * as React from 'react';
 import { useState } from 'react';
 import { StyledRfiTable } from './RfiTable';
 import styled from 'styled-components';
-import theme from '../../resources/theme';
+import theme, { rowStyles } from '../../resources/theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from '../../store';
-import RfiModel from '../../store/rfi/RfiModel';
-import { reorderRfis } from '../../store/rfi/Thunks';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { fetchLocalUpdate, reorderRfis } from '../../store/rfi/Thunks';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
-import { sortRfis } from '../../store/rfi';
+import { postRfiPriorityUpdate, reprioritizeRfis, sortRfis } from '../../store/rfi';
 import { StyledRfiDescriptionContainer } from './RfiDescriptionContainer';
 import { loadTgtPage } from '../../store/tgt/Thunks';
 import GetsClickRequestModel from '../../store/metrics/GetsClickRequestModel';
 import { postGetsClick } from '../../store/metrics';
 import { StyledRefreshButtonVector } from '../../resources/icons/RefreshButtonVector';
 import TextTooltip from '../components/TextTooltip';
+import { useSnackbar } from 'notistack';
+import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
+import { formatRfiNum } from '../../utils';
 
 interface MyProps {
   className?: string;
@@ -27,6 +30,9 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
   let rfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.rfis);
   let sortKey: SortKeyModel = useSelector(({rfiState}: ApplicationState) => rfiState.sortKey);
 
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+  const classes = rowStyles();
+
   let [refreshing, setRefreshing] = useState(false);
 
   const [selectedRfiId, setSelectedRfiId] = useState(
@@ -37,10 +43,39 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
 
   let selectedRfi = rfis.find((rfi) => rfi.id === selectedRfiId);
 
+  const copyRfis = (originalList: RfiModel[]): RfiModel[] => {
+
+    let newList: RfiModel[] = [];
+    for (let rfi of originalList) {
+      newList.push({...rfi});
+    }
+    return newList;
+  };
+
   const dispatch = useDispatch();
 
+  const handleReorderUndo = (rfiList: RfiModel[]) => {
+    dispatch(reprioritizeRfis(rfiList));
+    postRfiPriorityUpdate(rfiList)
+      .then(response => response.json()).catch((reason) => {
+      console.log(reason);
+    })
+      .then(success => {
+        if (!success) {
+          dispatch(fetchLocalUpdate());
+        }
+      });
+  };
+
   const handleReorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number) => {
+    let originalPriority: RfiModel[] = copyRfis(rfiList)
+      .filter((rfi) => rfi.status === RfiStatus.OPEN);
     dispatch(reorderRfis(rfiList, rfiId, newIndex));
+    enqueueSnackbar('RFI ' + formatRfiNum(rfiId) + ' Prioritized', {
+      action: (key) => UndoSnackbarAction(key, originalPriority, handleReorderUndo, closeSnackbar,
+                                          classes.snackbarButton),
+      variant: 'info',
+    });
   };
 
   const handleSortRfis = (field: Field) => {
