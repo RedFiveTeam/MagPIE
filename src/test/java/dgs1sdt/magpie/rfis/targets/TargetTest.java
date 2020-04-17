@@ -32,7 +32,7 @@ public class TargetTest {
     );
 
     String[] expected = {};
-    assertArrayEquals(expected, target1.Compare(target2).toArray());
+    assertArrayEquals(expected, target1.compare(target2).toArray());
 
 
     target2 = new TargetJson(
@@ -44,7 +44,7 @@ public class TargetTest {
     );
 
     expected = new String[]{"notes", "description"};
-    assertArrayEquals(expected, target1.Compare(target2).toArray());
+    assertArrayEquals(expected, target1.compare(target2).toArray());
 
     target2 = new TargetJson(
       1, 1,
@@ -55,6 +55,6 @@ public class TargetTest {
     );
 
     expected = new String[]{"name", "mgrs", "notes", "description"};
-    assertArrayEquals(expected, target1.Compare(target2).toArray());
+    assertArrayEquals(expected, target1.compare(target2).toArray());
   }
 }

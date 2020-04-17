@@ -1,4 +1,4 @@
-package dgs1sdt.magpie.metrics.sortClick;
+package dgs1sdt.magpie.metrics.clickSort;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

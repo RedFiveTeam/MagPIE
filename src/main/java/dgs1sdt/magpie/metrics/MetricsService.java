@@ -51,9 +51,9 @@ import dgs1sdt.magpie.metrics.login.MetricLogin;
 import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
-import dgs1sdt.magpie.metrics.sortClick.MetricClickSort;
-import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
-import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDelete;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDeleteRepository;
 import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDelete;
@@ -80,7 +80,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class MetricsService {
-  static final long MillisecondsInADay = 86400000L;
+  static final long MILLISECONDS_IN_A_DAY = 86400000L;
 
   private RfiRepository rfiRepository;
   private MetricClickGetsRepository metricClickGetsRepository;
@@ -367,7 +367,7 @@ public class MetricsService {
   public List<MetricChangeTarget> addChangeTarget(Target oldTarget, TargetJson newTarget, String userName) {
     List<MetricChangeTarget> metrics = new ArrayList<>();
     Timestamp now = new Timestamp(new Date().getTime());
-    for (String field : oldTarget.Compare(newTarget)) {
+    for (String field : oldTarget.compare(newTarget)) {
       try {
         MetricChangeTarget changeTarget = new MetricChangeTarget(
           field,
@@ -406,7 +406,7 @@ public class MetricsService {
   public List<MetricChangeIxn> addChangeIxn(IxnJson newIxn, Ixn oldIxn, String userName) {
     List<MetricChangeIxn> metrics = new ArrayList<>();
     Timestamp now = new Timestamp(new Date().getTime());
-    for (String field : oldIxn.Compare(newIxn)) {
+    for (String field : oldIxn.compare(newIxn)) {
       try {
         metrics.add(new MetricChangeIxn(field, newIxn, now, userName));
       } catch (Exception e) {
@@ -455,14 +455,14 @@ public class MetricsService {
       MetricChangeRfi metricOpen = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(rfi.getRfiNum());
       MetricChangeRfi metricClose = metricChangeRfiRepository.findStatusChangeToClosedByRfiNum(rfi.getRfiNum());
       if (metricOpen != null && metricClose != null &&
-        metricClose.getDatetime().getTime() - metricOpen.getDatetime().getTime() > MillisecondsInADay) {
+        metricClose.getDatetime().getTime() - metricOpen.getDatetime().getTime() > MILLISECONDS_IN_A_DAY) {
 
         Date openTime = metricOpen.getDatetime();
-        long daysPending = (openTime.getTime() - rfi.getReceiveDate().getTime()) / MillisecondsInADay;
+        long daysPending = (openTime.getTime() - rfi.getReceiveDate().getTime()) / MILLISECONDS_IN_A_DAY;
         totalTimePending += daysPending;
 
         Date closedTime = metricClose.getDatetime();
-        long daysOpen = (closedTime.getTime() - openTime.getTime()) / MillisecondsInADay;
+        long daysOpen = (closedTime.getTime() - openTime.getTime()) / MILLISECONDS_IN_A_DAY;
         totalTimeOpen += daysOpen;
         numberRfis++;
       }
@@ -537,20 +537,20 @@ public class MetricsService {
       return 0;
 
     long totalUniqueWeeklyLogins = 0;
-    long weeks = 0;
+    long weeks = 1;
+    long now = new Date().getTime();
     Timestamp weekStart = metricLoginRepository.findAll().get(0).getTimestamp();
-    Timestamp weekEnd = new Timestamp(weekStart.getTime() + 7 * MillisecondsInADay);
+    Timestamp weekEnd = new Timestamp(weekStart.getTime() + 7 * MILLISECONDS_IN_A_DAY);
 
-    while (weekStart.getTime() < new Date().getTime()) {
+    while (weekStart.getTime() < now) {
       long uniqueLoginsThisWeek = metricLoginRepository.findAllUniqueLoginsDuringWeek(weekStart, weekEnd).size();
-      if (uniqueLoginsThisWeek > 0) {
-        totalUniqueWeeklyLogins += uniqueLoginsThisWeek;
+      totalUniqueWeeklyLogins += uniqueLoginsThisWeek;
+      weekStart = weekEnd;
+      weekEnd = new Timestamp(weekStart.getTime() + 7 * MILLISECONDS_IN_A_DAY);
+      if (weekEnd.getTime() <= now) {
         weeks++;
       }
-      weekStart = weekEnd;
-      weekEnd = new Timestamp(weekStart.getTime() + 7 * MillisecondsInADay);
     }
-
     return Math.round((float) totalUniqueWeeklyLogins / (float) weeks);
   }
 
@@ -559,19 +559,20 @@ public class MetricsService {
       return 0;
 
     long totalUniqueWeeklyPrioritizations = 0;
-    long weeks = 0;
+    long weeks = 1;
+    long now = new Date().getTime();
     Date weekStart = metricChangeRfiPriorityRepository.findAll().get(0).getDatetime();
-    Date weekEnd = new Timestamp(weekStart.getTime() + 7 * MillisecondsInADay);
+    Date weekEnd = new Timestamp(weekStart.getTime() + 7 * MILLISECONDS_IN_A_DAY);
 
-    while (weekStart.getTime() < new Date().getTime()) {
+    while (weekStart.getTime() < now) {
       long uniquePrioritizationsThisWeek = metricChangeRfiPriorityRepository
         .findAllUniquePrioritizationsDuringWeek(weekStart, weekEnd).size();
-      if (uniquePrioritizationsThisWeek > 0) {
-        totalUniqueWeeklyPrioritizations += uniquePrioritizationsThisWeek;
+      totalUniqueWeeklyPrioritizations += uniquePrioritizationsThisWeek;
+      if (weekEnd.getTime() <= now) {
         weeks++;
       }
       weekStart = weekEnd;
-      weekEnd = new Timestamp(weekStart.getTime() + 7 * MillisecondsInADay);
+      weekEnd = new Timestamp(weekStart.getTime() + 7 * MILLISECONDS_IN_A_DAY);
     }
 
     return Math.round((float) totalUniqueWeeklyPrioritizations / (float) weeks);
@@ -582,7 +583,7 @@ public class MetricsService {
       long startDate = metrics.get(0).getTimestamp().getTime();
       long count = metrics.size();
       long now = new Date().getTime();
-      int weeksSinceStartDate = Math.round((float) (now - startDate) / (float) (7 * MillisecondsInADay));
+      int weeksSinceStartDate = Math.round((float) (now - startDate) / (float) (7 * MILLISECONDS_IN_A_DAY));
       if (weeksSinceStartDate == 0)
         weeksSinceStartDate = 1;
       return Math.round((float) count / (float) weeksSinceStartDate);
@@ -614,7 +615,7 @@ public class MetricsService {
       Timestamp rfiLtiov = rfi.getLtiov();
 
       if (metricOpen != null && metricClose != null &&
-        metricClose.getDatetime().getTime() - metricOpen.getDatetime().getTime() > MillisecondsInADay) {
+        metricClose.getDatetime().getTime() - metricOpen.getDatetime().getTime() > MILLISECONDS_IN_A_DAY) {
         if(rfiLtiov == null || metricClose.getDatetime().before(rfiLtiov)) {
           completedBeforeLtiov++;
         }
@@ -622,6 +623,10 @@ public class MetricsService {
       }
     }
 
-    return Math.round(((float) completedBeforeLtiov / (float) totalRfis) * 100);
+    if (totalRfis == 0) {
+      return 0;
+    } else {
+      return Math.round(((float) completedBeforeLtiov / (float) totalRfis) * 100);
+    }
   }
 }

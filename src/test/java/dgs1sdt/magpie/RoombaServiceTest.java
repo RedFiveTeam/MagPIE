@@ -46,7 +46,7 @@ public class RoombaServiceTest extends BaseIntegrationTest {
 
   @Test
   public void deletesOldSegments() {
-    Timestamp moreThanADayAgo = new Timestamp(new Date().getTime() - RoombaService.timeDelayInMs - 1);
+    Timestamp moreThanADayAgo = new Timestamp(new Date().getTime() - RoombaService.TIME_DELAY_IN_MS - 1);
     Segment segment = segmentRepository.findAll().get(0);
     segment.setDeleted(moreThanADayAgo);
     segmentRepository.save(segment);
@@ -62,7 +62,7 @@ public class RoombaServiceTest extends BaseIntegrationTest {
 
   @Test
   public void deletesOldTargets() {
-    Timestamp moreThanADayAgo = new Timestamp(new Date().getTime() - RoombaService.timeDelayInMs - 1);
+    Timestamp moreThanADayAgo = new Timestamp(new Date().getTime() - RoombaService.TIME_DELAY_IN_MS - 1);
     Target target = targetRepository.findAll().get(0);
     target.setDeleted(moreThanADayAgo);
     targetRepository.save(target);

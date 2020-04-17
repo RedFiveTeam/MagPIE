@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 public class RoombaService {
-  public static final long timeDelayInMs = 86400000L;
+  public static final long TIME_DELAY_IN_MS = 86400000L;
 
   IxnService ixnService;
   TargetService targetService;
@@ -35,9 +35,9 @@ public class RoombaService {
     this.targetService = targetService;
   }
 
-  @Scheduled(fixedDelay = timeDelayInMs)
+  @Scheduled(fixedDelay = TIME_DELAY_IN_MS)
   public void clean() {
-    Timestamp deleteCutoff = new Timestamp(new Date().getTime() - RoombaService.timeDelayInMs);
+    Timestamp deleteCutoff = new Timestamp(new Date().getTime() - RoombaService.TIME_DELAY_IN_MS);
 
     List<Segment> segments = ixnService.getDeletedSegments();
     List<Target> targets = targetService.getDeletedTargets();

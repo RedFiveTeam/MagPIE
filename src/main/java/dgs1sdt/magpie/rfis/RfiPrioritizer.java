@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RfiPrioritizer {
+  private RfiPrioritizer() {}
+
   public static List<Rfi> prioritize(List<Rfi> rfis) {
     //Fill in gaps due to closed RFIs
     int pri = 1;

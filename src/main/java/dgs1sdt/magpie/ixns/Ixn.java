@@ -1,13 +1,12 @@
 package dgs1sdt.magpie.ixns;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -70,7 +69,7 @@ public class Ixn {
     this.note = ixnJson.getNote();
   }
 
-  public ArrayList<String> Compare(IxnJson other) throws NullPointerException {
+  public List<String> compare(IxnJson other) {
     ArrayList<String> diff = new ArrayList<>();
 
     try {

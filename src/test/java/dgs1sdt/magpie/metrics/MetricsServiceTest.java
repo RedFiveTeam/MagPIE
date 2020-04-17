@@ -35,7 +35,7 @@ import dgs1sdt.magpie.metrics.login.MetricLogin;
 import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
-import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDelete;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDeleteRepository;
 import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDelete;

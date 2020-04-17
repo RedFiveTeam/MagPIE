@@ -1,10 +1,13 @@
 package dgs1sdt.magpie.tgts;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -54,7 +57,7 @@ public class Target {
     this.allCallouts = editTarget.getAllCallouts();
   }
 
-  public ArrayList<String> Compare(TargetJson other) throws NullPointerException {
+  public List<String> compare(TargetJson other) {
     ArrayList<String> diff = new ArrayList<>();
 
     if (!this.name.equals(other.getName())) {

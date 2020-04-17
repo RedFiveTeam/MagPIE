@@ -84,7 +84,7 @@ public class Rfi {
     this.priority = priority;
   }
 
-  public List<String> compare(Rfi otherRfi) throws NullPointerException {
+  public List<String> compare(Rfi otherRfi) {
     List<String> diff = new ArrayList<>();
 
     if (!this.getsUrl.equals(otherRfi.getsUrl))

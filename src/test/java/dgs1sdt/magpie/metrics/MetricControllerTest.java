@@ -21,8 +21,8 @@ import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepos
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
-import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
-import dgs1sdt.magpie.metrics.sortClick.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

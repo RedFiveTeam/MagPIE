@@ -1,4 +1,4 @@
-package dgs1sdt.magpie.metrics.sortClick;
+package dgs1sdt.magpie.metrics.clickSort;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,12 +17,12 @@ public class MetricClickSort {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
   private Date datetime;
-  private String sort_key;
-  private boolean sort_order_ascending;
+  private String sortKey;
+  private boolean sortOrderAscending;
 
   public MetricClickSort(Date datetime, String key, boolean order) {
     this.datetime = datetime;
-    this.sort_key = key;
-    this.sort_order_ascending = order;
+    this.sortKey = key;
+    this.sortOrderAscending = order;
   }
 }

@@ -9,8 +9,8 @@ import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
-import dgs1sdt.magpie.metrics.sortClick.MetricClickSort;
-import dgs1sdt.magpie.metrics.sortClick.MetricClickSortJson;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

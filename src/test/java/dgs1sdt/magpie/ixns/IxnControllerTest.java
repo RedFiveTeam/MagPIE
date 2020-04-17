@@ -285,7 +285,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       "",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -301,7 +301,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "Person entered vehicle",
       "123-234",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -359,7 +359,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       "",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -375,7 +375,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "Person entered vehicle",
       "123-234",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -433,7 +433,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       "",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -449,7 +449,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "Person entered vehicle",
       "123-234",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -543,7 +543,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       "",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -559,7 +559,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "Person entered vehicle",
       "123-234",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -635,7 +635,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "Person entered building from right",
       "123-234",
       "",
-      "NOT_STARTED",
+      IxnStatus.NOT_STARTED,
       "",
       ""
     ));
@@ -668,7 +668,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("1970-01-01 12:15:55.0", ixn.getTime().toString());
     assertEquals("Person entered building from right side", ixn.getActivity());
     assertEquals("William Joseph", ixn.getTrackAnalyst());
-    assertEquals("NOT_STARTED", ixn.getStatus());
+    assertEquals(IxnStatus.NOT_STARTED, ixn.getStatus());
     assertEquals("", ixn.getLeadChecker());
     assertEquals("", ixn.getFinalChecker());
 

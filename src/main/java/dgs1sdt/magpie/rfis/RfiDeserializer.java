@@ -9,6 +9,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class RfiDeserializer {
+  private RfiDeserializer() {}
+
   public static Rfi deserialize(Node rfiNode) throws Exception {
     Element element = (Element) rfiNode;
 
