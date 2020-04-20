@@ -37,11 +37,8 @@ describe('RFI description container', () => {
     expect(subject.find('.navigate-to-tgt-button').exists()).toBeTruthy();
     expect(subject.find(TgtPageButtonVector).exists()).toBeTruthy();
     subject.find('.navigate-to-tgt-button').simulate('click');
-    expect(loadTgtPageSpy).toHaveBeenCalledWith(rfi);
-  });
 
-  it('navigate to tgt button should be disabled on closed or pending rfis', () => {
-    let newRfi = {...rfi, status: RfiStatus.PENDING};
+    let newRfi = {...rfi, status: RfiStatus.CLOSED};
     subject = shallow(
       <RfiDescriptionContainer
         rfi={newRfi}
@@ -51,7 +48,13 @@ describe('RFI description container', () => {
     );
     subject.find('.navigate-to-tgt-button').simulate('click');
 
-    newRfi = {...rfi, status: RfiStatus.CLOSED};
+    expect(loadTgtPageSpy).toHaveBeenCalledWith(rfi);
+    expect(loadTgtPageSpy).toHaveBeenCalledWith(newRfi);
+    expect(loadTgtPageSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('navigate to tgt button should be disabled on pending rfis', () => {
+    let newRfi = {...rfi, status: RfiStatus.PENDING};
     subject = shallow(
       <RfiDescriptionContainer
         rfi={newRfi}

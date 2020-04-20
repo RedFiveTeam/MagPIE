@@ -415,13 +415,7 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
       }
     }
   }
-  
-  .disabled {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-  
-    
+
   .note{
     width: 100%;
   }

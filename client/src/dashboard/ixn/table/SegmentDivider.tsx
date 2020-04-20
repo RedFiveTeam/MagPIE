@@ -8,7 +8,7 @@ import { InputAdornment } from '@material-ui/core';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import globalTheme from '../../../resources/theme';
-import theme, { rowStyles } from '../../../resources/theme';
+import theme from '../../../resources/theme';
 import { TargetModel } from '../../../store/tgt/TargetModel';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import IxnModel from '../../../store/ixn/IxnModel';
@@ -16,8 +16,6 @@ import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import EditButton from '../../../resources/icons/EditButton';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
 import { convertTimeStringToMoment, RowAction } from '../../../utils';
-import { useSnackbar } from 'notistack';
-import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
 import { postCancelAddSegment } from '../../../store/ixn';
 
 interface Props {
@@ -30,6 +28,7 @@ interface Props {
   hasIxns: boolean;
   editing: boolean;
   setEdit: (segmentId: number) => void;
+  disabled: boolean;
   className?: string;
 }
 
@@ -68,7 +67,6 @@ function SegmentTextMask(props: TextMaskCustomProps) {
 
 export const SegmentDivider: React.FC<Props> = props => {
   const classes = useStyles();
-  const rowClasses = rowStyles();
 
   const [segmentStartString, setSegmentStartString] =
     React.useState(props.segment ? props.segment.startTime.format('HH:mm:ss') : '__:__:__');
@@ -78,7 +76,6 @@ export const SegmentDivider: React.FC<Props> = props => {
   const [segmentEndError, setSegmentEndError] = React.useState(false);
   const [displayModal, setDisplayModal] = React.useState(false);
   const [action, setAction] = useState(RowAction.NONE);
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   const resetAction = () => {
     setTimeout(() => {
@@ -169,12 +166,6 @@ export const SegmentDivider: React.FC<Props> = props => {
 
   const handleDelete = () => {
     if (props.segment !== null) {
-      enqueueSnackbar('You deleted ' + props.segment!.startTime.format('HH:mm:ss') + 'Z-' +
-                        props.segment!.endTime.format('HH:mm:ss') + 'Z', {
-                        action: (key) => UndoSnackbarAction(key, props.segment!, props.postSegment,
-                                                            closeSnackbar, rowClasses.snackbarButton),
-                        variant: 'info',
-                      });
       props.deleteSegment(props.segment);
     } else {
       props.setAddSegment(false);
@@ -205,7 +196,7 @@ export const SegmentDivider: React.FC<Props> = props => {
           {!props.editing ?
             <div className={'add-segment-form'}>
               <div
-                className={classNames('delete-segment', 'delete-cancel-segment-wrapper')}
+                className={classNames('delete-segment', 'delete-cancel-segment-wrapper', props.disabled? 'disabled' : null)}
                 onClick={handleDeleteClick}>
                 <DeleteButtonX className={'delete-cancel-segment'}/>
               </div>
@@ -219,7 +210,7 @@ export const SegmentDivider: React.FC<Props> = props => {
                 {props.segment!.endTime.format('HH:mm:ss') + 'Z'}
               </div>
               <div
-                className={'edit-segment'}
+                className={classNames('edit-segment', props.disabled ? 'disabled' : null)}
                 onClick={handleEditClick}
               >
                 <EditButton/>

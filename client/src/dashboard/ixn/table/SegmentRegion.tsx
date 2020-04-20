@@ -34,6 +34,7 @@ interface MyProps {
   dateString: string;
   addNote: number;
   setAddNote: (ixnId: number) => void;
+  readOnly: boolean;
   className?: string;
 }
 
@@ -42,7 +43,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
 
   const printRows = () => {
     let ixns: (IxnModel | null)[] = Array.from(props.ixns);
-    if (!ixns.includes(null))
+    if (!ixns.includes(null) && !props.readOnly)
       ixns.push(null); //input row--mapped to force a re-render
 
     return ixns.map((ixn: IxnModel | null, index: number) =>
@@ -58,7 +59,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           setEditIxn={props.setEditIxn}
           autofocus={props.autofocus}
           setAdding={setAdding}
-          disabled={ixn === null && (props.addNote > 0 || props.editIxn > 0)}
+          disabled={ixn === null && (props.addNote > 0 || props.editIxn > 0) || props.readOnly}
           addingNote={ixn !== null && props.addNote === ixn.id}
           setAddNote={props.setAddNote}
           />
@@ -77,6 +78,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           dateString={props.dateString}
           setAddNote={props.setAddNote}
           disabled={props.addNote > 0 || props.editIxn > 0}
+          readOnly={props.readOnly}
         />,
     );
   };
@@ -116,6 +118,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
         hasIxns={props.ixns.length > 0}
         editing={props.editSegment === props.segment.id}
         setEdit={props.setEditSegment}
+        disabled={props.readOnly}
       />
       {props.ixns.length > 0 ?
         <div className={classNames(props.collapsed ? 'expand-button' : 'collapse-button', 'expand-collapse')}

@@ -25,3 +25,8 @@ code {
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
+
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}

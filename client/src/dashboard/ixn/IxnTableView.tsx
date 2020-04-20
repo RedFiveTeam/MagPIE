@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { useSnackbar } from 'notistack';
 import theme, { rowStyles } from '../../resources/theme';
+import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 
 interface MyProps {
   target: TargetModel;
@@ -27,6 +28,7 @@ interface MyProps {
   collapse: (segmentId: number) => void;
   userName: string;
   dateString: string;
+  readOnly: boolean;
   className?: string;
 }
 
@@ -39,7 +41,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const classes = rowStyles();
 
-  let addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0;
+  let addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0 || props.readOnly;
 
   const dispatch = useDispatch();
 
@@ -68,33 +70,52 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
   };
 
   const handlePostSegment = (segment: SegmentModel) => {
-    setAddSegment(false);
-    setTimeout(() => {
-      setEditSegment(-1);
-    }, 300);
-    dispatch(updateSegment(segment));
+    if (!props.readOnly) {
+      setAddSegment(false);
+      setTimeout(() => {
+        setEditSegment(-1);
+      }, 300);
+      dispatch(updateSegment(segment));
+    }
   };
 
   const handlePostIxn = (ixn: IxnModel) => {
-    if (addNote > 0) {
-      enqueueSnackbar('Analyst Note Saved.', {
-        action: (key) => DismissSnackbarAction(key, closeSnackbar, classes.snackbarButton),
-        variant: 'info',
-      });
+    if (!props.readOnly) {
+      if (addNote > 0) {
+        enqueueSnackbar('Analyst Note Saved.', {
+          action: (key) => DismissSnackbarAction(key, closeSnackbar, classes.snackbarButton),
+          variant: 'info',
+        });
+      }
+      setTimeout(() => {
+        setEditIxn(-1);
+        setAddNote(-1);
+      }, 300);
+      dispatch(updateIxn(ixn, props.userName));
     }
-    setTimeout(() => {
-      setEditIxn(-1);
-      setAddNote(-1);
-    }, 300);
-    dispatch(updateIxn(ixn, props.userName));
   };
 
   const handleDeleteIxn = (ixn: IxnModel) => {
-    dispatch(deleteIxn(ixn));
+    if (!props.readOnly) {
+      enqueueSnackbar('Interaction deleted', {
+        action: (key) =>
+          UndoSnackbarAction(key, ixn, handlePostIxn, closeSnackbar, classes.snackbarButton),
+        variant: 'info',
+      });
+      dispatch(deleteIxn(ixn));
+    }
   };
 
   const handleDeleteSegment = (segment: SegmentModel) => {
-    dispatch(deleteSegment(segment));
+    if (!props.readOnly) {
+      enqueueSnackbar('You deleted ' + segment.startTime.format('HH:mm:ss') + 'Z-' +
+                        segment.endTime.format('HH:mm:ss') + 'Z', {
+                        action: (key) => UndoSnackbarAction(key, segment, handlePostSegment,
+                                                            closeSnackbar, classes.snackbarButton),
+                        variant: 'info',
+                      });
+      dispatch(deleteSegment(segment));
+    }
   };
 
   function printSegmentRegions() {
@@ -124,6 +145,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
           dateString={props.dateString}
           addNote={addNote}
           setAddNote={handleAddNote}
+          readOnly={props.readOnly}
         />,
     );
   }
@@ -152,6 +174,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
             hasIxns={false}
             setEdit={handleEditSegment}
             editing={true}
+            disabled={false}
           />
           :
           null
@@ -173,18 +196,20 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
           paddingLeft={1.8}
           fontSize={12}
           onClick={() => {
-            setAddSegment(true);
-            setTimeout(() => {
-              let scrollToLocation = document.getElementById('ixn-table-scrollable-region');
-              if (scrollToLocation !== null) {
-                scrollToLocation!.scrollTo(0, scrollToLocation!.scrollHeight);
-              }
-            }, 50);
+            if (!props.readOnly) {
+              setAddSegment(true);
+              setTimeout(() => {
+                let scrollToLocation = document.getElementById('ixn-table-scrollable-region');
+                if (scrollToLocation !== null) {
+                  scrollToLocation!.scrollTo(0, scrollToLocation!.scrollHeight);
+                }
+              }, 50);
+            }
           }}
           className={classNames(
             'add-segment-button',
             'no-select',
-            addSegment && editSegment < 0 ? 'add-segment-button-disabled' : null,
+            (addSegment && editSegment < 0) || props.readOnly ? 'disabled' : null,
           )}
         >
           Add Segment
@@ -194,5 +219,5 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
         <input className={'hidden-input'}/>
       </div>
     </div>
-  )
+  );
 };

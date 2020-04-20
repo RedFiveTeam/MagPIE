@@ -12,6 +12,7 @@ interface MyProps {
   rollupMode: RollupMode;
   selectedIxns: number[];
   select: (ixnId: number) => void;
+  readOnly: boolean;
   className?: string;
 }
 
@@ -25,6 +26,7 @@ export const MiniSegmentRegion: React.FC<MyProps> = (props) => {
                           selected={props.selectedIxns.includes(ixn.id as number)}
                           select={props.select}
                           rollupMode={props.rollupMode}
+                          readOnly={props.readOnly}
                         />,
     );
   };

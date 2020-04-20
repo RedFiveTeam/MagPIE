@@ -25,6 +25,7 @@ interface MyProps {
   saveRollup: (mode: RollupMode, rollup: string) => void;
   displaySnackbar: (message: string) => void;
   userName: string;
+  readOnly: boolean;
   className?: string;
 }
 
@@ -81,6 +82,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
           select={handleSelect}
           selectedIxns={selectedIxns}
           key={index}
+          readOnly={props.readOnly}
         />,
     );
   }
@@ -89,11 +91,11 @@ export const RollupView: React.FC<MyProps> = (props) => {
     if (rollupMode === RollupMode.ALL_CALLOUTS) {
       setRollupMode(RollupMode.HOURLY_ROLLUP);
       setTimeout(() => {
-          let element = document.getElementById('rollup-input');
-          if (element instanceof HTMLTextAreaElement) {
-            element.focus();
-            element.setSelectionRange(53, 53);
-          }
+        let element = document.getElementById('rollup-input');
+        if (element instanceof HTMLTextAreaElement) {
+          element.focus();
+          element.setSelectionRange(53, 53);
+        }
       }, 100);
     } else {
       setRollupMode(RollupMode.ALL_CALLOUTS);
@@ -208,22 +210,28 @@ export const RollupView: React.FC<MyProps> = (props) => {
             </Box>
           </div>
           <form className={classNames('rollup-form')}>
-            <div className={classes.modalInputContainer}>
-              <TextField
-                className={classNames('rollup', classes.modalTextfield)}
-                value={rollupMode === RollupMode.ALL_CALLOUTS ? allCallouts : hourlyRollup}
-                onChange={handleInput}
-                autoFocus
-                multiline
-                rows={27}
-                InputProps={{
-                  disableUnderline: true,
-                }}
-                inputProps={{
-                  id: 'rollup-input',
-                  className: 'rollup-input',
-                }}
-              />
+            <div className={classNames(classes.modalInputContainer, props.readOnly ? 'rollup-text-wrapper' : null)}>
+              {!props.readOnly ?
+                <TextField
+                  className={classNames('rollup', classes.modalTextfield)}
+                  value={rollupMode === RollupMode.ALL_CALLOUTS ? allCallouts : hourlyRollup}
+                  onChange={handleInput}
+                  autoFocus
+                  multiline
+                  rows={27}
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
+                  inputProps={{
+                    id: 'rollup-input',
+                    className: 'rollup-input',
+                  }}
+                />
+                :
+                <div className={'rollup-text'}>
+                  {rollupMode === RollupMode.ALL_CALLOUTS ? allCallouts : hourlyRollup}
+                </div>
+              }
             </div>
           </form>
           <div className={'button-section'}>
@@ -236,7 +244,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
             </div>
             <div
               onClick={handleSaveClick}
-              className={classNames('save', classes.modalNo)}
+              className={classNames('save', classes.modalNo, props.readOnly ? 'disabled' : null)}
             >
               SAVE
             </div>
@@ -251,7 +259,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
       </div>
       {rollupMode === RollupMode.ALL_CALLOUTS ?
         <div
-          className={classNames('import-rollup-button', selectedIxns.length === 0 ? 'disabled' : null)}
+          className={classNames('import-rollup-button', selectedIxns.length === 0 || props.readOnly ? 'disabled' : null)}
           onClick={importIxns}
         >
           <StyledImportRollupsButton/>
@@ -287,11 +295,6 @@ export const StyledRollupView = styled(RollupView)`
 
   .import-rollup-button {
     margin: 4px;
-  }
-
-  .disabled {
-    pointer-events: none;
-    opacity: 0.5;
   }
 
   .spacer {
@@ -352,5 +355,23 @@ export const StyledRollupView = styled(RollupView)`
     :hover {
       box-shadow: 0 0 6px #FFF;
     } 
+  }
+  
+  .rollup-text {
+    width: 100%;
+    align-self: flex-start;
+    justify-self: flex-start;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    text-align: left;
+  }
+  
+  .rollup-text-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 4px;
+    overflow-y: auto;
   }
 `;

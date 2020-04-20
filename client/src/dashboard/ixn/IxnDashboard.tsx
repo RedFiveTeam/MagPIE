@@ -19,6 +19,7 @@ import { RollupClickModel } from '../../store/metrics/RollupClickModel';
 import { RollupMode, StyledRollupView } from './RollupView';
 import { IxnTableView } from './IxnTableView';
 import { Cookie } from '../../utils';
+import { RfiStatus } from '../../store/rfi/RfiModel';
 
 interface Props {
   className?: string
@@ -32,6 +33,8 @@ export const IxnDashboard: React.FC<Props> = props => {
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
   const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
   const autofocus: boolean = useSelector(({ixnState}: ApplicationState) => ixnState.autofocus);
+
+  const readOnly = useSelector(({tgtState}: ApplicationState) => tgtState.rfi).status === RfiStatus.CLOSED;
 
   const [tgtAnalyst, setTgtAnalyst] = useState('');
   const [rollupMode, setRollupMode] = useState(false);
@@ -116,6 +119,7 @@ export const IxnDashboard: React.FC<Props> = props => {
             saveRollup={handleSaveRollup}
             displaySnackbar={handleDisplaySnackbar}
             userName={cookie.userName}
+            readOnly={readOnly}
           />
           :
           <IxnTableView
@@ -129,6 +133,7 @@ export const IxnDashboard: React.FC<Props> = props => {
             collapse={handleCollapse}
             userName={cookie.userName}
             dateString={moment(dateString, 'MM/DD/YYYY').format('DDMMMYY').toUpperCase()}
+            readOnly={readOnly}
           />
       }
     </div>
@@ -161,11 +166,6 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     :hover {
       box-shadow: 0 0 8px #FFFFFF;
     }
-  }
-  
-  .add-segment-button-disabled {
-    pointer-events: none;
-    opacity: 0.5;
   }
 
   .add-segment-vector {
