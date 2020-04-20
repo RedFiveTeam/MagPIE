@@ -21,7 +21,7 @@ export const RfiDescriptionContainer: React.FC<MyProps> = ({rfi, loadTgtPage, po
   let cookie: Cookie = cookies.magpie;
 
   const handleTgtClick = () => {
-    if (rfi && rfi.status === RfiStatus.OPEN) {
+    if (rfi && rfi.status !== RfiStatus.PENDING) {
       setCookies('magpie', {...cookie, viewState: {rfiId: rfi.id, tgtId: undefined}});
       loadTgtPage(rfi);
     }
@@ -38,7 +38,7 @@ export const RfiDescriptionContainer: React.FC<MyProps> = ({rfi, loadTgtPage, po
     <div className={className}>
       <div className={'button-section'}>
         <div className={classNames('navigate-to-tgt-button', 'button', 'no-select',
-                                   rfi && rfi.status !== RfiStatus.OPEN ? 'disabled' : null)}
+                                   rfi && rfi.status === RfiStatus.PENDING ? 'disabled' : null)}
              onClick={handleTgtClick}
         >
           <span>TGTs</span>
@@ -80,11 +80,6 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-  }
-  
-  .disabled {
-    opacity: 0.5;
-    pointer-events: none;
   }
   
   .button {

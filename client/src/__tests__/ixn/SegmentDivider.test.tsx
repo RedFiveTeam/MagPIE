@@ -43,6 +43,7 @@ describe('Segment Divider', () => {
           hasIxns={false}
           editing={false}
           setEdit={jest.fn()}
+          disabled={false}
         />
       </SnackbarProvider>,
     );
@@ -79,6 +80,7 @@ describe('Segment Divider', () => {
           hasIxns={false}
           editing={true}
           setEdit={editSpy}
+          disabled={false}
         />
       </SnackbarProvider>,
     );
@@ -103,6 +105,7 @@ describe('Segment Divider', () => {
           hasIxns={false}
           editing={true}
           setEdit={jest.fn()}
+          disabled={false}
         />
       </SnackbarProvider>,
     );

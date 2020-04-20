@@ -19,6 +19,7 @@ describe('Mini Ixn Row', () => {
         selected={false}
         select={jest.fn()}
         rollupMode={RollupMode.HOURLY_ROLLUP}
+        readOnly={false}
       />,
     );
   });
@@ -36,6 +37,7 @@ describe('Mini Ixn Row', () => {
         selected={false}
         select={jest.fn()}
         rollupMode={RollupMode.ALL_CALLOUTS}
+        readOnly={false}
       />,
     );
     expect(subject.find('.import-checkbox').exists()).toBeTruthy();

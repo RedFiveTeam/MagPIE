@@ -23,6 +23,7 @@ describe("Mini Segment Region", () => {
       rollupMode={RollupMode.ALL_CALLOUTS}
       selectedIxns={[]}
       select={jest.fn()}
+      readOnly={false}
     />
   );
 

@@ -41,6 +41,9 @@ describe("Target Date Region", () => {
         addingOrEditing={false}
         postTarget={jest.fn()}
         postExploitDate={jest.fn()}
+        navigateToIxnPage={jest.fn()}
+        deleteExploitDate={jest.fn()}
+        deleteTgt={jest.fn()}
       />
     );
   });
@@ -67,6 +70,9 @@ describe("Target Date Region", () => {
         addingOrEditing={true}
         postTarget={jest.fn()}
         postExploitDate={jest.fn()}
+        navigateToIxnPage={jest.fn()}
+        deleteExploitDate={jest.fn()}
+        deleteTgt={jest.fn()}
       />
     );
     expect(subject.find(StyledTgtRow).length).toBe(3);
@@ -97,6 +103,9 @@ describe("Target Date Region", () => {
         addingOrEditing={true}
         postTarget={jest.fn()}
         postExploitDate={jest.fn()}
+        navigateToIxnPage={jest.fn()}
+        deleteExploitDate={jest.fn()}
+        deleteTgt={jest.fn()}
       />
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();
@@ -119,6 +128,9 @@ describe("Target Date Region", () => {
         addingOrEditing={true}
         postTarget={jest.fn()}
         postExploitDate={jest.fn()}
+        navigateToIxnPage={jest.fn()}
+        deleteExploitDate={jest.fn()}
+        deleteTgt={jest.fn()}
       />
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();

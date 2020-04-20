@@ -6,15 +6,11 @@ import DateFnsUtils from '@date-io/date-fns';
 import { createMuiTheme, createStyles, InputAdornment, MuiThemeProvider, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
-import { deleteExploitDate } from '../../../store/tgt/Thunks';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
-import theme, { rowStyles } from '../../../resources/theme';
+import theme from '../../../resources/theme';
 import createPalette from '@material-ui/core/styles/createPalette';
-import { useSnackbar } from 'notistack';
-import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
 import { ExploitDatePostModel } from '../../../store/tgt/ExploitDatePostModel';
 import { truncateAndConvertDateToUtc } from '../../../store/tgt';
 
@@ -23,10 +19,11 @@ interface Props {
   postExploitDate: (date: ExploitDatePostModel) => void;
   setAddDate: (addDate: boolean) => void;
   uKey: number
-  deleteExploitDate: (exploitDateId: number) => void;
+  deleteExploitDate: (exploitDate: ExploitDateModel) => void;
   hasTgts: boolean;
   exploitDateDisplay?: string;
   exploitDate?: ExploitDateModel;
+  disabled: boolean;
   className?: string;
 }
 
@@ -68,7 +65,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 export const TgtDateDivider: React.FC<Props> = props => {
   const classes = useStyles();
-  const rowClasses = rowStyles();
 
   const muiPalette = createPalette({
     type: 'dark',
@@ -83,12 +79,19 @@ export const TgtDateDivider: React.FC<Props> = props => {
 
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
   const [displayModal, setDisplayModal] = React.useState(false);
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   function isValidDate(date: Date): boolean {
     return Object.prototype.toString.call(date) !== '[object Date]' ? false
       : !(isNaN(date.getTime()) || date > new Date());
   }
+
+  const createExploitDatePostModel = (date: Date): ExploitDatePostModel => {
+    return new ExploitDatePostModel(
+      props.exploitDate ? props.exploitDate.id : null,
+      props.rfiId,
+      truncateAndConvertDateToUtc(date),
+    );
+  };
 
   function handleChange(date: Date | null) {
     setSelectedDate(date);
@@ -102,34 +105,19 @@ export const TgtDateDivider: React.FC<Props> = props => {
   }
 
   function handleDeleteClick() {
-    if (props.hasTgts) {
-      setDisplayModal(true);
-    } else {
-      checkForExploitDate();
+    if (!props.disabled) {
+      if (props.hasTgts) {
+        setDisplayModal(true);
+      } else {
+        deleteExploitDate();
+      }
     }
   }
 
-  function deleteExploitDateById(exploitDateId: number) {
-    props.deleteExploitDate(exploitDateId);
-    setDisplayModal(false);
-  }
-
-  const createExploitDatePostModel = (date: Date): ExploitDatePostModel => {
-    return new ExploitDatePostModel(
-      props.exploitDate ? props.exploitDate.id : null,
-      props.rfiId,
-      truncateAndConvertDateToUtc(date),
-    );
-  };
-
-  function checkForExploitDate() {
+  function deleteExploitDate() {
     if (props.exploitDate) {
-      enqueueSnackbar('You deleted ' + props.exploitDate!.exploitDate.format('MM/DD/YYYY'), {
-        action: (key) => UndoSnackbarAction(key, createExploitDatePostModel(new Date(props.exploitDate!.exploitDate
-          .unix() * 1000)), props.postExploitDate, closeSnackbar, rowClasses.snackbarButton),
-        variant: 'info',
-      });
-      deleteExploitDateById(props.exploitDate.id);
+      props.deleteExploitDate(props.exploitDate);
+      setDisplayModal(false);
     } else {
       props.setAddDate(false);
     }
@@ -149,7 +137,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
                   startAdornment: (
                     <InputAdornment onClick={handleDeleteClick} position={'start'}>
                       <DeleteButtonX
-                        className={'delete-date'}
+                        className={classNames('delete-date', props.disabled ? 'disabled' : null)}
                         aria-label={'delete date'}
                       />
                     </InputAdornment>
@@ -170,6 +158,7 @@ export const TgtDateDivider: React.FC<Props> = props => {
                 error={false}
                 helperText={''}
                 autoFocus={props.exploitDate === undefined}
+                disabled={props.disabled}
               />
             </div>
           </MuiPickersUtilsProvider>
@@ -178,20 +167,14 @@ export const TgtDateDivider: React.FC<Props> = props => {
           deletingItem={props.exploitDate ? props.exploitDate.exploitDate.format('MM/DD/YYYY') : ''}
           display={displayModal}
           setDisplay={setDisplayModal}
-          handleYes={checkForExploitDate}
+          handleYes={deleteExploitDate}
         />
       </MuiThemeProvider>
     </div>
   );
 };
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = {
-  deleteExploitDate: deleteExploitDate,
-};
-
-export const StyledTgtDateDivider = styled(connect(mapStateToProps, mapDispatchToProps)(TgtDateDivider))`
+export const StyledTgtDateDivider = styled(TgtDateDivider)`
   font-family: ${theme.font.familyRegion};
   font-weight: ${theme.font.weightBold};
   font-size: ${theme.font.sizeRegion};

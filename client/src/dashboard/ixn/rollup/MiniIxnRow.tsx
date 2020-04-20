@@ -10,6 +10,7 @@ interface MyProps {
   rollupMode: RollupMode;
   selected: boolean;
   select: (ixnId: number) => void;
+  readOnly: boolean
   className?: string;
 }
 
@@ -33,6 +34,7 @@ export const MiniIxnRow: React.FC<MyProps> = props => {
             disableRipple
             color={'primary'}
             className={'import-checkbox'}
+            disabled={props.readOnly}
           />
           :
           null

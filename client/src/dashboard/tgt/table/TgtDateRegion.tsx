@@ -28,6 +28,9 @@ interface Props {
   addingOrEditing: boolean;
   postTarget: (target: TargetPostModel) => void;
   postExploitDate: (date: ExploitDatePostModel) => void;
+  navigateToIxnPage: (target: TargetModel, dateString: string) => void;
+  deleteTgt: (tgt: TargetModel) => void;
+  deleteExploitDate: (exploitDate: ExploitDateModel) => void;
   className?: string;
 }
 
@@ -54,11 +57,11 @@ export const TgtDateRegion: React.FC<Props> = props => {
           setAddEditTarget={props.setAddEditTarget}
           addingOrEditing={props.addingOrEditing}
           postTarget={props.postTarget}
+          deleteTgt={props.deleteTgt}
+          navigateToIxnPage={props.navigateToIxnPage}
         />
     )
   }
-
-  let isNotDisabled = props.addTgt === -1 && props.editTarget === -1 && !props.addDate;
 
   return (
     <div className={props.className}>
@@ -75,6 +78,8 @@ export const TgtDateRegion: React.FC<Props> = props => {
         uKey={props.index}
         hasTgts={props.targets.length > 0}
         postExploitDate={props.postExploitDate}
+        deleteExploitDate={props.deleteExploitDate}
+        disabled={props.addingOrEditing}
       />
         <div className={'tgt-input'}>
           <Box
@@ -92,7 +97,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
             paddingRight={0.25}
             paddingLeft={2.8}
             fontSize={12}
-            className={classNames('add-tgt-button' + (isNotDisabled ? '' : '-disabled'), 'no-select')}
+            className={classNames('add-tgt-button' + (!props.addingOrEditing ? '' : '-disabled'), 'no-select')}
           >
             Add TGT
             <AddTgtDateButtonVector/>

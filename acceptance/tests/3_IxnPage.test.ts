@@ -427,21 +427,6 @@ Scenario('Should be able to delete segments and undo segment delete', (I) => {
 });
 
 Scenario('Should display a modal when deleting targets with ixns', (I) => {
-  //Add date
-  I.click('.add-date-button');
-  I.fillField('input', '02012020');
-  I.click('.tgt-dash--header--back-button');
-  I.waitForText('PRI');
-  I.click('.navigate-to-tgt-button');
-
-
-  //Add target
-  I.click('.add-tgt-button');
-  I.fillField('.tgt-name-input-new', 'SDT20-123');
-  I.pressKey('Tab');
-  I.fillField('.mgrs', '12QWE1231231231');
-  I.pressKey('Enter');
-
   //Add segment
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);

@@ -46,6 +46,7 @@ describe('IxnRow', () => {
           userName={'billy'}
           setAddNote={setInputNoteSpy}
           disabled={false}
+          readOnly={false}
         />
       </SnackbarProvider>
     );

@@ -42,6 +42,7 @@ describe("Segment Region", () => {
       userName={'billy'}
       addNote={-1}
       setAddNote={jest.fn()}
+      readOnly={false}
     />
   );
 

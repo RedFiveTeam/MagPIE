@@ -29,7 +29,7 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
             <b>MGRS:</b> {props.target.mgrs}
           </div>
           <div className={'ixn-dash--header--date'}>
-            Date: {props.dateString}
+            <b>Date:</b> {props.dateString}
           </div>
         </div>
         <div className={'rollup-button-container'}>
@@ -142,11 +142,6 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   
   .ixn-dash--header--filler {
     width: 60px;
-  }
-  
-  .disabled {
-    opacity: 0.5;
-    pointer-events: none;
   }
   
   .rollup-button {

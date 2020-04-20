@@ -11,9 +11,7 @@ import { StyledIxnStatusPickerOutline } from '../../../resources/icons/IxnStatus
 import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiButton';
 import { DeleteCancelButton } from './DeleteCancelButton';
 import styled from 'styled-components';
-import { rowStyles } from '../../../resources/theme';
-import { useSnackbar } from 'notistack';
-import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
+import theme, { rowStyles } from '../../../resources/theme';
 import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton';
 import { TrackNarrativeModal } from './TrackNarrativeModal';
 import { postTrackNarrativeClick } from '../../../store/metrics';
@@ -21,6 +19,7 @@ import { TrackNarrativeClickModel } from '../../../store/metrics/TrackNarrativeC
 import TextTooltip from '../../components/TextTooltip';
 import { MiniTrashcanButton } from '../../../resources/icons/MiniTrashcanButton';
 import { NoteButton } from '../../../resources/icons/NoteButton';
+import CancelButtonSmall from '../../../resources/icons/CancelButtonSmall';
 
 interface MyProps {
   ixn: IxnModel;
@@ -35,6 +34,7 @@ interface MyProps {
   dateString: string;
   setAddNote: (ixnId: number) => void;
   disabled: boolean;
+  readOnly: boolean
   className?: string;
 }
 
@@ -50,15 +50,10 @@ const HtmlTooltip = withStyles((theme: Theme) => ({
 
 export const IxnRow: React.FC<MyProps> = props => {
   const classes = rowStyles();
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const [displayTrackNarrative, setDisplayTrackNarrative] = useState(false);
+  const [displayNote, setDisplayNote] = useState(false);
 
   const handleDeleteClick = () => {
-    enqueueSnackbar('Interaction deleted', {
-      action: (key) => UndoSnackbarAction(key, props.ixn, props.postIxn, closeSnackbar,
-                                          classes.snackbarButton),
-      variant: 'info',
-    });
     props.deleteIxn(props.ixn);
   };
 
@@ -91,13 +86,20 @@ export const IxnRow: React.FC<MyProps> = props => {
   };
 
   const handleNoteClick = () => {
-    props.setAddNote(props.ixn.id!);
+    if (props.readOnly) {
+      setDisplayNote(!displayNote);
+    } else {
+      props.setAddNote(props.ixn.id!);
+    }
   };
 
   return (
     <div className={props.className} id={'ixn-row-' + props.segment.id + '-' + props.ixn.id}>
       <HtmlTooltip
-        title={<div className={'delete-container'}><MiniTrashcanButton onClick={handleDeleteClick} className={'delete-ixn-button'}/></div>}
+        title={
+          <div className={'delete-container'}>
+            <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-ixn-button'}/>
+          </div>}
         placement={'bottom-end'}
         PopperProps={{
           popperOptions: {
@@ -181,14 +183,27 @@ export const IxnRow: React.FC<MyProps> = props => {
           </div>
           <DeleteCancelButton
             handleClick={handleNoteClick}
-            className={classNames('note-edit-button-container')}
+            className={classNames('note-edit-button-container', displayNote ? 'note-button-extended' : null)}
             buttonClassName={'note-button'}
-            title={'Analyst Notes'}
+            title={!displayNote ? 'Analyst Notes' : 'Hide Notes'}
           >
-            <NoteButton hasNote={props.ixn.note !== ''}/>
+            {!displayNote ?
+              <NoteButton hasNote={props.ixn.note !== ''}/>
+              :
+              <CancelButtonSmall/>
+            }
           </DeleteCancelButton>
         </Box>
       </HtmlTooltip>
+      {displayNote ?
+        <div className={'note-container'}>
+          <div className={'ixn-data-cell note'}>
+            {props.ixn.note}
+          </div>
+        </div>
+        :
+        null
+      }
       {displayTrackNarrative ?
         <TrackNarrativeModal
           setDisplay={setDisplayTrackNarrative}
@@ -206,10 +221,9 @@ export const IxnRow: React.FC<MyProps> = props => {
 export const StyledIxnRow = styled(IxnRow)`
   display: flex;
   overflow: hidden;
-  //padding-right: 50px;
   flex-direction: column;
 
- .ixn-data-cell {
+  .ixn-data-cell {
     margin: 14px 8px 8px 8px;
     padding-bottom: 6px;
     overflow-wrap: break-word;
@@ -239,16 +253,40 @@ export const StyledIxnRow = styled(IxnRow)`
     border-radius: 5px;
   }
   
-  .disabled {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-  
   .note-edit-button-container {
     padding-bottom: 4px;
   }
   
-  .delete-container {
-    //margin-left: 1500px;
+  .note-button-extended {
+    border-top-right-radius: 8px;
+    width: 75px !important;
+    margin-right: -8px;
+    background-color: ${theme.color.backgroundInformation};
+    margin-bottom: -8px;
+    padding-right: 7px;
+    padding-bottom: 8px;
+    z-index: 1;
+    flex-grow: 0 !important;
+    align-self: stretch !important;
+  }
+  
+  .note-container {
+    width: 1476px;
+    min-height: 62px;
+    border-radius: 8px 0 8px 8px;
+    background-color: ${theme.color.backgroundInformation};
+    margin: -4px 0 8px 0;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 50 !important;
+    position: relative;
+    word-wrap: break-word;
+  }
+  
+  .note {
+    margin: 0 !important;
+    width: 100%;
   }
 `;

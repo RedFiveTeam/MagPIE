@@ -33,6 +33,7 @@ describe('TgtDateDivider', () => {
           hasTgts={false}
           uKey={1}
           postExploitDate={jest.fn()}
+          disabled={false}
         />
       </SnackbarProvider>,
     );
@@ -69,6 +70,7 @@ describe('TgtDateDivider', () => {
           hasTgts={true}
           uKey={1}
           postExploitDate={jest.fn()}
+          disabled={false}
         />
       </SnackbarProvider>,
     );
@@ -102,6 +104,7 @@ describe('TgtDateDivider', () => {
           hasTgts={false}
           uKey={1}
           postExploitDate={jest.fn()}
+          disabled={false}
         />
       </SnackbarProvider>,
     );

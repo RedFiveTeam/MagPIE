@@ -5,12 +5,9 @@ import classNames from 'classnames';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
-import { connect } from 'react-redux';
 import theme, { rowStyles } from '../../../resources/theme';
-import { deleteTgt } from '../../../store/tgt/Thunks';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
-import { navigateToIxnPage } from '../../../store/ixn';
 import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import RfiModel from '../../../store/rfi/RfiModel';
 import { StyledTgtStatusPickerOutline } from '../../../resources/icons/TgtStatusPickerOutline';
@@ -20,10 +17,7 @@ import { IxnDeserializer } from '../../../store/ixn/IxnDeserializer';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
-import { useSnackbar } from 'notistack';
-import { UndoSnackbarAction } from '../../components/UndoSnackbarAction';
 import { DeleteCancelButton } from '../../ixn/table/DeleteCancelButton';
-import { useCookies } from 'react-cookie';
 
 interface Props {
   target: TargetModel;
@@ -32,7 +26,7 @@ interface Props {
   setAddEditTarget: (status: Status, id?: number) => void;
   postTarget: (target: TargetPostModel) => void;
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
-  deleteTgt: (tgtId: number) => void;
+  deleteTgt: (tgt: TargetModel) => void;
   key: number;
   addingOrEditing: boolean;
   className?: string;
@@ -52,9 +46,6 @@ export const TgtRow: React.FC<Props> = props => {
   const classes = rowStyles();
 
   const [displayModal, setDisplayModal] = useState(false);
-  const [cookie, setCookie] = useCookies(['magpie']);
-
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   const submitStatusChange = (status: TargetStatus) => {
     let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
@@ -75,12 +66,7 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   const performDelete = () => {
-    enqueueSnackbar('You deleted ' + props.target.name, {
-      action: (key) => UndoSnackbarAction(key, {...props.target, targetId: props.target.id},
-                                          props.postTarget, closeSnackbar, classes.snackbarButton),
-      variant: 'info',
-    });
-    props.deleteTgt(props.target.id);
+    props.deleteTgt(props.target)
   };
 
   const checkIxns = (hasIxns: boolean) => {
@@ -93,7 +79,6 @@ export const TgtRow: React.FC<Props> = props => {
 
   const handleIxnClick = () => {
     if (props.target !== null) {
-      setCookie('magpie', {...cookie.magpie, viewState: {rfiId: props.target.rfiId, tgtId: props.target.id}});
       props.navigateToIxnPage(props.target, props.exploitDate.exploitDate.format('MM/DD/YYYY'));
     }
   };
@@ -178,7 +163,7 @@ export const TgtRow: React.FC<Props> = props => {
           handleClick={handleDeleteClick}
           title={'Delete Target'}
           buttonClassName={'delete-tgt-button'}
-          className={'delete-edit-button-container'}
+          className={classNames('delete-edit-button-container', props.addingOrEditing ? 'delete-disabled' : null)}
         >
           <StyledDeleteButtonTrashcan/>
         </DeleteCancelButton>
@@ -196,14 +181,7 @@ export const TgtRow: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = (state: any) => ({});
-
-const mapDispatchToProps = {
-  navigateToIxnPage: navigateToIxnPage,
-  deleteTgt: deleteTgt,
-};
-
-export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(TgtRow))`
+export const StyledTgtRow = styled(TgtRow)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -237,9 +215,7 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   
   .data-cell {
     margin: 10px 8px 0 8px;
-    //padding-bottom: 6px;
     overflow-wrap: break-word;
-    //border-bottom: 1px solid #FFFFFF;
     max-height: 42px;
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightRow};
@@ -308,5 +284,13 @@ export const StyledTgtRow = styled(connect(mapStateToProps, mapDispatchToProps)(
   
   .status-menu {
     cursor: pointer;
+  }
+  
+  .delete-disabled {
+    svg {
+      opacity: 0.5;
+    }
+    
+    pointer-events: none;
   }
 `;
