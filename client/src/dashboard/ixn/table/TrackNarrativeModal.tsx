@@ -7,12 +7,15 @@ import IxnModel from '../../../store/ixn/IxnModel';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../../components/InformationalSnackbar';
+import styled from 'styled-components';
 
 interface MyProps {
   setDisplay: (display: boolean) => void;
   ixn: IxnModel;
   submitTrackNarrative: (trackNarrative: string) => void;
   dateString: string;
+  readOnly: boolean;
+  className?: string;
 }
 
 export const TrackNarrativeModal: React.FC<MyProps> = props => {
@@ -40,70 +43,101 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
   };
 
   const handleSave = () => {
-    props.submitTrackNarrative(trackNarrative);
-    props.setDisplay(false);
-    displaySnackbar('Track Narrative Saved');
+    if (!props.readOnly) {
+      props.submitTrackNarrative(trackNarrative);
+      props.setDisplay(false);
+      displaySnackbar('Track Narrative Saved');
+    }
   };
 
   return (
-    <Modal
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description"
-      open
-      onClose={() => props.setDisplay(false)}
-      style={{
-        top: '50%',
-        left: '50%',
-      }}
-      className={classNames('delete-modal', classes.modal)}
-      disableBackdropClick
-      disableEscapeKeyDown
-    >
-      <div className={classes.modalBody}>
-        <form className={classNames('track-narrative-form')}
-        >
-          <div className={classes.modalInputContainer}>
-            <span><b>{props.ixn.track}</b></span>
-            <TextField
-              className={classNames('track-narrative', classes.modalTextfield)}
-              value={trackNarrative}
-              onChange={inputTrackNarrative}
-              autoFocus
-              multiline
-              rows={25}
-              InputProps={{
-                disableUnderline: true,
-              }}
-              inputProps={{
-                id: 'track-narrative-' + props.ixn.id,
-                className: 'track-narrative-input'
-              }}
-            />
-          </div>
-        </form>
-        <div className={classes.buttonSection}>
-          <div className={classes.spacer}>&nbsp;</div>
-          <div
-            className={classNames('cancel', classes.modalYes)}
-            onClick={() => props.setDisplay(false)}
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open
+        onClose={() => props.setDisplay(false)}
+        style={{
+          top: '50%',
+          left: '50%',
+        }}
+        className={classNames('delete-modal', classes.modal, props.className)}
+        disableBackdropClick
+        disableEscapeKeyDown
+      >
+        <div className={classes.modalBody}>
+          <form className={classNames('track-narrative-form')}
           >
-            Cancel
-          </div>
-          <div
-            onClick={handleSave}
-            className={classNames('save', classes.modalNo)}
-          >
-            SAVE
-          </div>
-          <CopyToClipboard onCopy={() => displaySnackbar('Copied to Clipboard')} text={trackNarrative}>
-            <div
-              className={classNames('copy-to-clipboard', classes.copyToClipboard)}
-            >
-              Copy to Clipboard
+            <div className={classNames(classes.modalInputContainer, props.readOnly ? 'narrative-text-wrapper' : null)}>
+              <span><b>{props.ixn.track}</b></span>
+
+              {!props.readOnly ?
+                <TextField
+                  className={classNames('track-narrative', classes.modalTextfield)}
+                  value={trackNarrative}
+                  onChange={inputTrackNarrative}
+                  autoFocus
+                  multiline
+                  rows={25}
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
+                  inputProps={{
+                    id: 'track-narrative-' + props.ixn.id,
+                    className: 'track-narrative-input',
+                  }}
+                />
+
+                :
+                <div className={'narrative-text'}>
+                  {trackNarrative}
+                </div>
+              }
             </div>
-          </CopyToClipboard>
+          </form>
+          <div className={classes.buttonSection}>
+            <div className={classes.spacer}>&nbsp;</div>
+            <div
+              className={classNames('cancel', classes.modalYes)}
+              onClick={() => props.setDisplay(false)}
+            >
+              Cancel
+            </div>
+            <div
+              onClick={handleSave}
+              className={classNames('save', classes.modalNo, props.readOnly ? 'disabled' : null)}
+            >
+              SAVE
+            </div>
+            <CopyToClipboard onCopy={() => displaySnackbar('Copied to Clipboard')} text={trackNarrative}>
+              <div
+                className={classNames('copy-to-clipboard', classes.copyToClipboard)}
+              >
+                Copy to Clipboard
+              </div>
+            </CopyToClipboard>
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
   );
 };
+
+export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
+  .narrative-text {
+    margin-top: 8px;
+    width: 100%;
+    align-self: flex-start;
+    justify-self: flex-start;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    text-align: left;
+  }
+  
+  .narrative-text-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 4px !important;
+    overflow-y: auto !important;
+  }
+`;
