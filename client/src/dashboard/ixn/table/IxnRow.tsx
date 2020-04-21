@@ -13,7 +13,7 @@ import { DeleteCancelButton } from './DeleteCancelButton';
 import styled from 'styled-components';
 import theme, { rowStyles } from '../../../resources/theme';
 import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton';
-import { TrackNarrativeModal } from './TrackNarrativeModal';
+import { StyledTrackNarrativeModal } from './TrackNarrativeModal';
 import { postTrackNarrativeClick } from '../../../store/metrics';
 import { TrackNarrativeClickModel } from '../../../store/metrics/TrackNarrativeClickModel';
 import TextTooltip from '../../components/TextTooltip';
@@ -205,11 +205,12 @@ export const IxnRow: React.FC<MyProps> = props => {
         null
       }
       {displayTrackNarrative ?
-        <TrackNarrativeModal
+        <StyledTrackNarrativeModal
           setDisplay={setDisplayTrackNarrative}
           ixn={props.ixn}
           submitTrackNarrative={handleSubmitTrackNarrative}
           dateString={props.dateString}
+          readOnly={props.readOnly}
         />
         :
         null
