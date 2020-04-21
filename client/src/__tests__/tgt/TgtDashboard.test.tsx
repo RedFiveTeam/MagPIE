@@ -6,7 +6,7 @@ import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { SnackbarProvider } from 'notistack';
 import { Provider } from 'react-redux';
 import configureStore from '../../configureStore';
-import { StyledTgtDateDivider } from '../../dashboard/tgt/table/TgtDateDivider';
+import { StyledExploitDateDivider } from '../../dashboard/tgt/table/ExploitDateDivider';
 import { initStore } from '../../../setupTests';
 
 const initState = {
@@ -60,7 +60,7 @@ describe('TgtDashboardContainer', () => {
   });
 
   it('should display the date dividers or not properly', () => {
-    expect(subject.find(StyledTgtDateDivider).exists()).toBeFalsy();
+    expect(subject.find(StyledExploitDateDivider).length).toBe(1);
 
     let dates: ExploitDateModel[] = [
       new ExploitDateModel(2, 1, moment('2019-11-20').utc()),
@@ -89,12 +89,6 @@ describe('TgtDashboardContainer', () => {
       </Provider>,
     );
 
-    expect(subject.find(StyledTgtDateDivider).length).toBe(3);
-  });
-
-  it('should display a date placeholder when the add date button is clicked', () => {
-    expect(subject.find('.date-divider--placeholder').exists()).toBeFalsy();
-    subject.find('.add-date-button').at(0).simulate('click');
-    expect(subject.find('.date-divider--placeholder').exists()).toBeTruthy();
+    expect(subject.find(StyledExploitDateDivider).length).toBe(3);
   });
 });

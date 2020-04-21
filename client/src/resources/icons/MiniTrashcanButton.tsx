@@ -19,12 +19,13 @@ const pathD = 'M10 20C15.5228 20 20 15.5228 20 10C20 4.47715 15.5228 0 10 0C4.47
 
 interface MyProps {
   onClick: () => void;
+  tooltip: string
   className?: string
 }
 
 export const MiniTrashcanButton: React.FC<MyProps> = (props) => {
   return (
-    <TextTooltip title={'Delete Callout'}>
+    <TextTooltip title={props.tooltip}>
       <Wrapper
         className={props.className}
         onClick={props.onClick}
@@ -36,12 +37,12 @@ export const MiniTrashcanButton: React.FC<MyProps> = (props) => {
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
         >
-          <circle cx="10" cy="10" r="10" fill={theme.color.backgroundInformation}/>
+          <circle cx="10" cy="10" r="10" fill={theme.color.backgroundBase}/>
           <path
             fillRule='evenodd'
             clipRule='evenodd'
             d={pathD}
-            fill={'white'}
+            fill={theme.color.primaryButton}
           />
         </svg>
       </Wrapper>

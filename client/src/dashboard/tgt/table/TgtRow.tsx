@@ -3,7 +3,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
-import { StyledDeleteButtonTrashcan } from '../../../resources/icons/DeleteButtonTrashcan';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import theme, { rowStyles } from '../../../resources/theme';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
@@ -17,7 +16,7 @@ import { IxnDeserializer } from '../../../store/ixn/IxnDeserializer';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
-import { DeleteCancelButton } from '../../ixn/table/DeleteCancelButton';
+import { MiniTrashcanButton } from '../../../resources/icons/MiniTrashcanButton';
 
 interface Props {
   target: TargetModel;
@@ -66,13 +65,13 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   const performDelete = () => {
-    props.deleteTgt(props.target)
+    props.deleteTgt(props.target);
   };
 
   const checkIxns = (hasIxns: boolean) => {
-    if (hasIxns)
+    if (hasIxns) {
       setDisplayModal(true);
-    else {
+    } else {
       performDelete();
     }
   };
@@ -87,90 +86,107 @@ export const TgtRow: React.FC<Props> = props => {
     let className: String = event.target.className;
     props.setAddEditTarget(Status.EDIT, props.target.id);
     setTimeout(() => {
-      if (className.includes('name') && document.getElementById('tgt-name-input'))
+      if (className.includes('name') && document.getElementById('tgt-name-input')) {
         document.getElementById('tgt-name-input')!.focus();
-      if (className.includes('mgrs') && document.getElementById('mgrs-input'))
+      }
+      if (className.includes('mgrs') && document.getElementById('mgrs-input')) {
         document.getElementById('mgrs-input')!.focus();
-      if (className.includes('notes') && document.getElementById('notes-input'))
+      }
+      if (className.includes('notes') && document.getElementById('notes-input')) {
         document.getElementById('notes-input')!.focus();
-      if (className.includes('description') && document.getElementById('description-input'))
+      }
+      if (className.includes('description') && document.getElementById('description-input')) {
         document.getElementById('description-input')!.focus();
+      }
     }, 50);
   };
 
   return (
     <div className={props.className}>
-      <Box
-        borderRadius={8}
-        className={'tgt-form-box'}
+      <HtmlTooltip
+        title={
+          <div className={'delete-container'}>
+            <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-tgt-button'} tooltip={'Delete Target'}/>
+          </div>}
+        placement={'bottom-end'}
+        PopperProps={{
+          popperOptions: {
+            modifiers: {
+              offset: {
+                enabled: true,
+                offset: '45px, -35px',
+              },
+            },
+          },
+        }}
+        interactive
+        disableHoverListener={props.addingOrEditing}
+        leaveDelay={100}
       >
-        <div className={'tgt-form'}
-             onDoubleClick={handleDoubleClick}
+        <Box
+          borderRadius={8}
+          className={'tgt-form-box'}
         >
-          <div className={'data-cell-container'}>
-            <div className={classNames('data-cell', 'tgt-name')}>
-              {props.target.name}
-            </div>
-            <div className={'data-bottom'}>&nbsp;</div>
-          </div>
-          <div className={'data-cell-container'}>
-            <div className={classNames('data-cell', 'mgrs')}>
-              {props.target.mgrs}
-            </div>
-            <div className={'data-bottom'}>&nbsp;</div>
-          </div>
-          <div className={'data-cell-container'}>
-            <div className={classNames('data-cell', 'notes')}>
-              <div className={'data-notes'}>
-                {props.target.notes === '' ? '\xa0' : props.target.notes}
+          <div className={'tgt-form'}
+               onDoubleClick={handleDoubleClick}
+          >
+            <div className={'data-cell-container'}>
+              <div className={classNames('data-cell', 'tgt-name')}>
+                {props.target.name}
               </div>
+              <div className={'data-bottom'}>&nbsp;</div>
             </div>
-            <div className={'data-bottom'}>&nbsp;</div>
-          </div>
-          <div className={'data-cell-container'}>
-            <div className={classNames('data-cell', 'description')}>
-              <div className={'data-description'}>
-                {props.target.description === '' ? '\xa0' : props.target.description}
+            <div className={'data-cell-container'}>
+              <div className={classNames('data-cell', 'mgrs')}>
+                {props.target.mgrs}
               </div>
+              <div className={'data-bottom'}>&nbsp;</div>
             </div>
-            <div className={'data-bottom'}>&nbsp;</div>
+            <div className={'data-cell-container'}>
+              <div className={classNames('data-cell', 'notes')}>
+                <div className={'data-notes'}>
+                  {props.target.notes === '' ? '\xa0' : props.target.notes}
+                </div>
+              </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
+            <div className={'data-cell-container'}>
+              <div className={classNames('data-cell', 'description')}>
+                <div className={'data-description'}>
+                  {props.target.description === '' ? '\xa0' : props.target.description}
+                </div>
+              </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
           </div>
-        </div>
-        <HtmlTooltip
-          title={
-            <div className={'status-menu'}>
-              <StyledTgtStatusPickerOutline/>
-              <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable, classes.tgtClickable)}
-                                onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
-              <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, classes.tgtClickable)}
-                               onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
-            </div>
-          }
-          interactive
-          disableHoverListener={props.addingOrEditing}
-        >
-          <div
-            className={'status-wrapper'}>
-            {props.target.status === TargetStatus.NOT_STARTED ?
-              <NotStartedButton buttonClass={classes.statusUnclickable}/>
-              : (props.target.status === TargetStatus.IN_PROGRESS ?
-                <InProgressButton buttonClass={classes.statusUnclickable}/>
-                :
-                <CompletedButton buttonClass={classes.statusUnclickable}/>)
-            }</div>
-        </HtmlTooltip>
-        <DeleteCancelButton
-          handleClick={handleDeleteClick}
-          title={'Delete Target'}
-          buttonClassName={'delete-tgt-button'}
-          className={classNames('delete-edit-button-container', props.addingOrEditing ? 'delete-disabled' : null)}
-        >
-          <StyledDeleteButtonTrashcan/>
-        </DeleteCancelButton>
-        <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
-          <StyledExploitationLogButtonVector/>
-        </div>
-      </Box>
+          <HtmlTooltip
+            title={
+              <div className={'status-menu'}>
+                <StyledTgtStatusPickerOutline/>
+                <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable, classes.tgtClickable)}
+                                  onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
+                <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, classes.tgtClickable)}
+                                 onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
+              </div>
+            }
+            interactive
+            disableHoverListener={props.addingOrEditing}
+          >
+            <div
+              className={'status-wrapper'}>
+              {props.target.status === TargetStatus.NOT_STARTED ?
+                <NotStartedButton buttonClass={classes.statusUnclickable}/>
+                : (props.target.status === TargetStatus.IN_PROGRESS ?
+                  <InProgressButton buttonClass={classes.statusUnclickable}/>
+                  :
+                  <CompletedButton buttonClass={classes.statusUnclickable}/>)
+              }</div>
+          </HtmlTooltip>
+          <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
+            <StyledExploitationLogButtonVector/>
+          </div>
+        </Box>
+      </HtmlTooltip>
       <DeleteConfirmationModal
         deletingItem={props.target.name}
         display={displayModal}
@@ -187,11 +203,7 @@ export const StyledTgtRow = styled(TgtRow)`
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 4px;
-  width: 100%;
-  
-  .tgt-form {
-    width: 100%;
-  }
+  width: 1212px;
   
   .tgt-name {
     width: 115px;
@@ -216,11 +228,9 @@ export const StyledTgtRow = styled(TgtRow)`
   .data-cell {
     margin: 10px 8px 0 8px;
     overflow-wrap: break-word;
-    max-height: 42px;
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightRow};
     font-family: ${theme.font.familyRow};
-    overflow-y: auto;
     position: relative;
     
   }
@@ -230,7 +240,6 @@ export const StyledTgtRow = styled(TgtRow)`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-height: 62px;
   }
   
   .data-bottom {
@@ -246,28 +255,28 @@ export const StyledTgtRow = styled(TgtRow)`
     justify-content: center;
     align-items: center;
     width: 108px;
-    height: 62px;
     cursor: pointer;
+    border-left: 9px solid ${theme.color.backgroundBase};
+    align-self: stretch;
   }
   
   .tgt-form-box {
-    height: 62px;
+    min-height: 62px;
     width: 100%;
-    margin-top: 8px;
+    margin: 4px 0;
     background-color: ${theme.color.backgroundInformation};
     display: flex;
     flex-direction: row;
     align-items: center;
     font-weight: normal;
-    margin-bottom: 9px;
     padding-right: 7px;
+    box-shadow: -2px 2px 4px #000000;
   }
   
   .tgt-form {
     display: flex;
     flex-direction: row;
     align-items: center;
-    max-height: 62px;
   }
 
   .status-wrapper {

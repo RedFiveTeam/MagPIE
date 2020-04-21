@@ -12,7 +12,7 @@ import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledMiniSegmentRegion } from './rollup/MiniSegmentRegion';
 import { StyledImportRollupsButton } from '../../resources/icons/ImportRollupsButton';
 import { convertTimeStringToMoment } from '../../utils';
-import AddTgtDateButtonVector from '../../resources/icons/AddTgtDateButtonVector';
+import TgtTriangleVector from '../../resources/icons/TgtTriangleVector';
 import { postImportClick } from '../../store/metrics';
 import { ImportClickModel } from '../../store/metrics/ImportClickModel';
 
@@ -186,7 +186,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
                                     rollupMode === RollupMode.HOURLY_ROLLUP ? 'button-active' : 'button-inactive')}
             >
               <span>Hourly Rollup</span>
-              <div className={'icon icon-left'}><AddTgtDateButtonVector/></div>
+              <div className={'icon icon-left'}><TgtTriangleVector/></div>
             </Box>
             <Box
               height={22}
@@ -205,7 +205,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
               className={classNames('no-select', 'rollup-mode-button',
                                     rollupMode === RollupMode.ALL_CALLOUTS ? 'button-active' : 'button-inactive')}
             >
-              <div className={'icon icon-right'}><AddTgtDateButtonVector/></div>
+              <div className={'icon icon-right'}><TgtTriangleVector/></div>
               <span>All Callouts</span>
             </Box>
           </div>

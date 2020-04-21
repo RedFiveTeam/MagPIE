@@ -44,6 +44,7 @@ describe("Target Date Region", () => {
         navigateToIxnPage={jest.fn()}
         deleteExploitDate={jest.fn()}
         deleteTgt={jest.fn()}
+        disabled={false}
       />
     );
   });
@@ -73,6 +74,7 @@ describe("Target Date Region", () => {
         navigateToIxnPage={jest.fn()}
         deleteExploitDate={jest.fn()}
         deleteTgt={jest.fn()}
+        disabled={false}
       />
     );
     expect(subject.find(StyledTgtRow).length).toBe(3);
@@ -86,7 +88,7 @@ describe("Target Date Region", () => {
     expect(addEditSpy).toHaveBeenCalledWith(Status.ADD, exploitDate.id);
   });
 
-  it('should disable the add target button properly', () => {
+  it('should hide the add target button properly', () => {
     subject = shallow(
       <TgtDateRegion
         rfi={rfi}
@@ -106,11 +108,10 @@ describe("Target Date Region", () => {
         navigateToIxnPage={jest.fn()}
         deleteExploitDate={jest.fn()}
         deleteTgt={jest.fn()}
+        disabled={false}
       />
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();
-    expect(subject.find('.add-tgt-button-disabled').exists()).toBeTruthy();
-    subject.find('.add-tgt-button-disabled').simulate('.click');
 
     subject = shallow(
       <TgtDateRegion
@@ -131,11 +132,10 @@ describe("Target Date Region", () => {
         navigateToIxnPage={jest.fn()}
         deleteExploitDate={jest.fn()}
         deleteTgt={jest.fn()}
+        disabled={false}
       />
     );
-    expect(subject.find('.add-tgt-button').exists()).toBeFalsy();
-    expect(subject.find('.add-tgt-button-disabled').exists()).toBeTruthy();
-    subject.find('.add-tgt-button-disabled').simulate('.click');
+    subject.find('.add-tgt-button').simulate('.click');
 
     expect(addEditSpy).not.toHaveBeenCalled()
   });

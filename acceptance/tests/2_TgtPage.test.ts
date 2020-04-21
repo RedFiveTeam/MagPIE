@@ -15,7 +15,7 @@ Before((I) => {
 Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
   I.waitForText('RFI DESCRIPTION: Lorem ipsum', 10);
   I.click('.tgt-dash--header--back-button');
-  I.waitForText('PRI', 10);
+  I.waitForText('Justification', 10);
   I.waitForText('Customer', 10);
   I.waitForText('LTIOV', 10);
 });
@@ -118,7 +118,7 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.waitForText('Duplicate TGTs under the same date are not allowed.');
 
   I.click('.tgt-dash--header--back-button');
-  I.waitForText('PRI');
+  I.waitForText('Justification');
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI: 20-325');
 
@@ -138,16 +138,20 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
 });
 
 Scenario('Should be able to delete and undo delete tgts', (I) => {
+  I.moveCursorTo('.tgt-form-box', 10, 10);
   I.click('.delete-tgt-button');
   I.waitForText('You deleted SDT20-999');
   I.click('UNDO');
   I.waitForText('12QWE1234567890');
+
+  I.moveCursorTo('.tgt-form-box', 10, 10);
   I.click('.delete-tgt-button');
 
   //Need to leave page and come back to see changes
   I.click('.tgt-dash--header--back-button');
   I.click('.navigate-to-tgt-button');
 
+  I.moveCursorTo('.tgt-form-box', 10, 10);
   I.click('.delete-tgt-button');
 
   I.click('.tgt-dash--header--back-button');

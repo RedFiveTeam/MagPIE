@@ -1,10 +1,7 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import styled from 'styled-components';
-import { Box } from '@material-ui/core';
-import AddTgtDateButtonVector from '../../../resources/icons/AddTgtDateButtonVector';
 import { StyledTgtRow } from './TgtRow';
-import { StyledTgtDateDivider } from './TgtDateDivider';
+import { StyledExploitDateDivider } from './ExploitDateDivider';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../../store/tgt/TargetModel';
 import RfiModel from '../../../store/rfi/RfiModel';
@@ -13,6 +10,7 @@ import { StyledTgtInputRow } from './TgtInputRow';
 import theme from '../../../resources/theme';
 import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../../store/tgt/ExploitDatePostModel';
+import classNames from 'classnames';
 
 interface Props {
   rfi: RfiModel;
@@ -31,93 +29,80 @@ interface Props {
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
   deleteTgt: (tgt: TargetModel) => void;
   deleteExploitDate: (exploitDate: ExploitDateModel) => void;
+  disabled: boolean;
   className?: string;
 }
 
 export const TgtDateRegion: React.FC<Props> = props => {
 
   function printTargets() {
-    return props.targets.map((target: TargetModel, index: number) =>
-      props.editTarget === target.id ?
-      <StyledTgtInputRow
-        target={target}
-        key={index}
-        rfi={props.rfi}
-        exploitDate={props.exploitDate}
-        setAddEditTarget={props.setAddEditTarget}
-        addingOrEditing={props.addingOrEditing}
-        postTarget={props.postTarget}
-      />
-      :
-        <StyledTgtRow
-          target={target}
-          key={index}
-          rfi={props.rfi}
-          exploitDate={props.exploitDate}
-          setAddEditTarget={props.setAddEditTarget}
-          addingOrEditing={props.addingOrEditing}
-          postTarget={props.postTarget}
-          deleteTgt={props.deleteTgt}
-          navigateToIxnPage={props.navigateToIxnPage}
-        />
-    )
+    return props.targets.map(
+      (target: TargetModel, index: number) =>
+        props.editTarget === target.id ?
+          <StyledTgtInputRow
+            target={target}
+            key={index}
+            rfi={props.rfi}
+            exploitDate={props.exploitDate}
+            setAddEditTarget={props.setAddEditTarget}
+            addingOrEditing={props.addingOrEditing}
+            postTarget={props.postTarget}
+          />
+          :
+          <StyledTgtRow
+            target={target}
+            key={index}
+            rfi={props.rfi}
+            exploitDate={props.exploitDate}
+            setAddEditTarget={props.setAddEditTarget}
+            addingOrEditing={props.addingOrEditing}
+            postTarget={props.postTarget}
+            deleteTgt={props.deleteTgt}
+            navigateToIxnPage={props.navigateToIxnPage}
+          />,
+    );
   }
 
   return (
     <div className={props.className}>
-      <StyledTgtDateDivider
+      <StyledExploitDateDivider
         rfiId={props.rfi.id}
         setAddDate={props.setAddDate}
         exploitDate={props.exploitDate}
         exploitDateDisplay={
           new Date(props.exploitDate.exploitDate.utc().unix() * 1000
-            + new Date(props.exploitDate.exploitDate.utc().unix() * 1000)
-              .getTimezoneOffset() * 60000).toString()
+                     + (new Date().getTimezoneOffset() * 60 * 1000) + 60 * 60 * 1000).toString()
         }
-        className={"date-divider--" + props.exploitDateDisplay}
+        className={'date-divider--' + props.exploitDateDisplay}
         uKey={props.index}
         hasTgts={props.targets.length > 0}
         postExploitDate={props.postExploitDate}
         deleteExploitDate={props.deleteExploitDate}
         disabled={props.addingOrEditing}
       />
-        <div className={'tgt-input'}>
-          <Box
-            height={32}
-            width={110}
-            border={2}
-            borderRadius={16}
-            borderColor={theme.color.primaryButton}
-            bgcolor={theme.color.backgroundModal}
+      <div className={'tgt-input'}>
+        {printTargets()}
+        {props.addTgt === props.exploitDate.id ?
+          <StyledTgtInputRow
+            target={null}
+            key={99999}
+            rfi={props.rfi}
+            exploitDate={props.exploitDate}
+            setAddEditTarget={props.setAddEditTarget}
+            addingOrEditing={props.addingOrEditing}
+            postTarget={props.postTarget}
+          />
+          :
+          <div
+            className={classNames('add-tgt-button', 'no-select', props.disabled ? 'disabled' : null)}
             onClick={() => props.setAddEditTarget(Status.ADD, props.exploitDate.id)}
-            display='flex'
-            flexDirection='row'
-            alignItems='center'
-            justifyContent='space-between'
-            paddingRight={0.25}
-            paddingLeft={2.8}
-            fontSize={12}
-            className={classNames('add-tgt-button' + (!props.addingOrEditing ? '' : '-disabled'), 'no-select')}
           >
-            Add TGT
-            <AddTgtDateButtonVector/>
-          </Box>
-          {printTargets()}
-          {props.addTgt === props.exploitDate.id ?
-            <StyledTgtInputRow
-              target={null}
-              key={99999}
-              rfi={props.rfi}
-              exploitDate={props.exploitDate}
-              setAddEditTarget={props.setAddEditTarget}
-              addingOrEditing={props.addingOrEditing}
-              postTarget={props.postTarget}
-            />
-            :
-            null}
-        </div>
+            Add Target
+          </div>
+        }
+      </div>
     </div>
-  )
+  );
 };
 
 export const StyledTgtDateSection = styled(TgtDateRegion)`
@@ -128,8 +113,8 @@ export const StyledTgtDateSection = styled(TgtDateRegion)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 4px;
+  align-items: center;
+  margin-bottom: 16px;
   width: 100%;
   
   .separator-line {
@@ -183,7 +168,7 @@ export const StyledTgtDateSection = styled(TgtDateRegion)`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 100%;
+    width: 1212px;
   }
   
   .add-tgt-form-box {
@@ -201,17 +186,22 @@ export const StyledTgtDateSection = styled(TgtDateRegion)`
   
   .add-tgt-button {
     cursor: pointer;
-    margin-left: 8px;
-    box-shadow: 0 2px 4px #000000;
+    box-shadow: -2px 2px 20px #000000;
+    width: 1212px;
+    height: 62px;
+    border-radius: 8px;
+    background: ${theme.color.backgroundInformation};
+    border: 2px solid ${theme.color.borderAddButton};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: ${theme.font.sizeMetricsHeader};
+    font-weight: ${theme.font.weightBold};
+    color: ${theme.color.primaryButton};
+    margin-top: 4px; 
     
     :hover {
       box-shadow: 0 0 6px #FFFFFF;
     }
-  }
-  
-  .add-tgt-button-disabled {
-    margin-left: 8px;
-    opacity: 0.5;
-    pointer-events: none;
   }
 `;

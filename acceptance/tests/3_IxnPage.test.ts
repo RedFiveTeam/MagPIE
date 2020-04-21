@@ -449,6 +449,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   //Navigate back and try a delete
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI:');
+  I.moveCursorTo('.tgt-form-box', 10, 10);
   I.click('.delete-tgt-button');
   I.seeElement(locate('div').withText('All associated data will be erased.'));
   I.click('.modal-no');
@@ -459,6 +460,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
 
   I.waitForText('SDT20-123');
 
+  I.moveCursorTo('.tgt-form-box', 10, 10);
   I.click('.delete-tgt-button');
   I.seeElement(locate('div').withText('All associated data will be erased.'));
   I.click('.modal-yes');

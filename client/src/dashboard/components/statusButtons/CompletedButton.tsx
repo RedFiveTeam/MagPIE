@@ -12,8 +12,8 @@ const CompletedButton: React.FC<StatusButtonProps> = props => {
         width={110}
         border={2}
         borderRadius={16}
-        borderColor={theme.color.complete}
-        bgcolor={theme.color.backgroundModal}
+        borderColor={theme.color.fontPrimary}
+        bgcolor={theme.color.backgroundPillButton}
         display="flex"
         flexDirection="row"
         alignItems="center"

@@ -98,7 +98,7 @@ export const IxnRow: React.FC<MyProps> = props => {
       <HtmlTooltip
         title={
           <div className={'delete-container'}>
-            <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-ixn-button'}/>
+            <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-ixn-button'} tooltip={'Delete Callout'}/>
           </div>}
         placement={'bottom-end'}
         PopperProps={{

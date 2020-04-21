@@ -56,6 +56,8 @@ const theme = {
     modalInputBorder: crayonBox.subtlerGray,
     fontHeader: crayonBox.skyBlueGreen,//
     backgroundFocus: crayonBox.mediumBlueGray,//
+    borderAddButton: crayonBox.mediumGreenBlue,//
+    backgroundPillButton: crayonBox.darkGreenBlue,//
   },
 
   font: {
@@ -74,7 +76,7 @@ const theme = {
     sizeRowSmall: '12px',
     sizeRowMedium: '14px',
     sizeMetricsHeader: '20px',
-    sizeBigMetric: '40px'
+    sizeBigMetric: '40px',
   },
 
   table: {
@@ -85,47 +87,51 @@ const theme = {
   },
 };
 
-const muiPalette = createPalette({
-  type: 'dark',
-  primary: {
-    main: theme.color.primaryButton,
-  },
-});
+const muiPalette = createPalette(
+  {
+    type: 'dark',
+    primary: {
+      main: theme.color.primaryButton,
+    },
+  });
 
-export const muiTheme = createMuiTheme({
-  palette: muiPalette,
-});
+export const muiTheme = createMuiTheme(
+  {
+    palette: muiPalette,
+  });
 
-const rowPalette = createPalette({
-  primary: {
-    main: theme.color.fontInputFocus,
-  },
-  secondary: {
-    main: '#FFFFFF',
-  },
-});
+const rowPalette = createPalette(
+  {
+    primary: {
+      main: theme.color.fontInputFocus,
+    },
+    secondary: {
+      main: '#FFFFFF',
+    },
+  });
 
-export const rowTheme = createMuiTheme({
-  palette: rowPalette,
-  overrides: {
-    MuiInput: {
-      input: {
-        '&::placeholder': {
-          color: theme.color.fontBackgroundInactive,
+export const rowTheme = createMuiTheme(
+  {
+    palette: rowPalette,
+    overrides: {
+      MuiInput: {
+        input: {
+          '&::placeholder': {
+            color: theme.color.fontBackgroundInactive,
+          },
+          color: 'white', // if you also want to change the color of the input, this is the prop you'd use
         },
-        color: 'white', // if you also want to change the color of the input, this is the prop you'd use
-      },
-      underline: {
-        '&:before': {
-          borderBottom: '1px solid white',
+        underline: {
+          '&:before': {
+            borderBottom: '1px solid white',
+          },
         },
       },
     },
-  },
-});
+  });
 
-export const rowStyles = makeStyles((localTheme: Theme) =>
-  createStyles({
+export const rowStyles = makeStyles((localTheme: Theme) => createStyles(
+  {
     margin: {
       margin: localTheme.spacing(1),
     },
@@ -261,7 +267,5 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       width: 128,
     },
   }));
-
-
 
 export default theme;

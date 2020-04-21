@@ -5,7 +5,6 @@ import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { Status } from '../../dashboard/tgt/TgtDashboard';
-import { TgtInputRow } from '../../dashboard/tgt/table/TgtInputRow';
 import { SnackbarProvider } from 'notistack';
 
 describe('Target Row', () => {
@@ -57,25 +56,6 @@ describe('Target Row', () => {
     () => {
       subject.find('.exploitation').simulate('click');
       expect(navToIxnPageSpy).toBeCalledWith(target, '11/20/2019');
-
-      subject = mount(
-        <TgtInputRow
-          target={null}
-          key={1}
-          className={'class'}
-          postTarget={jest.fn()}
-          exploitDate={exploitDate}
-          rfi={rfiTest}
-          navigateToIxnPage={navToIxnPageSpy}
-          deleteTgt={deleteSpy}
-          setAddEditTarget={setAddEditTargetSpy}
-          addingOrEditing={true}
-        />,
-      );
-
-      subject.find('.exploitation').simulate('click');
-
-      expect(navToIxnPageSpy).toHaveBeenCalledTimes(1);
     });
 
   it('should make target row editable after double clicking them', () => {

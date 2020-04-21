@@ -5,10 +5,9 @@ import { connect, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledTgtTable } from './table/TgtTable';
-import { StyledTgtDateDivider } from './table/TgtDateDivider';
+import { StyledExploitDateDivider } from './table/ExploitDateDivider';
 import { Box } from '@material-ui/core';
 import theme, { rowStyles } from '../../resources/theme';
-import AddDateVector from '../../resources/icons/AddTgtDateVector';
 import { crayonBox } from '../../resources/crayonBox';
 import { ApplicationState } from '../../store';
 import { StyledTgtDateSection } from './table/TgtDateRegion';
@@ -16,7 +15,7 @@ import { StyledTgtDashboardHeader } from './TgtDashboardHeader';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
-import { deleteExploitDate, deleteTgt, postExploitDate, submitPostTarget } from '../../store/tgt/Thunks';
+import { deleteExploitDate, deleteTgt, loadTgtPage, postExploitDate, submitPostTarget } from '../../store/tgt/Thunks';
 import {
   addTgt,
   editTgt,
@@ -33,6 +32,7 @@ import { Cookie } from '../../utils';
 import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { navigateToIxnPage } from '../../store/ixn';
 import { useSnackbar } from 'notistack';
+import { StyledRfiSidebar } from './sidebar/RfiSidebar';
 
 interface MyProps {
   rfi: RfiModel;
@@ -132,6 +132,14 @@ export const TgtDashboard: React.FC<MyProps> = props => {
     dispatch(navigateToIxnPage(target, dateString));
   };
 
+  const handleSelectRfi = (rfi: RfiModel) => {
+    setCookies('magpie', {...cookie, viewState: {rfiId: rfi.id}});
+    dispatch(loadTgtPage(rfi, true));
+  }
+
+  const handleAddDate = () => {
+    setAddDate(true);
+  }
 
   function printDates(dates: ExploitDateModel[]) {
     return dates.map((exploitDateModel: ExploitDateModel, index: number) =>
@@ -154,6 +162,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
                          deleteTgt={handleDeleteTarget}
                          navigateToIxnPage={handleNavigateToIxnPage}
                          deleteExploitDate={handleDeleteExploitDate}
+                         disabled={isDisabled}
                        />,
     );
   }
@@ -164,77 +173,63 @@ export const TgtDashboard: React.FC<MyProps> = props => {
         exitTgtPage={props.exitTgtPage}
         rfi={props.rfi}
         editing={props.addTgt > 0 || props.editTgt > 0 || addDate}
+        addDate={handleAddDate}
+        disabled={isDisabled || props.exploitDates.length === 0}
+        displayHelperText={props.exploitDates.length < 2 && props.rfi.status === RfiStatus.OPEN}
       />
-      <div className={'tgt-dash-body'}>
-        {props.exploitDates.length > 0 || props.showDatePlaceholder ?
-          <StyledTableHeader
-            className={'tgt-table-header'}
-            headers={['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Delete', 'Exploitation']}
+      <div className={'tgt-dash-container'}>
+        <div className={'rfi-sidebar'}>
+          <StyledRfiSidebar
+            rfi={props.rfi}
+            selectRfi={handleSelectRfi}
           />
-          :
-          null
-        }
-        <StyledTgtTable>
-          {printDates(props.exploitDates)}
-          {addDate ?
-            <StyledTgtDateDivider
-              rfiId={props.rfi.id}
-              setAddDate={setAddDate}
-              className={'date-divider--placeholder'}
-              uKey={props.rfi.id}
-              hasTgts={false}
-              postExploitDate={handlePostExploitDate}
-              deleteExploitDate={() => {}}
-              disabled={false}
-            />
-            :
-            null
-          }
-        </StyledTgtTable>
-        <div className={'add-date-container'}>
-          <Box
-            height={34}
-            minHeight={34}
-            width={174}
-            borderRadius={17}
-            onClick={() => {
-              setAddDate(true);
-              setTimeout(() => {
-                let scrollToLocation = document.getElementById('tgt-table-scrollable-region');
-                if (scrollToLocation !== null) {
-                  scrollToLocation!.scrollTo(0, scrollToLocation!.scrollHeight);
-                }
-              }, 50);
-            }}
-            display='flex'
-            flexDirection='row'
-            alignItems='center'
-            justifyContent='center'
-            fontSize={14}
-            fontWeight={'bold'}
-            id={'add-date-button'}
-            className={classNames(
-              'add-date-button' + (isDisabled ? '-disabled' : ''),
-              'no-select',
-            )}
-          >
-            <span>Add Coverage Date&nbsp;&nbsp;&nbsp;</span>
-            <AddDateVector/>
-          </Box>
-          {/*Prevents user from tabbing out of page to address bar*/}
-          <input className={'hidden-input'}/>
         </div>
-      </div>
-      <div className={'tgt-dash--rfi-description-container'}>
-        <Box
-          border={1}
-          borderRadius={8}
-          borderColor={crayonBox.eggWhite}
-          className={'tgt-dash--rfi-description'}
-          padding={1}
-        >
-          <span>RFI DESCRIPTION: {props.rfi.description}</span>
-        </Box>
+        <div className={'tgt-dash'}>
+          <div className={'tgt-dash-body'}>
+            {props.exploitDates.length > 0 || props.showDatePlaceholder ?
+              <StyledTableHeader
+                className={'tgt-table-header'}
+                headers={['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Status']}
+              />
+              :
+              null
+            }
+            <StyledTgtTable>
+              {printDates(props.exploitDates)}
+              {addDate || (props.exploitDates.length === 0 && props.rfi.status === RfiStatus.OPEN) ?
+                <StyledExploitDateDivider
+                  rfiId={props.rfi.id}
+                  setAddDate={setAddDate}
+                  className={'date-divider--placeholder'}
+                  uKey={props.rfi.id}
+                  hasTgts={false}
+                  postExploitDate={handlePostExploitDate}
+                  deleteExploitDate={() => {
+                  }}
+                  disabled={false}
+                />
+                :
+                null
+              }
+            </StyledTgtTable>
+            {props.exploitDates.length === 0 && props.rfi.status === RfiStatus.OPEN ?
+            <div className={'helper-text'}>
+              Input or select a coverage date for your targets
+            </div>
+              :
+              null
+            }
+          </div>
+          <div className={'tgt-dash--rfi-description-container'}>
+            <Box
+              borderColor={crayonBox.eggWhite}
+              className={'tgt-dash--rfi-description'}
+            >
+              <span>RFI DESCRIPTION: {props.rfi.description}</span>
+            </Box>
+              <input className={'hidden-input'}/>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -264,12 +259,27 @@ export const StyledTgtDashboard = styled(
   flex-direction: column;
   justify-content: space-between;
   
-  .tgt-dash-daterange-display-inactive {
-    color: ${theme.color.backgroundInformation};
+  .tgt-dash {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+ 
+  .tgt-dash-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-around;
+    width: 100%;
+  }
+ 
+  .rfi-sidebar {
+   justify-self: flex-start;
   }
   
-  .tgt-table {
-    height: 100%;
+  .tgt-dash-daterange-display-inactive {
+    color: ${theme.color.backgroundInformation};
   }
   
   .tgt-dash-body {
@@ -278,7 +288,7 @@ export const StyledTgtDashboard = styled(
     flex-direction: column;
     align-items: center;
     align-self: center;
-    width: 1316px;
+    width: 1222px;
   }
   
   .tgt-dash--rfi-description-container {
@@ -292,8 +302,11 @@ export const StyledTgtDashboard = styled(
   .tgt-dash--rfi-description {
     height: 115px;
     min-width: 500px;
-    padding-right: 12px;
+    padding: 4px 16px 4px 4px;
     overflow-y: auto;
+    background: ${theme.color.backgroundInformation};
+    border-radius: 8px;
+    border: 2px solid ${theme.color.modalInputBorder};
   }
   
   .date-divider--placeholder {
@@ -309,23 +322,6 @@ export const StyledTgtDashboard = styled(
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-  }
-  
-  .add-date-container {
-    width: 224px;
-    height: 34px;    
-    margin-bottom: 7px;
-    margin-top: 7px;
-  }
-  
-  .add-date-button {
-    cursor: pointer;
-    background-color: ${theme.color.primaryButton};
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    
-    :hover {
-      box-shadow: 0 0 6px #FFFFFF;
-    }
   }
   
   .add-date-button-disabled {
@@ -372,21 +368,11 @@ export const StyledTgtDashboard = styled(
   }
   
   .header-cell--description {
-    width: 425px;
+    width: 285px;
   }
   
   .header-cell--status {
     width: 110px;
-  }
-  
-  .header-cell--delete {
-    width: 78px;
-    margin-left: 0;
-  }
-  
-  .header-cell--exploitation {
-    width: 81px;
-    margin-left: 0;
   }
   
   .hidden-input {
@@ -396,14 +382,18 @@ export const StyledTgtDashboard = styled(
   }
   
   .delete-edit-button-container {
-    border-left: 4px solid ${theme.color.backgroundBase};
-    border-right: 4px solid ${theme.color.backgroundBase};
-    height: 62px;
+    border-left: 9px solid ${theme.color.backgroundBase};
     display: flex;
-    flex: 0 0 81px;
+    flex: 0 0 85px;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    align-self: stretch;
+  }
+  
+  .helper-text {
+    margin-top: 50px;
+    font-size: ${theme.font.sizeHeader};
   }
 `;

@@ -3,17 +3,12 @@ import { useEffect, useState } from 'react';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
 import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
-import { navigateToIxnPage } from '../../../store/ixn';
 import { Box, MuiThemeProvider, TextField } from '@material-ui/core';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
 import styled from 'styled-components';
-import { crayonBox } from '../../../resources/crayonBox';
-import { deleteTgt } from '../../../store/tgt/Thunks';
 import RfiModel from '../../../store/rfi/RfiModel';
 import { RowAction } from '../../../utils';
-import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import { Status } from '../TgtDashboard';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
@@ -28,8 +23,6 @@ interface MyProps {
   rfi: RfiModel;
   setAddEditTarget: (status: Status, id?: number) => void;
   postTarget: (target: TargetPostModel) => void;
-  navigateToIxnPage: (target: TargetModel, dateString: string) => void;
-  deleteTgt: (tgtId: number) => void;
   key: number;
   addingOrEditing: boolean;
   className?: string;
@@ -169,12 +162,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
     }, 300);
   }
 
-  const handleIxnClick = () => {
-    if (props.target !== null) {
-      props.navigateToIxnPage(props.target, props.exploitDate.exploitDate.format('MM/DD/YYYY'));
-    }
-  };
-
   const tgtNameInputProps = {
     id: 'tgt-name-input',
   };
@@ -244,7 +231,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
             <div className={classes.margin}>
               <TextField
                 multiline
-                rowsMax="2"
                 className={'notes'}
                 value={notes}
                 label={props.target || notes !== '' ? '' : 'EEI Notes'}
@@ -258,7 +244,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
             <div className={classes.margin}>
               <TextField
                 multiline
-                rowsMax="2"
                 className={'description'}
                 value={description}
                 label={props.target || description !== '' ? '' : 'TGT Description'}
@@ -294,9 +279,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
         >
           <CancelButton/>
         </DeleteCancelButton>
-        <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
-          <StyledExploitationLogButtonVector/>
-        </div>
       </Box>
       {nameError ?
         <div className={'input-error-msg'}>Please use the format "OPNYY-###" for TGT name</div>
@@ -314,24 +296,13 @@ export const TgtInputRow: React.FC<MyProps> = props => {
   );
 };
 
-const mapStateToProps = (state: any) => ({});
-
-const mapDispatchToProps = {
-  navigateToIxnPage: navigateToIxnPage,
-  deleteTgt: deleteTgt,
-};
-
-export const StyledTgtInputRow = styled(connect(mapStateToProps, mapDispatchToProps)(TgtInputRow))`
+export const StyledTgtInputRow = styled(TgtInputRow)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 4px;
-  width: 100%;
-  
-  .tgt-form {
-    width: 100%;
-  }
+  margin-top: -4px;
+  width: 1212px;
   
   .tgt-name {
     width: 115px;
@@ -355,14 +326,10 @@ export const StyledTgtInputRow = styled(connect(mapStateToProps, mapDispatchToPr
   
   .data-cell {
     margin: 10px 8px 0 8px;
-    //padding-bottom: 6px;
     overflow-wrap: break-word;
-    //border-bottom: 1px solid #FFFFFF;
-    max-height: 42px;
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightRow};
     font-family: ${theme.font.familyRow};
-    overflow-y: auto;
     position: relative;
     
   }
@@ -372,7 +339,6 @@ export const StyledTgtInputRow = styled(connect(mapStateToProps, mapDispatchToPr
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-height: 62px;
   }
   
   .data-overflow {
@@ -386,30 +352,8 @@ export const StyledTgtInputRow = styled(connect(mapStateToProps, mapDispatchToPr
     border-bottom: 1px solid #FFFFFF;
   }
   
-  .delete-cancel-cell {
-    border-left: 4px solid ${crayonBox.softMetal};
-    border-right: 4px solid ${crayonBox.softMetal};
-    width: 90px;
-    height: 62px;
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .exploitation {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 108px;
-    height: 62px;
-    cursor: pointer;
-  }
-  
   .tgt-form-box {
-    height: 62px;
+    min-height: 62px;
     width: 100%;
     margin-top: 8px;
     background-color: ${theme.color.backgroundInformation};
@@ -419,13 +363,14 @@ export const StyledTgtInputRow = styled(connect(mapStateToProps, mapDispatchToPr
     font-weight: normal;
     margin-bottom: 9px;
     padding-right: 7px;
+    flex-grow: 1;
+    box-shadow: -2px 2px 4px #000000;
   }
   
   .tgt-form {
     display: flex;
     flex-direction: row;
     align-items: center;
-    max-height: 62px;
   }
 
   .status-wrapper {

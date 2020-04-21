@@ -25,7 +25,7 @@ const CancelButton: React.FC<MyProps> = (props) => {
         <circle cx="18" cy="18" r="18" fill="none"/>
         <path
           d={pathD}
-          fill={theme.color.fontPrimary}/>
+          fill={theme.color.primaryButton}/>
       </svg>
     </Wrapper>
   );

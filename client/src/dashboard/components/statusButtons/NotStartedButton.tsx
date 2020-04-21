@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core';
 import theme from '../../../resources/theme';
-import AddTgtDateButtonVector from '../../../resources/icons/AddTgtDateButtonVector';
+import TgtTriangleVector from '../../../resources/icons/TgtTriangleVector';
 import * as React from 'react';
 
 export interface StatusButtonProps {
@@ -19,7 +19,7 @@ const NotStartedButton: React.FC<StatusButtonProps> = props => {
         border={2}
         borderRadius={16}
         borderColor={theme.color.backgroundAssigned}
-        bgcolor={theme.color.backgroundModal}
+        bgcolor={theme.color.backgroundPillButton}
         display="flex"
         flexDirection="row"
         alignItems="center"
@@ -30,7 +30,7 @@ const NotStartedButton: React.FC<StatusButtonProps> = props => {
         className={props.buttonClass}
       >
         Status
-        <AddTgtDateButtonVector/>
+        <TgtTriangleVector/>
       </Box>
     </div>
   );
