@@ -9,7 +9,7 @@ Before((I) => {
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
   I.click('.navigate-to-tgt-button');
-  I.waitForText('RFI: 20-325', 10);
+  I.waitForText('RFI DESCRIPTION:', 10);
 });
 
 Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
@@ -20,11 +20,24 @@ Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
   I.waitForText('LTIOV', 10);
 });
 
-Scenario('Should be able to set dates', (I) => {
-  I.click('.add-date-button');
+Scenario('Should be able to add dates and undo', (I) => {
+  I.see('Input or select a coverage date for your targets');
   I.fillField('input', '02012020');
   I.waitForText('TGT Name', 10);
   I.seeElement(locate('input').withAttr({value: '02/01/2020'}));
+  I.waitForText('02/01/2020 Created', 10);
+  I.dontSee('Input or select a coverage date for your targets');
+
+  I.click('UNDO');
+  I.waitForText('Input or select a coverage date for your targets', 10);
+  I.dontSee('TGT Name');
+  I.dontSeeElement(locate('input').withAttr({value: '02/01/2020'}));
+
+  I.fillField('input', '02012020');
+  I.waitForText('TGT Name', 10);
+  I.seeElement(locate('input').withAttr({value: '02/01/2020'}));
+  I.waitForText('02/01/2020 Created', 10);
+  I.dontSee('Input or select a coverage date for your targets');
 });
 
 Scenario('Should be able to edit dates', (I) => {
@@ -45,7 +58,7 @@ Scenario('Should be able to delete and undo delete dates', (I) => {
 
   I.click('.tgt-dash--header--back-button');
   I.click('.navigate-to-tgt-button');
-  I.waitForText('RFI: 20-325', 10);
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.seeElement(locate('input').withAttr({value: '02/09/2020'}));
   I.click('.delete-date');
   I.waitForText('You deleted 02/09/2020', 10);
@@ -120,7 +133,7 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.click('.tgt-dash--header--back-button');
   I.waitForText('Justification');
   I.click('.navigate-to-tgt-button');
-  I.waitForText('RFI: 20-325');
+  I.waitForText('RFI DESCRIPTION:');
 
   I.click('.add-tgt-button');
   I.fillField('.tgt-name-input-new', 'SDT21-999');

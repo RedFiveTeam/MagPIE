@@ -25,10 +25,6 @@ describe('TgtDashboardHeader', () => {
       />);
   });
 
-  it('should display rfi rfiNum header', () => {
-    expect(subject.find('.tgt-dash--header').text()).toContain('RFI: 35-335');
-  });
-
   it('should contain a clickable back button', () => {
     subject.find('.tgt-dash--header--back-button').simulate('click');
     expect(exitSpy).toHaveBeenCalled();

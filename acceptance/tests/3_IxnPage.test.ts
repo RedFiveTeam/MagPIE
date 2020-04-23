@@ -9,7 +9,7 @@ Before((I) => {
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
   I.click('.navigate-to-tgt-button');
-  I.waitForText('RFI:', 10);
+  I.waitForText('RFI DESCRIPTION:', 10);
 });
 
 Scenario('Should be able to navigate to and exit the interactions page', (I) => {
@@ -32,8 +32,7 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.waitForText('MGRS: 12QWE1231231231', 10);
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
-  I.waitForText('RFI: 20-325', 10);
+  I.waitForText('RFI DESCRIPTION:', 10);
 });
 
 Scenario('Should be able to add and cancel adding segments', (I) => {
@@ -48,7 +47,7 @@ Scenario('Should be able to add and cancel adding segments', (I) => {
   I.click('.cancel-add-segment');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
   I.dontSee('12:00:00Z');
@@ -93,7 +92,7 @@ Scenario('Should be able to add ixns', (I) => {
   I.waitForText('The time you entered does not fall within the segment timeline', 10);
 });
 
-Scenario('Should be able to see Tgt and Ixn counts on the RFI page', (I) => {
+Scenario('Should be able to see Tgt and Ixn counts on the RFI Description page', (I) => {
   I.click('.tgt-dash--header--back-button');
 
   I.waitForText('TGTs', 10);
@@ -115,7 +114,7 @@ Scenario('Should be able to edit ixns', (I) => {
   I.pressKey('Enter');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.waitForText('12:10:30Z');
@@ -129,7 +128,7 @@ Scenario('Should be able to edit ixns', (I) => {
   I.click('.cancel-edit-ixn-button');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
   I.waitForText('12:10:30Z');
   I.dontSee('12:11:33Z');
@@ -143,7 +142,7 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.click('.in-progress-button');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.waitForText('In Progress', 10);
@@ -153,7 +152,7 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.click('.completed-button');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.waitForText('Complete', 10);
@@ -164,7 +163,7 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.click('.does-not-meet-eei-button');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.waitForText('EEI', 10);
@@ -223,7 +222,7 @@ Scenario('Should be able to write and view ixn notes', (I) => {
   I.pressKey('Enter');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
   I.waitForText('TGT: SDT20-123', 10);
   I.dontSee('These are some notes about an ixn');
@@ -320,7 +319,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.click('.delete-ixn-button');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.dontSee('Person entered tgt from right side');
@@ -334,7 +333,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.click('UNDO');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.waitForText('Person entered tgt from right side', 10);
@@ -344,7 +343,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.click('.delete-ixn-button');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.dontSee('Person entered tgt from right side');
@@ -371,7 +370,7 @@ Scenario('Should be able to edit segments', (I) => {
   I.pressKey('Enter');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.waitForText('11:00:00Z');
@@ -390,7 +389,7 @@ Scenario('Should be able to delete segments and undo segment delete', (I) => {
   I.click('UNDO');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   //Redo delete
@@ -415,7 +414,7 @@ Scenario('Should be able to delete segments and undo segment delete', (I) => {
   I.click('.modal-no');
 
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
 
   I.waitForText('12:00:00Z');
@@ -448,7 +447,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
 
   //Navigate back and try a delete
   I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.moveCursorTo('.tgt-form-box', 10, 10);
   I.click('.delete-tgt-button');
   I.seeElement(locate('div').withText('All associated data will be erased.'));
@@ -468,6 +467,6 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.click('.tgt-dash--header--back-button');
   I.click('.navigate-to-tgt-button');
 
-  I.waitForText('RFI:');
+  I.waitForText('RFI DESCRIPTION:', 10);
   I.dontSee('12QWE1231231231');
 });

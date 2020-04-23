@@ -49,14 +49,16 @@ export const StyledTgtTable = styled(TgtTable)`
   .tgt-table {
     display: flex;
     flex-direction: column;
-    padding-left: 4px;
-    padding-right: 15px;
+    align-items: flex-start;
+    padding-left: 15px;
+    padding-right: 20px;
   }
   
     
   .helper-text {
-    margin-top: 80px;
+    margin-top: 50px;
     text-align: center;
     font-size: ${theme.font.sizeHeader};
+    align-self: center;
   }
 `;

@@ -4,16 +4,16 @@ import { ExploitDateSorter } from './ExploitDateSorter';
 import { Reducer } from 'redux';
 import { TgtState } from './Types';
 import { ExploitDateModel } from './ExploitDateModel';
-import { TargetModel } from './TargetModel';
 
 const initState: TgtState = {
   rfi: {} as RfiModel,
   viewTgtPage: false,
-  exploitDates: [] as ExploitDateModel[],
+  exploitDates: [],
   showDatePlaceholder: false,
   addTgt: -1,
   editTgt: -1,
-  targets: [] as TargetModel[],
+  targets: [],
+  newExploitDate: undefined,
 };
 
 const reducer: Reducer<TgtState> = (state = initState, action: any) => {
@@ -32,10 +32,13 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
       };
     case TgtActionTypes.RELOAD_TGT_PAGE:
       sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
+      let newExploitDate: ExploitDateModel = action.exploitDates.find(
+        (exploitDate: ExploitDateModel) => exploitDate.id == action.newExploitDateId);
       return {
         ...state,
         exploitDates: sortedExploitDates,
         targets: action.targets,
+        newExploitDate: newExploitDate
       };
     case TgtActionTypes.EXIT_TGT_PAGE:
       return {

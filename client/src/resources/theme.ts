@@ -37,8 +37,7 @@ const theme = {
     buttonOnBlack: crayonBox.straightWhite,
     regionDividerPrimary: crayonBox.mediumMediumBrightBlue,//
     regionDividerSecondary: crayonBox.blueBlueGray,//
-    fontToolTip: crayonBox.softMetal,
-    backgroundToolTip: crayonBox.lightGray,
+    backgroundToolTip: crayonBox.mediumBlue,
     inProgress: crayonBox.stoplightYellow,
     complete: crayonBox.stoplightGreen,
     primaryButton: crayonBox.brightBlue,//

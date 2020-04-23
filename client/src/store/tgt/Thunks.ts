@@ -14,15 +14,15 @@ import {
   updateTgtSuccess,
 } from './Actions';
 
-export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstLoad: boolean) => {
+export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstLoad: boolean, newExploitDateId: number) => {
   return (dispatch: any) => {
     return fetch('/api/targets?rfiId=' + rfi.id)
       .then(response => response.json())
-      .then(targets => dispatch(fetchDatesAndTargetsSuccess(rfi, dates, targets, firstLoad)))
+      .then(targets => dispatch(fetchDatesAndTargetsSuccess(rfi, dates, targets, firstLoad, newExploitDateId)))
       .catch((reason => {
-        console.log("Failed to fetch Targets: " + reason)
+        console.log('Failed to fetch Targets: ' + reason);
       }));
-  }
+  };
 };
 
 export const deleteExploitDate = (exploitDateId: number) => {
@@ -31,18 +31,28 @@ export const deleteExploitDate = (exploitDateId: number) => {
       .then(response => response.json())
       .then(dates => dispatch(updateExploitDateSuccess(ExploitDateDeserializer.deserialize(dates))))
       .catch((reason) => {
-        console.log(reason)
-      })
-  }
+        console.log(reason);
+      });
+  };
 };
 
 export const postExploitDate = (rfi: RfiModel, exploitDate: ExploitDatePostModel) => {
+  if (exploitDate.exploitDateId === null) {
+    return (dispatch: any) => {
+      postExploitDatesUpdate(exploitDate)
+        .then(response => response.json())
+        .then(json => dispatch(loadTgtPage(rfi, false, json)))
+        .catch((reason) => {
+          console.log(reason);
+        });
+    };
+  }
   return (dispatch: any) => {
     postExploitDatesUpdate(exploitDate)
       .then(response => dispatch(loadTgtPage(rfi, false)))
       .catch((reason) => {
-        console.log(reason)
-      })
+        console.log(reason);
+      });
   };
 };
 
@@ -51,8 +61,8 @@ export const submitPostTarget = (target: TargetPostModel, rfi: RfiModel, userNam
     postTarget(target, userName)
       .then(response => dispatch(loadTgtPage(rfi, false)))
       .catch((reason) => {
-        console.log(reason)
-      })
+        console.log(reason);
+      });
   };
 };
 
@@ -62,12 +72,12 @@ export const deleteTgt = (tgtId: number) => {
       .then(response => response.json())
       .then(tgts => dispatch(updateTgtSuccess(tgts)))
       .catch((reason) => {
-        console.log('Error deleting target: ' + reason)
-      })
+        console.log('Error deleting target: ' + reason);
+      });
   };
 };
 
-export const loadTgtPage = (rfi: RfiModel, firstLoad: boolean) => {
+export const loadTgtPage = (rfi: RfiModel, firstLoad: boolean, newExploitDateId?: number) => {
   return (dispatch: any) => {
     return fetch('/api/targets/dates?rfiId=' + rfi.id)
       .then(response => response.json())
@@ -75,11 +85,12 @@ export const loadTgtPage = (rfi: RfiModel, firstLoad: boolean) => {
         fetchRfiTargets(
           rfi,
           ExploitDateDeserializer.deserialize(exploitDates),
-          firstLoad
-        )
+          firstLoad,
+          newExploitDateId ? newExploitDateId : -1,
+        ),
       ))
       .catch(reason => {
-        console.log("Failed to fetch exploit dates: " + reason)
+        console.log('Failed to fetch exploit dates: ' + reason);
       });
   };
 };

@@ -56,7 +56,7 @@ export const resetAddEditTgt = () => {
 };
 
 export const fetchDatesAndTargetsSuccess = (rfi: RfiModel, exploitDates: ExploitDateModel[], targets: TargetModel[],
-                                            firstLoad: boolean) => {
+                                            firstLoad: boolean, newExploitDateId: number) => {
   if (firstLoad)
     return {
       type: TgtActionTypes.NAVIGATE_TO_TGT_PAGE,
@@ -68,6 +68,7 @@ export const fetchDatesAndTargetsSuccess = (rfi: RfiModel, exploitDates: Exploit
     type: TgtActionTypes.RELOAD_TGT_PAGE,
     exploitDates: exploitDates,
     targets: targets,
+    newExploitDateId: newExploitDateId,
   };
 };
 
@@ -107,9 +108,7 @@ export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
       },
       body: JSON.stringify(exploitDate),
     },
-  ).catch((reason) => {
-    console.log('Failed to post exploit date: ' + reason);
-  });
+  )
 };
 
 export const postTargetDelete = (tgtId: number) => {

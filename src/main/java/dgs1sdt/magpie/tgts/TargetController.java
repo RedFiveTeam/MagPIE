@@ -42,8 +42,15 @@ public class TargetController {
   }
 
   @PostMapping(path = "/dates/post")
-  public List<ExploitDate> postExploitDate(@Valid @RequestBody ExploitDateJson exploitDateJson) {
-    return targetService.postExploitDate(exploitDateJson);
+  public long postExploitDate(@Valid @RequestBody ExploitDateJson exploitDateJson) {
+    List<ExploitDate> exploitDates = targetService.postExploitDate(exploitDateJson);
+    ExploitDate newestDate = exploitDates.get(0);
+    for (ExploitDate exploitDate : exploitDates) {
+      if (exploitDate.getId() > newestDate.getId()) {
+        newestDate = exploitDate;
+      }
+    }
+    return newestDate.getId();
   }
 
   @DeleteMapping(path = "/delete")

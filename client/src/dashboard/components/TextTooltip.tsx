@@ -5,7 +5,7 @@ import theme from '../../resources/theme';
 const TextTooltip = withStyles((localTheme: Theme) => ({
   tooltip: {
     backgroundColor: theme.color.backgroundToolTip,
-    color: theme.color.fontToolTip,
+    color: theme.color.fontPrimary,
     width: 'inherit',
     height: 22,
     borderRadius: 11,

@@ -30,3 +30,11 @@ code {
     opacity: 0.5;
     pointer-events: none;
 }
+
+.smallbord-container {
+    position: absolute;
+    left: 50%;
+    top: 1px;
+    margin-left: -90px;
+    padding-left: 20px;
+}

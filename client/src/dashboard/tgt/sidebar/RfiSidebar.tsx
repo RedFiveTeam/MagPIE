@@ -6,6 +6,7 @@ import { ApplicationState } from '../../../store';
 import { StyledMiniRfiRow } from './MiniRfiRow';
 import { StyledMiniRfiRegion } from './MiniRfiRegion';
 import ScrollShadow from 'react-scroll-shadow';
+import theme from '../../../resources/theme';
 
 
 interface MyProps {
@@ -30,17 +31,17 @@ export const RfiSidebar: React.FC<MyProps> = (props) => {
       <ScrollShadow
         bottomShadowColors={{
           active: 'linear-gradient(to top, #000000 0%, #00000000 100%);',
-          inactive: 'linear-gradient(90deg, #041319 0%, #1B2326 90%);',
+          inactive: `linear-gradient(90deg, #041319 0%, #1B2326 91%, ${theme.color.backgroundBase} 91%);`,
         }}
         topShadowColors={{
           active: 'linear-gradient(to bottom, #000000 0%, #00000000 100%);',
-          inactive: 'linear-gradient(90deg, #041319 0%, #1B2326 90%);',
+          inactive: `linear-gradient(90deg, #041319 0%, #1B2326 91%, ${theme.color.backgroundBase} 91%);`,
         }}
         shadowSize={10}
       >
         <div className={'mini-rfi-table'}>
           <StyledMiniRfiRegion
-            title={'prioritizing'}
+            title={'prioritized'}
             emptyMessage={''}
           >
             {printRows(openRfis, props.rfi.id, props.selectRfi)}
@@ -62,10 +63,11 @@ export const StyledRfiSidebar = styled(RfiSidebar)`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background: linear-gradient(90deg, #041319 0%, #1B2326 90%);
+  background: linear-gradient(90deg, #041319 0%, #1B2326 91%, ${theme.color.backgroundBase} 91%);
   height: calc(100vh - 63px);
+  margin-right: 5px;
   
   .mini-rfi-table {
-    padding: 21px 25px 21px 8px;
+    padding: 21px 30px 21px 8px;
   }
 `;

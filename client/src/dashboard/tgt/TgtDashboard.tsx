@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 import * as React from 'react';
-import { useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledTgtTable } from './table/TgtTable';
 import { StyledExploitDateDivider } from './table/ExploitDateDivider';
-import { Box } from '@material-ui/core';
 import theme, { rowStyles } from '../../resources/theme';
-import { crayonBox } from '../../resources/crayonBox';
 import { ApplicationState } from '../../store';
 import { StyledTgtDateSection } from './table/TgtDateRegion';
 import { StyledTgtDashboardHeader } from './TgtDashboardHeader';
@@ -63,6 +61,22 @@ export const TgtDashboard: React.FC<MyProps> = props => {
 
   const isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0 || props.rfi.status === RfiStatus.CLOSED;
 
+  let newExploitDate = useSelector(({tgtState}: ApplicationState) => tgtState.newExploitDate);
+
+  useEffect(() => {
+    if (newExploitDate) {
+      enqueueSnackbar(newExploitDate.exploitDate.format('MM/DD/YYYY') + ' Created', {
+        action: (key) => UndoSnackbarAction(key, newExploitDate!.id,
+                                            handleUndoPostExploitDate, closeSnackbar, classes.snackbarButton),
+        variant: 'info',
+      });
+    }
+  }, [newExploitDate]);
+
+  const handleUndoPostExploitDate = (exploitDateId: number) => {
+    dispatch(deleteExploitDate(exploitDateId));
+  };
+
   const dispatch = useDispatch();
 
   const handlePostTarget = (target: TargetPostModel) => {
@@ -74,11 +88,11 @@ export const TgtDashboard: React.FC<MyProps> = props => {
     }
   };
 
-  const handlePostExploitDate = (date: ExploitDatePostModel) => {
+  async function handlePostExploitDate(date: ExploitDatePostModel) {
     if (props.rfi.status !== RfiStatus.CLOSED) {
       dispatch(postExploitDate(props.rfi, date));
     }
-  };
+  }
 
   const handleAddEdit = (status: Status, id?: number) => {
     if (props.rfi.status !== RfiStatus.CLOSED) {
@@ -135,11 +149,11 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const handleSelectRfi = (rfi: RfiModel) => {
     setCookies('magpie', {...cookie, viewState: {rfiId: rfi.id}});
     dispatch(loadTgtPage(rfi, true));
-  }
+  };
 
   const handleAddDate = () => {
     setAddDate(true);
-  }
+  };
 
   function printDates(dates: ExploitDateModel[]) {
     return dates.map((exploitDateModel: ExploitDateModel, index: number) =>
@@ -200,7 +214,8 @@ export const TgtDashboard: React.FC<MyProps> = props => {
                 <StyledExploitDateDivider
                   rfiId={props.rfi.id}
                   setAddDate={setAddDate}
-                  className={'date-divider--placeholder'}
+                  className={classNames('date-divider--placeholder',
+                                        props.exploitDates.length === 0 ? 'date-divider--new' : null)}
                   uKey={props.rfi.id}
                   hasTgts={false}
                   postExploitDate={handlePostExploitDate}
@@ -214,13 +229,12 @@ export const TgtDashboard: React.FC<MyProps> = props => {
             </StyledTgtTable>
           </div>
           <div className={'tgt-dash--rfi-description-container'}>
-            <Box
-              borderColor={crayonBox.eggWhite}
-              className={'tgt-dash--rfi-description'}
-            >
-              <span>RFI DESCRIPTION: {props.rfi.description}</span>
-            </Box>
-              <input className={'hidden-input'}/>
+            <div
+              className={'tgt-dash--rfi-description-box'}
+            >&nbsp;</div>
+
+              <div className={'tgt-dash--rfi-description'}>RFI DESCRIPTION: {props.rfi.description}</div>
+            <input className={'hidden-input'}/>
           </div>
         </div>
       </div>
@@ -256,6 +270,7 @@ export const StyledTgtDashboard = styled(
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     flex-grow: 1;
   }
  
@@ -285,18 +300,29 @@ export const StyledTgtDashboard = styled(
   }
   
   .tgt-dash--rfi-description-container {
-    width: 100%;
-    padding-left: 113px;
-    padding-right: 113px;
-    padding-bottom: 21px;
-    height: 136px;
+    height: 108px;
+    width: 1232px;
+    padding: 8px 44px 8px 8px;
+    overflow-y: scroll;
+    margin-left: 15px;
+    margin-bottom: 16px;
+  }
+  
+  .tgt-dash--rfi-description {
+    z-index: 2;
+    position: relative;
+    width: 1200px;
+    
   }
 
-  .tgt-dash--rfi-description {
+  .tgt-dash--rfi-description-box {
+    z-index: 1;
+    position: absolute;
+    margin-top: -11px;
+    margin-left: -6px;
     height: 115px;
-    min-width: 500px;
-    padding: 4px 16px 4px 4px;
-    overflow-y: auto;
+    width: 1212px;
+    padding: 4px;
     background: ${theme.color.backgroundInformation};
     border-radius: 8px;
     border: 2px solid ${theme.color.modalInputBorder};
@@ -305,7 +331,9 @@ export const StyledTgtDashboard = styled(
   .date-divider--placeholder {
     width: 100%;
     color: ${theme.color.fontBackgroundInactive};
-    margin-bottom: -32px;
+  }
+  
+  .date-divider--new {
     margin-top: 48px;
   }
   

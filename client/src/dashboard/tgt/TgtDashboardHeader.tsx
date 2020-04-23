@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { formatRfiNum } from '../../utils';
 import styled from 'styled-components';
 import RfiModel from '../../store/rfi/RfiModel';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
@@ -51,8 +50,8 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
         <div className={'tgt-dash--header--back-button'} onClick={handleExitClick}>
           <StyledBackButtonVector/>
         </div>
-        <div className={'tgt-dash--header--rfi-num-container'}>
-          <span className={'tgt-dash--header--rfi-num'}>RFI: {formatRfiNum(props.rfi.rfiNum)}</span>
+        <div className={'smallbord-container'}>
+          <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
         </div>
         <div className={'tgt-dash--header--right-section'}>
           {props.displayHelperText ?
@@ -94,6 +93,8 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     align-items: center;
     height: 63px;
     background: ${theme.color.backgroundHeader};
+    box-shadow: 0 2px 20px #000000;
+    z-index: 9999;
   }
   
   .tgt-dash--header--back-button {
@@ -112,17 +113,6 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     width: 250px;
     margin-left: -250px;
     height: 24px;
-  }
-  
-  .tgt-dash--header--rfi-num-container {
-    text-align: center;
-    width: 400px;
-    min-width: 300px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    font-size: 18px;
-    font-weight: ${theme.font.weightBold};
   }
   
   .tgt-dash--header--rfi-num {

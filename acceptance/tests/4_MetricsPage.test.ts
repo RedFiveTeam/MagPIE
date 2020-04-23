@@ -30,7 +30,7 @@ Scenario ('Should display other metrics', (I) => {
   I.see('Targets', '.deletions');
   I.see('Segments', '.deletions');
   I.see('Interactions', '.deletions');
-  I.see('3', locate('.deletions').find('.card-row').at(1));
+  I.see('4', locate('.deletions').find('.card-row').at(1));
   I.see('4', locate('.deletions').find('.card-row').at(2));
   I.see('3', locate('.deletions').find('.card-row').at(3));
   I.see('3', locate('.deletions').find('.card-row').at(4));

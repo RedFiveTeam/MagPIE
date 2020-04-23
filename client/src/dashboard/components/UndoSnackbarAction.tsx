@@ -7,7 +7,7 @@ import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 import RfiModel from '../../store/rfi/RfiModel';
 
-type UndoTypes = IxnModel|SegmentModel|TargetPostModel|ExploitDatePostModel;
+type UndoTypes = IxnModel|SegmentModel|TargetPostModel|ExploitDatePostModel|number;
 
 export const UndoSnackbarAction = (key: any, data: UndoTypes, postData: (data: any) => void,
                                    closeSnackbar: (key: any) => void, className: string) => {

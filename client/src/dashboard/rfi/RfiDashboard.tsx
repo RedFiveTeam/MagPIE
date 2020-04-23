@@ -146,7 +146,9 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
     <div className={props.className}>
       <div className={'rfi-dash--header'}>
         <div className={'refresh-spacer'}/>
-        <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
+        <div className={'smallbord-container'}>
+          <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
+        </div>
         <TextTooltip title={'Refresh from GETS'}>
           <div className={'refresh-button'}
                onClick={handleRefreshClick}

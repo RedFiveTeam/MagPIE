@@ -23,4 +23,5 @@ export interface TgtState {
   readonly  targets: TargetModel[];
   readonly  addTgt: number;
   readonly  editTgt: number;
+  readonly  newExploitDate: undefined|ExploitDateModel;
 }
