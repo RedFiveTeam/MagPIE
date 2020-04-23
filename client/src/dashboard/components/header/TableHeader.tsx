@@ -12,7 +12,7 @@ interface Props {
 export const TableHeader: React.FC<Props> = props => {
 
   return (
-    <div className={classNames('header', props.className)}>
+    <div className={classNames('table-header', props.className)}>
       {props.headers.map(value =>
         <StyledTableHeaderCell
           text={value}

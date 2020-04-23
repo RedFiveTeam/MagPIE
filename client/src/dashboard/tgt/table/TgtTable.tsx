@@ -5,6 +5,7 @@ import theme from '../../../resources/theme';
 import ScrollShadow from '../../components/scroll-shadow';
 
 interface Props {
+  displayHelperText: boolean;
   className?: string;
 }
 
@@ -24,6 +25,13 @@ export const TgtTable: React.FC<Props> = props => {
       >
         <div className={'tgt-table'}>
           {props.children}
+          {props.displayHelperText ?
+            <div className={'helper-text'}>
+              Input or select a coverage date for your targets
+            </div>
+            :
+            null
+          }
         </div>
       </ScrollShadow>
     </div>
@@ -41,6 +49,14 @@ export const StyledTgtTable = styled(TgtTable)`
   .tgt-table {
     display: flex;
     flex-direction: column;
+    padding-left: 4px;
     padding-right: 15px;
+  }
+  
+    
+  .helper-text {
+    margin-top: 80px;
+    text-align: center;
+    font-size: ${theme.font.sizeHeader};
   }
 `;

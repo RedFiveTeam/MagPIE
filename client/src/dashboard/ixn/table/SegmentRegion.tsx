@@ -59,7 +59,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           setEditIxn={props.setEditIxn}
           autofocus={props.autofocus}
           setAdding={setAdding}
-          disabled={ixn === null && (props.addNote > 0 || props.editIxn > 0) || props.readOnly}
+          disabled={(ixn === null && (props.addNote > 0 || props.editIxn > 0)) || props.readOnly}
           addingNote={ixn !== null && props.addNote === ixn.id}
           setAddNote={props.setAddNote}
           />

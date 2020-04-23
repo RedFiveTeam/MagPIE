@@ -194,7 +194,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
               :
               null
             }
-            <StyledTgtTable>
+            <StyledTgtTable displayHelperText={props.exploitDates.length === 0}>
               {printDates(props.exploitDates)}
               {addDate || (props.exploitDates.length === 0 && props.rfi.status === RfiStatus.OPEN) ?
                 <StyledExploitDateDivider
@@ -212,13 +212,6 @@ export const TgtDashboard: React.FC<MyProps> = props => {
                 null
               }
             </StyledTgtTable>
-            {props.exploitDates.length === 0 && props.rfi.status === RfiStatus.OPEN ?
-            <div className={'helper-text'}>
-              Input or select a coverage date for your targets
-            </div>
-              :
-              null
-            }
           </div>
           <div className={'tgt-dash--rfi-description-container'}>
             <Box
@@ -313,7 +306,7 @@ export const StyledTgtDashboard = styled(
     width: 100%;
     color: ${theme.color.fontBackgroundInactive};
     margin-bottom: -32px;
-    margin-top: 56px;
+    margin-top: 48px;
   }
   
   .tgt-dash-add-date-button {
@@ -350,6 +343,7 @@ export const StyledTgtDashboard = styled(
   }
   
   .tgt-table-header {
+    flex: 0 0 27px;
     padding-right: 15px;
     align-self: flex-start;
   }
@@ -390,10 +384,5 @@ export const StyledTgtDashboard = styled(
     align-items: center;
     cursor: pointer;
     align-self: stretch;
-  }
-  
-  .helper-text {
-    margin-top: 50px;
-    font-size: ${theme.font.sizeHeader};
   }
 `;
