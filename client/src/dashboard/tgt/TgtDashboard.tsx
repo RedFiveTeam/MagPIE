@@ -31,12 +31,12 @@ import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { navigateToIxnPage } from '../../store/ixn';
 import { useSnackbar } from 'notistack';
 import { StyledRfiSidebar } from './sidebar/RfiSidebar';
+import { NavigateAwayConfirmationModal } from '../components/NavigateAwayConfirmationModal';
 
 interface MyProps {
   rfi: RfiModel;
   exploitDates: ExploitDateModel[];
   showDatePlaceholder: boolean;
-  exitTgtPage: () => void;
   setDatePlaceholder: (show: boolean) => void;
   targets: TargetModel[];
   addTgt: number;
@@ -58,6 +58,8 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   const [addDate, setAddDate] = useState(false);
+  const [navigating, setNavigating] = useState(false);
+  const [navigate, setNavigate] = useState(null as RfiModel|null);
 
   const isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0 || props.rfi.status === RfiStatus.CLOSED;
 
@@ -79,12 +81,24 @@ export const TgtDashboard: React.FC<MyProps> = props => {
 
   const dispatch = useDispatch();
 
+  const handleExitTgtPage = () => {
+    if (props.addTgt > 0 || props.editTgt > 0) {
+      setNavigating(true);
+      setNavigate(null);
+    } else {
+      setCookies('magpie', {...cookie, viewState: {rfiId: undefined, tgtId: undefined}});
+      dispatch(exitTgtPage());
+    }
+  };
+
   const handlePostTarget = (target: TargetPostModel) => {
-    let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
-                              target.mgrs, target.notes, target.description, target.status, '', '');
-    if (props.rfi.status !== RfiStatus.CLOSED) {
-      dispatch(updateTgtsLocal(tgt));
-      dispatch(submitPostTarget(target, props.rfi, cookie.userName));
+    if (!navigating) {
+      let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
+                                target.mgrs, target.notes, target.description, target.status, '', '');
+      if (props.rfi.status !== RfiStatus.CLOSED) {
+        dispatch(updateTgtsLocal(tgt));
+        dispatch(submitPostTarget(target, props.rfi, cookie.userName));
+      }
     }
   };
 
@@ -147,8 +161,23 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   };
 
   const handleSelectRfi = (rfi: RfiModel) => {
-    setCookies('magpie', {...cookie, viewState: {rfiId: rfi.id}});
-    dispatch(loadTgtPage(rfi, true));
+    if (props.addTgt > 0 || props.editTgt > 0) {
+      setNavigating(true);
+      setNavigate(rfi);
+    } else {
+      setCookies('magpie', {...cookie, viewState: {rfiId: rfi.id}});
+      dispatch(loadTgtPage(rfi, true));
+    }
+  };
+
+  const handleNavigate = () => {
+    if (navigate === null) {
+      setCookies('magpie', {...cookie, viewState: {rfiId: undefined, tgtId: undefined}});
+      dispatch(exitTgtPage());
+    } else {
+      setCookies('magpie', {...cookie, viewState: {rfiId: navigate.id}});
+      dispatch(loadTgtPage(navigate, true));
+    }
   };
 
   const handleAddDate = () => {
@@ -184,7 +213,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   return (
     <div className={classNames(props.className)}>
       <StyledTgtDashboardHeader
-        exitTgtPage={props.exitTgtPage}
+        exitTgtPage={handleExitTgtPage}
         rfi={props.rfi}
         editing={props.addTgt > 0 || props.editTgt > 0 || addDate}
         addDate={handleAddDate}
@@ -233,9 +262,13 @@ export const TgtDashboard: React.FC<MyProps> = props => {
               className={'tgt-dash--rfi-description-box'}
             >&nbsp;</div>
 
-              <div className={'tgt-dash--rfi-description'}>RFI DESCRIPTION: {props.rfi.description}</div>
+            <div className={'tgt-dash--rfi-description'}>RFI DESCRIPTION: {props.rfi.description}</div>
             <input className={'hidden-input'}/>
           </div>
+          {navigating ?
+            <NavigateAwayConfirmationModal display={true} setDisplay={setNavigating} handleYes={handleNavigate}/>
+            :
+            null}
         </div>
       </div>
     </div>

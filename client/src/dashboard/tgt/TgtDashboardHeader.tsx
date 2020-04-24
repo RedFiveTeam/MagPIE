@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import RfiModel from '../../store/rfi/RfiModel';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import theme from '../../resources/theme';
-import { useCookies } from 'react-cookie';
 import AddTgtDateVector from '../../resources/icons/AddTgtDateVector';
 import classNames from 'classnames';
 import TextTooltip from '../components/TextTooltip';
@@ -19,19 +18,6 @@ interface OwnProps {
 }
 
 export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
-  const [cookie, setCookie] = useCookies(['magpie']);
-
-  const handleExitClick = () => {
-    setCookie('magpie', {...cookie.magpie, viewState: {rfiId: undefined, tgtId: undefined}});
-    if (props.editing) {
-      setTimeout(() => {
-        props.exitTgtPage();
-      }, 300);
-    } else {
-      props.exitTgtPage();
-    }
-  };
-
   const handleDateClick = () => {
     if (!props.disabled) {
       props.addDate();
@@ -47,7 +33,7 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
   return (
     <div className={props.className}>
       <div className={'tgt-dash--header'}>
-        <div className={'tgt-dash--header--back-button'} onClick={handleExitClick}>
+        <div className={'tgt-dash--header--back-button'} onClick={() => props.exitTgtPage()}>
           <StyledBackButtonVector/>
         </div>
         <div className={'smallbord-container'}>

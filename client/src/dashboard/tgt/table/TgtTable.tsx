@@ -54,7 +54,6 @@ export const StyledTgtTable = styled(TgtTable)`
     padding-right: 20px;
   }
   
-    
   .helper-text {
     margin-top: 50px;
     text-align: center;

@@ -234,17 +234,17 @@ export const RollupView: React.FC<MyProps> = (props) => {
               }
             </div>
           </form>
-          <div className={'button-section'}>
+          <div className={classNames('button-section', classes.buttonSection)}>
             <div className={classes.spacer}>&nbsp;</div>
             <div
-              className={classNames('cancel', classes.modalYes)}
+              className={classNames('cancel', classes.modalButton)}
               onClick={props.exitRollupMode}
             >
               Cancel
             </div>
             <div
               onClick={handleSaveClick}
-              className={classNames('save', classes.modalNo, props.readOnly ? 'disabled' : null)}
+              className={classNames('save', classes.modalButton, props.readOnly ? 'disabled' : null)}
             >
               SAVE
             </div>
@@ -299,15 +299,6 @@ export const StyledRollupView = styled(RollupView)`
 
   .spacer {
     width: 48px;
-  }
-
-  .button-section {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-    height: 56px;
   }
 
   .icon {

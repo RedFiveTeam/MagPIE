@@ -20,11 +20,9 @@ describe('TgtDashboardContainer', () => {
   let subject: ReactWrapper;
   const moment = require('moment');
   let rfiTest: RfiModel;
-  let exitSpy: jest.Mock;
   let setPlaceholderSpy: jest.Mock;
 
   beforeEach(() => {
-    exitSpy = jest.fn();
     setPlaceholderSpy = jest.fn();
     rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse',
                            moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
@@ -38,7 +36,6 @@ describe('TgtDashboardContainer', () => {
         >
           <TgtDashboard
             rfi={rfiTest}
-            exitTgtPage={exitSpy}
             exploitDates={[]}
             setDatePlaceholder={setPlaceholderSpy}
             showDatePlaceholder={false}
@@ -77,7 +74,6 @@ describe('TgtDashboardContainer', () => {
         >
           <TgtDashboard
             rfi={rfiTest}
-            exitTgtPage={exitSpy}
             exploitDates={dates}
             setDatePlaceholder={setPlaceholderSpy}
             showDatePlaceholder={false}

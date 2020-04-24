@@ -69,7 +69,6 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
           >
             <div className={classNames(classes.modalInputContainer, props.readOnly ? 'narrative-text-wrapper' : null)}>
               <span><b>{props.ixn.track}</b></span>
-
               {!props.readOnly ?
                 <TextField
                   className={classNames('track-narrative', classes.modalTextfield)}
@@ -97,14 +96,14 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
           <div className={classes.buttonSection}>
             <div className={classes.spacer}>&nbsp;</div>
             <div
-              className={classNames('cancel', classes.modalYes)}
+              className={classNames('cancel', classes.modalButton)}
               onClick={() => props.setDisplay(false)}
             >
               Cancel
             </div>
             <div
               onClick={handleSave}
-              className={classNames('save', classes.modalNo, props.readOnly ? 'disabled' : null)}
+              className={classNames('save', classes.modalButton, props.readOnly ? 'disabled' : null)}
             >
               SAVE
             </div>

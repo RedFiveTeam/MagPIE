@@ -120,12 +120,12 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                             notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED, '', ''),
       );
 
-      setTimeout(() => {
-        setName('');
-        setMgrs('');
-        setNotes('');
-        setDescription('');
-      }, 500);
+      // setTimeout(() => {
+      //   setName('');
+      //   setMgrs('');
+      //   setNotes('');
+      //   setDescription('');
+      // }, 500);
     }
   };
 

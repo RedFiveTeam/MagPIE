@@ -29,11 +29,13 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
         rfi: action.rfi,
         exploitDates: sortedExploitDates,
         targets: action.targets,
+        addTgt: -1,
+        editTgt: -1,
       };
     case TgtActionTypes.RELOAD_TGT_PAGE:
       sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
       let newExploitDate: ExploitDateModel = action.exploitDates.find(
-        (exploitDate: ExploitDateModel) => exploitDate.id == action.newExploitDateId);
+        (exploitDate: ExploitDateModel) => exploitDate.id === action.newExploitDateId);
       return {
         ...state,
         exploitDates: sortedExploitDates,

@@ -121,6 +121,29 @@ Scenario('Should be able to edit tgts', (I) => {
   I.dontSee('12QWE0987654321');
 });
 
+Scenario('Should display modal when trying to navigate away while editing a target', (I) => {
+  I.doubleClick('.tgt-name');
+
+  I.click('.tgt-dash--header--back-button');
+  I.waitForText('You haven\'t saved the target you were editing.', 10);
+  I.click('.modal-no');
+  I.wait(3);
+  I.dontSee('You haven\'t saved the target you were editing.');
+
+  I.doubleClick('.tgt-name');
+  I.pressKey('Backspace');
+  I.pressKey('0');
+
+  I.click('.tgt-dash--header--back-button');
+  I.waitForText('You haven\'t saved the target you were editing.', 10);
+  I.click('.modal-yes');
+  I.waitForText('Customer', 10)
+  I.click('.navigate-to-tgt-button');
+  I.waitForText('RFI DESCRIPTION:');
+  I.dontSee('SDT20-990');
+});
+
+
 Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.click('.add-tgt-button');
   I.fillField('.tgt-name-input-new', 'SDT20-999');
@@ -131,6 +154,8 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.waitForText('Duplicate TGTs under the same date are not allowed.');
 
   I.click('.tgt-dash--header--back-button');
+  I.waitForText('You haven\'t saved the target you were editing.', 10);
+  I.click('.modal-yes');
   I.waitForText('Justification');
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:');
