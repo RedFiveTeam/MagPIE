@@ -6,6 +6,7 @@ import theme from '../../resources/theme';
 import AddTgtDateVector from '../../resources/icons/AddTgtDateVector';
 import classNames from 'classnames';
 import TextTooltip from '../components/TextTooltip';
+import CopyTargetsButton from '../../resources/icons/CopyTargetsButton';
 
 interface OwnProps {
   exitTgtPage: () => void;
@@ -14,6 +15,7 @@ interface OwnProps {
   addDate: () => void;
   disabled: boolean;
   displayHelperText: boolean;
+  displayCopyTargets: () => void;
   className?: string;
 }
 
@@ -27,6 +29,12 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
           scrollToLocation!.scrollTo(0, scrollToLocation!.scrollHeight);
         }
       }, 50);
+    }
+  };
+
+  const handleCopyTgtsClick = () => {
+    if (!props.displayHelperText) {
+      props.displayCopyTargets();
     }
   };
 
@@ -51,10 +59,20 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
             disableHoverListener={props.displayHelperText}
             disableTouchListener={props.displayHelperText}
           >
-            <div className={classNames('add-date-button', props.disabled ? 'disabled' : null)}
+            <div className={classNames('add-date-button header-button', props.disabled ? 'disabled' : null)}
                  onClick={handleDateClick}
             >
               <AddTgtDateVector/>
+            </div>
+          </TextTooltip>
+          <TextTooltip
+            title={'Copy Targets'}
+          >
+            <div className={classNames('copy-tgts-button header-button',
+                                       props.disabled || props.displayHelperText ? 'disabled' : null)}
+                 onClick={handleCopyTgtsClick}
+            >
+              <CopyTargetsButton/>
             </div>
           </TextTooltip>
         </div>
@@ -78,9 +96,10 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     justify-content: space-between;
     align-items: center;
     height: 63px;
+    padding-right: 34px;
     background: ${theme.color.backgroundHeader};
     box-shadow: 0 2px 20px #000000;
-    z-index: 9999;
+    z-index: 100;
   }
   
   .tgt-dash--header--back-button {
@@ -95,6 +114,7 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
   }
   
   .header-helper-text {
+    position: absolute;
     font-size: ${theme.font.sizeRegion};
     width: 250px;
     margin-left: -250px;
@@ -107,14 +127,14 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
   }
   
   .tgt-dash--header--right-section {
-    width: 108px;
+    width: 84px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
   }
     
-  .add-date-button {
+  .header-button {
     border-radius: 15px;
     width: 30px;
     height: 30px;

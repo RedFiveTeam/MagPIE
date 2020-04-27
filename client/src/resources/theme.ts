@@ -14,6 +14,7 @@ const theme = {
     backgroundInformation: crayonBox.steelBlue,//
     backgroundInactive: crayonBox.blueGrayLight,
     backgroundAction: crayonBox.safetyOrange,
+    backgroundHighlighted: crayonBox.mediumBlueGray,//
     backgroundAssigned: crayonBox.notEggWhite,
     backgroundModal: crayonBox.steelBlue,
     backgroundStatus: crayonBox.darkGray,
@@ -57,6 +58,8 @@ const theme = {
     backgroundFocus: crayonBox.mediumBlueGray,//
     borderAddButton: crayonBox.mediumGreenBlue,//
     backgroundPillButton: crayonBox.darkGreenBlue,//
+    fontSubHeader: crayonBox.lightBlueGray,//
+    copyTgtBorder: crayonBox.lightCoolBlack,//
   },
 
   font: {
@@ -64,6 +67,7 @@ const theme = {
     weightRow: 400,
     weightMedium: 500,
     weightBold: 700,
+    weightSubHeader: 300,
     sizeRow: '16px',
     familyHeader: 'Roboto',
     weightHeader: 400,
@@ -75,6 +79,7 @@ const theme = {
     sizeRowSmall: '12px',
     sizeRowMedium: '14px',
     sizeMetricsHeader: '20px',
+    sizeModalHeader: '30px',
     sizeBigMetric: '40px',
   },
 

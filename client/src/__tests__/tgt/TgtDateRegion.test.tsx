@@ -45,6 +45,7 @@ describe("Target Date Region", () => {
         deleteExploitDate={jest.fn()}
         deleteTgt={jest.fn()}
         disabled={false}
+        highlight={false}
       />
     );
   });
@@ -75,6 +76,7 @@ describe("Target Date Region", () => {
         deleteExploitDate={jest.fn()}
         deleteTgt={jest.fn()}
         disabled={false}
+        highlight={false}
       />
     );
     expect(subject.find(StyledTgtRow).length).toBe(3);
@@ -109,6 +111,7 @@ describe("Target Date Region", () => {
         deleteExploitDate={jest.fn()}
         deleteTgt={jest.fn()}
         disabled={false}
+        highlight={false}
       />
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();
@@ -133,6 +136,7 @@ describe("Target Date Region", () => {
         deleteExploitDate={jest.fn()}
         deleteTgt={jest.fn()}
         disabled={false}
+        highlight={false}
       />
     );
     subject.find('.add-tgt-button').simulate('.click');

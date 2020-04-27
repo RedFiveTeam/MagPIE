@@ -8,6 +8,7 @@ Before((I) => {
   I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
+  I.click('.rfi-row');
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:', 10);
 });
@@ -127,7 +128,7 @@ Scenario('Should display modal when trying to navigate away while editing a targ
   I.click('.tgt-dash--header--back-button');
   I.waitForText('You haven\'t saved the target you were editing.', 10);
   I.click('.modal-no');
-  I.wait(3);
+  I.wait(1);
   I.dontSee('You haven\'t saved the target you were editing.');
 
   I.doubleClick('.tgt-name');
@@ -176,25 +177,90 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
 });
 
 Scenario('Should be able to delete and undo delete tgts', (I) => {
-  I.moveCursorTo('.tgt-form-box', 10, 10);
+  I.moveCursorTo('.tgt-form-box');
   I.click('.delete-tgt-button');
   I.waitForText('You deleted SDT20-999');
   I.click('UNDO');
-  I.waitForText('12QWE1234567890');
+  I.wait(1);
 
-  I.moveCursorTo('.tgt-form-box', 10, 10);
+  I.moveCursorTo('.tgt-form-box');
   I.click('.delete-tgt-button');
 
   //Need to leave page and come back to see changes
   I.click('.tgt-dash--header--back-button');
   I.click('.navigate-to-tgt-button');
 
-  I.moveCursorTo('.tgt-form-box', 10, 10);
+  I.moveCursorTo('.tgt-form-box');
   I.click('.delete-tgt-button');
 
   I.click('.tgt-dash--header--back-button');
   I.click('.navigate-to-tgt-button');
 
   I.dontSeeElement('.tgt-form-box');
+  I.click('.delete-date');
+});
+
+Scenario('Should be able to copy targets', (I) => {
+  I.click('.add-date-button');
+  I.fillField('input', '02012020');
+
+  I.click('.add-tgt-button');
+  I.fillField('.tgt-name-input-new', 'SDT20-123');
+  I.pressKey('Tab');
+  I.fillField('.mgrs', '12QWE1231231231');
+  I.pressKey('Enter');
+
+  I.click('.add-date-button');
+  I.fillField('input', '02022020');
+
+  I.click('.copy-tgts-button');
+  I.waitForText('Copy Targets from', 10);
+  I.click('.tgt-copy--select-date');
+
+  I.click('.copy-to-menu');
+  I.click(locate('.menu-item').at(2));
+  I.wait(1);
+  I.click('.select-all-checkbox');
+  I.click('.copy-button');
+
+  within('.tgt-copy--small-body', () => {
+    I.see('SDT20-123');
+    I.see('12QWE1231231231');
+  });
+
+  I.click('.tgt-copy--header-button');
+  I.waitForText('You haven\'t saved all the targets you\'ve copied.');
+  I.click('.modal-yes');
+
+  I.click('.copy-tgts-button');
+  I.waitForText('Copy Targets from', 10);
+  I.click('.tgt-copy--select-date');
+
+  I.click('.copy-to-menu');
+  I.click(locate('.menu-item').at(2));
+  I.wait(1);
+  I.click('.select-all-checkbox');
+  I.click('.copy-button');
+
+  within('.tgt-copy--small-body', () => {
+    I.see('SDT20-123');
+    I.see('12QWE1231231231');
+  });
+
+  I.click('.tgt-copy--submit');
+
+  within('.date-divider--2-Feb-20', () => {
+    I.waitForElement('.highlighted');
+    I.see('SDT20-123');
+    I.see('12QWE1231231231');
+  });
+
+  I.moveCursorTo('.tgt-form-box');
+  I.waitForElement('.delete-tgt-button');
+  I.click('.delete-tgt-button');
+  I.moveCursorTo('.tgt-form-box');
+  I.waitForElement('.delete-tgt-button');
+  I.click('.delete-tgt-button');
+  I.click('.delete-date');
   I.click('.delete-date');
 });

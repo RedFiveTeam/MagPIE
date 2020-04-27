@@ -36,9 +36,14 @@ public class TargetController {
   }
 
   @PostMapping(path = "/post")
-  public void postTarget(@Valid @RequestBody TargetJson targetJson, @RequestParam(name = "userName", defaultValue =
-    "") String userName) {
-    targetService.postTarget(targetJson, userName);
+  public void postTarget(@Valid @RequestBody List<TargetJson> targetJsons, @RequestParam(name = "userName", defaultValue =
+    "") String userName, @RequestParam(name = "isCopy", defaultValue = "false") String isCopyString) {
+    boolean isCopy = false;
+    if (isCopyString.equals("true")) {
+      isCopy = true;
+    }
+
+    targetService.postTarget(targetJsons, userName, isCopy);
   }
 
   @PostMapping(path = "/dates/post")

@@ -3,6 +3,7 @@ export const crayonBox = {
   tarBlack: '#010102',
   lightBlack: '#040404',
   coolBlack: '#041319',//
+  lightCoolBlack: '#1F1F2C',//
   softMetal: '#202020',
   darkGray: '#323232',
   lessDarkGray: '#393939',
@@ -42,4 +43,5 @@ export const crayonBox = {
   brightBlue: '#1E98E5',//
   skyBlueGreen: '#6FB6CF',//
   skyBlue: '#82BFF9',
+  lightBlueGray: '#8199A2',//
 };

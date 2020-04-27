@@ -8,6 +8,7 @@ Before((I) => {
   I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
+  I.click('.rfi-row');
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:', 10);
 });
@@ -138,7 +139,8 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.click('.exploitation');
   I.waitForText('Status', 10);
 
-  I.moveCursorTo('.status-wrapper', 10, 10);
+  I.moveCursorTo('.status-wrapper');
+  I.waitForElement('.in-progress-button');
   I.click('.in-progress-button');
 
   I.click('.ixn-dash--header--back-button');
@@ -148,7 +150,8 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.waitForText('In Progress', 10);
   I.see('123-001');
 
-  I.moveCursorTo('.status-wrapper', 10, 10);
+  I.moveCursorTo('.status-wrapper');
+  I.waitForElement('.completed-button');
   I.click('.completed-button');
 
   I.click('.ixn-dash--header--back-button');
@@ -159,7 +162,8 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.see('123-001');
   I.dontSee('In Progress');
 
-  I.moveCursorTo('.status-wrapper', 10, 10);
+  I.moveCursorTo('.status-wrapper');
+  I.waitForElement('.does-not-meet-eei-button');
   I.click('.does-not-meet-eei-button');
 
   I.click('.ixn-dash--header--back-button');
@@ -217,7 +221,7 @@ Scenario('Should be able to write and view ixn notes', (I) => {
   I.waitForText('TGT: SDT20-123', 10);
 
   I.click('.note-button');
-  I.wait(1);
+  I.waitForElement('.note-input');
   I.fillField('.note-input', 'These are some notes about an ixn');
   I.pressKey('Enter');
 
@@ -228,7 +232,7 @@ Scenario('Should be able to write and view ixn notes', (I) => {
   I.dontSee('These are some notes about an ixn');
 
   I.click('.note-button');
-  I.wait(1);
+  I.waitForElement('.note-input');
   I.seeInField('.note-input', 'These are some notes about an ixn');
 });
 
@@ -249,12 +253,12 @@ Scenario('Should be able to write and view rollups', (I) => {
 
   I.click(locate('.import-checkbox').at(2));
   I.click('.import-rollup-button');
-  I.wait(1);
+  I.waitForElement('.rollup-input');
   I.seeInField('.rollup-input', '12:15:00Z -');
 
   I.click(locate('.import-checkbox').at(1));
   I.click('.import-rollup-button');
-  I.wait(1);
+  I.waitForElement('.rollup-input');
   I.seeInField('.rollup-input', '12:10:30Z - Person entered tgt from right side\n\n12:15:00Z -');
 
   I.click('.save');
@@ -274,7 +278,7 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.dontSeeInField('.rollup-input', 'DO NOT SAVE THIS');
 
   I.click('.rollup-mode-toggle-button');
-  I.wait(1);
+  I.waitForElement('.rollup-input');
 
   I.seeInField('.rollup-input', 'Activity Rollup (SDT20-123)');
   I.seeInField('.rollup-input', '01FEB20');
@@ -293,7 +297,7 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.seeInField('.rollup-input', '12:10:30Z - Person entered tgt from right side\n\n12:15:00Z -');
 
   I.click('.rollup-mode-toggle-button');
-  I.wait(1);
+  I.waitForElement('.rollup-input');
 
   I.seeInField('.rollup-input', 'Some things happened within this half hour block of time');
 
@@ -305,7 +309,7 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.waitForText('Copy to Clipboard');
 
   I.click('.rollup-mode-toggle-button');
-  I.wait(1);
+  I.waitForElement('.rollup-input');
 
   I.dontSeeInField('.rollup-input', 'DO NOT SAVE THIS');
 });

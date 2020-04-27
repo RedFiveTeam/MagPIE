@@ -56,9 +56,9 @@ export const postExploitDate = (rfi: RfiModel, exploitDate: ExploitDatePostModel
   };
 };
 
-export const submitPostTarget = (target: TargetPostModel, rfi: RfiModel, userName: string) => {
+export const submitPostTargets = (targets: TargetPostModel[], rfi: RfiModel, userName: string, isCopy: boolean) => {
   return (dispatch: any) => {
-    postTarget(target, userName)
+    postTarget(targets, userName, isCopy)
       .then(response => dispatch(loadTgtPage(rfi, false)))
       .catch((reason) => {
         console.log(reason);

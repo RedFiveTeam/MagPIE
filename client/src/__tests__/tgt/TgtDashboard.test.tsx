@@ -42,6 +42,7 @@ describe('TgtDashboardContainer', () => {
             targets={[]}
             addTgt={-1}
             editTgt={-1}
+            highlight={false}
           />
         </SnackbarProvider>
       </Provider>,
@@ -80,6 +81,7 @@ describe('TgtDashboardContainer', () => {
             targets={[]}
             addTgt={-1}
             editTgt={-1}
+            highlight={false}
           />
         </SnackbarProvider>
       </Provider>,

@@ -42,6 +42,7 @@ describe('Target Row', () => {
           deleteTgt={deleteSpy}
           setAddEditTarget={setAddEditTargetSpy}
           addingOrEditing={false}
+          highlight={false}
         />
       </SnackbarProvider>,
     );

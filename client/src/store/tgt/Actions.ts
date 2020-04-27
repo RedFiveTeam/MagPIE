@@ -28,10 +28,11 @@ export const updateTgtSuccess = (targets: TargetModel[]) => {
   };
 };
 
-export const updateTgtsLocal = (target: TargetModel) => {
+export const updateTgtsLocal = (targets: TargetModel[], isCopy: boolean) => {
   return {
     type: TgtActionTypes.UPDATE_TGT_LOCAL,
-    target: target,
+    targets: targets,
+    isCopy: isCopy,
   };
 };
 
@@ -123,15 +124,15 @@ export const postTargetDelete = (tgtId: number) => {
   );
 };
 
-export const postTarget = (target: TargetPostModel, userName: string) => {
-  return fetch('/api/targets/post?userName=' + userName,
+export const postTarget = (targets: TargetPostModel[], userName: string, isCopy?: boolean) => {
+  return fetch('/api/targets/post?userName=' + userName + (isCopy ? '&isCopy=true' : ''),
     {
       method: 'post',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(target),
+      body: JSON.stringify(targets),
     },
   ).catch((reason) => {
     console.log('Failed to post target: ' + reason);

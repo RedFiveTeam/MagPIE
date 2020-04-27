@@ -34,7 +34,7 @@ export const exitIxnPage = () => {
 
 export const saveRollup = (newTarget: TargetPostModel, dateString: string, userName: string) => {
   return (dispatch: any) => {
-    postTarget(newTarget, userName)
+    postTarget([newTarget], userName)
       .then(response => fetch('/api/targets?rfiId=' + newTarget.rfiId))
       .then(response => response.json())
       .then((targets: TargetModel[]) => dispatch(navigateToIxnPage(targets.find((target) => target.id ===

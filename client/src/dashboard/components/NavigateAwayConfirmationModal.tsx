@@ -5,6 +5,7 @@ import { longInputStyles } from '../../resources/theme';
 
 interface MyProps {
   display: boolean;
+  message: string;
   setDisplay: (display: boolean) => void;
   handleYes: () => void;
 }
@@ -25,7 +26,7 @@ export const NavigateAwayConfirmationModal: React.FC<MyProps> = (props) => {
       className={classNames('delete-modal', classes.deleteModal)}
     >
       <div className={classes.modalBody}>
-        <div className={'modal-text'}>You haven't saved the target you were editing.</div>
+        <div className={'modal-text'}>{props.message}</div>
         <div className={'modal-text'}>Do you want to leave without saving?</div>
         <div className={classes.modalConfirmation}>
           <span className={classNames('modal-yes', classes.modalButton)} onClick={() => {

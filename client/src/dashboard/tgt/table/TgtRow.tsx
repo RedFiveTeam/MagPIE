@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
@@ -28,6 +28,7 @@ interface Props {
   deleteTgt: (tgt: TargetModel) => void;
   key: number;
   addingOrEditing: boolean;
+  highlight: boolean;
   className?: string;
 }
 
@@ -45,6 +46,17 @@ export const TgtRow: React.FC<Props> = props => {
   const classes = rowStyles();
 
   const [displayModal, setDisplayModal] = useState(false);
+  const [highlighted, setHighlighted] = useState(true);
+
+  useEffect(() => {
+    if (!props.highlight) {
+      setHighlighted(false);
+    } else {
+      setTimeout(() => {
+        setHighlighted(false);
+      }, 5000);
+    }
+  }, []);
 
   const submitStatusChange = (status: TargetStatus) => {
     let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
@@ -125,7 +137,7 @@ export const TgtRow: React.FC<Props> = props => {
       >
         <Box
           borderRadius={8}
-          className={'tgt-form-box'}
+          className={classNames('tgt-form-box', highlighted && props.highlight ? 'highlighted' : null)}
         >
           <div className={'tgt-form'}
                onDoubleClick={handleDoubleClick}
@@ -301,5 +313,9 @@ export const StyledTgtRow = styled(TgtRow)`
     }
     
     pointer-events: none;
+  }
+  
+  .highlighted {
+    background: ${theme.color.backgroundHighlighted} !important;
   }
 `;

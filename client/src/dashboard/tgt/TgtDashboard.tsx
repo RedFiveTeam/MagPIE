@@ -8,12 +8,12 @@ import { StyledTgtTable } from './table/TgtTable';
 import { StyledExploitDateDivider } from './table/ExploitDateDivider';
 import theme, { rowStyles } from '../../resources/theme';
 import { ApplicationState } from '../../store';
-import { StyledTgtDateSection } from './table/TgtDateRegion';
+import { StyledTgtDateRegion } from './table/TgtDateRegion';
 import { StyledTgtDashboardHeader } from './TgtDashboardHeader';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
-import { deleteExploitDate, deleteTgt, loadTgtPage, postExploitDate, submitPostTarget } from '../../store/tgt/Thunks';
+import { deleteExploitDate, deleteTgt, loadTgtPage, postExploitDate, submitPostTargets } from '../../store/tgt/Thunks';
 import {
   addTgt,
   editTgt,
@@ -32,6 +32,7 @@ import { navigateToIxnPage } from '../../store/ixn';
 import { useSnackbar } from 'notistack';
 import { StyledRfiSidebar } from './sidebar/RfiSidebar';
 import { NavigateAwayConfirmationModal } from '../components/NavigateAwayConfirmationModal';
+import { StyledTgtCopyModal } from './TgtCopyModal';
 
 interface MyProps {
   rfi: RfiModel;
@@ -41,6 +42,7 @@ interface MyProps {
   targets: TargetModel[];
   addTgt: number;
   editTgt: number;
+  highlight: boolean;
   className?: string;
 }
 
@@ -60,6 +62,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const [addDate, setAddDate] = useState(false);
   const [navigating, setNavigating] = useState(false);
   const [navigate, setNavigate] = useState(null as RfiModel|null);
+  const [displayCopyTargets, setDisplayCopyTargets] = useState(false);
 
   const isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0 || props.rfi.status === RfiStatus.CLOSED;
 
@@ -91,15 +94,23 @@ export const TgtDashboard: React.FC<MyProps> = props => {
     }
   };
 
-  const handlePostTarget = (target: TargetPostModel) => {
+  const handlePostTargets = (targets: TargetPostModel[], isCopy: boolean) => {
     if (!navigating) {
-      let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
-                                target.mgrs, target.notes, target.description, target.status, '', '');
       if (props.rfi.status !== RfiStatus.CLOSED) {
-        dispatch(updateTgtsLocal(tgt));
-        dispatch(submitPostTarget(target, props.rfi, cookie.userName));
+        let tgts: TargetModel[] = [];
+        for (let target of targets) {
+          let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
+                                    target.mgrs, target.notes, target.description, target.status, '', '');
+          tgts.push(tgt);
+        }
+        dispatch(updateTgtsLocal(tgts, isCopy));
+        dispatch(submitPostTargets(targets, props.rfi, cookie.userName, isCopy));
       }
     }
+  };
+
+  const handlePostTarget = (target: TargetPostModel) => {
+    handlePostTargets([target], false);
   };
 
   async function handlePostExploitDate(date: ExploitDatePostModel) {
@@ -130,7 +141,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const handleDeleteTarget = (target: TargetModel) => {
     if (props.rfi.status !== RfiStatus.CLOSED) {
       enqueueSnackbar('You deleted ' + target.name, {
-        action: (key) => UndoSnackbarAction(key, {...target, targetId: target.id},
+        action: (key) => UndoSnackbarAction(key, {...target, targetId: target.id} as TargetPostModel,
                                             handlePostTarget, closeSnackbar, classes.snackbarButton),
         variant: 'info',
       });
@@ -185,28 +196,30 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   };
 
   function printDates(dates: ExploitDateModel[]) {
-    return dates.map((exploitDateModel: ExploitDateModel, index: number) =>
-                       <StyledTgtDateSection
-                         rfi={props.rfi}
-                         addDate={addDate}
-                         setAddDate={setAddDate}
-                         exploitDate={exploitDateModel}
-                         exploitDateDisplay={exploitDateModel.exploitDate.utc().format('D MMM YY')}
-                         targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
-                         editTarget={props.editTgt}
-                         addTgt={props.addTgt}
-                         setAddEditTarget={handleAddEdit}
-                         index={index}
-                         className={'date-divider--' + moment(exploitDateModel.exploitDate).format('D-MMM-YY')}
-                         key={index}
-                         addingOrEditing={isDisabled}
-                         postTarget={handlePostTarget}
-                         postExploitDate={handlePostExploitDate}
-                         deleteTgt={handleDeleteTarget}
-                         navigateToIxnPage={handleNavigateToIxnPage}
-                         deleteExploitDate={handleDeleteExploitDate}
-                         disabled={isDisabled}
-                       />,
+    return dates.map(
+      (exploitDateModel: ExploitDateModel, index: number) =>
+        <StyledTgtDateRegion
+          rfi={props.rfi}
+          addDate={addDate}
+          setAddDate={setAddDate}
+          exploitDate={exploitDateModel}
+          exploitDateDisplay={exploitDateModel.exploitDate.utc().format('D MMM YY')}
+          targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
+          editTarget={props.editTgt}
+          addTgt={props.addTgt}
+          setAddEditTarget={handleAddEdit}
+          index={index}
+          className={'date-divider--' + moment(exploitDateModel.exploitDate).format('D-MMM-YY')}
+          key={index}
+          addingOrEditing={isDisabled}
+          postTarget={handlePostTarget}
+          postExploitDate={handlePostExploitDate}
+          deleteTgt={handleDeleteTarget}
+          navigateToIxnPage={handleNavigateToIxnPage}
+          deleteExploitDate={handleDeleteExploitDate}
+          disabled={isDisabled}
+          highlight={props.highlight}
+        />,
     );
   }
 
@@ -219,6 +232,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
         addDate={handleAddDate}
         disabled={isDisabled || props.exploitDates.length === 0}
         displayHelperText={props.exploitDates.length < 2 && props.rfi.status === RfiStatus.OPEN}
+        displayCopyTargets={() => setDisplayCopyTargets(true)}
       />
       <div className={'tgt-dash-container'}>
         <div className={'rfi-sidebar'}>
@@ -266,11 +280,26 @@ export const TgtDashboard: React.FC<MyProps> = props => {
             <input className={'hidden-input'}/>
           </div>
           {navigating ?
-            <NavigateAwayConfirmationModal display={true} setDisplay={setNavigating} handleYes={handleNavigate}/>
+            <NavigateAwayConfirmationModal
+              message={'You haven\'t saved the target you were editing.'}
+              display={true}
+              setDisplay={setNavigating}
+              handleYes={handleNavigate}
+            />
             :
             null}
         </div>
       </div>
+      {displayCopyTargets ?
+        <StyledTgtCopyModal
+          display={true}
+          hide={() => setDisplayCopyTargets(false)}
+          postTargets={handlePostTargets}
+          exploitDates={props.exploitDates}
+          targets={props.targets}
+        />
+        :
+        null}
     </div>
   );
 };
@@ -282,6 +311,7 @@ const mapStateToProps = ({tgtState}: ApplicationState) => ({
   targets: tgtState.targets,
   addTgt: tgtState.addTgt,
   editTgt: tgtState.editTgt,
+  highlight: tgtState.highlight,
 });
 
 const mapDispatchToProps = {

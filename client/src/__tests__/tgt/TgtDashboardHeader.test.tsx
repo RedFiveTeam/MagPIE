@@ -22,6 +22,7 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={false}
         displayHelperText={false}
+        displayCopyTargets={() => {}}
       />);
   });
 
@@ -40,6 +41,7 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={true}
         displayHelperText={false}
+        displayCopyTargets={() => {}}
       />);
     subject.find('.add-date-button').simulate('click');
     expect(addDateSpy).toHaveBeenCalledTimes(1);
@@ -55,6 +57,7 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={false}
         displayHelperText={true}
+        displayCopyTargets={() => {}}
       />);
     expect(subject.find('.header-helper-text').text()).toContain('Add additional coverage dates');
   });

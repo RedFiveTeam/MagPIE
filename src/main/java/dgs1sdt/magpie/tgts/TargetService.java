@@ -89,11 +89,13 @@ public class TargetService {
     return dates;
   }
 
-  public void postTarget(TargetJson targetJson, String userName) {
-    if (targetJson.getTargetId() > 0) {
-      editTarget(targetJson, userName);
-    } else {
-      addTarget(targetJson, userName);
+  public void postTarget(List<TargetJson> targetJsons, String userName, Boolean isCopy) {
+    for (TargetJson targetJson : targetJsons) {
+      if (targetJson.getTargetId() > 0) {
+        editTarget(targetJson, userName);
+      } else {
+        addTarget(targetJson, userName, isCopy);
+      }
     }
   }
 
@@ -214,7 +216,7 @@ public class TargetService {
     }
   }
 
-  private void addTarget(TargetJson targetJson, String userName) {
+  private void addTarget(TargetJson targetJson, String userName, Boolean isCopy) {
     long exploitDateId = targetJson.getExploitDateId();
 
     Target target = new Target(targetJson.getRfiId(), exploitDateId, targetJson);
@@ -227,7 +229,7 @@ public class TargetService {
         if (exploitDateRepository.findById(exploitDateId).isPresent()) {
           long lastTargetId = targetRepository.findAll().get(targetRepository.findAll().size() - 1).getId();
 
-          metricsService.addCreateTarget(lastTargetId, targetJson, userName);
+          metricsService.addCreateTarget(lastTargetId, targetJson, userName, isCopy);
         } else {
           log.error("Error finding exploit date by id: " + exploitDateId);
         }

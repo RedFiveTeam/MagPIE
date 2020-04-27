@@ -298,15 +298,15 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "",
       "");
-    MetricCreateTarget metric1 = new MetricCreateTarget(1, target, "billy.bob.joe");
-    MetricCreateTarget metric2 = new MetricCreateTarget(1, target, "billy.bob.joe");
-    MetricCreateTarget metric3 = new MetricCreateTarget(1, target, "billy.bob.joe");
-    MetricCreateTarget metric4 = new MetricCreateTarget(1, target, "billy.bob.joe");
-    MetricCreateTarget metric5 = new MetricCreateTarget(1, target, "billy.bob.joe");
-    MetricCreateTarget metric6 = new MetricCreateTarget(1, target, "billy.bob.joe");
-    MetricCreateTarget metric7 = new MetricCreateTarget(1, target, "billy.bob.joe");
-    MetricCreateTarget metric8 = new MetricCreateTarget(1, target, "billy.bob.joe");
-    MetricCreateTarget metric9 = new MetricCreateTarget(1, target, "billy.bob.joe");
+    MetricCreateTarget metric1 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric2 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric3 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric4 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric5 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric6 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric7 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric8 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric9 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
     metric1.setTimestamp(new Timestamp(threeWeeksAgo));
     metric2.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(2)));
     metric3.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(5)));

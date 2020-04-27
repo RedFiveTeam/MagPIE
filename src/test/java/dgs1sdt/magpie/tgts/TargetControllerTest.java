@@ -27,9 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -246,7 +244,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    String json = objectMapper.writeValueAsString(targetJson);
+    String json = objectMapper.writeValueAsString(Collections.singletonList(targetJson));
 
     given()
       .port(port)
@@ -275,7 +273,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a unique description"
     );
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
     assertEquals(1, targetRepository.findAll().size());
 
     assertEquals(1, metricCreateTargetRepository.findAll().size());
@@ -286,6 +284,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals(target.getExploitDateId(), metric.getExploitDateId());
     assertEquals(target.getId(), metric.getTargetId());
     assertEquals("william.robert.joseph", metric.getUserName());
+    assertEquals(false, metric.getIsCopy());
   }
 
   @Test
@@ -375,8 +374,8 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson1, "billy.bob.joe");
-    targetController.postTarget(targetJson2, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson1), "billy.bob.joe", "false");
+    targetController.postTarget(Collections.singletonList(targetJson2), "billy.bob.joe", "false");
 
     long id = exploitDateRepository.findAll().get(0).getId();
 
@@ -407,7 +406,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
     long targetId = targetRepository.findAll().get(0).getId();
 
     assertEquals(0, targetController.deleteTarget(targetId).size());
@@ -418,7 +417,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertEquals(0, targetController.getTargets(rfiId).size());
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
     targetId = targetRepository.findAll().get(1).getId();
 
     given()
@@ -456,7 +455,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
     long targetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, "SDT20-123").getId();
 
     TargetJson targetEditJson = new TargetJson(
@@ -470,7 +469,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       TargetStatus.NOT_STARTED,
       "",
       "");
-    String json = objectMapper.writeValueAsString(targetEditJson);
+    String json = objectMapper.writeValueAsString(Collections.singletonList(targetEditJson));
 
     given()
       .port(port)
@@ -518,7 +517,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a rollup",
       "");
 
-    json = objectMapper.writeValueAsString(targetEditJson);
+    json = objectMapper.writeValueAsString(Collections.singletonList(targetEditJson));
 
     given()
       .port(port)
@@ -554,7 +553,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a rollup",
       "This is an \"All Callouts\" rollup");
 
-    json = objectMapper.writeValueAsString(targetEditJson);
+    json = objectMapper.writeValueAsString(Collections.singletonList(targetEditJson));
 
     given()
       .port(port)
@@ -608,8 +607,8 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
-    targetController.postTarget(targetJsonConflict, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
+    targetController.postTarget(Collections.singletonList(targetJsonConflict), "billy.bob.joe", "false");
 
     long targetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, "SDT20-123").getId();
 
@@ -625,7 +624,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "",
       "");
 
-    targetController.postTarget(updatedTargetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(updatedTargetJson), "billy.bob.joe", "false");
 
     assertEquals("SDT20-123", targetRepository.findById(targetId).get().getName());
 
@@ -652,14 +651,14 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "This is a description"
     );
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
 
     Target target = targetRepository.findAll().get(0);
     long targetId = target.getId();
 
     assertEquals(TargetStatus.NOT_STARTED, target.getStatus());
 
-    String targetUpdateJsonString = "{" +
+    String targetUpdateJsonString = "[{" +
       "\"targetId\":" + targetId +
       ",\"rfiId\":" + rfiId +
       ",\"exploitDateId\":" + exploitDateId +
@@ -670,7 +669,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       ",\"status\":\"IN_PROGRESS\"" +
       ",\"hourlyRollup\":\"\"" +
       ",\"allCallouts\":\"\"" +
-      "}";
+      "}]";
 
     given()
       .port(port)
@@ -685,7 +684,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertEquals(TargetStatus.IN_PROGRESS, target.getStatus());
 
-    targetUpdateJsonString = "{" +
+    targetUpdateJsonString = "[{" +
       "\"targetId\":" + targetId +
       ",\"rfiId\":" + rfiId +
       ",\"exploitDateId\":" + exploitDateId +
@@ -696,7 +695,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
       ",\"status\":\"COMPLETED\"" +
       ",\"hourlyRollup\":\"\"" +
       ",\"allCallouts\":\"\"" +
-      "}";
+      "}]";
 
     given()
       .port(port)
@@ -738,7 +737,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     targetController.deleteTarget(targetId);
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
 
     assertEquals(numTargets, targetRepository.findAll().size());
     assertEquals(1, metricUndoTargetDeleteRepository.findAll().size());
@@ -758,7 +757,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
 
     long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetName).getId();
 
@@ -817,12 +816,63 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
 
-    targetController.postTarget(targetJson, "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
 
     long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetName).getId();
 
     assertEquals(2, targetController.getTargets(rfiId).size());
     assertEquals(0, ixnController.getIxns(newTargetId).size());
+  }
+
+  @Test
+  public void addsTargetCopiesWithMetrics() throws Exception {
+    rfiRepository.save(new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
+    exploitDateRepository.save(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      rfiId
+    ));
+    exploitDateRepository.save(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("12/11/2020").getTime()),
+      rfiId
+    ));
+    long exploitDateId1 = exploitDateRepository.findByRfiIdAndExploitDate(rfiId,
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime())).getId();
+    long exploitDateId2 = exploitDateRepository.findByRfiIdAndExploitDate(rfiId,
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("12/11/2020").getTime())).getId();
+
+    TargetJson targetJson1 = new TargetJson(rfiId, exploitDateId1, "ASD12-123", "12ASD1231231231", "These are notes",
+      "This is a description");
+    TargetJson targetJson2 = new TargetJson(rfiId, exploitDateId1, "ASD12-234", "13ASD1231231231", "These are different notes",
+      "This is another description");
+    TargetJson targetJson3 = new TargetJson(rfiId, exploitDateId1, "ASD12-345", "14ASD1231231231", "These are some notes",
+      "This is some sort of description");
+
+    targetController.postTarget(Arrays.asList(targetJson1, targetJson2, targetJson3), "billy.bob.joe", "false");
+
+    targetJson1.setExploitDateId(exploitDateId2);
+    targetJson3.setExploitDateId(exploitDateId2);
+
+    List<TargetJson> targetCopies = Arrays.asList(targetJson1, targetJson3);
+
+    String copyJsonString =objectMapper.writeValueAsString(targetCopies);
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(copyJsonString)
+      .when()
+      .post(TargetController.URI + "/post?userName=billy.bob.joe&isCopy=true")
+      .then()
+      .statusCode(200);
+
+    assertEquals(5, targetRepository.findAll().size());
+    assertEquals("ASD12-123", targetRepository.findAll().get(3).getName());
+    assertEquals("14ASD1231231231", targetRepository.findAll().get(4).getMgrs());
+
+    assertEquals(5, metricCreateTargetRepository.findAll().size());
+    assertEquals(true, metricCreateTargetRepository.findAll().get(3).getIsCopy());
+    assertEquals(true, metricCreateTargetRepository.findAll().get(4).getIsCopy());
   }
 
   private void setupIxns() throws Exception {

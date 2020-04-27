@@ -116,17 +116,17 @@ describe('reducer', () => {
       targets: [],
     };
 
-    expect(
-      tgtReducer(undefined, mockAction),
-    ).toEqual({
-                viewTgtPage: true,
-                showDatePlaceholder: false,
-                rfi: rfi,
-                exploitDates: [],
-                targets: [],
-                addTgt: -1,
-                editTgt: -1,
-              });
+    expect(tgtReducer(undefined, mockAction)).toEqual(
+      {
+        viewTgtPage: true,
+        showDatePlaceholder: false,
+        rfi: rfi,
+        exploitDates: [],
+        targets: [],
+        addTgt: -1,
+        editTgt: -1,
+        highlight: false,
+      });
   });
 
   it('should sort by rfiNum and flip the sort key', () => {
@@ -481,6 +481,7 @@ describe('reducer', () => {
         targets: [],
         addTgt: -1,
         editTgt: -1,
+        highlight: false,
       },
     );
   });

@@ -30,6 +30,7 @@ interface Props {
   deleteTgt: (tgt: TargetModel) => void;
   deleteExploitDate: (exploitDate: ExploitDateModel) => void;
   disabled: boolean;
+  highlight: boolean;
   className?: string;
 }
 
@@ -59,6 +60,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
             postTarget={props.postTarget}
             deleteTgt={props.deleteTgt}
             navigateToIxnPage={props.navigateToIxnPage}
+            highlight={props.highlight}
           />,
     );
   }
@@ -105,7 +107,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
   );
 };
 
-export const StyledTgtDateSection = styled(TgtDateRegion)`
+export const StyledTgtDateRegion = styled(TgtDateRegion)`
   font-family: ${theme.font.familyRegion};
   font-weight: ${theme.font.weightBold};
   font-size: ${theme.font.sizeRegion};

@@ -38,3 +38,15 @@ code {
     margin-left: -90px;
     padding-left: 20px;
 }
+
+.menu-item {
+    font-family: Roboto !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font-size: 24px !important;
+}
+
+.menu-item:hover {
+    font-weight: 700 !important;
+    text-shadow: 0 0 2px #FFF !important;
+}

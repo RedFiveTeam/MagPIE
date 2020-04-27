@@ -20,7 +20,7 @@ Scenario ('Should display other metrics', (I) => {
   I.see('0 d', '.workflow-time');
 
   I.waitForText('Avg Targets Created', 10);
-  I.see('3', '.tgts-created');
+  I.see('5', '.tgts-created');
 
   I.waitForText('Avg Interactions Created', 10);
   I.see('4', '.ixns-created');
@@ -30,8 +30,8 @@ Scenario ('Should display other metrics', (I) => {
   I.see('Targets', '.deletions');
   I.see('Segments', '.deletions');
   I.see('Interactions', '.deletions');
-  I.see('4', locate('.deletions').find('.card-row').at(1));
-  I.see('4', locate('.deletions').find('.card-row').at(2));
+  I.see('6', locate('.deletions').find('.card-row').at(1));
+  I.see('6', locate('.deletions').find('.card-row').at(2));
   I.see('3', locate('.deletions').find('.card-row').at(3));
   I.see('3', locate('.deletions').find('.card-row').at(4));
 

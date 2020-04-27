@@ -25,6 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 import static io.restassured.RestAssured.given;
@@ -799,13 +802,14 @@ public class IxnControllerTest extends BaseIntegrationTest {
     exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
     target2Id = targetRepository.findAll().get(1).getId();
 
-    targetController.postTarget(new TargetJson(target2Id, rfiId, exploitDate2Id, "SDT12-234", "12WQE1231231231", "",
-      "", TargetStatus.IN_PROGRESS, "", ""), "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(new TargetJson(target2Id, rfiId, exploitDate2Id, "SDT12-234"
+      , "12WQE1231231231", "",
+      "", TargetStatus.IN_PROGRESS, "", "")), "billy.bob.joe", "false");
 
     assertEquals("123-001", ixnRepository.findAll().get(0).getTrack());
 
-    targetController.postTarget(new TargetJson(target2Id, rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "",
-      "", TargetStatus.IN_PROGRESS, "", ""), "billy.bob.joe");
+    targetController.postTarget(Collections.singletonList(new TargetJson(target2Id, rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "",
+      "", TargetStatus.IN_PROGRESS, "", "")), "billy.bob.joe", "false");
 
     assertEquals("123-003", ixnRepository.findAll().get(0).getTrack());
   }

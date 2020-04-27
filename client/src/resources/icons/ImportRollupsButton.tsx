@@ -10,7 +10,7 @@ interface Props {
   className?: string
 }
 
-const ImportRollupsButton = (props: Props) => {
+const ImportCopyButton = (props: Props) => {
   return (
     <div className={props.className}>
       <svg
@@ -30,8 +30,7 @@ const ImportRollupsButton = (props: Props) => {
   );
 };
 
-export const StyledImportRollupsButton = styled(ImportRollupsButton)`
-
+export const StyledImportRollupsButton = styled(ImportCopyButton)`
   svg {
     border-radius: 20px;
     box-shadow: 0 2px 4px #000000;
@@ -41,3 +40,15 @@ export const StyledImportRollupsButton = styled(ImportRollupsButton)`
     }
   }
 `;
+
+export const StyledCopyTargetsButton = styled(ImportCopyButton)`
+  svg {
+    border-radius: 20px;
+    box-shadow: 0 2px 4px #000000;
+    transform: rotate(180deg);
+  
+    :hover {
+      box-shadow: 0 0 6px #FFFFFF;
+    }
+  }
+`

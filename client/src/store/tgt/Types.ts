@@ -24,4 +24,5 @@ export interface TgtState {
   readonly  addTgt: number;
   readonly  editTgt: number;
   readonly  newExploitDate: undefined|ExploitDateModel;
+  readonly  highlight: boolean;
 }
