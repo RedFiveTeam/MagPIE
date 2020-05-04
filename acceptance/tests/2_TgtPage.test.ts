@@ -21,6 +21,20 @@ Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
   I.waitForText('LTIOV', 10);
 });
 
+Scenario ('Should be able to collapse/expand mini RFI table', (I) => {
+  I.waitForText('RFI DESCRIPTION: Lorem ipsum', 10);
+  I.moveCursorTo('.mini-rfi-table');
+  I.waitForElement('.collapse-button');
+  I.click('.collapse-button');
+
+  I.waitForElement('.mini-rfi-table-collapsed');
+  I.moveCursorTo('.mini-rfi-table-collapsed');
+  I.waitForElement('.expand-button');
+  I.click('.expand-button');
+
+  I.waitForElement('.mini-rfi-table');
+});
+
 Scenario('Should be able to add dates and undo', (I) => {
   I.see('Input or select a coverage date for your targets');
   I.fillField('input', '02012020');
@@ -258,9 +272,11 @@ Scenario('Should be able to copy targets', (I) => {
   I.moveCursorTo('.tgt-form-box');
   I.waitForElement('.delete-tgt-button');
   I.click('.delete-tgt-button');
+
   I.moveCursorTo('.tgt-form-box');
   I.waitForElement('.delete-tgt-button');
   I.click('.delete-tgt-button');
+
   I.click('.delete-date');
   I.click('.delete-date');
 });

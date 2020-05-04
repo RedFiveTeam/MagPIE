@@ -9,6 +9,7 @@ interface Props {
   rfi: RfiModel;
   selectRfi: (rfi: RfiModel) => void;
   selected: boolean;
+  collapsed: boolean;
   index?: number;
   className?: string;
 }
@@ -25,10 +26,13 @@ export const MiniRfiRow: React.FC<Props> = props => {
         <span className={classNames('cell', 'cell--rfi-num')}>
           {formatRfiNum(props.rfi.rfiNum)}
         </span>
-        <span className={classNames('cell', 'cell--customer')}>
-          {props.rfi.customer}
-        </span>
-
+        {!props.collapsed ?
+          <span className={classNames('cell', 'cell--customer')}>
+            {props.rfi.customer}
+          </span>
+          :
+          null
+        }
       </div>
     </div>
   );
@@ -40,7 +44,7 @@ export const StyledMiniRfiRow = styled(MiniRfiRow)`
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    width: 192px;
+    width: ${(props) => props.collapsed ? '65px' : '192px'};
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightBold};
     color: ${theme.color.fontActive};
@@ -50,7 +54,7 @@ export const StyledMiniRfiRow = styled(MiniRfiRow)`
     white-space: nowrap;
     cursor: pointer;
     background-color: ${theme.color.backgroundInformation};
-    margin-left: 4px;
+    padding: ${(props) => props.collapsed ? '0 6px' : '0'}
     
     :hover {
       box-shadow: 0 0 4px #FFF;

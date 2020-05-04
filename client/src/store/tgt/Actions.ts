@@ -53,18 +53,19 @@ export const editTgt = (targetId: number) => {
 export const resetAddEditTgt = () => {
   return {
     type: TgtActionTypes.RESET_ADD_EDIT_TGT,
-  }
+  };
 };
 
 export const fetchDatesAndTargetsSuccess = (rfi: RfiModel, exploitDates: ExploitDateModel[], targets: TargetModel[],
                                             firstLoad: boolean, newExploitDateId: number) => {
-  if (firstLoad)
+  if (firstLoad) {
     return {
       type: TgtActionTypes.NAVIGATE_TO_TGT_PAGE,
       rfi: rfi,
       exploitDates: exploitDates,
       targets: targets,
     };
+  }
   return {
     type: TgtActionTypes.RELOAD_TGT_PAGE,
     exploitDates: exploitDates,
@@ -88,7 +89,8 @@ export const setDatePlaceholder = (show: boolean) => {
 };
 
 export const postExploitDateDelete = (exploitDateId: number) => {
-  return fetch('/api/targets/dates/delete?exploitDateId=' + exploitDateId,
+  return fetch(
+    '/api/targets/dates/delete?exploitDateId=' + exploitDateId,
     {
       method: 'delete',
       headers: {
@@ -100,7 +102,8 @@ export const postExploitDateDelete = (exploitDateId: number) => {
 };
 
 export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
-  return fetch('/api/targets/dates/post',
+  return fetch(
+    '/api/targets/dates/post',
     {
       method: 'post',
       headers: {
@@ -109,11 +112,12 @@ export const postExploitDatesUpdate = (exploitDate: ExploitDatePostModel) => {
       },
       body: JSON.stringify(exploitDate),
     },
-  )
+  );
 };
 
 export const postTargetDelete = (tgtId: number) => {
-  return fetch('/api/targets/delete?targetId=' + tgtId,
+  return fetch(
+    '/api/targets/delete?targetId=' + tgtId,
     {
       method: 'delete',
       headers: {
@@ -125,7 +129,8 @@ export const postTargetDelete = (tgtId: number) => {
 };
 
 export const postTarget = (targets: TargetPostModel[], userName: string, isCopy?: boolean) => {
-  return fetch('/api/targets/post?userName=' + userName + (isCopy ? '&isCopy=true' : ''),
+  return fetch(
+    '/api/targets/post?userName=' + userName + (isCopy ? '&isCopy=true' : ''),
     {
       method: 'post',
       headers: {
@@ -136,5 +141,21 @@ export const postTarget = (targets: TargetPostModel[], userName: string, isCopy?
     },
   ).catch((reason) => {
     console.log('Failed to post target: ' + reason);
+  });
+};
+
+export const postCollapseClick = (userName: string) => {
+  return fetch(
+    '/api/metrics/click-collapse',
+    {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: userName,
+    },
+  ).catch((reason) => {
+    console.log('Failed to post collapse click: ' + reason);
   });
 };

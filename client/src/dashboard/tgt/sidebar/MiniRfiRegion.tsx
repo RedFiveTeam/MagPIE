@@ -7,6 +7,7 @@ import { StyledMiniRfiRegionDivider } from './MiniRfiRegionDivider';
 interface Props {
   title: string;
   emptyMessage: string;
+  collapsed: boolean;
   className?: string;
 }
 
@@ -20,7 +21,7 @@ export const MiniRfiRegion: React.FC<Props> = props => {
     <div
       className={classNames('region', `region--${props.title}`, props.className)}
     >
-      <StyledMiniRfiRegionDivider regionTitle={props.title}/>
+      <StyledMiniRfiRegionDivider regionTitle={props.title} collapsed={props.collapsed}/>
       {React.Children.count(props.children) === 0 ? displayMessage(props.emptyMessage) : props.children}
     </div>
   );

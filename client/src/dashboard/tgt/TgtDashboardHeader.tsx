@@ -99,7 +99,7 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     padding-right: 34px;
     background: ${theme.color.backgroundHeader};
     box-shadow: 0 2px 20px #000000;
-    z-index: 100;
+    z-index: 10000;
   }
   
   .tgt-dash--header--back-button {

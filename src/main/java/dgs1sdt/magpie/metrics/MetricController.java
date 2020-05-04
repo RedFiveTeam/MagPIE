@@ -1,6 +1,7 @@
 package dgs1sdt.magpie.metrics;
 
 import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegment;
+import dgs1sdt.magpie.metrics.clickCollapse.MetricClickCollapse;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickImport.MetricClickImport;
@@ -136,5 +137,10 @@ public class MetricController {
   @PostMapping(path = "/click-rollup")
   public MetricClickRollup createClickRollup(@Valid @RequestBody MetricClickRollupJson metricClickRollupJson) {
     return metricsService.createClickRollup(metricClickRollupJson);
+  }
+
+  @PostMapping(path = "/click-collapse")
+  public MetricClickCollapse createClickCollapse(@Valid @RequestBody String userName) {
+    return metricsService.createClickCollapse(userName);
   }
 }

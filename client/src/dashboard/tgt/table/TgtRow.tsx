@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { StyledExploitationLogButtonVector } from '../../../resources/icons/ExploitationLogButtonVector';
 import theme, { rowStyles } from '../../../resources/theme';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
@@ -17,6 +17,7 @@ import CompletedButton from '../../components/statusButtons/CompletedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import { MiniTrashcanButton } from '../../../resources/icons/MiniTrashcanButton';
+import HtmlTooltip from '../../components/HtmlToolTip';
 
 interface Props {
   target: TargetModel;
@@ -31,16 +32,6 @@ interface Props {
   highlight: boolean;
   className?: string;
 }
-
-const HtmlTooltip = withStyles((theme: Theme) => ({
-  tooltip: {
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    marginTop: '-15px',
-  },
-}))(Tooltip);
 
 export const TgtRow: React.FC<Props> = props => {
   const classes = rowStyles();

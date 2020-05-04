@@ -17,6 +17,8 @@ import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegment;
 import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegmentRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
+import dgs1sdt.magpie.metrics.clickCollapse.MetricClickCollapse;
+import dgs1sdt.magpie.metrics.clickCollapse.MetricClickCollapseRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
@@ -112,6 +114,7 @@ public class MetricsService {
   private MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository;
   private MetricClickRollupRepository metricClickRollupRepository;
   private MetricClickImportRepository metricClickImportRepository;
+  private MetricClickCollapseRepository metricClickCollapseRepository;
   private MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository;
 
   @Autowired
@@ -252,6 +255,11 @@ public class MetricsService {
   @Autowired
   public void setMetricClickImportRepository(MetricClickImportRepository metricClickImportRepository) {
     this.metricClickImportRepository = metricClickImportRepository;
+  }
+
+  @Autowired
+  public void setMetricClickCollapseRepository(MetricClickCollapseRepository metricClickCollapseRepository) {
+    this.metricClickCollapseRepository = metricClickCollapseRepository;
   }
 
   @Autowired
@@ -640,5 +648,9 @@ public class MetricsService {
     } else {
       return Math.round(((float) completedBeforeLtiov / (float) totalRfis) * 100);
     }
+  }
+
+  public MetricClickCollapse createClickCollapse(String userName) {
+    return metricClickCollapseRepository.save(new MetricClickCollapse(userName));
   }
 }

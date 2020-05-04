@@ -3,12 +3,13 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 import theme from '../../../resources/theme';
 
-interface Props {
-  regionTitle: string
+interface MyProps {
+  regionTitle: string;
+  collapsed: boolean;
   className?: string;
 }
 
-export const MiniRfiRegionDivider: React.FC<Props> = props => {
+export const MiniRfiRegionDivider: React.FC<MyProps> = props => {
   return (
     <div className={classNames('region-divider', 'pending', props.className)}>
       <div className={'region-divider--bar'}/>
@@ -31,7 +32,7 @@ export const StyledMiniRfiRegionDivider = styled(MiniRfiRegionDivider)`
   
   .region-divider--bar {
     margin-bottom: -4px;
-    width: 193px;
+    width: ${(props) => props.collapsed ? '65px' : '192px'};
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -40,17 +41,16 @@ export const StyledMiniRfiRegionDivider = styled(MiniRfiRegionDivider)`
   }
   
   .region-divider--box {
-    width: 151px;
+    width: ${(props) => props.collapsed ? '65px' : '151px'};
     height: 30px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: ${(props) => props.collapsed ? '25px' : '30px'};
+    border-bottom-right-radius: ${(props) => props.collapsed ? '25px' : '30px'};
     border: 4px solid ${theme.color.regionDividerPrimary};
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-left: 36px;
-    padding-right: 36px;
+    padding: ${(props) => props.collapsed ? '0' : '0 36px'};
     z-index: 1;
   }
 `;

@@ -6,6 +6,8 @@ import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepositor
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
+import dgs1sdt.magpie.metrics.clickCollapse.MetricClickCollapse;
+import dgs1sdt.magpie.metrics.clickCollapse.MetricClickCollapseRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsJson;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickImport.MetricClickImport;
@@ -73,6 +75,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricClickImportRepository metricClickImportRepository;
 
+  @Autowired
+  private MetricClickCollapseRepository metricClickCollapseRepository;
+
   @Before
   public void setup() {
     metricClickGetsRepository.deleteAll();
@@ -87,6 +92,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricClickTrackNarrativeRepository.deleteAll();
     metricClickRollupRepository.deleteAll();
     metricClickImportRepository.deleteAll();
+    metricClickCollapseRepository.deleteAll();
   }
 
   @Test
@@ -241,6 +247,22 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
     assertEquals(5, metric.getTargetId());
     assertEquals(12, metric.getIxnsImported());
+    assertEquals("billy.bob.joe", metric.getUserName());
+  }
+
+  @Test
+  public void postCreatesNewCollapseClickMetric() {
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body("billy.bob.joe")
+      .when()
+      .post(MetricController.URI + "/click-collapse")
+      .then()
+      .statusCode(200);
+
+    MetricClickCollapse metric = metricClickCollapseRepository.findAll().get(0);
+
     assertEquals("billy.bob.joe", metric.getUserName());
   }
 }
