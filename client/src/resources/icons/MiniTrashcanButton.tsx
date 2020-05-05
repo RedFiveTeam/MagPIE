@@ -51,7 +51,7 @@ export const MiniTrashcanButton: React.FC<MyProps> = (props) => {
 };
 
 const Wrapper = styled('div')`
-  margin-left: -20px;
+  margin-left: -10px;
   margin-top: 3px;
   cursor: pointer;
   

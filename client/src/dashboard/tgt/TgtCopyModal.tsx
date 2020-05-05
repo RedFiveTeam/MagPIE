@@ -126,7 +126,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
               disableRipple
               color={'primary'}
               className={'copy-checkbox'}
-              disabled={copyToDateId === 0}
+              // disabled={copyToDateId === 0}
             />
           </div>,
       )
@@ -253,7 +253,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
       return target.exploitDateId === copyFromDate.id && !checkDisabled(target.name);
     }).length;
 
-  let disableSelectAll = copyFromDate === null || copyToDateId === 0 || props.targets.filter((target) => {
+  let disableSelectAll = copyFromDate === null || props.targets.filter((target) => {
     return target.exploitDateId === copyFromDate.id && !checkDisabled(target.name);
   }).length === 0;
 

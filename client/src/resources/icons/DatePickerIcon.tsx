@@ -43,6 +43,7 @@ const Wrapper = styled('div')`
   height: 18px;
   border-radius: 1px;
   margin-top: 1px;
+  margin-left: 10px;
 
   :hover {
     box-shadow: 0 0 6px #FFFFFF;
