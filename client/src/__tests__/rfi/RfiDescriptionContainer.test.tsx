@@ -8,7 +8,8 @@ import ExternalLinkVector from '../../resources/icons/ExternalLinkVector';
 describe('RFI description container', () => {
   let subject: ShallowWrapper;
   const moment = require('moment');
-  let rfi = new RfiModel(1, 'id', 'url', RfiStatus.OPEN, 'customer', moment(), 'country', 'hi', 'Just a fiction', -1, 12, 345);
+  let rfi = new RfiModel(1, 'id', 'url', RfiStatus.OPEN, 'LTJG', 'John', 'Kennedy', 'POTUS', 'john@whitehouse.gov',
+                         '(202) 456-1111', '', '', '555-1212', moment(), 'country', 'hi', 'Just a fiction', -1, 12, 345);
   let postGetsClickSpy: jest.Mock;
   let loadTgtPageSpy: jest.Mock;
   window.open = jest.fn();
@@ -75,5 +76,12 @@ describe('RFI description container', () => {
   it('should call the given postGetsClick function on click', () => {
     subject.find('.gets-button').simulate('click');
     expect(postGetsClickSpy).toHaveBeenCalled();
+  });
+
+  it('should should display customer information', () => {
+    expect(subject.find('.header').at(2).text()).toContain('Customer Information');
+    expect(subject.find('.text-body').at(2).text()).toContain('LTJG Kennedy, John');
+    expect(subject.find('.text-body').at(2).text()).toContain('COMM: (202) 456-1111 / TSVoIP: 555-1212');
+    expect(subject.find('.text-body').at(2).text()).toContain('john@whitehouse.gov');
   });
 });

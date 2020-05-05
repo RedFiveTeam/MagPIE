@@ -47,8 +47,8 @@ export const RfiRow: React.FC<Props> = props => {
         <span className={classNames('cell', 'cell--country')}>
           {props.rfi.country}
         </span>
-        <span className={classNames('cell', 'cell--customer')}>
-          <div>{props.rfi.customer}</div>
+        <span className={classNames('cell', 'cell--customerUnit')}>
+          <div>{props.rfi.customerUnit}</div>
       </span>
         <span className={classNames('cell', 'cell--ltiov')}>
             {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format('D MMM YY').toUpperCase()}
@@ -117,14 +117,13 @@ export const StyledRfiRow = styled(RfiRow)`
     width: 45px;
   }
   
-  .cell--customer {
+  .cell--customerUnit {
     width: 90px;
-  }
   
-  .cell--customer div {
-    width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   
   .cell--ltiov {

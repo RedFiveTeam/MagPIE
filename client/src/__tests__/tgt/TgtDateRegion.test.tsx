@@ -8,11 +8,11 @@ import { StyledTgtRow } from '../../dashboard/tgt/table/TgtRow';
 import { Status } from '../../dashboard/tgt/TgtDashboard';
 import { StyledTgtInputRow } from '../../dashboard/tgt/table/TgtInputRow';
 
-describe("Target Date Region", () => {
+describe('Target Date Region', () => {
   const moment = require('moment');
   let subject: ShallowWrapper;
-  let rfi = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse',
-                         moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
+  let rfi = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, '', '', '', 'space forse', '', '',
+                         '', '', '', moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
                          'Just a fiction', 42, 0, 0);
   let exploitDate = new ExploitDateModel(1, 1, moment(new Date));
   let targets: TargetModel[] =
@@ -46,7 +46,7 @@ describe("Target Date Region", () => {
         deleteTgt={jest.fn()}
         disabled={false}
         highlight={false}
-      />
+      />,
     );
   });
 
@@ -77,7 +77,7 @@ describe("Target Date Region", () => {
         deleteTgt={jest.fn()}
         disabled={false}
         highlight={false}
-      />
+      />,
     );
     expect(subject.find(StyledTgtRow).length).toBe(3);
     expect(subject.find(StyledTgtInputRow).length).toBe(1);
@@ -112,7 +112,7 @@ describe("Target Date Region", () => {
         deleteTgt={jest.fn()}
         disabled={false}
         highlight={false}
-      />
+      />,
     );
     expect(subject.find('.add-tgt-button').exists()).toBeFalsy();
 
@@ -137,10 +137,10 @@ describe("Target Date Region", () => {
         deleteTgt={jest.fn()}
         disabled={false}
         highlight={false}
-      />
+      />,
     );
     subject.find('.add-tgt-button').simulate('.click');
 
-    expect(addEditSpy).not.toHaveBeenCalled()
+    expect(addEditSpy).not.toHaveBeenCalled();
   });
 });

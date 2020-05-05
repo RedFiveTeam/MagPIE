@@ -11,19 +11,23 @@ import { ExploitDateModel } from '../store/tgt/ExploitDateModel';
 import { TargetModel, TargetStatus } from '../store/tgt/TargetModel';
 
 describe('WorkflowContainer', () => {
-  const moment = require ('moment');
+  const moment = require('moment');
   let subject: ShallowWrapper;
-  let rfi = new RfiModel(1, 'DGS1-SDT-2020-00321', 'google.com', RfiStatus.OPEN, '', undefined, 'USA', '', 'Just a fiction', 1, 1, 0);
+  let rfi = new RfiModel(1, 'DGS1-SDT-2020-00321', 'google.com', RfiStatus.OPEN, '', '', '', '', '', '', '', '', '',
+                         undefined, 'USA', '', 'Just a fiction', 1, 1, 0);
   let exploitDate = new ExploitDateModel(1, 1, moment(123456));
-  let tgt = new TargetModel(1, 1, 1, "SDT12-123", "12ASD1231231231", "", "", TargetStatus.IN_PROGRESS, "", "");
+  let tgt = new TargetModel(1, 1, 1, 'SDT12-123', '12ASD1231231231', '', '', TargetStatus.IN_PROGRESS, '', '');
 
   it('should display a login page when not logged in', () => {
     subject = shallow(
       <DashboardContainer
-        fetchRfis={()=>{}}
-        fetchLocalUpdate={()=>{}}
-        loadTgtPage={()=>{}}
-        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
+        fetchRfis={jest.fn()}
+        fetchLocalUpdate={jest.fn()}
+        loadTgtPage={jest.fn()}
+        postSiteVisit={() => {
+          return new Promise((resolve, reject) => {
+          });
+        }}
         loading={true}
         viewTgtPage={false}
         viewIxnPage={false}
@@ -45,10 +49,13 @@ describe('WorkflowContainer', () => {
   it('should display loading screen while app is loading', () => {
     subject = shallow(
       <DashboardContainer
-        fetchRfis={()=>{}}
-        fetchLocalUpdate={()=>{}}
-        loadTgtPage={()=>{}}
-        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
+        fetchRfis={jest.fn()}
+        fetchLocalUpdate={jest.fn()}
+        loadTgtPage={jest.fn()}
+        postSiteVisit={() => {
+          return new Promise((resolve, reject) => {
+          });
+        }}
         loading={true}
         viewTgtPage={false}
         viewIxnPage={false}
@@ -70,10 +77,13 @@ describe('WorkflowContainer', () => {
   it('should display the rfi page upon logging in', () => {
     subject = shallow(
       <DashboardContainer
-        fetchRfis={()=>{}}
-        fetchLocalUpdate={()=>{}}
-        loadTgtPage={()=>{}}
-        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
+        fetchRfis={jest.fn()}
+        fetchLocalUpdate={jest.fn()}
+        loadTgtPage={jest.fn()}
+        postSiteVisit={() => {
+          return new Promise((resolve, reject) => {
+          });
+        }}
         loading={false}
         viewTgtPage={false}
         viewIxnPage={false}
@@ -96,10 +106,13 @@ describe('WorkflowContainer', () => {
   it('should display the tgt page when user navigates through rfi', () => {
     subject = shallow(
       <DashboardContainer
-        fetchRfis={()=>{}}
-        fetchLocalUpdate={()=>{}}
-        loadTgtPage={()=>{}}
-        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
+        fetchRfis={jest.fn()}
+        fetchLocalUpdate={jest.fn()}
+        loadTgtPage={jest.fn()}
+        postSiteVisit={() => {
+          return new Promise((resolve, reject) => {
+          });
+        }}
         loading={false}
         viewTgtPage={true}
         viewIxnPage={false}
@@ -121,10 +134,13 @@ describe('WorkflowContainer', () => {
   it('should display the ixn page when user navigates through tgt', () => {
     subject = shallow(
       <DashboardContainer
-        fetchRfis={()=>{}}
-        fetchLocalUpdate={()=>{}}
-        loadTgtPage={()=>{}}
-        postSiteVisit={()=>{return new Promise((resolve, reject) => {})}}
+        fetchRfis={jest.fn()}
+        fetchLocalUpdate={jest.fn()}
+        loadTgtPage={jest.fn()}
+        postSiteVisit={() => {
+          return new Promise((resolve, reject) => {
+          });
+        }}
         loading={false}
         viewTgtPage={true}
         viewIxnPage={true}

@@ -12,7 +12,15 @@ export default class RfiModel {
     public rfiNum: string,
     public getsUrl: string,
     public status: RfiStatus = RfiStatus.PENDING,
-    public customer: string,
+    public customerTitle: string,
+    public customerGivenName: string,
+    public customerSurname: string,
+    public customerUnit: string,
+    public customerEmail: string,
+    public customerCommPhone: string,
+    public customerDsnPhone: string,
+    public customerSvoip: string,
+    public customerTsvoip: string,
     public ltiov: Moment|undefined,
     public country: string,
     public description: string,
@@ -20,6 +28,6 @@ export default class RfiModel {
     public priority: number,
     public tgtCount: number,
     public ixnCount: number,
-  ) {
+    ) {
   }
 }

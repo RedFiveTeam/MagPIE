@@ -44,7 +44,7 @@ export const RfiTableHeader: React.FC<Props> = props => {
         text={'Customer'}
         sort={() => props.sortRfis(Field.CUSTOMER)}
         field={Field.CUSTOMER}
-        className={'header-cell--customer'}
+        className={'header-cell--customerUnit'}
         sortKey={props.sortKey}
       />
       <StyledHeaderCell

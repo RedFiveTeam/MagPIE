@@ -76,9 +76,44 @@ public class MetricChangeRfi {
         }
         break;
 
-      case "customer":
-        this.oldData = oldRfi.getCustomer();
-        this.newData = newRfi.getCustomer();
+      case "customerTitle":
+        this.oldData = oldRfi.getCustomerTitle();
+        this.newData = newRfi.getCustomerTitle();
+        break;
+
+      case "customerGivenName":
+        this.oldData = oldRfi.getCustomerGivenName();
+        this.newData = newRfi.getCustomerGivenName();
+        break;
+
+      case "customerSurname":
+        this.oldData = oldRfi.getCustomerSurname();
+        this.newData = newRfi.getCustomerSurname();
+        break;
+
+      case "customerEmail":
+        this.oldData = oldRfi.getCustomerEmail();
+        this.newData = newRfi.getCustomerEmail();
+        break;
+
+      case "customerCommPhone":
+        this.oldData = oldRfi.getCustomerCommPhone();
+        this.newData = newRfi.getCustomerCommPhone();
+        break;
+
+      case "customerDsnPhone":
+        this.oldData = oldRfi.getCustomerDsnPhone();
+        this.newData = newRfi.getCustomerDsnPhone();
+        break;
+
+      case "customerSvoip":
+        this.oldData = oldRfi.getCustomerSvoip();
+        this.newData = newRfi.getCustomerSvoip();
+        break;
+
+      case "customerTsvoip":
+        this.oldData = oldRfi.getCustomerTsvoip();
+        this.newData = newRfi.getCustomerTsvoip();
         break;
 
       case "status":

@@ -45,10 +45,10 @@ public class RfiServiceTest extends BaseIntegrationTest {
   public void marshallsXmlDocIntoRfis() throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder db = dbf.newDocumentBuilder();
-    Document document = db.parse(new File("src/main/resources/rfis.xml"));
+    Document document = db.parse(new File("src/main/resources/RfisNewOpen.xml"));
     List<Rfi> rfiList = rfiService.marshallDocumentToRfis(document);
 
-    assertEquals(2, rfiList.size());
+    assertEquals(13, rfiList.size());
   }
 
   @Test
@@ -106,11 +106,14 @@ public class RfiServiceTest extends BaseIntegrationTest {
   public void sendsRfiUpdateMetricIfThereIsAChangeInAnRfi() {
     Date rfi1ltiov = new Date();
 
-    Rfi rfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a description", "This is a " +
-      "justifiction");
-    Rfi updatedRfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customer", rfi1ltiov, "USA", "a new and improved " +
-      "description", "This is a justifiction");
-    Rfi rfi2 = new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description", "This is a justifiction");
+    Rfi rfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customerUnit", rfi1ltiov, "USA", "a description",
+      "This is a justifiction", "", "", "", "", "", "", "", "");
+    Rfi updatedRfi =
+      new Rfi("rfiNum", "url", "NEW", new Date(), "customerUnit", rfi1ltiov, "USA", "a new and improved description",
+        "This is a justifiction", "", "", "", "", "", "", "", "");
+    Rfi rfi2 =
+      new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description", "This is a justifiction",
+        "", "", "", "", "", "", "", "");
 
     long rfiUpdateCount = metricChangeRfiRepository.count();
 
@@ -129,8 +132,11 @@ public class RfiServiceTest extends BaseIntegrationTest {
   public void updatesRfisInRepoWithUpdatesFromGets() {
     Date rfiltiov = new Date();
 
-    Rfi rfi1 = new Rfi("SDT-0321", "url", "NEW", new Date(), "1 FW", rfiltiov, "USA", "a description", "This is a justifiction");
-    Rfi rfi2 = new Rfi("SDT-0322", "url", "OPEN", new Date(), "1 FW", rfiltiov, "CAN", "one description", "This is a justifiction");
+    Rfi rfi1 =
+      new Rfi("SDT-0321", "url", "NEW", new Date(), "1 FW", rfiltiov, "USA", "a description", "This is a justifiction",
+        "", "", "", "", "", "", "", "");
+    Rfi rfi2 = new Rfi("SDT-0322", "url", "OPEN", new Date(), "1 FW", rfiltiov, "CAN", "one description",
+      "This is a justifiction", "", "", "", "", "", "", "", "");
 
     rfiRepository.save(rfi1);
     rfiRepository.save(rfi2);

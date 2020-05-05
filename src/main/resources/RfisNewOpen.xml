@@ -2,13 +2,21 @@
   <RFIList>
     <getsrfi:RequestForInformation id="DGS-1-SDT-2020-00321">
       <getsrfi:Request id="DGS-1-SDT-2020-00321">
-        <getsrfi:requestText>hi</getsrfi:requestText>
+        <getsrfi:requestText>hello rfi</getsrfi:requestText>
         <getsrfi:justification>This is a justification.</getsrfi:justification>
         <gets:url>http://www.google.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-05T14:21:21Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:militaryRank>Fireman Apprentice</gets:militaryRank>
+          <gets:givenname>Thomas</gets:givenname>
+          <gets:surname>Boonty</gets:surname>
+          <gets:email>thomas.j.boonty@uscg.mil</gets:email>
           <gets:unit>633d ABW</gets:unit>
+          <gets:phoneCommercial>(757) 225-0085</gets:phoneCommercial>
+          <gets:phoneDSN>575-0085</gets:phoneDSN>
+          <gets:phoneSVOIP>555-5555</gets:phoneSVOIP>
+          <gets:phoneTSVOIP>777-7777</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:ltiov>2020-11-05T14:21:21Z</gets:ltiov>
         <gets:CountryCodeList>
@@ -40,7 +48,12 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <getsrfi:receiveDate>2019-11-11T14:21:22Z</getsrfi:receiveDate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Charge</gets:surname>
+          <gets:email>charles.n.charge@gmail.com</gets:email>
           <gets:unit>633 ABW KUYGEUYGIUYGWOUY FJWUYTDAUIYGDUYFID UYBSOIUHOIUD</gets:unit>
+          <gets:phoneCommercial>(757) 225-1212</gets:phoneCommercial>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>CAN</gets:iso1366trigraph>
@@ -68,7 +81,15 @@
         <gets:lastUpdate>2019-11-12T14:21:23Z</gets:lastUpdate>
         <getsrfi:receiveDate>2019-09-11T14:21:22Z</getsrfi:receiveDate>
         <getsrfi:RequestingPOC>
+          <gets:militaryRank>Fireman Apprentice</gets:militaryRank>
+          <gets:givenname>Thomas</gets:givenname>
+          <gets:surname>Boonty</gets:surname>
+          <gets:email>thomas.j.boonty@uscg.mil</gets:email>
           <gets:unit>633d ABW</gets:unit>
+          <gets:phoneCommercial>(757) 225-0085</gets:phoneCommercial>
+          <gets:phoneDSN>575-0085</gets:phoneDSN>
+          <gets:phoneSVOIP>555-5555</gets:phoneSVOIP>
+          <gets:phoneTSVOIP>777-7777</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>USA</gets:iso1366trigraph>
@@ -95,7 +116,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-10T14:21:24Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:militaryRank>Mastronaut</gets:militaryRank>
+          <gets:givenname>Jack</gets:givenname>
+          <gets:surname>O'Neill</gets:surname>
+          <gets:email>Jack.ONeill@us.sf.mil</gets:email>
           <gets:unit>HQ ACC</gets:unit>
+          <gets:phoneCommercial>(757) 225-5678</gets:phoneCommercial>
+          <gets:phoneDSN>575-5678</gets:phoneDSN>
+          <gets:phoneSVOIP>666-6667</gets:phoneSVOIP>
         </getsrfi:RequestingPOC>
         <gets:ltiov>2020-05-05T14:21:21Z</gets:ltiov>
         <gets:CountryCodeList>
@@ -120,7 +148,15 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-12T14:21:25Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:militaryRank>Fireman Apprentice</gets:militaryRank>
+          <gets:givenname>Thomas</gets:givenname>
+          <gets:surname>Boonty</gets:surname>
+          <gets:email>thomas.j.boonty@uscg.mil</gets:email>
           <gets:unit>633d ABW</gets:unit>
+          <gets:phoneCommercial>(757) 225-0085</gets:phoneCommercial>
+          <gets:phoneDSN>575-0085</gets:phoneDSN>
+          <gets:phoneSVOIP>555-5555</gets:phoneSVOIP>
+          <gets:phoneTSVOIP>777-7777</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:ltiov>2020-11-10T14:21:21Z</gets:ltiov>
         <gets:CountryCodeList>
@@ -163,7 +199,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Winchester</gets:surname>
+          <gets:email>charles.e.winchester@us.af.mil</gets:email>
           <gets:unit>1 FW</gets:unit>
+          <gets:phoneCommercial>(757) 225-1234</gets:phoneCommercial>
+          <gets:phoneDSN>575-1234</gets:phoneDSN>
+          <gets:phoneTSVOIP>777-7778</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:ltiov>2022-11-09T14:21:21Z</gets:ltiov>
         <gets:CountryCodeList>
@@ -191,7 +234,15 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-05T14:21:21Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:militaryRank>Fireman Apprentice</gets:militaryRank>
+          <gets:givenname>Thomas</gets:givenname>
+          <gets:surname>Boonty</gets:surname>
+          <gets:email>thomas.j.boonty@uscg.mil</gets:email>
           <gets:unit>633d ABW</gets:unit>
+          <gets:phoneCommercial>(757) 225-0085</gets:phoneCommercial>
+          <gets:phoneDSN>575-0085</gets:phoneDSN>
+          <gets:phoneSVOIP>555-5555</gets:phoneSVOIP>
+          <gets:phoneTSVOIP>777-7777</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>USA</gets:iso1366trigraph>
@@ -212,7 +263,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-11T14:21:22Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Winchester</gets:surname>
+          <gets:email>charles.e.winchester@us.af.mil</gets:email>
           <gets:unit>1 FW</gets:unit>
+          <gets:phoneCommercial>(757) 225-1234</gets:phoneCommercial>
+          <gets:phoneDSN>575-1234</gets:phoneDSN>
+          <gets:phoneTSVOIP>777-7778</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:ltiov>2020-02-04T14:21:21Z</gets:ltiov>
         <gets:CountryCodeList>
@@ -234,7 +292,15 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-12T14:21:23Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:militaryRank>Fireman Apprentice</gets:militaryRank>
+          <gets:givenname>Thomas</gets:givenname>
+          <gets:surname>Boonty</gets:surname>
+          <gets:email>thomas.j.boonty@uscg.mil</gets:email>
           <gets:unit>633d ABW</gets:unit>
+          <gets:phoneCommercial>(757) 225-0085</gets:phoneCommercial>
+          <gets:phoneDSN>575-0085</gets:phoneDSN>
+          <gets:phoneSVOIP>555-5555</gets:phoneSVOIP>
+          <gets:phoneTSVOIP>777-7777</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>CAN</gets:iso1366trigraph>
@@ -255,7 +321,15 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-10T14:21:24Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:militaryRank>Fireman Apprentice</gets:militaryRank>
+          <gets:givenname>Thomas</gets:givenname>
+          <gets:surname>Boonty</gets:surname>
+          <gets:email>thomas.j.boonty@uscg.mil</gets:email>
           <gets:unit>633d ABW</gets:unit>
+          <gets:phoneCommercial>(757) 225-0085</gets:phoneCommercial>
+          <gets:phoneDSN>575-0085</gets:phoneDSN>
+          <gets:phoneSVOIP>555-5555</gets:phoneSVOIP>
+          <gets:phoneTSVOIP>777-7777</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>USA</gets:iso1366trigraph>
@@ -286,7 +360,15 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-12T14:21:25Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:militaryRank>Fireman Apprentice</gets:militaryRank>
+          <gets:givenname>Thomas</gets:givenname>
+          <gets:surname>Boonty</gets:surname>
+          <gets:email>thomas.j.boonty@uscg.mil</gets:email>
           <gets:unit>633d ABW</gets:unit>
+          <gets:phoneCommercial>(757) 225-0085</gets:phoneCommercial>
+          <gets:phoneDSN>575-0085</gets:phoneDSN>
+          <gets:phoneSVOIP>555-5555</gets:phoneSVOIP>
+          <gets:phoneTSVOIP>777-7777</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>MEX</gets:iso1366trigraph>
@@ -314,7 +396,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Winchester</gets:surname>
+          <gets:email>charles.e.winchester@us.af.mil</gets:email>
           <gets:unit>1 FW</gets:unit>
+          <gets:phoneCommercial>(757) 225-1234</gets:phoneCommercial>
+          <gets:phoneDSN>575-1234</gets:phoneDSN>
+          <gets:phoneTSVOIP>777-7778</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>CAN</gets:iso1366trigraph>
@@ -339,7 +428,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Winchester</gets:surname>
+          <gets:email>charles.e.winchester@us.af.mil</gets:email>
           <gets:unit>1 FW</gets:unit>
+          <gets:phoneCommercial>(757) 225-1234</gets:phoneCommercial>
+          <gets:phoneDSN>575-1234</gets:phoneDSN>
+          <gets:phoneTSVOIP>777-7778</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>CAN</gets:iso1366trigraph>

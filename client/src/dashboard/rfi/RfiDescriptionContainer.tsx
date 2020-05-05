@@ -15,8 +15,10 @@ interface MyProps {
   className?: string
 }
 
-export const RfiDescriptionContainer: React.FC<MyProps> = ({rfi, loadTgtPage, postGetsClick,
-                                                             className}) => {
+export const RfiDescriptionContainer: React.FC<MyProps> = ({
+                                                             rfi, loadTgtPage, postGetsClick,
+                                                             className,
+                                                           }) => {
   const [cookies, setCookies] = useCookies(['magpie']);
   let cookie: Cookie = cookies.magpie;
 
@@ -56,6 +58,19 @@ export const RfiDescriptionContainer: React.FC<MyProps> = ({rfi, loadTgtPage, po
         <span className={'text-body'}>{rfi ? rfi.description : null}</span>
         <span className={'header'}>Justification</span>
         <span className={'text-body'}>{rfi ? rfi.justification : null}</span>
+        <span className={'header'}>Customer Information</span>
+        <span className={'text-body'}>
+          <span>{rfi ? `${rfi.customerTitle} ${rfi.customerSurname}, ${rfi.customerGivenName}` : null}</span>
+          <span>{rfi ?
+            `COMM: ${rfi.customerCommPhone}` +
+            (rfi.customerDsnPhone === '' ? '' : ` / DSN: ${rfi.customerDsnPhone}`) +
+            (rfi.customerSvoip === '' ? '' : ` / SVoIP: ${rfi.customerSvoip}`) +
+            (rfi.customerTsvoip === '' ? '' : ` / TSVoIP: ${rfi.customerTsvoip}`)
+            :
+            null
+          }</span>
+          <span>{rfi ? rfi.customerEmail : null}</span>
+        </span>
       </div>
     </div>
   );
@@ -131,6 +146,9 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
   
   .text-body {
     padding-left: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
 `;

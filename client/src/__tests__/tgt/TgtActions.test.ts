@@ -12,9 +12,10 @@ import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 
 describe('Tgt actions tests', () => {
   const moment = require('moment');
-  let rfi: RfiModel = new RfiModel(1, '19-004', '', RfiStatus.OPEN, '633 ABW', moment.utc('2019-12-02'), 'CAN', 'hi',
-                                   'Just a fiction', 2, 0, 0);
-  let exploitDate: ExploitDateModel = new ExploitDateModel(3, 1, moment('Apr 4 19 00:00:00', 'MMM DD YY hh:mm:ss').utc());
+  let rfi: RfiModel = new RfiModel(1, '19-004', '', RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '',
+                                   moment.utc('2019-12-02'), 'CAN', 'hi', 'Just a fiction', 2, 0, 0);
+  let exploitDate: ExploitDateModel = new ExploitDateModel(3, 1,
+                                                           moment('Apr 4 19 00:00:00', 'MMM DD YY hh:mm:ss').utc());
   console.log = jest.fn();
 
   it('should return a proper NAVIGATE_TO_TGT_PAGE or RELOAD_TGT_PAGE action object', () => {
@@ -58,7 +59,8 @@ describe('Tgt actions tests', () => {
 
   it('should take a rando date and convert it to a truncated UTC date', () => {
     let date = new Date(moment('Apr 4 19 05:06:07', 'MMM DD YY hh:mm:ss').unix() * 1000);
-    expect(truncateAndConvertDateToUtc(date)).toEqual(new Date(moment('Apr 4 19 00:00:00', 'MMM DD YY hh:mm:ss').utc()));
+    expect(truncateAndConvertDateToUtc(date))
+      .toEqual(new Date(moment('Apr 4 19 00:00:00', 'MMM DD YY hh:mm:ss').utc()));
   });
 
   it('should return a proper UPDATE_TGT_SUCCESS action object', () => {
@@ -69,26 +71,4 @@ describe('Tgt actions tests', () => {
                              targets: [tgt],
                            });
   });
-
-  //TODO: figure out testing dispatched functions
-
-  // it('should return a proper exploit date on exploit date update', () => {
-  //   fetch.mockResponse(JSON.stringify({newExploitDate: "2020-11-18T00:00:00.000+0000", rfiId: 5})).resolves;
-  //
-  //   let date: Date = new Date(moment('2019-12-01').unix() * 1000);
-  //   let returnedDate: any = navigateToTgtPage(rfi);
-  //   console.log(returnedDate);
-  //   returnedDate().then(response => console.log('response is ' + response));
-  //
-  //   let state;
-  //   returnedDate().then(response => state = reducer(undefined, response));
-  //   console.log(state);
-  //
-  //   const store = mockStore(tgtReducer);
-  //   store.dispatch(returnedDate);
-  //
-  //
-  //   expect(store.getState().tgtReducer.dates[0].isSame(moment.utc('2020-11-18'), 'second')).toBeTruthy()
-  // });
-
 });

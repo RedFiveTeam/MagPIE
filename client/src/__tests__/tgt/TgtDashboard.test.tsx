@@ -10,7 +10,7 @@ import { StyledExploitDateDivider } from '../../dashboard/tgt/table/ExploitDateD
 import { initStore } from '../../../setupTests';
 
 const initState = {
-  ...initStore
+  ...initStore,
 };
 
 //@ts-ignore
@@ -24,9 +24,10 @@ describe('TgtDashboardContainer', () => {
 
   beforeEach(() => {
     setPlaceholderSpy = jest.fn();
-    rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse',
-                           moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
-                           'Just a fiction', 42, 0, 0);
+    rfiTest =
+      new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, '', '', '', 'space forse', '', '', '',
+                   '', '', moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
+                   'Just a fiction', 42, 0, 0);
     subject = mount(
       <Provider store={mockStore}>
         <SnackbarProvider
@@ -50,7 +51,8 @@ describe('TgtDashboardContainer', () => {
   });
 
   it('should display the rfi description', () => {
-    expect(subject.find('.tgt-dash--rfi-description-container').text()).toContain('Good morning starshine, the earth says hello');
+    expect(subject.find('.tgt-dash--rfi-description-container').text())
+      .toContain('Good morning starshine, the earth says hello');
   });
 
   it('should display an add date button', () => {

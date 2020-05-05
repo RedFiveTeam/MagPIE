@@ -85,7 +85,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
   @Test
   public void addsSegments() {
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a " +
-      "justifiction"));
+      "justifiction", "", "", "", "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate = new Date(0);
     exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
@@ -134,7 +134,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
   @Test
   public void getsSegments() {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     exploitDateRepository.save(new ExploitDate(new Date(), rfiId));
     long exploitDateId = exploitDateRepository.findAll().get(0).getId();
@@ -184,7 +186,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
   @Test
   public void addsInteractions() throws Exception {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate = new Date(0);
     exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
@@ -254,7 +258,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
   @Test
   public void getsIxns() {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate = new Date(0);
     exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
@@ -328,7 +334,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
   @Test
   public void deletesIxns() {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate = new Date(0);
     exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
@@ -402,7 +410,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
   @Test
   public void deletesSegmentinos() {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate = new Date(0);
     exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
@@ -512,7 +522,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
   @Test
   public void editsSegments() {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate = new Date(0);
     exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
@@ -604,7 +616,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
   @Test
   public void editIxns() throws Exception {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate = new Date(0);
     exploitDateRepository.save(new ExploitDate(exploitDate, rfiId));
@@ -808,8 +822,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
 
     assertEquals("123-001", ixnRepository.findAll().get(0).getTrack());
 
-    targetController.postTarget(Collections.singletonList(new TargetJson(target2Id, rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "",
-      "", TargetStatus.IN_PROGRESS, "", "")), "billy.bob.joe", "false");
+    targetController.postTarget(
+      Collections.singletonList(new TargetJson(target2Id, rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "",
+        "", TargetStatus.IN_PROGRESS, "", "")), "billy.bob.joe", "false");
 
     assertEquals("123-003", ixnRepository.findAll().get(0).getTrack());
   }
@@ -857,7 +872,9 @@ public class IxnControllerTest extends BaseIntegrationTest {
   }
 
   private void setupIxns() throws Exception {
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));

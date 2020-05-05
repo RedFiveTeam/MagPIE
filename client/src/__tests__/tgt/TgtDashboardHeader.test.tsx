@@ -6,8 +6,9 @@ import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 describe('TgtDashboardHeader', () => {
   const moment = require('moment');
   let exitSpy: jest.Mock = jest.fn();
-  let rfiTest: RfiModel = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse',
-                                       moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says ' +
+  let rfiTest: RfiModel = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, '', '', '',
+                                       'space forse', '', '', '', '', '', moment('2019-11-20').utc(), 'USLT',
+                                       'Good morning starshine, the earth says ' +
                                          'hello', 'Just a fiction', 42, 0, 0);
   let addDateSpy: jest.Mock;
   let subject: ShallowWrapper;
@@ -22,7 +23,8 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={false}
         displayHelperText={false}
-        displayCopyTargets={() => {}}
+        displayCopyTargets={() => {
+        }}
       />);
   });
 
@@ -41,7 +43,8 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={true}
         displayHelperText={false}
-        displayCopyTargets={() => {}}
+        displayCopyTargets={() => {
+        }}
       />);
     subject.find('.add-date-button').simulate('click');
     expect(addDateSpy).toHaveBeenCalledTimes(1);
@@ -57,7 +60,8 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={false}
         displayHelperText={true}
-        displayCopyTargets={() => {}}
+        displayCopyTargets={() => {
+        }}
       />);
     expect(subject.find('.header-helper-text').text()).toContain('Add additional coverage dates');
   });

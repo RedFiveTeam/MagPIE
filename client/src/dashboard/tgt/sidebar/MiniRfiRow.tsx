@@ -27,8 +27,8 @@ export const MiniRfiRow: React.FC<Props> = props => {
           {formatRfiNum(props.rfi.rfiNum)}
         </span>
         {!props.collapsed ?
-          <span className={classNames('cell', 'cell--customer')}>
-            {props.rfi.customer}
+          <span className={classNames('cell', 'cell--customerUnit')}>
+            {props.rfi.customerUnit}
           </span>
           :
           null

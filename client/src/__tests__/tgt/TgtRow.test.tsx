@@ -12,9 +12,9 @@ describe('Target Row', () => {
   const moment = require('moment');
   let target: TargetModel = new TargetModel(1, 1, 3, 'SDT12-123', '12QWE1231231231', 'These are the notes',
                                             'This is a description', TargetStatus.NOT_STARTED, '', '');
-  let rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, 'space forse',
-                             moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
-                             'Just a fiction', 42, 0, 0);
+  let rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, '', '', '', 'space forse', '',
+                             '', '', '', '', moment('2019-11-20').utc(), 'USLT',
+                             'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0);
   let exploitDate = new ExploitDateModel(1, 1, moment('2019-11-20').utc());
   let deleteSpy: jest.Mock;
   let navToIxnPageSpy: jest.Mock;
@@ -54,10 +54,10 @@ describe('Target Row', () => {
   });
 
   it('should call a navigate to interaction page test when the exploitation log button is clicked except in add mode',
-    () => {
-      subject.find('.exploitation').simulate('click');
-      expect(navToIxnPageSpy).toBeCalledWith(target, '11/20/2019');
-    });
+     () => {
+       subject.find('.exploitation').simulate('click');
+       expect(navToIxnPageSpy).toBeCalledWith(target, '11/20/2019');
+     });
 
   it('should make target row editable after double clicking them', () => {
     subject.find('.tgt-form').at(0).simulate('dblclick');

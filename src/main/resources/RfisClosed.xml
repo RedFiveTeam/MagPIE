@@ -13,7 +13,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-10-16T01:21:27Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Winchester</gets:surname>
+          <gets:email>charles.e.winchester@us.af.mil</gets:email>
           <gets:unit>1 FW</gets:unit>
+          <gets:phoneCommercial>(757) 225-1234</gets:phoneCommercial>
+          <gets:phoneDSN>575-1234</gets:phoneDSN>
+          <gets:phoneTSVOIP>777-7778</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>USA</gets:iso1366trigraph>
@@ -39,7 +46,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-10-30T14:21:28Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Winchester</gets:surname>
+          <gets:email>charles.e.winchester@us.af.mil</gets:email>
           <gets:unit>1 FW</gets:unit>
+          <gets:phoneCommercial>(757) 225-1234</gets:phoneCommercial>
+          <gets:phoneDSN>575-1234</gets:phoneDSN>
+          <gets:phoneTSVOIP>777-7778</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>USA</gets:iso1366trigraph>
@@ -61,7 +75,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2018-03-16T14:21:29Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Winchester</gets:surname>
+          <gets:email>charles.e.winchester@us.af.mil</gets:email>
           <gets:unit>1 FW</gets:unit>
+          <gets:phoneCommercial>(757) 225-1234</gets:phoneCommercial>
+          <gets:phoneDSN>575-1234</gets:phoneDSN>
+          <gets:phoneTSVOIP>777-7778</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>MEX</gets:iso1366trigraph>
@@ -91,7 +112,14 @@
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2017-10-01T14:21:30Z</gets:lastUpdate>
         <getsrfi:RequestingPOC>
+          <gets:personalTitle>Mr</gets:personalTitle>
+          <gets:givenname>Charles</gets:givenname>
+          <gets:surname>Winchester</gets:surname>
+          <gets:email>charles.e.winchester@us.af.mil</gets:email>
           <gets:unit>1 FW</gets:unit>
+          <gets:phoneCommercial>(757) 225-1234</gets:phoneCommercial>
+          <gets:phoneDSN>575-1234</gets:phoneDSN>
+          <gets:phoneTSVOIP>777-7778</gets:phoneTSVOIP>
         </getsrfi:RequestingPOC>
         <gets:CountryCodeList>
           <gets:iso1366trigraph>CAN</gets:iso1366trigraph>

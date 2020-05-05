@@ -249,14 +249,26 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   public void returnsAverageTimeRfisAreInPendingAndOpen() {
     assertArrayEquals(new long[]{0, 0}, metricsService.getAverageWorkflowTime());
 
-    Rfi rfi1 = new Rfi("SDT20-321", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction");
-    Rfi rfi2 = new Rfi("SDT20-322", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction");
-    Rfi rfi3 = new Rfi("SDT20-323", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction");
-    Rfi rfi4 = new Rfi("SDT20-324", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction");
+    Rfi rfi1 =
+      new Rfi("SDT20-321", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
+    Rfi rfi2 =
+      new Rfi("SDT20-322", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
+    Rfi rfi3 =
+      new Rfi("SDT20-323", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
+    Rfi rfi4 =
+      new Rfi("SDT20-324", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
 
     //status is not closed, ignore
-    Rfi rfi5 = new Rfi("SDT20-325", "", "NEW", new Date(), "", null, "", "", "This is a justifiction");
-    Rfi rfi6 = new Rfi("SDT20-326", "", "OPEN", new Date(), "", null, "", "", "This is a justifiction");
+    Rfi rfi5 =
+      new Rfi("SDT20-325", "", "NEW", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
+    Rfi rfi6 =
+      new Rfi("SDT20-326", "", "OPEN", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
 
     rfi1.setReceiveDate(new Timestamp(0));
     rfi2.setReceiveDate(new Timestamp(0));
@@ -332,7 +344,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
-    IxnJson ixn = new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+    IxnJson ixn =
+      new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
     MetricCreateIxn metric1 = new MetricCreateIxn(1, ixn, "guy");
     MetricCreateIxn metric2 = new MetricCreateIxn(1, ixn, "guy");
     MetricCreateIxn metric3 = new MetricCreateIxn(1, ixn, "guy");
@@ -595,9 +608,12 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       new Timestamp(234)));
     metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
 
-    IxnJson ixnJson1 = new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
-    IxnJson ixnJson2 = new IxnJson(2, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
-    IxnJson ixnJson3 = new IxnJson(3, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+    IxnJson ixnJson1 =
+      new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+    IxnJson ixnJson2 =
+      new IxnJson(2, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+    IxnJson ixnJson3 =
+      new IxnJson(3, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
     MetricChangeIxn metric8 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)),
       "guy");
     MetricChangeIxn metric9 = new MetricChangeIxn("activity", ixnJson1,
@@ -637,15 +653,24 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   public void returnsPercentageOfRfisThatMeetLTIOV() {
     assertEquals(0, metricsService.getLtiovMetPercentage());
 
-    Rfi rfi1 = new Rfi("SDT20-321", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(30)), "", "", "This is a " +
-      "justifiction");
-    Rfi rfi2 = new Rfi("SDT20-322", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(20)), "", "", "This is a justifiction");
-    Rfi rfi3 = new Rfi("SDT20-323", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(35)), "", "", "This is a justifiction");
-    Rfi rfi4 = new Rfi("SDT20-324", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction");
+    Rfi rfi1 =
+      new Rfi("SDT20-321", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(30)), "", "", "This is a ", "", "",
+        "", "", "", "", "", "justifiction");
+    Rfi rfi2 = new Rfi("SDT20-322", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(20)), "", "",
+      "This is a justifiction", "", "", "", "", "", "", "", "");
+    Rfi rfi3 = new Rfi("SDT20-323", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(35)), "", "",
+      "This is a justifiction", "", "", "", "", "", "", "", "");
+    Rfi rfi4 =
+      new Rfi("SDT20-324", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
 
     //status is not closed, ignore
-    Rfi rfi5 = new Rfi("SDT20-325", "", "NEW", new Date(), "", null, "", "", "This is a justifiction");
-    Rfi rfi6 = new Rfi("SDT20-326", "", "OPEN", new Date(), "", null, "", "", "This is a justifiction");
+    Rfi rfi5 =
+      new Rfi("SDT20-325", "", "NEW", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
+    Rfi rfi6 =
+      new Rfi("SDT20-326", "", "OPEN", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "");
 
     rfiRepository.saveAll(new ArrayList<>(Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5, rfi6)));
 

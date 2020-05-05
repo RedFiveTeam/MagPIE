@@ -32,9 +32,9 @@ Scenario('Should be able to sort by clicking buttons', (I) => {
   I.click('.header-cell--country');
   I.see('USA', locate('.region--new').find('.rfi-row').at(1));
 
-  I.click('.header-cell--customer');
+  I.click('.header-cell--customerUnit');
   I.see('1 FW', locate('.region--new').find('.rfi-row').at(1));
-  I.click('.header-cell--customer');
+  I.click('.header-cell--customerUnit');
   I.see('HQ ACC', locate('.region--new').find('.rfi-row').at(1));
 });
 

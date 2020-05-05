@@ -91,7 +91,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
   }
 
   @Autowired
-  public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
+  public void setMetricChangeExploitDateRepository(
+    MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
   }
 
@@ -106,7 +107,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
   }
 
   @Autowired
-  public void setMetricDeleteExploitDateRepository(MetricDeleteExploitDateRepository metricDeleteExploitDateRepository) {
+  public void setMetricDeleteExploitDateRepository(
+    MetricDeleteExploitDateRepository metricDeleteExploitDateRepository) {
     this.metricDeleteExploitDateRepository = metricDeleteExploitDateRepository;
   }
 
@@ -116,12 +118,14 @@ public class RfiControllerTest extends BaseIntegrationTest {
   }
 
   @Autowired
-  public void setMetricChangeRfiPriorityRepository(MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository) {
+  public void setMetricChangeRfiPriorityRepository(
+    MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository) {
     this.metricChangeRfiPriorityRepository = metricChangeRfiPriorityRepository;
   }
 
   @Autowired
-  public void setMetricUndoChangeRfiPriorityRepository(MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository) {
+  public void setMetricUndoChangeRfiPriorityRepository(
+    MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository) {
     this.metricUndoChangeRfiPriorityRepository = metricUndoChangeRfiPriorityRepository;
   }
 
@@ -147,11 +151,12 @@ public class RfiControllerTest extends BaseIntegrationTest {
     };
     rfiService.fetchRfisFromUris(files);
 
-    Rfi exploitingRfi = new Rfi("ZZZZZ", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 1);
+    Rfi exploitingRfi =
+      new Rfi("ZZZZZ", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 1, "", "", "", "", "",
+        "", "", "");
 
     rfiRepository.save(exploitingRfi);
 
-    String firstDescription = "hi";
     String longDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
       "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
       "laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit " +
@@ -168,10 +173,10 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[2].getsUrl", equalTo("http://www.google.com"))
       .body("[2].lastUpdate", equalTo("2019-11-05T14:21:21.000+0000"))
       .body("[2].status", equalTo("NEW"))
-      .body("[2].customer", equalTo("633d ABW"))
+      .body("[2].customerUnit", equalTo("633d ABW"))
       .body("[2].ltiov", equalTo("2020-11-05T14:21:21.000+0000"))
       .body("[2].country", equalTo("USA"))
-      .body("[2].description", equalTo(firstDescription))
+      .body("[2].description", equalTo("hello rfi"))
       .body("[2].priority", equalTo(-1))
       .body("[2].justification", equalTo("This is a justification."))
 
@@ -187,7 +192,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .body("[15].getsUrl", equalTo("http://www.google.com"))
       .body("[15].lastUpdate", equalTo("2019-10-16T20:21:26.000+0000"))
       .body("[15].status", equalTo("OPEN"))
-      .body("[15].customer", equalTo("1 FW"))
+      .body("[15].customerUnit", equalTo("1 FW"))
       .body("[15].ltiov", equalTo(null))
       .body("[15].country", equalTo("CAN"))
 
@@ -198,13 +203,25 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void checksPriorityChangeLegality() throws Exception {
-    Rfi rfi2 = new Rfi("id2", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 1);
-    Rfi rfi3 = new Rfi("id3", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 2);
-    Rfi rfi1 = new Rfi("id1", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 3);
+    Rfi rfi2 =
+      new Rfi("id2", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 1, "", "", "", "", "",
+        "", "", "");
+    Rfi rfi3 =
+      new Rfi("id3", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 2, "", "", "", "", "",
+        "", "", "");
+    Rfi rfi1 =
+      new Rfi("id1", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 3, "", "", "", "", "",
+        "", "", "");
 
-    Rfi rfi4 = new Rfi("id4", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 4);
-    Rfi rfi5 = new Rfi("id5", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 5);
-    Rfi rfi6 = new Rfi("id6", "", "CLOSED", new Date(), "", new Date(), "", "", "This is a justifiction", 3);
+    Rfi rfi4 =
+      new Rfi("id4", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 4, "", "", "", "", "",
+        "", "", "");
+    Rfi rfi5 =
+      new Rfi("id5", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", 5, "", "", "", "", "",
+        "", "", "");
+    Rfi rfi6 =
+      new Rfi("id6", "", "CLOSED", new Date(), "", new Date(), "", "", "This is a justifiction", 3, "", "", "", "", "",
+        "", "", "");
 
     List<Rfi> rfis = new ArrayList<>();
     rfis.add(rfi1);
@@ -261,8 +278,9 @@ public class RfiControllerTest extends BaseIntegrationTest {
   @Test
   public void returnsRfisWithTgtAndIxnCounts() throws Exception {
     //Setup and RFI with 2 targets and 10 interactions
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a " +
-      "justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));
@@ -311,8 +329,9 @@ public class RfiControllerTest extends BaseIntegrationTest {
       new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-002
 
     //Another RFI
-    rfiRepository.save(new Rfi("DGS-1-SDT-2020-00339", "", "", new Date(), "", new Date(), "", "", "This is a " +
-      "justifiction"));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00339", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", ""));
     rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00339").getId();
     exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));
@@ -388,9 +407,15 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void postCreatesNewUndoRfiPrioritizationMetric() throws Exception {
-    Rfi rfi1 = new Rfi("ABC-0321", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 1);
-    Rfi rfi2 = new Rfi("ABC-0322", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 2);
-    Rfi rfi3 = new Rfi("ABC-0323", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 3);
+    Rfi rfi1 =
+      new Rfi("ABC-0321", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 1, "", "", "", "", "", "",
+        "", "");
+    Rfi rfi2 =
+      new Rfi("ABC-0322", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 2, "", "", "", "", "", "",
+        "", "");
+    Rfi rfi3 =
+      new Rfi("ABC-0323", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 3, "", "", "", "", "", "",
+        "", "");
 
     rfiRepository.saveAll(Arrays.asList(rfi1, rfi2, rfi3));
 

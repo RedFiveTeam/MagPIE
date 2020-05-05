@@ -13,7 +13,8 @@ describe('Region', () => {
     const moment = require('moment');
     rows = [
       <RfiRow
-        rfi={new RfiModel(1, '19-001', 'url', RfiStatus.OPEN, '1 FW', moment('2019-12-01').utc(), 'USA', 'hi', 'Just a fiction', -1, 0, 0)}
+        rfi={new RfiModel(1, '19-001', 'url', RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '',
+                          moment('2019-12-01').utc(), 'USA', 'hi', 'Just a fiction', -1, 0, 0)}
         key={'1'}
         scrollRegionRef={{}}
         index={0}
@@ -21,7 +22,8 @@ describe('Region', () => {
         selectRfi={jest.fn()}
       />,
       <RfiRow
-        rfi={new RfiModel(2, '19-004', 'url', RfiStatus.OPEN, '633 ABW', moment('2019-12-02').utc(), 'CAN', 'hi', 'Just a fiction', -1, 0, 0)}
+        rfi={new RfiModel(2, '19-004', 'url', RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '',
+                          moment('2019-12-02').utc(), 'CAN', 'hi', 'Just a fiction', -1, 0, 0)}
         key={'2'}
         scrollRegionRef={{}}
         index={1}
@@ -29,7 +31,8 @@ describe('Region', () => {
         selectRfi={jest.fn()}
       />,
       <RfiRow
-        rfi={new RfiModel(3, '19-003', 'url', RfiStatus.OPEN, 'HQ ACC', undefined, 'MEX', 'hi', 'Just a fiction', -1, 0, 0)}
+        rfi={new RfiModel(3, '19-003', 'url', RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
+                          'MEX', 'hi', 'Just a fiction', -1, 0, 0)}
         key={'3'}
         scrollRegionRef={{}}
         index={2}

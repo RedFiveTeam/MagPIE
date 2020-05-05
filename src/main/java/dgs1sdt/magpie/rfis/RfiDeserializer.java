@@ -9,7 +9,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class RfiDeserializer {
-  private RfiDeserializer() {}
+  private RfiDeserializer() {
+  }
 
   public static Rfi deserialize(Node rfiNode) throws Exception {
     Element element = (Element) rfiNode;
@@ -23,7 +24,15 @@ public class RfiDeserializer {
       getLtiov(element),
       getStringFromElement(element, "gets:iso1366trigraph"),
       getStringFromElement(element, "getsrfi:requestText"),
-      getStringFromElement(element, "getsrfi:justification")
+      getStringFromElement(element, "getsrfi:justification"),
+      getCustomerTitle(element),
+      getStringFromElement(element, "gets:givenname"),
+      getStringFromElement(element, "gets:surname"),
+      getStringFromElement(element, "gets:email"),
+      getStringFromElement(element, "gets:phoneCommercial"),
+      getStringFromElement(element, "gets:phoneDSN"),
+      getStringFromElement(element, "gets:phoneSVOIP"),
+      getStringFromElement(element, "gets:phoneTSVOIP")
     );
 
     Timestamp receiveDate = getReceiveDate(element);
@@ -33,6 +42,13 @@ public class RfiDeserializer {
     }
 
     return rfi;
+  }
+
+  private static String getCustomerTitle(Element element) {
+    String rank = getStringFromElement(element, "gets:militaryRank");
+    if (!rank.equals(""))
+      return rank;
+    return getStringFromElement(element, "gets:personalTitle");
   }
 
   private static String getRfiNum(Node node) {
@@ -80,10 +96,11 @@ public class RfiDeserializer {
   }
 
   private static String getStringFromElement(Element element, String string) {
-    if (element.getElementsByTagName(string) != null) {
+    try {
       return element.getElementsByTagName(string).item(0).getTextContent();
+    } catch (Exception e) {
+      return "";
     }
-    return "N/A";
   }
 
   private static Timestamp getReceiveDate(Element element) {

@@ -24,28 +24,45 @@ public class Rfi {
   private String getsUrl;
   private String status;
   private Timestamp lastUpdate;
-  private String customer;
+  private String customerUnit;
   private Timestamp ltiov;
   private String country;
   private int priority;
   private Timestamp receiveDate;
+  private String customerTitle;
+  private String customerGivenName;
+  private String customerSurname;
+  private String customerEmail;
+  private String customerCommPhone;
+  private String customerDsnPhone;
+  private String customerSvoip;
+  private String customerTsvoip;
+
 
   public Rfi(
     String rfiNum,
     String getsUrl,
     String status,
     Date lastUpdate,
-    String customer,
+    String customerUnit,
     Date ltiov,
     String country,
     String description,
-    String justification
+    String justification,
+    String customerTitle,
+    String customerGivenName,
+    String customerSurname,
+    String customerEmail,
+    String customerCommPhone,
+    String customerDsnPhone,
+    String customerSvoip,
+    String customerTsvoip
   ) {
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
     this.status = status;
     this.lastUpdate = new Timestamp(lastUpdate.getTime());
-    this.customer = customer;
+    this.customerUnit = customerUnit;
 
     try {
       this.ltiov = new Timestamp(ltiov.getTime());
@@ -58,6 +75,14 @@ public class Rfi {
     this.priority = -1;
     this.receiveDate = new Timestamp(new Date().getTime());
     this.justification = justification;
+    this.customerTitle = customerTitle;
+    this.customerGivenName = customerGivenName;
+    this.customerSurname = customerSurname;
+    this.customerEmail = customerEmail;
+    this.customerCommPhone = customerCommPhone;
+    this.customerDsnPhone = customerDsnPhone;
+    this.customerSvoip = customerSvoip;
+    this.customerTsvoip = customerTsvoip;
   }
 
   public Rfi(
@@ -65,23 +90,39 @@ public class Rfi {
     String getsUrl,
     String status,
     Date lastUpdate,
-    String customer,
+    String customerUnit,
     Date ltiov,
     String country,
     String description,
     String justification,
-    int priority
+    int priority,
+    String customerTitle,
+    String customerGivenName,
+    String customerSurname,
+    String customerEmail,
+    String customerCommPhone,
+    String customerDsnPhone,
+    String customerSvoip,
+    String customerTsvoip
   ) {
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
     this.status = status;
     this.lastUpdate = new Timestamp(lastUpdate.getTime());
-    this.customer = customer;
+    this.customerUnit = customerUnit;
     this.ltiov = new Timestamp(ltiov.getTime());
     this.country = country;
     this.description = description;
     this.justification = justification;
     this.priority = priority;
+    this.customerTitle = customerTitle;
+    this.customerGivenName = customerGivenName;
+    this.customerSurname = customerSurname;
+    this.customerEmail = customerEmail;
+    this.customerCommPhone = customerCommPhone;
+    this.customerDsnPhone = customerDsnPhone;
+    this.customerSvoip = customerSvoip;
+    this.customerTsvoip = customerTsvoip;
   }
 
   public List<String> compare(Rfi otherRfi) {
@@ -98,10 +139,59 @@ public class Rfi {
     }
 
     try {
-      if (!this.customer.equals(otherRfi.customer))
-        diff.add("customer");
+      if (!this.customerTitle.equals(otherRfi.customerTitle))
+        diff.add("customerTitle");
     } catch (NullPointerException e) {
-      diff.add("customer");
+      diff.add("customerTitle");
+    }
+
+    try {
+      if (!this.customerGivenName.equals(otherRfi.customerGivenName))
+        diff.add("customerGivenName");
+    } catch (NullPointerException e) {
+      diff.add("customerGivenName");
+    }
+
+    try {
+      if (!this.customerSurname.equals(otherRfi.customerSurname))
+        diff.add("customerSurname");
+    } catch (NullPointerException e) {
+      diff.add("customerSurname");
+    }
+
+    try {
+      if (!this.customerEmail.equals(otherRfi.customerEmail))
+        diff.add("customerEmail");
+    } catch (NullPointerException e) {
+      diff.add("customerEmail");
+    }
+
+    try {
+      if (!this.customerCommPhone.equals(otherRfi.customerCommPhone))
+        diff.add("customerCommPhone");
+    } catch (NullPointerException e) {
+      diff.add("customerCommPhone");
+    }
+
+    try {
+      if (!this.customerDsnPhone.equals(otherRfi.customerDsnPhone))
+        diff.add("customerDsnPhone");
+    } catch (NullPointerException e) {
+      diff.add("customerDsnPhone");
+    }
+
+    try {
+      if (!this.customerSvoip.equals(otherRfi.customerSvoip))
+        diff.add("customerSvoip");
+    } catch (NullPointerException e) {
+      diff.add("customerSvoip");
+    }
+
+    try {
+      if (!this.customerTsvoip.equals(otherRfi.customerTsvoip))
+        diff.add("customerTsvoip");
+    } catch (NullPointerException e) {
+      diff.add("customerTsvoip");
     }
 
     try {

@@ -20,7 +20,7 @@ public class RfiDeserializerTest {
   public void extractsRfiFromXml() throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder db = dbf.newDocumentBuilder();
-    Document document = db.parse(new File("src/main/resources/rfis.xml"));
+    Document document = db.parse(new File("src/main/resources/RfisNewOpen.xml"));
     NodeList nodeList = document.getElementsByTagName("getsrfi:RequestForInformation");
     Node rfiNode = nodeList.item(0);
 
@@ -30,7 +30,15 @@ public class RfiDeserializerTest {
     assertEquals("http://www.google.com", rfi.getGetsUrl());
     assertEquals("NEW", rfi.getStatus());
     assertEquals(Utilities.parseDate("2019-11-05T14:21:21Z"), rfi.getLastUpdate());
-    assertEquals("633d ABW", rfi.getCustomer());
+    assertEquals("Fireman Apprentice", rfi.getCustomerTitle());
+    assertEquals("Thomas", rfi.getCustomerGivenName());
+    assertEquals("Boonty", rfi.getCustomerSurname());
+    assertEquals("thomas.j.boonty@uscg.mil", rfi.getCustomerEmail());
+    assertEquals("633d ABW", rfi.getCustomerUnit());
+    assertEquals("(757) 225-0085", rfi.getCustomerCommPhone());
+    assertEquals("575-0085", rfi.getCustomerDsnPhone());
+    assertEquals("555-5555", rfi.getCustomerSvoip());
+    assertEquals("777-7777", rfi.getCustomerTsvoip());
     assertEquals(Utilities.parseDate("2020-11-05T14:21:21Z"), rfi.getLtiov());
     assertEquals("USA", rfi.getCountry());
     assertEquals("hello rfi", rfi.getDescription());

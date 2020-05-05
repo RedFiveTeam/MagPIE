@@ -96,13 +96,13 @@ function sortDescendingNum(rfis: RfiModel[]) {
 
 function sortDescendingCustomer(rfis: RfiModel[]) {
   return rfis.sort(function (a, b) {
-    return a.customer > b.customer ? -1 : 1;
+    return a.customerUnit > b.customerUnit ? -1 : 1;
   });
 }
 
 function sortAscendingCustomer(rfis: RfiModel[]) {
   return rfis.sort(function (a, b) {
-    return a.customer < b.customer ? -1 : 1;
+    return a.customerUnit < b.customerUnit ? -1 : 1;
   });
 }
 

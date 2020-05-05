@@ -10,7 +10,15 @@ describe('RFIDeserializer', () => {
         getsUrl: 'getsUrl',
         status: 'NEW',
         lastUpdate: '2020-11-10T14:21:21.000+0000',
-        customer: 'customer',
+        customerTitle: 'customerTitle',
+        customerGivenName: 'customerGivenName',
+        customerSurname: 'customerSurname',
+        customerEmail: 'customerEmail',
+        customerUnit: 'customerUnit',
+        customerCommPhone: 'customerCommPhone',
+        customerDsnPhone: 'customerDsnPhone',
+        customerSvoip: 'customerSvoip',
+        customerTsvoip: 'customerTsvoip',
         ltiov: '2020-11-20T00:00:00.000+0000',
         country: 'country',
         description: 'A description',
@@ -24,7 +32,15 @@ describe('RFIDeserializer', () => {
         getsUrl: 'getsUrl',
         status: 'OPEN',
         lastUpdate: '2020-11-10T14:21:21.000+0000',
-        customer: 'customer',
+        customerTitle: 'customerTitle',
+        customerGivenName: 'customerGivenName',
+        customerSurname: 'customerSurname',
+        customerEmail: 'customerEmail',
+        customerUnit: 'customerUnit',
+        customerCommPhone: 'customerCommPhone',
+        customerDsnPhone: 'customerDsnPhone',
+        customerSvoip: 'customerSvoip',
+        customerTsvoip: 'customerTsvoip',
         ltiov: null,
         country: 'country',
         description: 'A description',
@@ -39,14 +55,21 @@ describe('RFIDeserializer', () => {
     expect(rfis[0].rfiNum).toBe('id');
     expect(rfis[0].getsUrl).toBe('getsUrl');
     expect(rfis[0].status).toBe(RfiStatus.PENDING);
-    expect(rfis[0].customer).toBe('customer');
+    expect(rfis[0].customerTitle).toBe('customerTitle');
+    expect(rfis[0].customerGivenName).toBe('customerGivenName');
+    expect(rfis[0].customerSurname).toBe('customerSurname');
+    expect(rfis[0].customerEmail).toBe('customerEmail');
+    expect(rfis[0].customerUnit).toBe('customerUnit');
+    expect(rfis[0].customerCommPhone).toBe('customerCommPhone');
+    expect(rfis[0].customerDsnPhone).toBe('customerDsnPhone');
+    expect(rfis[0].customerSvoip).toBe('customerSvoip');
+    expect(rfis[0].customerTsvoip).toBe('customerTsvoip');
     expect(rfis[0].description).toBe('A description');
     expect(rfis[0].justification).toBe('A wild justification appears!');
     expect(rfis[0].country).toBe('country');
     expect(rfis[0].priority).toBe(-1);
     expect(rfis[0].tgtCount).toBe(50);
     expect(rfis[0].ixnCount).toBe(5462789);
-
     expect(rfis[1].ltiov).toBe(undefined);
     expect(rfis[1].priority).toBe(7);
   });

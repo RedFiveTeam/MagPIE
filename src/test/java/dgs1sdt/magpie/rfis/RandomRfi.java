@@ -150,7 +150,15 @@ public class RandomRfi {
       this.country,
       this.description,
       "This is a justifiction",
-      this.priority
+      this.priority,
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     );
     this.randomize();
     return rfi;

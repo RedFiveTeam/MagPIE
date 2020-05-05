@@ -26,15 +26,22 @@ export class RfiDeserializer {
           item.rfiNum,
           item.getsUrl,
           matchEnum(item.status),
-          item.customer,
+          item.customerTitle,
+          item.customerGivenName,
+          item.customerSurname,
+          item.customerUnit,
+          item.customerEmail,
+          item.customerCommPhone,
+          item.customerDsnPhone,
+          item.customerSvoip,
+          item.customerTsvoip,
           item.ltiov === null ? undefined : moment(item.ltiov, moment.ISO_8601).utc(),
           item.country,
           item.description,
           item.justification,
           item.priority,
           item.tgtCount,
-          item.ixnCount,
-        );
+          item.ixnCount);
       });
     }
     return [];
