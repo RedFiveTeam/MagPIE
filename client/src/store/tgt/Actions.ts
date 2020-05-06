@@ -128,6 +128,20 @@ export const postTargetDelete = (tgtId: number) => {
   );
 };
 
+export const postTargetsDelete = (targets: TargetPostModel[], userName: string) => {
+  return fetch(
+    '/api/targets/delete-targets?userName=' + userName,
+    {
+      method: 'delete',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(targets),
+    },
+  );
+};
+
 export const postTarget = (targets: TargetPostModel[], userName: string, isCopy?: boolean) => {
   return fetch(
     '/api/targets/post?userName=' + userName + (isCopy ? '&isCopy=true' : ''),

@@ -273,4 +273,8 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     cursor: pointer;
     flex: 1 1 auto;
   }
+  
+  .exploitation-log-button-wrapper {
+    display: flex;
+  }
 `;

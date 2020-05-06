@@ -132,8 +132,9 @@ public class TargetService {
           metricsService.addUndoExploitDateDelete(exploitDateJson.getExploitDateId());
           List<Target> targets = targetRepository
             .findAllByExploitDateIdAndDeletedIsNotNull(exploitDateJson.getExploitDateId());
-          for(Target target : targets)
+          for (Target target : targets) {
             target.setDeleted(null);
+          }
           targetRepository.saveAll(targets);
           oldDate.setDeleted(null);
           exploitDateRepository.save(oldDate);
@@ -158,13 +159,32 @@ public class TargetService {
 
       this.metricsService.addDeleteTarget(targetId);
 
-      ixnService.assignTracks(target.getRfiId(), targetRepository.findById(target.getId()).get().getName());
+      ixnService.assignTracks(target.getRfiId(), target.getName());
 
       return this.getTargets(target.getRfiId());
     } else {
       log.error("Error deleting target: could not find target with id " + targetId);
       return new ArrayList<>();
     }
+  }
+
+  public List<Target> setDeletedTargets(List<TargetJson> targets, String userName) {
+    Timestamp now = new Timestamp(new Date().getTime());
+    for (TargetJson target : targets) {
+      Target toDelete = targetRepository
+        .findByRfiIdAndExploitDateIdAndName(target.getRfiId(), target.getExploitDateId(), target.getName());
+      if (toDelete != null) {
+        toDelete.setDeleted(now);
+        targetRepository.save(toDelete);
+        this.metricsService.addUndoTargetCreate(toDelete.getId(), userName);
+//        ixnService.assignTracks(target.getRfiId(), target.getName());
+      } else {
+        log.error(
+          "Error deleting target: could not find target with name " + target.getName() + " and exploit date id " +
+            target.getExploitDateId());
+      }
+    }
+    return this.getTargets(targets.get(0).getRfiId());
   }
 
   public void deleteTarget(long targetId) {
@@ -268,11 +288,13 @@ public class TargetService {
           ixnService.assignTracks(newTarget.getRfiId(), newTarget.getName());
         }
 
-      } else
+      } else {
         log.error("Error updating target: Could not find exploit date by id " + exploitDateId);
+      }
 
-    } else
+    } else {
       log.error("Error updating target: Could not find target by id " + targetJson.getTargetId());
+    }
   }
 
   public List<Target> getDeletedTargets() {

@@ -7,7 +7,7 @@ import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 import RfiModel from '../../store/rfi/RfiModel';
 
-type UndoTypes = IxnModel|SegmentModel|TargetPostModel|ExploitDatePostModel|number;
+type UndoTypes = IxnModel|SegmentModel|TargetPostModel|TargetPostModel[]|ExploitDatePostModel|number;
 
 export const UndoSnackbarAction = (key: any, data: UndoTypes, postData: (data: any) => void,
                                    closeSnackbar: (key: any) => void, className: string) => {
@@ -34,7 +34,8 @@ export const UndoSnackbarAction = (key: any, data: UndoTypes, postData: (data: a
   );
 };
 
-export const PriorityUndoSnackbarAction = (key: any, data: RfiModel[], postPriority: (rfis: RfiModel[], pathVars: string) => void,
+export const PriorityUndoSnackbarAction = (key: any, data: RfiModel[],
+                                           postPriority: (rfis: RfiModel[], pathVars: string) => void,
                                            closeSnackbar: (key: any) => void, className: string,
                                            rfiNum: string) => {
   return (

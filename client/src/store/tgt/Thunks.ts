@@ -5,16 +5,12 @@ import { ExploitDatePostModel } from './ExploitDatePostModel';
 
 import { TargetPostModel } from './TargetPostModel';
 import {
-  fetchDatesAndTargetsSuccess,
-  postExploitDateDelete,
-  postExploitDatesUpdate,
-  postTarget,
-  postTargetDelete,
-  updateExploitDateSuccess,
-  updateTgtSuccess,
+  fetchDatesAndTargetsSuccess, postExploitDateDelete, postExploitDatesUpdate, postTarget, postTargetDelete,
+  postTargetsDelete, updateExploitDateSuccess, updateTgtSuccess,
 } from './Actions';
 
-export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstLoad: boolean, newExploitDateId: number) => {
+export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstLoad: boolean,
+                                newExploitDateId: number) => {
   return (dispatch: any) => {
     return fetch('/api/targets?rfiId=' + rfi.id)
       .then(response => response.json())
@@ -30,6 +26,17 @@ export const deleteExploitDate = (exploitDateId: number) => {
     postExploitDateDelete(exploitDateId)
       .then(response => response.json())
       .then(dates => dispatch(updateExploitDateSuccess(ExploitDateDeserializer.deserialize(dates))))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  };
+};
+
+export const deleteTargets = (targets: TargetPostModel[], userName: string) => {
+  return (dispatch: any) => {
+    postTargetsDelete(targets, userName)
+      .then(response => response.json())
+      .then(tgts => dispatch(updateTgtSuccess(tgts)))
       .catch((reason) => {
         console.log(reason);
       });

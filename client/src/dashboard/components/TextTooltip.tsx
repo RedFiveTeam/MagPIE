@@ -1,5 +1,6 @@
 import { Theme, Tooltip, withStyles } from '@material-ui/core';
 import theme from '../../resources/theme';
+import styled from 'styled-components';
 
 // @ts-ignore
 const TextTooltip = withStyles((localTheme: Theme) => ({
@@ -16,3 +17,8 @@ const TextTooltip = withStyles((localTheme: Theme) => ({
 }))(Tooltip);
 
 export default TextTooltip;
+
+export const StyledTextTooltip = styled(TextTooltip)`
+  display: flex;
+  z-index: 10001 !important;
+`

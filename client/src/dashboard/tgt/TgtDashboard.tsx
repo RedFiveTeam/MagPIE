@@ -13,7 +13,9 @@ import { StyledTgtDashboardHeader } from './TgtDashboardHeader';
 import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
-import { deleteExploitDate, deleteTgt, loadTgtPage, postExploitDate, submitPostTargets } from '../../store/tgt/Thunks';
+import {
+  deleteExploitDate, deleteTargets, deleteTgt, loadTgtPage, postExploitDate, submitPostTargets,
+} from '../../store/tgt/Thunks';
 import {
   addTgt,
   editTgt,
@@ -71,8 +73,8 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   useEffect(() => {
     if (newExploitDate) {
       enqueueSnackbar(newExploitDate.exploitDate.format('MM/DD/YYYY') + ' Created', {
-        action: (key) => UndoSnackbarAction(key, newExploitDate!.id,
-                                            handleUndoPostExploitDate, closeSnackbar, classes.snackbarButton),
+        action: (key) => UndoSnackbarAction(key, newExploitDate!.id, handleUndoPostExploitDate, closeSnackbar,
+                                            classes.snackbarButton),
         variant: 'info',
       });
     }
@@ -80,6 +82,10 @@ export const TgtDashboard: React.FC<MyProps> = props => {
 
   const handleUndoPostExploitDate = (exploitDateId: number) => {
     dispatch(deleteExploitDate(exploitDateId));
+  };
+
+  const handleUndoPostTargets = (targets: TargetPostModel[]) => {
+    dispatch(deleteTargets(targets, cookie.userName));
   };
 
   const dispatch = useDispatch();
@@ -99,9 +105,22 @@ export const TgtDashboard: React.FC<MyProps> = props => {
       if (props.rfi.status !== RfiStatus.CLOSED) {
         let tgts: TargetModel[] = [];
         for (let target of targets) {
-          let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId, target.name,
-                                    target.mgrs, target.notes, target.description, target.status, '', '');
+          let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId,
+                                    target.name, target.mgrs, target.notes, target.description, target.status, '', '');
           tgts.push(tgt);
+        }
+        if (isCopy) {
+          enqueueSnackbar('Targets Copied', {
+            action: (key) => UndoSnackbarAction(key, targets, handleUndoPostTargets, closeSnackbar,
+                                                classes.snackbarButton),
+            variant: 'info',
+          });
+        } else {
+          enqueueSnackbar(targets[0].name + ' Created', {
+            action: (key) => UndoSnackbarAction(key, targets, handleUndoPostTargets, closeSnackbar,
+                                                classes.snackbarButton),
+            variant: 'info',
+          });
         }
         dispatch(updateTgtsLocal(tgts, isCopy));
         dispatch(submitPostTargets(targets, props.rfi, cookie.userName, isCopy));
@@ -141,8 +160,8 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const handleDeleteTarget = (target: TargetModel) => {
     if (props.rfi.status !== RfiStatus.CLOSED) {
       enqueueSnackbar('You deleted ' + target.name, {
-        action: (key) => UndoSnackbarAction(key, {...target, targetId: target.id} as TargetPostModel,
-                                            handlePostTarget, closeSnackbar, classes.snackbarButton),
+        action: (key) => UndoSnackbarAction(key, {...target, targetId: target.id} as TargetPostModel, handlePostTarget,
+                                            closeSnackbar, classes.snackbarButton),
         variant: 'info',
       });
       dispatch(deleteTgt(target.id));
@@ -157,9 +176,8 @@ export const TgtDashboard: React.FC<MyProps> = props => {
         truncateAndConvertDateToUtc(new Date(exploitDate.exploitDate.unix() * 1000)),
       );
       enqueueSnackbar('You deleted ' + exploitDate.exploitDate.format('MM/DD/YYYY'), {
-        action: (key) => UndoSnackbarAction(
-          key, exploitDatePost, handlePostExploitDate,
-          closeSnackbar, classes.snackbarButton),
+        action: (key) => UndoSnackbarAction(key, exploitDatePost, handlePostExploitDate, closeSnackbar,
+                                            classes.snackbarButton),
         variant: 'info',
       });
       dispatch(deleteExploitDate(exploitDate.id));

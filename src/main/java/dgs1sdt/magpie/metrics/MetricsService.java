@@ -64,6 +64,8 @@ import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDelete;
 import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDeleteRepository;
 import dgs1sdt.magpie.metrics.undoSegmentDelete.MetricUndoSegmentDelete;
 import dgs1sdt.magpie.metrics.undoSegmentDelete.MetricUndoSegmentDeleteRepository;
+import dgs1sdt.magpie.metrics.undoTargetCreate.MetricUndoTargetCreate;
+import dgs1sdt.magpie.metrics.undoTargetCreate.MetricUndoTargetCreateRepository;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDelete;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
 import dgs1sdt.magpie.rfis.Rfi;
@@ -116,6 +118,7 @@ public class MetricsService {
   private MetricClickImportRepository metricClickImportRepository;
   private MetricClickCollapseRepository metricClickCollapseRepository;
   private MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository;
+  private MetricUndoTargetCreateRepository metricUndoTargetCreateRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -273,6 +276,12 @@ public class MetricsService {
   public void setMetricUndoChangeRfiPriorityRepository(
     MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository) {
     this.metricUndoChangeRfiPriorityRepository = metricUndoChangeRfiPriorityRepository;
+  }
+
+  @Autowired
+  public void setMetricUndoTargetCreateRepository(
+    MetricUndoTargetCreateRepository metricUndoTargetCreateRepository) {
+    this.metricUndoTargetCreateRepository = metricUndoTargetCreateRepository;
   }
 
   public long getSiteVisitCount() {
@@ -674,5 +683,9 @@ public class MetricsService {
       return null;
     }
     return startDateMetric.getDatetime();
+  }
+
+  public MetricUndoTargetCreate addUndoTargetCreate(long targetId, String userName) {
+    return metricUndoTargetCreateRepository.save(new MetricUndoTargetCreate(targetId, userName));
   }
 }

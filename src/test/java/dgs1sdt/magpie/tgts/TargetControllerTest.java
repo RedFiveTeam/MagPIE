@@ -13,6 +13,7 @@ import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDeleteRepository;
+import dgs1sdt.magpie.metrics.undoTargetCreate.MetricUndoTargetCreateRepository;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiController;
@@ -54,6 +55,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
   MetricDeleteTargetRepository metricDeleteTargetRepository;
   MetricUndoTargetDeleteRepository metricUndoTargetDeleteRepository;
   MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository;
+  MetricUndoTargetCreateRepository metricUndoTargetCreateRepository;
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -144,6 +146,12 @@ public class TargetControllerTest extends BaseIntegrationTest {
     this.metricUndoExploitDateDeleteRepository = metricUndoExploitDateDeleteRepository;
   }
 
+  @Autowired
+  public void setMetricUndoTargetCreateRepository(
+    MetricUndoTargetCreateRepository metricUndoTargetCreateRepository) {
+    this.metricUndoTargetCreateRepository = metricUndoTargetCreateRepository;
+  }
+
   @Before
   public void clean() {
     rfiRepository.deleteAll();
@@ -158,6 +166,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     metricChangeTargetRepository.deleteAll();
     metricDeleteTargetRepository.deleteAll();
     metricUndoTargetDeleteRepository.deleteAll();
+    metricUndoTargetCreateRepository.deleteAll();
   }
 
   @Test
@@ -450,6 +459,58 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals(2, metricDeleteTargetRepository.findAll().size());
 
     assertEquals(targetId, metricDeleteTargetRepository.findAll().get(1).getTargetId());
+  }
+
+  @Test
+  public void deletesMultipleTargets() throws Exception {
+    rfiRepository.save(
+      new Rfi("SDT-123", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", ""));
+    long rfiId = rfiRepository.findByRfiNum("SDT-123").getId();
+    exploitDateRepository.save(new ExploitDate(
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime()),
+      rfiId
+    ));
+    long exploitDateId = exploitDateRepository.findByRfiIdAndExploitDate(rfiId,
+      new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("11/11/2020").getTime())).getId();
+
+    TargetJson targetJson1 = new TargetJson(
+      rfiId,
+      exploitDateId,
+      "SDT20-123",
+      "12ABC1234567890",
+      "These are some EEI notes",
+      "This is a description"
+    );
+
+    TargetJson targetJson2 = new TargetJson(
+      rfiId,
+      exploitDateId,
+      "SDT20-124",
+      "12ABC1234567980",
+      "These are some EEI notes",
+      "This is a description"
+    );
+
+    targetController.postTarget(new ArrayList<>(Arrays.asList(targetJson1, targetJson2)), "billy.bob.joe", "false");
+
+    String jsonString = objectMapper.writeValueAsString(new TargetJson[]{targetJson1, targetJson2});
+
+    System.out.println(jsonString);
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .body(jsonString)
+      .when()
+      .delete(TargetController.URI + "/delete-targets?userName=billy.bob.joe")
+      .then()
+      .statusCode(200);
+
+    assertEquals(0, targetController.getTargets(rfiId).size());
+
+    assertEquals(2, metricUndoTargetCreateRepository.findAll().size());
+    assertEquals("billy.bob.joe", metricUndoTargetCreateRepository.findAll().get(0).getUserName());
   }
 
   @Test

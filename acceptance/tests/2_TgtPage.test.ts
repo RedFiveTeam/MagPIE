@@ -93,9 +93,21 @@ Scenario('Should be able to add tgts', (I) => {
   I.pressKey('Tab');
   I.fillField('.description', 'desc');
   I.pressKey('Enter');
+  I.waitForText('SDT20-123 Created');
+  I.click('UNDO');
 
   I.click('.tgt-dash--header--back-button');
   I.click('.navigate-to-tgt-button');
+
+  I.click('.add-tgt-button');
+  I.fillField('.tgt-name-input-new', 'SDT20-123');
+  I.pressKey('Tab');
+  I.fillField('.mgrs', '12QWE1231231231');
+  I.pressKey('Tab');
+  I.fillField('.notes', 'notes');
+  I.pressKey('Tab');
+  I.fillField('.description', 'desc');
+  I.pressKey('Enter');
 
   I.waitForText('SDT20-123', 10);
   I.seeElement('.add-tgt-button');
@@ -262,6 +274,7 @@ Scenario('Should be able to copy targets', (I) => {
   });
 
   I.click('.tgt-copy--submit');
+  I.waitForText('Targets Copied');
 
   within('.date-divider--2-Feb-20', () => {
     I.waitForElement('.highlighted');
@@ -269,9 +282,12 @@ Scenario('Should be able to copy targets', (I) => {
     I.see('12QWE1231231231');
   });
 
-  I.moveCursorTo('.tgt-form-box');
-  I.waitForElement('.delete-tgt-button');
-  I.click('.delete-tgt-button');
+  I.click('UNDO');
+
+  within('.date-divider--2-Feb-20', () => {
+    I.dontSee('SDT20-123');
+    I.dontSee('12QWE1231231231');
+  });
 
   I.moveCursorTo('.tgt-form-box');
   I.waitForElement('.delete-tgt-button');

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TargetRepository extends JpaRepository<Target, Long> {
-  @Query("SELECT tgt FROM Target tgt WHERE tgt.rfiId = ?1 AND tgt.exploitDateId = ?2 AND tgt.name = ?3 " +
-    "AND tgt.deleted IS NULL")
+  @Query("SELECT tgt FROM Target tgt WHERE tgt.rfiId = ?1 AND tgt.exploitDateId = ?2 AND tgt.name = ?3 AND tgt" +
+    ".deleted IS NULL")
   Target findByRfiIdAndExploitDateIdAndName(long rfiId, long exploitDateId, String name);
 
   @Query("SELECT tgt FROM Target tgt WHERE tgt.rfiId = ?1 AND tgt.deleted IS NULL")

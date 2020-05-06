@@ -110,8 +110,8 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
     if (!props.readOnly) {
       enqueueSnackbar('You deleted ' + segment.startTime.format('HH:mm:ss') + 'Z-' +
                         segment.endTime.format('HH:mm:ss') + 'Z', {
-                        action: (key) => UndoSnackbarAction(key, segment, handlePostSegment,
-                                                            closeSnackbar, classes.snackbarButton),
+                        action: (key) => UndoSnackbarAction(key, segment, handlePostSegment, closeSnackbar,
+                                                            classes.snackbarButton),
                         variant: 'info',
                       });
       dispatch(deleteSegment(segment));
@@ -182,17 +182,17 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
       </StyledIxnTable>
       <div className={'add-segment-button-container'}>
         <Box
-          height={42}
+          height={38}
           width={160}
           border={2}
-          borderRadius={21}
+          borderRadius={19}
           borderColor={theme.color.primaryButton}
           bgcolor={theme.color.backgroundModal}
           display="flex"
           flexDirection="row"
           alignItems="center"
           justifyContent="space-between"
-          paddingRight={0.45}
+          paddingRight={0.25}
           paddingLeft={1.8}
           fontSize={12}
           onClick={() => {
