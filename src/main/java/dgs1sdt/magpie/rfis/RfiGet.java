@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Getter
 @NoArgsConstructor
@@ -29,8 +30,9 @@ public class RfiGet {
   private int priority;
   private long tgtCount;
   private long ixnCount;
+  private Date startDate;
 
-  public RfiGet(Rfi rfi, long tgtCount, long ixnCount) {
+  public RfiGet(Rfi rfi, long tgtCount, long ixnCount, Date startDate) {
     this.id = rfi.getId();
     this.description = rfi.getDescription();
     this.justification = rfi.getJustification();
@@ -52,5 +54,6 @@ public class RfiGet {
     this.priority = rfi.getPriority();
     this.tgtCount = tgtCount;
     this.ixnCount = ixnCount;
+    this.startDate = startDate;
   }
 }

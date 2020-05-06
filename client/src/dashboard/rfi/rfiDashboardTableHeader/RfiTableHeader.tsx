@@ -12,11 +12,6 @@ interface Props {
 }
 
 export const RfiTableHeader: React.FC<Props> = props => {
-  // TODO: refactor headers into a map using the similar style to target table headers for cleanliness and DRY
-  //
-  // let sortableHeaders: string[] = ['PRI', 'RFI', 'CC', 'Customer', 'LTIOV'];
-  // let unsortableHeaders: string[] = ['TGTs', 'Description'];
-
   return (
     <div className={classNames('header', props.className)}>
       <StyledHeaderCell
@@ -55,6 +50,13 @@ export const RfiTableHeader: React.FC<Props> = props => {
         sortKey={props.sortKey}
       />
       <StyledHeaderCell
+        text={'START'}
+        sort={() => props.sortRfis(Field.START)}
+        field={Field.START}
+        className={'header-cell--startDate'}
+        sortKey={props.sortKey}
+      />
+      <StyledHeaderCell
         text={'TGTs'}
         sort={() => props.sortRfis(Field.TGTS)}
         field={Field.TGTS}
@@ -62,7 +64,7 @@ export const RfiTableHeader: React.FC<Props> = props => {
         sortKey={props.sortKey}
       />
       <StyledHeaderCell
-        text={'IXNs'}
+        text={'C/Os'}
         sort={() => props.sortRfis(Field.IXNS)}
         field={Field.IXNS}
         className={'header-cell--count'}
@@ -83,43 +85,56 @@ export const StyledRfiTableHeader = styled(RfiTableHeader)`
   display: flex;
   flex: 0 0;
   flex-direction: row;
-  justify-content: space-between;
-  width: 509px;
+  justify-content: flex-start;
+  align-items: center;
+  
+  .header-cell {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-left: 0;
+  }
   
   .header--tgts {
     text-align: center;
     height: 20px;
+    width: 40px;
   }
   
-  .header--ixns {
+  .header--cos {
     text-align: center;
     height: 20px;
+    width: 48px;
   }
   
   .header-cell--pri {
-    padding-left: 40px;
-    width: 61px;
+    padding-left: 30px !important;
+    width: 75px;
   }
   
   .header-cell--rfi-num {
-    justify-content: flex-start;
     width: 60px;
   }
   
   .header-cell--country {
-    width: 45px;
+    width: 70px;
   }
   
-  .header-cell--customer{
-    width: 95px;
+  .header-cell--customerUnit {
+    width: 100px;
   }
   
   .header-cell--ltiov {
-    width: 75px;
+    width: 100px;
+  }
+  
+  .header-cell--startDate {
+    width: 85px;
   }
   
   .header-cell--count {
-    width: 30px;  
+    text-align: center;
+    height: 20px;  
   }
   
   .header-cell--description {

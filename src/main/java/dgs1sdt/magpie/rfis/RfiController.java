@@ -72,7 +72,8 @@ public class RfiController {
     for(Rfi rfi : rfis) {
       long tgtCount = targetService.findNumByRfiId(rfi.getId());
       long ixnCount = ixnService.findNumByRfiId(rfi.getId());
-      rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount));
+      Date startDate = metricsService.getRfiStartDate(rfi.getRfiNum());
+      rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate));
     }
 
     return rfiGetList;

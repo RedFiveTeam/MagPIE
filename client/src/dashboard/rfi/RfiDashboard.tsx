@@ -228,7 +228,6 @@ export const StyledRfiDashboard = styled(RfiDashboard)`
     border-radius: 8px;
     width: 4px;
     height: 100%;
-    margin-left: 42px;
-    margin-right: 25px;
+    margin: 0 25px;
   }
 `;

@@ -18,6 +18,6 @@ describe('RfiTableHeader', () => {
   });
 
   it('should render a header for each field', () => {
-    expect(subject.find(StyledHeaderCell).length).toBe(7);
+    expect(subject.find(StyledHeaderCell).length).toBe(8);
   });
 });

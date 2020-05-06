@@ -32,6 +32,14 @@ export class RfiSorter {
                 sortDescendingLtiov(open).concat(sortDescendingLtiov(pending))
             ).concat(closed)
           );
+        case Field.START:
+          return (
+            (sortKey.defaultOrder ?
+                sortAscendingStartDate(open).concat(sortAscendingStartDate(pending))
+                :
+                sortDescendingStartDate(open).concat(sortDescendingStartDate(pending))
+            ).concat(closed)
+          );
         case Field.COUNTRY:
           return (
             (sortKey.defaultOrder ?
@@ -163,5 +171,29 @@ function sortAscendingLtiov(rfis: RfiModel[]) {
       return -1;
     }
     return a.ltiov.valueOf() < b.ltiov.valueOf() ? -1 : 1;
+  });
+}
+
+function sortDescendingStartDate(rfis: RfiModel[]) {
+  return rfis.sort(function (a, b) {
+    if (a.startDate === undefined) {
+      return -1;
+    }
+    if (b.startDate === undefined) {
+      return 1;
+    }
+    return a.startDate.valueOf() > b.startDate.valueOf() ? -1 : 1;
+  });
+}
+
+function sortAscendingStartDate(rfis: RfiModel[]) {
+  return rfis.sort(function (a, b) {
+    if (a.startDate === undefined) {
+      return 1;
+    }
+    if (b.startDate === undefined) {
+      return -1;
+    }
+    return a.startDate.valueOf() < b.startDate.valueOf() ? -1 : 1;
   });
 }

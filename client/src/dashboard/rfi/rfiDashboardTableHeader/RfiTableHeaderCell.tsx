@@ -25,7 +25,7 @@ export const RfiTableHeaderCell: React.FC<Props> = props => {
           (props.sortKey.field === props.field) ?
             <SortButtonVector ascending={true} active={true}/> : <SortButtonVector ascending={true} active={false}/>}
         </div>
-        <span className={'header--' + props.text.toLowerCase()}>
+        <span className={'header--' + props.text.replace(/\W/g, '').toLowerCase()}>
         {props.text}
       </span>
         <div className={classNames('lower--sort')}>

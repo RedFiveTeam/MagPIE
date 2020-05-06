@@ -26,7 +26,7 @@
 tmp/acceptance.log
 /client/yarn-error.log
 /target/
-/artifacts/
+/artifacts/magpie.jar
 /logs/
 
 ### Acceptance output images/node_modules ###

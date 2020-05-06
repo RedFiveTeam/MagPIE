@@ -25,6 +25,7 @@ export class RfiDeserializer {
           item.id,
           item.rfiNum,
           item.getsUrl,
+          item.startDate === null ? undefined : moment(item.startDate, moment.ISO_8601).utc(),
           matchEnum(item.status),
           item.customerTitle,
           item.customerGivenName,
@@ -41,7 +42,8 @@ export class RfiDeserializer {
           item.justification,
           item.priority,
           item.tgtCount,
-          item.ixnCount);
+          item.ixnCount,
+        );
       });
     }
     return [];

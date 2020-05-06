@@ -1,6 +1,7 @@
 export enum Field {
   PRIORITY = 'PRIORITY',
   LTIOV = 'LTIOV',
+  START = 'START',
   RFINUM = 'RFINUM',
   CUSTOMER = 'CUSTOMER',
   COUNTRY = 'COUNTRY',

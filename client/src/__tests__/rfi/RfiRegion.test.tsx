@@ -13,7 +13,7 @@ describe('Region', () => {
     const moment = require('moment');
     rows = [
       <RfiRow
-        rfi={new RfiModel(1, '19-001', 'url', RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '',
+        rfi={new RfiModel(1, '19-001', 'url', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '',
                           moment('2019-12-01').utc(), 'USA', 'hi', 'Just a fiction', -1, 0, 0)}
         key={'1'}
         scrollRegionRef={{}}
@@ -22,7 +22,7 @@ describe('Region', () => {
         selectRfi={jest.fn()}
       />,
       <RfiRow
-        rfi={new RfiModel(2, '19-004', 'url', RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '',
+        rfi={new RfiModel(2, '19-004', 'url', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '',
                           moment('2019-12-02').utc(), 'CAN', 'hi', 'Just a fiction', -1, 0, 0)}
         key={'2'}
         scrollRegionRef={{}}
@@ -31,8 +31,8 @@ describe('Region', () => {
         selectRfi={jest.fn()}
       />,
       <RfiRow
-        rfi={new RfiModel(3, '19-003', 'url', RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                          'MEX', 'hi', 'Just a fiction', -1, 0, 0)}
+        rfi={new RfiModel(3, '19-003', 'url', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '',
+                          undefined, 'MEX', 'hi', 'Just a fiction', -1, 0, 0)}
         key={'3'}
         scrollRegionRef={{}}
         index={2}
@@ -41,13 +41,13 @@ describe('Region', () => {
       />,
     ];
     subject = shallow(
-        <RfiRegion
-          title={'title'}
-          emptyMessage={'empty'}
-          provided={{innerRef:0}}
-        >
-          {rows}
-        </RfiRegion>
+      <RfiRegion
+        title={'title'}
+        emptyMessage={'empty'}
+        provided={{innerRef: 0}}
+      >
+        {rows}
+      </RfiRegion>,
     );
   });
 
@@ -64,12 +64,11 @@ describe('Region', () => {
     expect(subject.text()).not.toContain(emptyMessage);
 
     subject = shallow(
-        <RfiRegion
-          title={'title'}
-          emptyMessage={emptyMessage}
-          provided={{innerRef:0}}
-        />
-
+      <RfiRegion
+        title={'title'}
+        emptyMessage={emptyMessage}
+        provided={{innerRef: 0}}
+      />,
     );
     expect(subject.text()).toContain(emptyMessage);
   });

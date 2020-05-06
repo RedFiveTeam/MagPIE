@@ -148,7 +148,7 @@ export const StyledRfiTable = styled(RfiTable)`
   flex-direction: column;
   margin-left: 30px;
   height: 100%;
-  width: 533px;
+  width: 628px;
   
   .rfi-table--body{
     overflow-y: auto; 

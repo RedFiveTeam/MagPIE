@@ -97,7 +97,7 @@ Scenario('Should be able to see Tgt and Ixn counts on the RFI Description page',
   I.click('.tgt-dash--header--back-button');
 
   I.waitForText('TGTs', 10);
-  I.see('IXNs');
+  I.see('C/Os');
   I.see('1', locate('.region--prioritized').find('.cell--count').at(1));
   I.see('2', locate('.region--prioritized').find('.cell--count').at(2));
 });

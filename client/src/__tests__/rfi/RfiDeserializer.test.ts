@@ -10,6 +10,7 @@ describe('RFIDeserializer', () => {
         getsUrl: 'getsUrl',
         status: 'NEW',
         lastUpdate: '2020-11-10T14:21:21.000+0000',
+        startDate: null,
         customerTitle: 'customerTitle',
         customerGivenName: 'customerGivenName',
         customerSurname: 'customerSurname',
@@ -32,6 +33,7 @@ describe('RFIDeserializer', () => {
         getsUrl: 'getsUrl',
         status: 'OPEN',
         lastUpdate: '2020-11-10T14:21:21.000+0000',
+        startDate: '2020-12-13T14:21:21.000+0000',
         customerTitle: 'customerTitle',
         customerGivenName: 'customerGivenName',
         customerSurname: 'customerSurname',
@@ -70,7 +72,9 @@ describe('RFIDeserializer', () => {
     expect(rfis[0].priority).toBe(-1);
     expect(rfis[0].tgtCount).toBe(50);
     expect(rfis[0].ixnCount).toBe(5462789);
+    expect(rfis[0].startDate).toBe(undefined);
     expect(rfis[1].ltiov).toBe(undefined);
     expect(rfis[1].priority).toBe(7);
+    expect(rfis[1].startDate!.isSame(moment.utc('2020-12-13'), 'day')).toBeTruthy();
   });
 });

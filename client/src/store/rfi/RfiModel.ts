@@ -11,6 +11,7 @@ export default class RfiModel {
     public id: number,
     public rfiNum: string,
     public getsUrl: string,
+    public startDate: Moment|undefined,
     public status: RfiStatus = RfiStatus.PENDING,
     public customerTitle: string,
     public customerGivenName: string,

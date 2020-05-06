@@ -138,7 +138,8 @@ public class MetricsService {
   }
 
   @Autowired
-  public void setMetricChangeRfiPriorityRepository(MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository) {
+  public void setMetricChangeRfiPriorityRepository(
+    MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository) {
     this.metricChangeRfiPriorityRepository = metricChangeRfiPriorityRepository;
   }
 
@@ -153,12 +154,14 @@ public class MetricsService {
   }
 
   @Autowired
-  public void setMetricCreateExploitDateRepository(MetricCreateExploitDateRepository metricCreateExploitDateRepository) {
+  public void setMetricCreateExploitDateRepository(
+    MetricCreateExploitDateRepository metricCreateExploitDateRepository) {
     this.metricCreateExploitDateRepository = metricCreateExploitDateRepository;
   }
 
   @Autowired
-  public void setMetricChangeExploitDateRepository(MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
+  public void setMetricChangeExploitDateRepository(
+    MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
   }
 
@@ -173,7 +176,8 @@ public class MetricsService {
   }
 
   @Autowired
-  public void setMetricDeleteExploitDateRepository(MetricDeleteExploitDateRepository metricDeleteExploitDateRepository) {
+  public void setMetricDeleteExploitDateRepository(
+    MetricDeleteExploitDateRepository metricDeleteExploitDateRepository) {
     this.metricDeleteExploitDateRepository = metricDeleteExploitDateRepository;
   }
 
@@ -218,7 +222,8 @@ public class MetricsService {
   }
 
   @Autowired
-  public void setMetricUndoSegmentDeleteRepository(MetricUndoSegmentDeleteRepository metricUndoSegmentDeleteRepository) {
+  public void setMetricUndoSegmentDeleteRepository(
+    MetricUndoSegmentDeleteRepository metricUndoSegmentDeleteRepository) {
     this.metricUndoSegmentDeleteRepository = metricUndoSegmentDeleteRepository;
   }
 
@@ -228,7 +233,8 @@ public class MetricsService {
   }
 
   @Autowired
-  public void setMetricUndoExploitDateDeleteRepository(MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository) {
+  public void setMetricUndoExploitDateDeleteRepository(
+    MetricUndoExploitDateDeleteRepository metricUndoExploitDateDeleteRepository) {
     this.metricUndoExploitDateDeleteRepository = metricUndoExploitDateDeleteRepository;
   }
 
@@ -243,7 +249,8 @@ public class MetricsService {
   }
 
   @Autowired
-  public void setMetricClickTrackNarrativeRepository(MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository) {
+  public void setMetricClickTrackNarrativeRepository(
+    MetricClickTrackNarrativeRepository metricClickTrackNarrativeRepository) {
     this.metricClickTrackNarrativeRepository = metricClickTrackNarrativeRepository;
   }
 
@@ -263,7 +270,8 @@ public class MetricsService {
   }
 
   @Autowired
-  public void setMetricUndoChangeRfiPriorityRepository(MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository) {
+  public void setMetricUndoChangeRfiPriorityRepository(
+    MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository) {
     this.metricUndoChangeRfiPriorityRepository = metricUndoChangeRfiPriorityRepository;
   }
 
@@ -488,8 +496,9 @@ public class MetricsService {
       }
     }
 
-    if (numberRfis > 0)
+    if (numberRfis > 0) {
       return new long[]{totalTimeOpen / numberRfis, totalTimePending / numberRfis};
+    }
     return new long[]{0, 0};
   }
 
@@ -524,7 +533,8 @@ public class MetricsService {
     for (MetricChangeTarget metric : metricChangeTargetRepository.findAll()) {
       try {
         MetricChangeTarget lastMetric = tgtEdits.get(tgtEdits.size() - 1);
-        if (!(metric.getTimestamp().equals(lastMetric.getTimestamp()) && metric.getTargetId() == lastMetric.getTargetId())) {
+        if (!(metric.getTimestamp().equals(lastMetric.getTimestamp()) &&
+          metric.getTargetId() == lastMetric.getTargetId())) {
           tgtEdits.add(metric);
         }
       } catch (Exception e) {
@@ -553,8 +563,9 @@ public class MetricsService {
   }
 
   public long getAverageUniqueLoginsPerWeek() {
-    if (metricLoginRepository.findAll().size() == 0)
+    if (metricLoginRepository.findAll().size() == 0) {
       return 0;
+    }
 
     long totalUniqueWeeklyLogins = 0;
     long weeks = 1;
@@ -575,8 +586,9 @@ public class MetricsService {
   }
 
   public long getAveragePrioritizationsPerWeek() {
-    if (metricChangeRfiPriorityRepository.findAll().size() == 0)
+    if (metricChangeRfiPriorityRepository.findAll().size() == 0) {
       return 0;
+    }
 
     long totalUniqueWeeklyPrioritizations = 0;
     long weeks = 1;
@@ -604,15 +616,17 @@ public class MetricsService {
       long count = metrics.size();
       long now = new Date().getTime();
       int weeksSinceStartDate = Math.round((float) (now - startDate) / (float) (7 * MILLISECONDS_IN_A_DAY));
-      if (weeksSinceStartDate == 0)
+      if (weeksSinceStartDate == 0) {
         weeksSinceStartDate = 1;
+      }
       return Math.round((float) count / (float) weeksSinceStartDate);
     } catch (Exception e) {
       return 0;
     }
   }
 
-  public MetricClickTrackNarrative createClickTrackNarrative(MetricClickTrackNarrativeJson metricClickTrackNarrativeJson) {
+  public MetricClickTrackNarrative createClickTrackNarrative(
+    MetricClickTrackNarrativeJson metricClickTrackNarrativeJson) {
     return metricClickTrackNarrativeRepository.save(new MetricClickTrackNarrative(metricClickTrackNarrativeJson));
   }
 
@@ -636,7 +650,7 @@ public class MetricsService {
 
       if (metricOpen != null && metricClose != null &&
         metricClose.getDatetime().getTime() - metricOpen.getDatetime().getTime() > MILLISECONDS_IN_A_DAY) {
-        if(rfiLtiov == null || metricClose.getDatetime().before(rfiLtiov)) {
+        if (rfiLtiov == null || metricClose.getDatetime().before(rfiLtiov)) {
           completedBeforeLtiov++;
         }
         totalRfis++;
@@ -652,5 +666,13 @@ public class MetricsService {
 
   public MetricClickCollapse createClickCollapse(String userName) {
     return metricClickCollapseRepository.save(new MetricClickCollapse(userName));
+  }
+
+  public Date getRfiStartDate(String rfiNum) {
+    MetricChangeRfi startDateMetric = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(rfiNum);
+    if (startDateMetric == null) {
+      return null;
+    }
+    return startDateMetric.getDatetime();
   }
 }

@@ -25,9 +25,9 @@ describe('TgtDashboardContainer', () => {
   beforeEach(() => {
     setPlaceholderSpy = jest.fn();
     rfiTest =
-      new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', RfiStatus.OPEN, '', '', '', 'space forse', '', '', '',
-                   '', '', moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
-                   'Just a fiction', 42, 0, 0);
+      new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', undefined, RfiStatus.OPEN, '', '', '', 'space forse',
+                   '', '', '', '', '', moment('2019-11-20').utc(), 'USLT',
+                   'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0);
     subject = mount(
       <Provider store={mockStore}>
         <SnackbarProvider

@@ -3,6 +3,8 @@ package dgs1sdt.magpie.rfis;
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.ixns.*;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
+import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
+import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
@@ -55,6 +57,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
   MetricChangeTargetRepository metricChangeTargetRepository;
   MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository;
   MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository;
+  MetricChangeRfiRepository metricChangeRfiRepository;
 
   @Autowired
   SegmentRepository segmentRepository;
@@ -127,6 +130,12 @@ public class RfiControllerTest extends BaseIntegrationTest {
   public void setMetricUndoChangeRfiPriorityRepository(
     MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository) {
     this.metricUndoChangeRfiPriorityRepository = metricUndoChangeRfiPriorityRepository;
+  }
+
+  @Autowired
+  public void setMetricChangeRfiRepository(
+    MetricChangeRfiRepository metricChangeRfiRepository) {
+    this.metricChangeRfiRepository = metricChangeRfiRepository;
   }
 
   @Before
@@ -446,5 +455,24 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals(rfi1.getId(), metric.getRfiId());
     assertEquals("billy.bob.joe", metric.getUserName());
+  }
+
+  @Test
+  public void returnsRfisWithStartDate() throws Exception {
+    rfiRepository.save(
+      new Rfi("ABC-0321", "", "OPEN", new Date(12345678), "", new Date(345678), "", "", "", 1, "", "", "", "", "", "",
+        "", ""));
+
+    Date startDate = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("12/11/2020").getTime());
+
+    metricChangeRfiRepository.save(new MetricChangeRfi("ABC-0321", startDate, "status", "NEW", "OPEN"));
+
+    given()
+      .port(port)
+      .when()
+      .get(RfiController.URI)
+      .then()
+      .statusCode(200)
+      .body("[0].startDate", equalTo("2020-12-11T00:00:00.000+0000"));
   }
 }

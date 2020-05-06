@@ -42,23 +42,26 @@ export const RfiRow: React.FC<Props> = props => {
           </div>
         }
         <span className={classNames('cell', 'cell--rfi-num')}>
-        {formatRfiNum(props.rfi.rfiNum)}
-      </span>
+          {formatRfiNum(props.rfi.rfiNum)}
+        </span>
         <span className={classNames('cell', 'cell--country')}>
           {props.rfi.country}
         </span>
         <span className={classNames('cell', 'cell--customerUnit')}>
           <div>{props.rfi.customerUnit}</div>
-      </span>
+        </span>
         <span className={classNames('cell', 'cell--ltiov')}>
-            {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format('D MMM YY').toUpperCase()}
-      </span>
+          {props.rfi.ltiov === undefined ? '-' : props.rfi.ltiov.utc().format('D MMM YY').toUpperCase()}
+        </span>
+        <span className={classNames('cell', 'cell--startDate')}>
+          {props.rfi.startDate === undefined ? '-' : props.rfi.startDate.utc().format('D MMM YY').toUpperCase()}
+        </span>
         <span className={classNames('cell', 'cell--count')}>
           {props.rfi.status === RfiStatus.PENDING ? '-' : props.rfi.tgtCount}
-      </span>
+        </span>
         <span className={classNames('cell', 'cell--count')}>
           {props.rfi.status === RfiStatus.PENDING ? '-' : props.rfi.ixnCount}
-      </span>
+        </span>
       </div>
     </div>
   );
@@ -70,7 +73,7 @@ export const StyledRfiRow = styled(RfiRow)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 509px;
+    width: 574px;
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightBold};
     color: ${theme.color.fontActive};
@@ -127,6 +130,10 @@ export const StyledRfiRow = styled(RfiRow)`
   }
   
   .cell--ltiov {
+    width: 80px;
+  }
+  
+  .cell--startDate {
     width: 80px;
   }
   

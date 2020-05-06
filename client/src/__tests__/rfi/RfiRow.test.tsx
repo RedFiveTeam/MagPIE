@@ -6,8 +6,8 @@ import { RfiRow } from '../../dashboard/rfi/region/RfiRow';
 describe('RFIRow', () => {
   let subject: ShallowWrapper;
   const moment = require('moment');
-  let rfi = new RfiModel(1, '2020-00123', 'google.com', RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '',
-                         moment('2019-11-20').utc(), 'CAN', 'hi', 'Just a fiction', 1, 12, 345);
+  let rfi = new RfiModel(1, '2020-00123', 'google.com', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '',
+                         '', moment('2019-11-20').utc(), 'CAN', 'hi', 'Just a fiction', 1, 12, 345);
   let selectSpy: jest.Mock;
 
   beforeEach(() => {
