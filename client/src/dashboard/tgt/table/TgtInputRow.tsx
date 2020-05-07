@@ -25,6 +25,7 @@ interface MyProps {
   postTarget: (target: TargetPostModel) => void;
   key: number;
   addingOrEditing: boolean;
+  setEditingElement: (e: Element|null) => void;
   className?: string;
 }
 
@@ -119,13 +120,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
         new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
                             notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED, '', ''),
       );
-
-      // setTimeout(() => {
-      //   setName('');
-      //   setMgrs('');
-      //   setNotes('');
-      //   setDescription('');
-      // }, 500);
     }
   };
 
@@ -155,9 +149,12 @@ export const TgtInputRow: React.FC<MyProps> = props => {
 
   function onBlur(event: any) {
     let currentTarget: any = event.currentTarget;
+
     setTimeout(() => {
       if (!currentTarget.contains(document.activeElement) && action !== RowAction.DELETING) {
         setAction(RowAction.SUBMITTING);
+      } else {
+        props.setEditingElement(document.activeElement);
       }
     }, 300);
   }

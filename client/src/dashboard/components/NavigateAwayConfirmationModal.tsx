@@ -8,6 +8,7 @@ interface MyProps {
   message: string;
   setDisplay: (display: boolean) => void;
   handleYes: () => void;
+  focusedElement?: Element|null;
 }
 
 export const NavigateAwayConfirmationModal: React.FC<MyProps> = (props) => {
@@ -35,7 +36,14 @@ export const NavigateAwayConfirmationModal: React.FC<MyProps> = (props) => {
           }}>
             Leave Page
           </span>
-          <span className={classNames('modal-no', classes.modalButton)} onClick={() => props.setDisplay(false)}>
+          <span className={classNames('modal-no', classes.modalButton)} onClick={() => {
+            props.setDisplay(false);
+            setTimeout(() => {
+              if (props.focusedElement instanceof HTMLElement) {
+                props.focusedElement.focus();
+              }
+            }, 200);
+          }}>
             Stay on Page
           </span>
         </div>

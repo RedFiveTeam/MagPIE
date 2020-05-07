@@ -65,6 +65,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const [navigating, setNavigating] = useState(false);
   const [navigate, setNavigate] = useState(null as RfiModel|null);
   const [displayCopyTargets, setDisplayCopyTargets] = useState(false);
+  const [editingElement, setEditingElement] = useState(null as Element|null);
 
   const isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0 || props.rfi.status === RfiStatus.CLOSED;
 
@@ -115,7 +116,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
                                                 classes.snackbarButton),
             variant: 'info',
           });
-        } else {
+        } else if (targets[0].targetId === null) {
           enqueueSnackbar(targets[0].name + ' Created', {
             action: (key) => UndoSnackbarAction(key, targets, handleUndoPostTargets, closeSnackbar,
                                                 classes.snackbarButton),
@@ -237,6 +238,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
           deleteExploitDate={handleDeleteExploitDate}
           disabled={isDisabled}
           highlight={props.highlight}
+          setEditingElement={setEditingElement}
         />,
     );
   }
@@ -303,6 +305,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
               display={true}
               setDisplay={setNavigating}
               handleYes={handleNavigate}
+              focusedElement={editingElement}
             />
             :
             null}

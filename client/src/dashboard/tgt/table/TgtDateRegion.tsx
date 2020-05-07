@@ -31,6 +31,7 @@ interface Props {
   deleteExploitDate: (exploitDate: ExploitDateModel) => void;
   disabled: boolean;
   highlight: boolean;
+  setEditingElement: (e: Element|null) => void;
   className?: string;
 }
 
@@ -48,6 +49,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
             setAddEditTarget={props.setAddEditTarget}
             addingOrEditing={props.addingOrEditing}
             postTarget={props.postTarget}
+            setEditingElement={props.setEditingElement}
           />
           :
           <StyledTgtRow
@@ -93,6 +95,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
             setAddEditTarget={props.setAddEditTarget}
             addingOrEditing={props.addingOrEditing}
             postTarget={props.postTarget}
+            setEditingElement={props.setEditingElement}
           />
           :
           <div
