@@ -223,6 +223,7 @@ Scenario('Should be able to delete and undo delete tgts', (I) => {
   I.moveCursorTo('.tgt-form-box');
   I.waitForElement('.delete-tgt-button');
   I.click('.delete-tgt-button');
+  I.waitForElement('.dismiss-snackbar');
   I.click('.dismiss-snackbar');
 
   //Need to leave page and come back to see changes
@@ -233,6 +234,7 @@ Scenario('Should be able to delete and undo delete tgts', (I) => {
   I.moveCursorTo('.tgt-form-box');
   I.waitForElement('.delete-tgt-button');
   I.click('.delete-tgt-button');
+  I.waitForElement('.dismiss-snackbar');
   I.click('.dismiss-snackbar');
 
   I.click('.tgt-dash--header--back-button');
@@ -241,12 +243,12 @@ Scenario('Should be able to delete and undo delete tgts', (I) => {
 
   I.dontSeeElement('.tgt-form-box');
   I.click('.delete-date');
-  I.click('.dismiss-snackbar');
 });
 
 Scenario('Should be able to copy targets', (I) => {
   I.click('.add-date-button');
   I.fillField('input', '02012020');
+  I.waitForElement('.dismiss-snackbar');
   I.click('.dismiss-snackbar');
 
   I.click('.add-tgt-button');
@@ -254,6 +256,7 @@ Scenario('Should be able to copy targets', (I) => {
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
+  I.waitForElement('.dismiss-snackbar');
   I.click('.dismiss-snackbar');
 
   I.click('.add-date-button');
