@@ -50,3 +50,7 @@ code {
     font-weight: 700 !important;
     text-shadow: 0 0 2px #FFF !important;
 }
+
+.header-tooltip {
+    z-index: 10001 !important;
+}

@@ -55,6 +55,9 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
           }
           <TextTooltip
             title={'Add Exploit Date'}
+            PopperProps={{
+              className: 'header-tooltip'
+            }}
             disableFocusListener={props.displayHelperText}
             disableHoverListener={props.displayHelperText}
             disableTouchListener={props.displayHelperText}
@@ -67,6 +70,9 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
           </TextTooltip>
           <TextTooltip
             title={'Copy Targets'}
+            PopperProps={{
+              className: 'header-tooltip'
+            }}
           >
             <div className={classNames('copy-tgts-button header-button',
                                        props.disabled || props.displayHelperText ? 'disabled' : null)}
