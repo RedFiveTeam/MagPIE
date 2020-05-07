@@ -8,13 +8,12 @@ Before((I) => {
   I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
-  I.click('.rfi-row');
+  I.click(locate('.rfi-row').at(2));
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:', 10);
 });
 
 Scenario('Should be able to navigate to and exit the interactions page', (I) => {
-  I.click('.add-date-button');
   I.fillField('input', '02012020');
 
   I.waitForText('TGT Name', 10);
@@ -26,6 +25,7 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.pressKey('Enter');
 
   I.click('.tgt-dash--header--back-button');
+  I.click(locate('.rfi-row').at(2));
   I.click('.navigate-to-tgt-button');
 
   I.click('.exploitation');
@@ -98,8 +98,10 @@ Scenario('Should be able to see Tgt and Ixn counts on the RFI Description page',
 
   I.waitForText('TGTs', 10);
   I.see('C/Os');
-  I.see('1', locate('.region--prioritized').find('.cell--count').at(1));
-  I.see('2', locate('.region--prioritized').find('.cell--count').at(2));
+  within(locate('.rfi-row').at(2), () => {
+    I.see('1', locate('.cell--count').at(1));
+    I.see('2', locate('.cell--count').at(2));
+  });
 });
 
 Scenario('Should be able to edit ixns', (I) => {
@@ -179,9 +181,10 @@ Scenario('Should be able to write and view track narratives', (I) => {
   I.click('.exploitation');
   I.waitForText('Status', 10);
   I.click('.status-wrapper');
+  I.waitForElement('.completed-button');
   I.click('.completed-button');
-  I.click('.track-narrative-button');
 
+  I.click('.track-narrative-button');
   I.waitForText('Copy to Clipboard');
 
   I.fillField('.track-narrative', '3 already present PERS were in the CY S of BLDG 1. 2 Pers entered the S entrance of ' +
@@ -320,6 +323,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
 
   //Delete first ixn
   I.moveCursorTo('.ixn-row-box', 10, 10);
+  I.waitForElement('.delete-ixn-button');
   I.click('.delete-ixn-button');
 
   I.click('.ixn-dash--header--back-button');
@@ -330,11 +334,12 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
 
   //Delete second ixn and undo
   I.moveCursorTo('.ixn-row-box', 10, 10);
+  I.waitForElement('.delete-ixn-button');
   I.click('.delete-ixn-button');
 
   I.waitForText('Interaction deleted', 10);
 
-  I.click('UNDO');
+  I.click(locate('.undo-button'));
 
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI DESCRIPTION:', 10);
@@ -344,6 +349,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
 
   //Delete second ixn
   I.moveCursorTo('.ixn-row-box', 10, 10);
+  I.waitForElement('.delete-ixn-button');
   I.click('.delete-ixn-button');
 
   I.click('.ixn-dash--header--back-button');
@@ -390,7 +396,7 @@ Scenario('Should be able to delete segments and undo segment delete', (I) => {
 
   I.waitForText('You deleted 11:00:00Z-12:00:00Z', 10);
 
-  I.click('UNDO');
+  I.click('.undo-button');
 
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI DESCRIPTION:', 10);
@@ -453,22 +459,26 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI DESCRIPTION:', 10);
   I.moveCursorTo('.tgt-form-box', 10, 10);
+  I.waitForElement('.delete-tgt-button');
   I.click('.delete-tgt-button');
   I.seeElement(locate('div').withText('All associated data will be erased.'));
   I.click('.modal-no');
 
   I.click('.tgt-dash--header--back-button');
   I.waitForText('PRI');
+  I.click(locate('.rfi-row').at(2));
   I.click('.navigate-to-tgt-button');
 
   I.waitForText('SDT20-123');
 
   I.moveCursorTo('.tgt-form-box', 10, 10);
+  I.waitForElement('.delete-tgt-button');
   I.click('.delete-tgt-button');
   I.seeElement(locate('div').withText('All associated data will be erased.'));
   I.click('.modal-yes');
 
   I.click('.tgt-dash--header--back-button');
+  I.click(locate('.rfi-row').at(2));
   I.click('.navigate-to-tgt-button');
 
   I.waitForText('RFI DESCRIPTION:', 10);

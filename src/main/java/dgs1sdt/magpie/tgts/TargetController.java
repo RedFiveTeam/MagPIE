@@ -37,8 +37,7 @@ public class TargetController {
 
   @PostMapping(path = "/post")
   public void postTarget(@Valid @RequestBody List<TargetJson> targetJsons,
-                         @RequestParam(name = "userName", defaultValue =
-                           "") String userName,
+                         @RequestParam(name = "userName", defaultValue = "") String userName,
                          @RequestParam(name = "isCopy", defaultValue = "false") String isCopyString) {
     boolean isCopy = false;
     if (isCopyString.equals("true")) {

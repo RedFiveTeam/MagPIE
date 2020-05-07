@@ -8,7 +8,7 @@ Before((I) => {
   I.fillField('.username-input', 'Sdt.Test');
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
-  I.click('.rfi-row');
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:', 10);
 });
@@ -39,19 +39,22 @@ Scenario('Should be able to add dates and undo', (I) => {
   I.see('Input or select a coverage date for your targets');
   I.fillField('input', '02012020');
   I.waitForText('TGT Name', 10);
-  I.seeElement(locate('input').withAttr({value: '02/01/2020'}));
+  I.waitForElement('.date-divider--1-Feb-20')
+  // I.seeElement(locate('input').withAttr({value: '02/01/2020'}));
   I.waitForText('02/01/2020 Created', 10);
   I.dontSee('Input or select a coverage date for your targets');
 
-  I.click('UNDO');
+  I.click('.undo-button');
   I.waitForText('Input or select a coverage date for your targets', 10);
   I.dontSee('TGT Name');
-  I.dontSeeElement(locate('input').withAttr({value: '02/01/2020'}));
+  I.dontSeeElement('.date-divider--1-Feb-20')
+  // I.dontSeeElement(locate('input').withAttr({value: '02/01/2020'}));
 
   I.fillField('input', '02012020');
-  I.waitForText('TGT Name', 10);
-  I.seeElement(locate('input').withAttr({value: '02/01/2020'}));
+  // I.waitForText('TGT Name', 10);
   I.waitForText('02/01/2020 Created', 10);
+  I.waitForElement('.date-divider--1-Feb-20')
+  // I.seeElement(locate('input').withAttr({value: '02/01/2020'}));
   I.dontSee('Input or select a coverage date for your targets');
 });
 
@@ -65,24 +68,26 @@ Scenario('Should be able to edit dates', (I) => {
 
 Scenario('Should be able to delete and undo delete dates', (I) => {
   I.see('TGT Name');
-  I.seeElement(locate('input').withAttr({value: '02/09/2020'}));
+  I.waitForElement('.date-divider--9-Feb-20');
   I.click('.delete-date');
   I.waitForText('You deleted 02/09/2020', 10);
-  I.dontSeeElement(locate('input').withAttr({value: '02/09/2020'}));
-  I.click('UNDO');
+  I.dontSeeElement('.date-divider--9-Feb-20');
+  I.click('.undo-button');
 
   I.click('.tgt-dash--header--back-button');
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:', 10);
-  I.seeElement(locate('input').withAttr({value: '02/09/2020'}));
+  I.waitForElement('.date-divider--9-Feb-20');
   I.click('.delete-date');
   I.waitForText('You deleted 02/09/2020', 10);
-  I.dontSeeElement(locate('input').withAttr({value: '02/09/2020'}));
+  I.dontSeeElement('.date-divider--9-Feb-20');
 });
 
 Scenario('Should be able to add tgts', (I) => {
   I.click('.add-date-button');
   I.fillField('input', '02012020');
+  I.click('.dismiss-snackbar');
 
   I.click('.add-tgt-button');
   I.fillField('.tgt-name-input-new', 'SDT20-123');
@@ -94,9 +99,10 @@ Scenario('Should be able to add tgts', (I) => {
   I.fillField('.description', 'desc');
   I.pressKey('Enter');
   I.waitForText('SDT20-123 Created');
-  I.click('UNDO');
+  I.click('.undo-button');
 
   I.click('.tgt-dash--header--back-button');
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
 
   I.click('.add-tgt-button');
@@ -108,6 +114,7 @@ Scenario('Should be able to add tgts', (I) => {
   I.pressKey('Tab');
   I.fillField('.description', 'desc');
   I.pressKey('Enter');
+  I.click('.dismiss-snackbar');
 
   I.waitForText('SDT20-123', 10);
   I.seeElement('.add-tgt-button');
@@ -128,6 +135,7 @@ Scenario('Should be able to edit tgts', (I) => {
 
   //Need to leave page and come back to see changes
   I.click('.tgt-dash--header--back-button');
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
 
   I.waitForText('SDT20-999', 10);
@@ -142,6 +150,7 @@ Scenario('Should be able to edit tgts', (I) => {
   I.click('.cancel-edit-tgt-button');
 
   I.click('.tgt-dash--header--back-button');
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
 
   I.waitForText('SDT20-999', 10);
@@ -165,11 +174,11 @@ Scenario('Should display modal when trying to navigate away while editing a targ
   I.waitForText('You haven\'t saved the target you were editing.', 10);
   I.click('.modal-yes');
   I.waitForText('Customer', 10)
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:');
   I.dontSee('SDT20-990');
 });
-
 
 Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.click('.add-tgt-button');
@@ -184,6 +193,7 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.waitForText('You haven\'t saved the target you were editing.', 10);
   I.click('.modal-yes');
   I.waitForText('Justification');
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:');
 
@@ -192,6 +202,7 @@ Scenario('Should not be able to add tgts with conflicting names', (I) => {
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
+  I.click('.dismiss-snackbar');
 
   I.doubleClick('.tgt-name');
   for (let i = 0; i < 5; i++)
@@ -206,38 +217,49 @@ Scenario('Should be able to delete and undo delete tgts', (I) => {
   I.moveCursorTo('.tgt-form-box');
   I.click('.delete-tgt-button');
   I.waitForText('You deleted SDT20-999');
-  I.click('UNDO');
+  I.click('.undo-button');
   I.wait(1);
 
   I.moveCursorTo('.tgt-form-box');
+  I.waitForElement('.delete-tgt-button');
   I.click('.delete-tgt-button');
+  I.click('.dismiss-snackbar');
 
   //Need to leave page and come back to see changes
   I.click('.tgt-dash--header--back-button');
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
 
   I.moveCursorTo('.tgt-form-box');
+  I.waitForElement('.delete-tgt-button');
   I.click('.delete-tgt-button');
+  I.click('.dismiss-snackbar');
 
   I.click('.tgt-dash--header--back-button');
+  I.click(locate('.rfi-row').at(1));
   I.click('.navigate-to-tgt-button');
 
   I.dontSeeElement('.tgt-form-box');
   I.click('.delete-date');
+  I.click('.dismiss-snackbar');
 });
 
 Scenario('Should be able to copy targets', (I) => {
   I.click('.add-date-button');
   I.fillField('input', '02012020');
+  I.click('.dismiss-snackbar');
 
   I.click('.add-tgt-button');
   I.fillField('.tgt-name-input-new', 'SDT20-123');
   I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
+  I.click('.dismiss-snackbar');
 
   I.click('.add-date-button');
   I.fillField('input', '02022020');
+  I.wait(1);
+  I.click('.dismiss-snackbar');
 
   I.click('.copy-tgts-button');
   I.waitForText('Copy Targets from', 10);
@@ -282,7 +304,7 @@ Scenario('Should be able to copy targets', (I) => {
     I.see('12QWE1231231231');
   });
 
-  I.click('UNDO');
+  I.click('.undo-button');
 
   within('.date-divider--2-Feb-20', () => {
     I.dontSee('SDT20-123');

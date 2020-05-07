@@ -5,7 +5,7 @@ import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import theme from '../../resources/theme';
 import AddTgtDateVector from '../../resources/icons/AddTgtDateVector';
 import classNames from 'classnames';
-import TextTooltip, { StyledTextTooltip } from '../components/TextTooltip';
+import TextTooltip from '../components/TextTooltip';
 import CopyTargetsButton from '../../resources/icons/CopyTargetsButton';
 
 interface OwnProps {
@@ -53,7 +53,7 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
             :
             null
           }
-          <StyledTextTooltip
+          <TextTooltip
             title={'Add Exploit Date'}
             disableFocusListener={props.displayHelperText}
             disableHoverListener={props.displayHelperText}
@@ -64,7 +64,7 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
             >
               <AddTgtDateVector/>
             </div>
-          </StyledTextTooltip>
+          </TextTooltip>
           <TextTooltip
             title={'Copy Targets'}
           >

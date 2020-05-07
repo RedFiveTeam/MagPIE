@@ -73,8 +73,8 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   useEffect(() => {
     if (newExploitDate) {
       enqueueSnackbar(newExploitDate.exploitDate.format('MM/DD/YYYY') + ' Created', {
-        action: (key) => UndoSnackbarAction(key, newExploitDate!.id, handleUndoPostExploitDate, closeSnackbar,
-                                            classes.snackbarButton),
+        action: (key) => UndoSnackbarAction(key, newExploitDate!.id, handleUndoPostExploitDate,
+                                            closeSnackbar, classes.snackbarButton),
         variant: 'info',
       });
     }
@@ -160,8 +160,8 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const handleDeleteTarget = (target: TargetModel) => {
     if (props.rfi.status !== RfiStatus.CLOSED) {
       enqueueSnackbar('You deleted ' + target.name, {
-        action: (key) => UndoSnackbarAction(key, {...target, targetId: target.id} as TargetPostModel, handlePostTarget,
-                                            closeSnackbar, classes.snackbarButton),
+        action: (key) => UndoSnackbarAction(key, {...target, targetId: target.id} as TargetPostModel,
+                                            handlePostTarget, closeSnackbar, classes.snackbarButton),
         variant: 'info',
       });
       dispatch(deleteTgt(target.id));

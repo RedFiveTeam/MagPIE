@@ -6,6 +6,7 @@ import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 import RfiModel from '../../store/rfi/RfiModel';
+import classNames from 'classnames';
 
 type UndoTypes = IxnModel|SegmentModel|TargetPostModel|TargetPostModel[]|ExploitDatePostModel|number;
 
@@ -20,13 +21,14 @@ export const UndoSnackbarAction = (key: any, data: UndoTypes, postData: (data: a
           postData(data);
           closeSnackbar(key);
         }}
-        className={className}
+        className={classNames(className, 'undo-button')}
       >
         UNDO
       </Button>
       <IconButton
         onClick={() => closeSnackbar(key)}
         color={'primary'}
+        className={'dismiss-snackbar'}
       >
         <SnackbarDismissIcon/>
       </IconButton>

@@ -177,7 +177,7 @@ public class TargetService {
         toDelete.setDeleted(now);
         targetRepository.save(toDelete);
         this.metricsService.addUndoTargetCreate(toDelete.getId(), userName);
-//        ixnService.assignTracks(target.getRfiId(), target.getName());
+        ixnService.assignTracks(target.getRfiId(), target.getName());
       } else {
         log.error(
           "Error deleting target: could not find target with name " + target.getName() + " and exploit date id " +
