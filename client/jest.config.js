@@ -2,6 +2,11 @@ module.exports = {
   "roots": [
     "<rootDir>/src"
   ],
+  "globals": {
+    'ts-jest': {
+      diagnostics: true
+    }
+  },
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
   },

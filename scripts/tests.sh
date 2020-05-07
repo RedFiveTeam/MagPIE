@@ -75,7 +75,7 @@ function unitTests {
 
     showBanner "Frontend"
     pushd ${BASE_DIR}/client
-        CI=true yarn jest
+        CI=true yarn test
     popd
 }
 
