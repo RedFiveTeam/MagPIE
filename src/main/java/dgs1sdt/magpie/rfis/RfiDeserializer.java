@@ -58,7 +58,8 @@ public class RfiDeserializer {
   private static String getUrl(Element element) {
     String rawUrl = getStringFromElement(element, "gets:url");
 
-    return rawUrl.replace(".smil.mil", ".smil.mil/internal");
+//    return rawUrl.replace(".smil.mil", ".smil.mil/internal");
+    return rawUrl;
   }
 
   private static String getStatus(Element element) {
