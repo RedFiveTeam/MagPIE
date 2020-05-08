@@ -14,7 +14,12 @@ import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import {
-  deleteExploitDate, deleteTargets, deleteTgt, loadTgtPage, postExploitDate, submitPostTargets,
+  deleteExploitDate,
+  deleteTargets,
+  deleteTgt,
+  loadTgtPage,
+  postExploitDate,
+  submitPostTargets,
 } from '../../store/tgt/Thunks';
 import {
   addTgt,
@@ -186,8 +191,10 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   };
 
   const handleNavigateToIxnPage = (target: TargetModel, dateString: string) => {
-    setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: target.id}});
-    dispatch(navigateToIxnPage(target, dateString));
+    if (!isDisabled || props.rfi.status === RfiStatus.CLOSED) {
+      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: target.id}});
+      dispatch(navigateToIxnPage(target, dateString));
+    }
   };
 
   const handleSelectRfi = (rfi: RfiModel) => {

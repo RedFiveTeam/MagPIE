@@ -8,7 +8,7 @@ import theme, { rowStyles } from '../../../resources/theme';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
 import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
-import RfiModel from '../../../store/rfi/RfiModel';
+import RfiModel, { RfiStatus } from '../../../store/rfi/RfiModel';
 import { StyledTgtStatusPickerOutline } from '../../../resources/icons/TgtStatusPickerOutline';
 import { Status } from '../TgtDashboard';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
@@ -185,7 +185,8 @@ export const TgtRow: React.FC<Props> = props => {
                   <CompletedButton buttonClass={classes.statusUnclickable}/>)
               }</div>
           </HtmlTooltip>
-          <div className={classNames('exploitation', props.target ? '' : 'input-disabled')} onClick={handleIxnClick}>
+          <div className={classNames('exploitation', props.addingOrEditing && !(props.rfi.status === RfiStatus.CLOSED)
+            ? 'delete-disabled' : null)} onClick={handleIxnClick}>
             <StyledExploitationLogButtonVector/>
           </div>
         </Box>

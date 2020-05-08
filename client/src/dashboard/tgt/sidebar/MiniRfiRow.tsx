@@ -23,13 +23,13 @@ export const MiniRfiRow: React.FC<Props> = props => {
         key={props.rfi.rfiNum}
         onClick={() => props.selectRfi(props.rfi)}
       >
-        <span className={classNames('cell', 'cell--rfi-num')}>
+        <div className={classNames('cell', 'cell--rfi-num')}>
           {formatRfiNum(props.rfi.rfiNum)}
-        </span>
+        </div>
         {!props.collapsed ?
-          <span className={classNames('cell', 'cell--customerUnit')}>
-            {props.rfi.customerUnit}
-          </span>
+          <div className={classNames('cell', 'cell--customer')}>
+            <div>{props.rfi.customerUnit}</div>
+          </div>
           :
           null
         }
