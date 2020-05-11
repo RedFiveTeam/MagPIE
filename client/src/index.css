@@ -54,3 +54,11 @@ code {
 .header-tooltip {
     z-index: 10001 !important;
 }
+
+.MuiPickersCalendarHeader-iconButton {
+    background: none !important;
+}
+
+.MuiPickersCalendarHeader-iconButton:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+}

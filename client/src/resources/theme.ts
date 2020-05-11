@@ -57,6 +57,7 @@ const theme = {
     fontHeader: crayonBox.skyBlueGreen,//
     backgroundFocus: crayonBox.mediumBlueGray,//
     borderAddButton: crayonBox.mediumGreenBlue,//
+    dateDividerHighlight: crayonBox.mediumGreenBlue,//
     backgroundPillButton: crayonBox.darkGreenBlue,//
     fontSubHeader: crayonBox.lightBlueGray,//
     copyTgtBorder: crayonBox.lightCoolBlack,//
@@ -67,6 +68,7 @@ const theme = {
     weightRow: 400,
     weightMedium: 500,
     weightBold: 700,
+    weightBolder: 900,
     weightSubHeader: 300,
     sizeRow: '16px',
     familyHeader: 'Roboto',
@@ -101,6 +103,33 @@ const muiPalette = createPalette(
 
 export const muiTheme = createMuiTheme(
   {
+    overrides: {
+      MuiToolbar: {
+        root: {
+          background: '#000000'
+        }
+      },
+      MuiDialogContent: {
+        root: {
+          background: theme.color.backgroundInformation
+        }
+      },
+      MuiIconButton: {
+        root: {
+          background: theme.color.backgroundInformation,
+        }
+      },
+      MuiButtonBase: {
+        root: {
+          background: theme.color.backgroundInformation,
+        }
+      },
+      MuiDialogActions: {
+        root: {
+          background: theme.color.backgroundInformation
+        }
+      }
+    },
     palette: muiPalette,
   });
 
@@ -173,6 +202,7 @@ export const rowStyles = makeStyles((localTheme: Theme) => createStyles(
     },
     snackbarButton: {
       fontSize: theme.font.sizeRowMedium,
+      background: theme.color.backgroundSnackbar,
     },
   }),
 );
@@ -225,7 +255,9 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       height: '49px',
       justifySelf: 'flex-end',
       padding: '0 115px',
-      boxShadow: '0px -2px 4px rgba(0, 0, 0, 0.5)'
+      boxShadow: '0px -2px 4px rgba(0, 0, 0, 0.5)',
+      borderBottomRightRadius: '6px',
+      borderBottomLeftRadius: '6px',
     },
     modalButton: {
       cursor: 'pointer',

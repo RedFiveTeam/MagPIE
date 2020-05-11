@@ -28,7 +28,7 @@ export const UndoSnackbarAction = (key: any, data: UndoTypes, postData: (data: a
       <IconButton
         onClick={() => closeSnackbar(key)}
         color={'primary'}
-        className={'dismiss-snackbar'}
+        className={classNames(className, 'dismiss-snackbar')}
       >
         <SnackbarDismissIcon/>
       </IconButton>
@@ -56,6 +56,7 @@ export const PriorityUndoSnackbarAction = (key: any, data: RfiModel[],
       <IconButton
         onClick={() => closeSnackbar(key)}
         color={'primary'}
+        className={className}
       >
         <SnackbarDismissIcon/>
       </IconButton>

@@ -85,7 +85,7 @@ public class IxnServiceTest extends BaseIntegrationTest {
 
   private void setupIxns() throws Exception {
     rfiRepository.save(new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a " +
-      "justifiction", "", "", "", "", "", "", "", ""));
+      "justifiction", "", "", "", "", "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));

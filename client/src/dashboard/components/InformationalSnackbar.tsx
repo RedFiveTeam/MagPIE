@@ -8,6 +8,7 @@ export const DismissSnackbarAction = (key: any, closeSnackbar: (key: any) => voi
       <IconButton
         onClick={() => closeSnackbar(key)}
         color={'primary'}
+        className={className}
       >
         <SnackbarDismissIcon/>
       </IconButton>

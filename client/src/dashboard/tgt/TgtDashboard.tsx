@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledTgtTable } from './table/TgtTable';
 import { StyledExploitDateDivider } from './table/ExploitDateDivider';
-import theme, { rowStyles } from '../../resources/theme';
+import theme, { longInputStyles, rowStyles } from '../../resources/theme';
 import { ApplicationState } from '../../store';
 import { StyledTgtDateRegion } from './table/TgtDateRegion';
 import { StyledTgtDashboardHeader } from './TgtDashboardHeader';
@@ -30,7 +30,7 @@ import {
   truncateAndConvertDateToUtc,
   updateTgtsLocal,
 } from '../../store/tgt';
-import { TargetPostModel } from '../../store/tgt/TargetPostModel';
+import { convertToPostModel, TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 import { useCookies } from 'react-cookie';
 import { Cookie } from '../../utils';
@@ -40,6 +40,9 @@ import { useSnackbar } from 'notistack';
 import { StyledRfiSidebar } from './sidebar/RfiSidebar';
 import { NavigateAwayConfirmationModal } from '../components/NavigateAwayConfirmationModal';
 import { StyledTgtCopyModal } from './TgtCopyModal';
+import { StyledTgtInputRow } from './table/TgtInputRow';
+import { StyledTgtRow } from './table/TgtRow';
+import { Modal } from '@material-ui/core';
 
 interface MyProps {
   rfi: RfiModel;
@@ -70,9 +73,12 @@ export const TgtDashboard: React.FC<MyProps> = props => {
   const [navigating, setNavigating] = useState(false);
   const [navigate, setNavigate] = useState(null as RfiModel|null);
   const [displayCopyTargets, setDisplayCopyTargets] = useState(false);
+  const [displayCopyAllTargets, setDisplayCopyAllTargets] = useState(false);
   const [editingElement, setEditingElement] = useState(null as Element|null);
+  const [copyTgts, setCopyTgts] = useState([] as TargetPostModel[]);
 
-  const isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0 || props.rfi.status === RfiStatus.CLOSED;
+  const isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0 || props.rfi.status === RfiStatus.CLOSED
+    || displayCopyAllTargets || displayCopyTargets;
 
   let newExploitDate = useSelector(({tgtState}: ApplicationState) => tgtState.newExploitDate);
 
@@ -83,6 +89,25 @@ export const TgtDashboard: React.FC<MyProps> = props => {
                                             closeSnackbar, classes.snackbarButton),
         variant: 'info',
       });
+      let newTgts: TargetPostModel[] = [];
+      if (props.targets.length > 0 && props.targets[0].exploitDateId === -1) {
+        for (let tgt of props.targets) {
+          let newTgt = {...convertToPostModel(tgt), exploitDateId: newExploitDate!.id};
+          if (newTgts.find(tgt => tgt.name === newTgt.name) === undefined) {
+            newTgts.push(newTgt);
+          }
+        }
+        handlePostTargets(newTgts, false);
+      } else if (props.targets.length > 0 && props.targets[0].exploitDateId > 0) {
+        for (let tgt of props.targets) {
+          let newTgt = {...convertToPostModel(tgt), targetId: null, exploitDateId: newExploitDate!.id};
+          if (newTgts.find(tgt => tgt.name === newTgt.name) === undefined) {
+            newTgts.push(newTgt);
+          }
+        }
+        setCopyTgts(newTgts);
+        setDisplayCopyAllTargets(true);
+      }
     }
   }, [newExploitDate]);
 
@@ -250,6 +275,82 @@ export const TgtDashboard: React.FC<MyProps> = props => {
     );
   }
 
+  function printGetsTargets() {
+    return props.targets.map(
+      (target: TargetModel, index: number) =>
+        props.editTgt === target.id ?
+          <StyledTgtInputRow
+            target={target}
+            key={index}
+            rfi={props.rfi}
+            exploitDate={null}
+            setAddEditTarget={handleAddEdit}
+            addingOrEditing={isDisabled}
+            postTarget={handlePostTarget}
+            setEditingElement={setEditingElement}
+          />
+          :
+          <StyledTgtRow
+            target={target}
+            key={index}
+            rfi={props.rfi}
+            exploitDate={null}
+            setAddEditTarget={handleAddEdit}
+            addingOrEditing={isDisabled}
+            postTarget={handlePostTarget}
+            deleteTgt={handleDeleteTarget}
+            navigateToIxnPage={handleNavigateToIxnPage}
+            highlight={props.highlight}
+          />,
+    );
+  }
+
+  const CopyTargetsModal = () => {
+      const classes = longInputStyles();
+      return (
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={displayCopyAllTargets}
+          onClose={() => setDisplayCopyAllTargets(false)}
+          style={{
+            top: '50%',
+            left: '50%',
+          }}
+          className={classNames('delete-modal', classes.deleteModal)}
+        >
+          <div className={classes.modalBody}>
+            <div className={'modal-text'}>Would you like to import <br/>targets from all previous dates?</div>
+            <div className={classes.modalConfirmation}>
+          <span className={classNames('modal-no', classes.modalButton)} onClick={() => {
+            setDisplayCopyAllTargets(false);
+          }}>
+            No
+          </span>
+              <span className={classNames('modal-yes', classes.modalButton)} onClick={() => {
+                handlePostTargets(copyTgts, true);
+                setDisplayCopyAllTargets(false);
+              }}>
+            Yes
+          </span>
+            </div>
+          </div>
+        </Modal>
+      );
+    }
+  ;
+
+  const checkNames = () => {
+    for (let tgt of props.targets) {
+      if (tgt.name === '') {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  let allNamesEntered = checkNames();
+
   return (
     <div className={classNames(props.className)}>
       <StyledTgtDashboardHeader
@@ -257,8 +358,9 @@ export const TgtDashboard: React.FC<MyProps> = props => {
         rfi={props.rfi}
         editing={props.addTgt > 0 || props.editTgt > 0 || addDate}
         addDate={handleAddDate}
-        disabled={isDisabled || props.exploitDates.length === 0}
-        displayHelperText={props.exploitDates.length < 2 && props.rfi.status === RfiStatus.OPEN}
+        disabled={isDisabled || !allNamesEntered}
+        displayHelperText={props.exploitDates.length < 2 && props.rfi.status === RfiStatus.OPEN && allNamesEntered}
+        displayExploitDateHelper={props.targets.length > 0 && props.exploitDates.length === 0 && allNamesEntered}
         displayCopyTargets={() => setDisplayCopyTargets(true)}
       />
       <div className={'tgt-dash-container'}>
@@ -269,35 +371,87 @@ export const TgtDashboard: React.FC<MyProps> = props => {
           />
         </div>
         <div className={'tgt-dash'}>
-          <div className={'tgt-dash-body'}>
-            {props.exploitDates.length > 0 || props.showDatePlaceholder ?
+          {props.targets.length > 0 && props.targets[0].exploitDateId == -1 ?
+            <div className={'tgt-dash-body'}>
+              {allNamesEntered ? null :
+                <span className={'name-input-helper'}>Input all target names to assign a coverage date</span>}
               <StyledTableHeader
                 className={'tgt-table-header'}
                 headers={['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Status']}
               />
-              :
-              null
-            }
-            <StyledTgtTable displayHelperText={props.exploitDates.length === 0}>
-              {printDates(props.exploitDates)}
-              {addDate || (props.exploitDates.length === 0 && props.rfi.status === RfiStatus.OPEN) ?
-                <StyledExploitDateDivider
-                  rfiId={props.rfi.id}
-                  setAddDate={setAddDate}
-                  className={classNames('date-divider--placeholder',
-                                        props.exploitDates.length === 0 ? 'date-divider--new' : null)}
-                  uKey={props.rfi.id}
-                  hasTgts={false}
-                  postExploitDate={handlePostExploitDate}
-                  deleteExploitDate={() => {
-                  }}
-                  disabled={false}
+              <StyledTgtTable displayHelperText={false}>
+                {addDate ?
+                  <StyledExploitDateDivider
+                    rfiId={props.rfi.id}
+                    setAddDate={setAddDate}
+                    className={classNames('date-divider--placeholder', 'date-divider--no-top-margin',
+                                          props.exploitDates.length === 0 ? 'date-divider--new' : null)}
+                    uKey={props.rfi.id}
+                    hasTgts={false}
+                    postExploitDate={handlePostExploitDate}
+                    deleteExploitDate={() => {
+                    }}
+                    disabled={false}
+                    highlight={true}
+                  />
+                  :
+                  null
+                }
+                {printGetsTargets()}
+                {props.addTgt === 1 ?
+                  <StyledTgtInputRow
+                    target={null}
+                    key={99999}
+                    rfi={props.rfi}
+                    exploitDate={null}
+                    setAddEditTarget={handleAddEdit}
+                    addingOrEditing={isDisabled}
+                    postTarget={handlePostTarget}
+                    setEditingElement={setEditingElement}
+                  />
+                  :
+                  <div
+                    className={classNames('add-tgt-button', 'no-select')}
+                    onClick={() => handleAddEdit(Status.ADD, 1)}
+                  >
+                    Add Target
+                  </div>
+                }
+
+              </StyledTgtTable>
+            </div>
+            :
+            <div className={'tgt-dash-body'}>
+              {props.exploitDates.length > 0 || props.showDatePlaceholder ?
+                <StyledTableHeader
+                  className={'tgt-table-header'}
+                  headers={['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Status']}
                 />
                 :
                 null
               }
-            </StyledTgtTable>
-          </div>
+              <StyledTgtTable displayHelperText={props.exploitDates.length === 0}>
+                {printDates(props.exploitDates)}
+                {addDate ?
+                  <StyledExploitDateDivider
+                    rfiId={props.rfi.id}
+                    setAddDate={setAddDate}
+                    className={classNames('date-divider--placeholder',
+                                          props.exploitDates.length === 0 ? 'date-divider--new' : null)}
+                    uKey={props.rfi.id}
+                    hasTgts={false}
+                    postExploitDate={handlePostExploitDate}
+                    deleteExploitDate={() => {
+                    }}
+                    disabled={false}
+                    highlight={true}
+                  />
+                  :
+                  null
+                }
+              </StyledTgtTable>
+            </div>
+          }
           <div className={'tgt-dash--rfi-description-container'}>
             <div
               className={'tgt-dash--rfi-description-box'}
@@ -326,6 +480,10 @@ export const TgtDashboard: React.FC<MyProps> = props => {
           exploitDates={props.exploitDates}
           targets={props.targets}
         />
+        :
+        null}
+      {displayCopyAllTargets ?
+        <CopyTargetsModal/>
         :
         null}
     </div>
@@ -382,7 +540,7 @@ export const StyledTgtDashboard = styled(
   }
   
   .tgt-dash-body {
-    height: calc(100vh - 199px);
+    height: calc(100vh - 224px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -419,9 +577,34 @@ export const StyledTgtDashboard = styled(
     border: 2px solid ${theme.color.modalInputBorder};
   }
   
+  .add-tgt-button {
+    cursor: pointer;
+    box-shadow: -2px 2px 20px #000000;
+    width: 1212px;
+    height: 62px;
+    border-radius: 8px;
+    background: ${theme.color.backgroundInformation};
+    border: 2px solid ${theme.color.borderAddButton};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: ${theme.font.sizeMetricsHeader};
+    font-weight: ${theme.font.weightBold};
+    color: ${theme.color.primaryButton};
+    margin-top: 4px; 
+    
+    :hover {
+      box-shadow: 0 0 6px #FFFFFF;
+    }
+  }
+  
   .date-divider--placeholder {
     width: 100%;
     color: ${theme.color.fontBackgroundInactive};
+  }
+  
+  .date-divider--no-top-margin {
+    margin-top: 0 !important;
   }
   
   .date-divider--new {
@@ -503,5 +686,18 @@ export const StyledTgtDashboard = styled(
     align-items: center;
     cursor: pointer;
     align-self: stretch;
+  }
+  
+  .name-input-helper {
+    font-weight: ${theme.font.weightBolder};
+    font-size: ${theme.font.sizeHeader};
+    line-height: 28px;
+    padding-right: 100px;
+    margin-bottom: -43px;
+    margin-top: 15px;
+  }
+  
+  .modal-text {
+    margin-top: 40px;
   }
 `;

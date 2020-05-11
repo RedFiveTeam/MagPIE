@@ -276,7 +276,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
 };
 
 export const StyledRollupView = styled(RollupView)`
-  margin-top: -25px;
+  margin-top: 58px;
   width: 100%;
   height: calc(100vh - 116px);
   display: flex;

@@ -32,7 +32,8 @@ public class RfiDeserializer {
       getStringFromElement(element, "gets:phoneCommercial"),
       getStringFromElement(element, "gets:phoneDSN"),
       getStringFromElement(element, "gets:phoneSVOIP"),
-      getStringFromElement(element, "gets:phoneTSVOIP")
+      getStringFromElement(element, "gets:phoneTSVOIP"),
+      getMgrs(element)
     );
 
     Timestamp receiveDate = getReceiveDate(element);
@@ -46,8 +47,9 @@ public class RfiDeserializer {
 
   private static String getCustomerTitle(Element element) {
     String rank = getStringFromElement(element, "gets:militaryRank");
-    if (!rank.equals(""))
+    if (!rank.equals("")) {
       return rank;
+    }
     return getStringFromElement(element, "gets:personalTitle");
   }
 
@@ -55,10 +57,30 @@ public class RfiDeserializer {
     return node.getAttributes().getNamedItem("id").getNodeValue();
   }
 
+  private static String getMgrs(Element element) {
+    NodeList responses = element.getElementsByTagName("gets:pointTarget");
+    String mgrsList = "";
+
+    for (int i = 0; i < responses.getLength(); i++) {
+      Node node = responses.item(i);
+      Element curr = (Element) node;
+      try {
+        if(!curr.getAttribute("mgrs").equals(""))
+        mgrsList = mgrsList.concat(
+          curr.getAttribute("mgrs")
+            + ","
+        );
+      } catch (Exception e) {
+
+      }
+    }
+
+    return mgrsList;
+  }
+
   private static String getUrl(Element element) {
     String rawUrl = getStringFromElement(element, "gets:url");
 
-//    return rawUrl.replace(".smil.mil", ".smil.mil/internal");
     return rawUrl;
   }
 

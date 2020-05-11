@@ -1,4 +1,4 @@
-import { TargetStatus } from './TargetModel';
+import { TargetModel, TargetStatus } from './TargetModel';
 
 export class TargetPostModel {
   constructor(
@@ -12,6 +12,11 @@ export class TargetPostModel {
     public status: TargetStatus = TargetStatus.NOT_STARTED,
     public hourlyRollup: string,
     public allCallouts: string,
-    ) {
+  ) {
   }
 }
+
+export const convertToPostModel = (target: TargetModel): TargetPostModel => {
+  return new TargetPostModel(target.id, target.rfiId, target.exploitDateId, target.name, target.mgrs, target.notes,
+                             target.description, target.status, target.hourlyRollup, target.allCallouts);
+};

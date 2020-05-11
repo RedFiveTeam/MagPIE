@@ -37,7 +37,7 @@ public class Rfi {
   private String customerDsnPhone;
   private String customerSvoip;
   private String customerTsvoip;
-
+  private String mgrsList;
 
   public Rfi(
     String rfiNum,
@@ -56,7 +56,8 @@ public class Rfi {
     String customerCommPhone,
     String customerDsnPhone,
     String customerSvoip,
-    String customerTsvoip
+    String customerTsvoip,
+    String mgrsList
   ) {
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
@@ -83,6 +84,7 @@ public class Rfi {
     this.customerDsnPhone = customerDsnPhone;
     this.customerSvoip = customerSvoip;
     this.customerTsvoip = customerTsvoip;
+    this.mgrsList = mgrsList;
   }
 
   public Rfi(
@@ -103,7 +105,8 @@ public class Rfi {
     String customerCommPhone,
     String customerDsnPhone,
     String customerSvoip,
-    String customerTsvoip
+    String customerTsvoip,
+    String mgrsList
   ) {
     this.getsUrl = getsUrl;
     this.rfiNum = rfiNum;
@@ -123,6 +126,7 @@ public class Rfi {
     this.customerDsnPhone = customerDsnPhone;
     this.customerSvoip = customerSvoip;
     this.customerTsvoip = customerTsvoip;
+    this.mgrsList = mgrsList;
   }
 
   public List<String> compare(Rfi otherRfi) {

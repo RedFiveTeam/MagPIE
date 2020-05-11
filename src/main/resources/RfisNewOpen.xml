@@ -144,6 +144,14 @@
           magna aliqua.
         </getsrfi:requestText>
         <getsrfi:justification>This is a justification.</getsrfi:justification>
+        <getsrfi:Targets>
+          <gets:TargetList>
+            <gets:pointTarget mgrs="34ABC1234567890" />
+            <gets:pointTarget mgrs="12GSD0987654321" />
+            <gets:pointTarget mgrs="67SDT1092837465" />
+            <gets:pointTarget latitude="89.5" longitude="5" />
+          </gets:TargetList>
+        </getsrfi:Targets>
         <gets:url>http://www.ask.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-11-12T14:21:25Z</gets:lastUpdate>
@@ -424,6 +432,14 @@
           consequa
         </getsrfi:requestText>
         <getsrfi:justification>This is a justification.</getsrfi:justification>
+        <getsrfi:Targets>
+          <gets:TargetList>
+            <gets:pointTarget mgrs="35ABC1212787890" />
+            <gets:pointTarget mgrs="23GSD0987685321" />
+            <gets:pointTarget mgrs="68SDT1056737465" />
+            <gets:pointTarget latitude="89.5" longitude="5" />
+          </gets:TargetList>
+        </getsrfi:Targets>
         <gets:url>http://www.google.com</gets:url>
         <getsrfi:primaryOrganization>DGS-1</getsrfi:primaryOrganization>
         <gets:lastUpdate>2019-10-16T20:21:26Z</gets:lastUpdate>

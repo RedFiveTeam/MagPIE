@@ -41,6 +41,8 @@ import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
+import dgs1sdt.magpie.metrics.createTargetFromGets.MetricCreateTargetFromGets;
+import dgs1sdt.magpie.metrics.createTargetFromGets.MetricCreateTargetFromGetsRepository;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDate;
 import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepository;
 import dgs1sdt.magpie.metrics.deleteIxn.MetricDeleteIxn;
@@ -99,6 +101,7 @@ public class MetricsService {
   private MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   private MetricDeleteExploitDateRepository metricDeleteExploitDateRepository;
   private MetricCreateTargetRepository metricCreateTargetRepository;
+  private MetricCreateTargetFromGetsRepository metricCreateTargetFromGetsRepository;
   private MetricChangeTargetRepository metricChangeTargetRepository;
   private MetricDeleteTargetRepository metricDeleteTargetRepository;
   private MetricCreateSegmentRepository metricCreateSegmentRepository;
@@ -171,6 +174,12 @@ public class MetricsService {
   @Autowired
   public void setMetricCreateTargetRepository(MetricCreateTargetRepository metricCreateTargetRepository) {
     this.metricCreateTargetRepository = metricCreateTargetRepository;
+  }
+
+  @Autowired
+  public void setMetricCreateTargetFromGetsRepository(
+    MetricCreateTargetFromGetsRepository metricCreateTargetFromGetsRepository) {
+    this.metricCreateTargetFromGetsRepository = metricCreateTargetFromGetsRepository;
   }
 
   @Autowired
@@ -687,5 +696,9 @@ public class MetricsService {
 
   public MetricUndoTargetCreate addUndoTargetCreate(long targetId, String userName) {
     return metricUndoTargetCreateRepository.save(new MetricUndoTargetCreate(targetId, userName));
+  }
+
+  public MetricCreateTargetFromGets addCreateTargetFromGets(Target target, Timestamp timestamp) {
+    return metricCreateTargetFromGetsRepository.save(new MetricCreateTargetFromGets(target, timestamp));
   }
 }

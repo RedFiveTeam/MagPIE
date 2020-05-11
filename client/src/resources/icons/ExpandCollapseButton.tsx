@@ -79,6 +79,7 @@ const Wrapper = styled('div')`
     background-color: #1B2326;
     padding: 4px;
     border-bottom-right-radius: 6px;
+    cursor: pointer;
     
     svg {
       display: flex;

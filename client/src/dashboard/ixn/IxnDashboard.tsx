@@ -13,7 +13,7 @@ import IxnModel from '../../store/ixn/IxnModel';
 import { useCookies } from 'react-cookie';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { useSnackbar } from 'notistack';
-import { TargetPostModel } from '../../store/tgt/TargetPostModel';
+import { convertToPostModel, TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { postRollupClick } from '../../store/metrics';
 import { RollupClickModel } from '../../store/metrics/RollupClickModel';
 import { RollupMode, StyledRollupView } from './RollupView';
@@ -85,11 +85,10 @@ export const IxnDashboard: React.FC<Props> = props => {
     setRollupMode(false);
     let newTarget: TargetPostModel;
     if (mode === RollupMode.ALL_CALLOUTS) {
-      newTarget = new TargetPostModel(target.id, target.rfiId, target.exploitDateId, target.name, target.mgrs,
-                                      target.notes, target.description, target.status, target.hourlyRollup, rollup);
+      newTarget = {...convertToPostModel(target), allCallouts: rollup}
     } else {
-      newTarget = new TargetPostModel(target.id, target.rfiId, target.exploitDateId, target.name, target.mgrs,
-                                      target.notes, target.description, target.status, rollup, target.allCallouts);
+      newTarget = {...convertToPostModel(target), hourlyRollup: rollup}
+
     }
     dispatch(saveRollup(newTarget, dateString, cookie.userName));
     displaySnackbar('Rollup Saved');

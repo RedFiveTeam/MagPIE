@@ -4,6 +4,11 @@ package dgs1sdt.magpie.rfis;
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.metrics.MetricController;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
+import dgs1sdt.magpie.metrics.createTargetFromGets.MetricCreateTargetFromGets;
+import dgs1sdt.magpie.metrics.createTargetFromGets.MetricCreateTargetFromGetsRepository;
+import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetRepository;
+import dgs1sdt.magpie.tgts.TargetService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +36,26 @@ public class RfiServiceTest extends BaseIntegrationTest {
   RfiService rfiService;
 
   @Autowired
+  TargetService targetService;
+
+  @Autowired
   RfiRepository rfiRepository;
+
+  @Autowired
+  TargetRepository targetRepository;
 
   @Autowired
   MetricChangeRfiRepository metricChangeRfiRepository;
 
+  @Autowired
+  MetricCreateTargetFromGetsRepository metricCreateTargetFromGetsRepository;
+
   @Before
   public void clean() {
     rfiRepository.deleteAll();
+    targetRepository.deleteAll();
+    metricChangeRfiRepository.deleteAll();
+    metricCreateTargetFromGetsRepository.deleteAll();
   }
 
   @Test
@@ -107,13 +124,13 @@ public class RfiServiceTest extends BaseIntegrationTest {
     Date rfi1ltiov = new Date();
 
     Rfi rfi = new Rfi("rfiNum", "url", "NEW", new Date(), "customerUnit", rfi1ltiov, "USA", "a description",
-      "This is a justifiction", "", "", "", "", "", "", "", "");
+      "This is a justifiction", "", "", "", "", "", "", "", "", "");
     Rfi updatedRfi =
       new Rfi("rfiNum", "url", "NEW", new Date(), "customerUnit", rfi1ltiov, "USA", "a new and improved description",
-        "This is a justifiction", "", "", "", "", "", "", "", "");
+        "This is a justifiction", "", "", "", "", "", "", "", "", "");
     Rfi rfi2 =
       new Rfi("2", "url2", "NEW", new Date(), "customer2", new Date(), "USA", "description", "This is a justifiction",
-        "", "", "", "", "", "", "", "");
+        "", "", "", "", "", "", "", "", "");
 
     long rfiUpdateCount = metricChangeRfiRepository.count();
 
@@ -134,9 +151,9 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
     Rfi rfi1 =
       new Rfi("SDT-0321", "url", "NEW", new Date(), "1 FW", rfiltiov, "USA", "a description", "This is a justifiction",
-        "", "", "", "", "", "", "", "");
+        "", "", "", "", "", "", "", "", "");
     Rfi rfi2 = new Rfi("SDT-0322", "url", "OPEN", new Date(), "1 FW", rfiltiov, "CAN", "one description",
-      "This is a justifiction", "", "", "", "", "", "", "", "");
+      "This is a justifiction", "", "", "", "", "", "", "", "", "");
 
     rfiRepository.save(rfi1);
     rfiRepository.save(rfi2);
@@ -197,5 +214,45 @@ public class RfiServiceTest extends BaseIntegrationTest {
     assertEquals(2, rfiSecond.getPriority());
     assertEquals(3, rfiThird.getPriority());
     assertEquals(4, rfiFourth.getPriority());
+  }
+
+  @Test
+  public void createsTargetsIfGetsTargetListPopulated() {
+    String[] files = {
+      "RfisNewOpen.xml",
+      "RfisClosed.xml"
+    };
+
+    rfiService.fetchRfisFromUris(files);
+
+    Rfi rfi1 = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00325");
+    Rfi rfi2 = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338");
+
+    assertEquals("34ABC1234567890,12GSD0987654321,67SDT1092837465,", rfi1.getMgrsList());
+    assertEquals("35ABC1212787890,23GSD0987685321,68SDT1056737465,", rfi2.getMgrsList());
+
+    List<Target> targets1 = targetService.getTargets(rfi1.getId());
+    List<Target> targets2 = targetService.getTargets(rfi2.getId());
+
+    assertEquals(3, targets1.size());
+    assertEquals(3, targets2.size());
+
+    assertEquals("34ABC1234567890", targets1.get(0).getMgrs());
+    assertEquals("12GSD0987654321", targets1.get(1).getMgrs());
+    assertEquals("67SDT1092837465", targets1.get(2).getMgrs());
+
+    assertEquals("35ABC1212787890", targets2.get(0).getMgrs());
+    assertEquals("23GSD0987685321", targets2.get(1).getMgrs());
+    assertEquals("68SDT1056737465", targets2.get(2).getMgrs());
+
+    assertEquals(6, metricCreateTargetFromGetsRepository.findAll().size());
+
+    MetricCreateTargetFromGets metric1 = metricCreateTargetFromGetsRepository.findAll().get(0);
+    MetricCreateTargetFromGets metric2 = metricCreateTargetFromGetsRepository.findAll().get(5);
+
+    assertEquals(rfi1.getId(), metric1.getRfiId());
+    assertEquals(rfi2.getId(), metric2.getRfiId());
+    assertEquals("34ABC1234567890", metric1.getMgrs());
+    assertEquals("68SDT1056737465", metric2.getMgrs());
   }
 }

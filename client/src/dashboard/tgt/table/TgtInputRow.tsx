@@ -18,8 +18,8 @@ import { DeleteCancelButton } from '../../ixn/table/DeleteCancelButton';
 
 
 interface MyProps {
-  target: TargetModel | null;
-  exploitDate: ExploitDateModel;
+  target: TargetModel|null;
+  exploitDate: ExploitDateModel|null;
   rfi: RfiModel;
   setAddEditTarget: (status: Status, id?: number) => void;
   postTarget: (target: TargetPostModel) => void;
@@ -101,24 +101,35 @@ export const TgtInputRow: React.FC<MyProps> = props => {
 
   const inputNotes = (event: any) => {
     let newNotes = event.target.value;
-    if (newNotes.charAt(newNotes.length - 1) !== '\n')
+    if (newNotes.charAt(newNotes.length - 1) !== '\n') {
       setNotes(newNotes);
+    }
   };
 
   const inputDescription = (event: any) => {
     let newDescription = event.target.value;
-    if (newDescription.charAt(newDescription.length - 1) !== '\n')
+    if (newDescription.charAt(newDescription.length - 1) !== '\n') {
       setDescription(newDescription);
+    }
   };
 
   const checkTgts = (tgts: TargetModel[]) => {
-    if (tgts.filter((tgt) => tgt.exploitDateId === props.exploitDate.id && tgt.name === name).length > 0
-    && !(props.target && props.target.name === name))
-      setNameConflictError(true);
-    else {
+    if (props.exploitDate !== null) {
+      if (tgts.filter((tgt) => tgt.exploitDateId === props.exploitDate!.id && tgt.name === name).length > 0
+        && !(props.target && props.target.name === name)) {
+        setNameConflictError(true);
+      } else {
+        props.postTarget(
+          new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
+                              notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED, '',
+                              ''),
+        );
+      }
+    } else {
       props.postTarget(
-        new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
-                            notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED, '', ''),
+        new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, -1, name, mgrs,
+                            notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED, '',
+                            ''),
       );
     }
   };

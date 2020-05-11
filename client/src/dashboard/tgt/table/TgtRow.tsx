@@ -7,7 +7,7 @@ import { StyledExploitationLogButtonVector } from '../../../resources/icons/Expl
 import theme, { rowStyles } from '../../../resources/theme';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
-import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
+import { convertToPostModel, TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import RfiModel, { RfiStatus } from '../../../store/rfi/RfiModel';
 import { StyledTgtStatusPickerOutline } from '../../../resources/icons/TgtStatusPickerOutline';
 import { Status } from '../TgtDashboard';
@@ -21,7 +21,7 @@ import HtmlTooltip from '../../components/HtmlToolTip';
 
 interface Props {
   target: TargetModel;
-  exploitDate: ExploitDateModel;
+  exploitDate: ExploitDateModel|null;
   rfi: RfiModel;
   setAddEditTarget: (status: Status, id?: number) => void;
   postTarget: (target: TargetPostModel) => void;
@@ -50,9 +50,7 @@ export const TgtRow: React.FC<Props> = props => {
   }, []);
 
   const submitStatusChange = (status: TargetStatus) => {
-    let newTarget: TargetPostModel = new TargetPostModel(props.target.id, props.rfi.id, props.exploitDate.id,
-                                                         props.target.name, props.target.mgrs, props.target.notes,
-                                                         props.target.description, status, '', '');
+    let newTarget: TargetPostModel = {...convertToPostModel(props.target), status: status};
     props.postTarget(
       newTarget,
     );
@@ -80,7 +78,7 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   const handleIxnClick = () => {
-    if (props.target !== null) {
+    if (props.target !== null && props.exploitDate !== null) {
       props.navigateToIxnPage(props.target, props.exploitDate.exploitDate.format('MM/DD/YYYY'));
     }
   };
@@ -135,7 +133,7 @@ export const TgtRow: React.FC<Props> = props => {
           >
             <div className={'data-cell-container'}>
               <div className={classNames('data-cell', 'tgt-name')}>
-                {props.target.name}
+                {props.target.name === '' ? '\xa0' : props.target.name}
               </div>
               <div className={'data-bottom'}>&nbsp;</div>
             </div>
@@ -173,7 +171,7 @@ export const TgtRow: React.FC<Props> = props => {
               </div>
             }
             interactive
-            disableHoverListener={props.addingOrEditing}
+            disableHoverListener={props.addingOrEditing || props.exploitDate === null}
           >
             <div
               className={'status-wrapper'}>
@@ -185,8 +183,8 @@ export const TgtRow: React.FC<Props> = props => {
                   <CompletedButton buttonClass={classes.statusUnclickable}/>)
               }</div>
           </HtmlTooltip>
-          <div className={classNames('exploitation', props.addingOrEditing && !(props.rfi.status === RfiStatus.CLOSED)
-            ? 'delete-disabled' : null)} onClick={handleIxnClick}>
+          <div className={classNames('exploitation', (props.addingOrEditing && !(props.rfi.status === RfiStatus.CLOSED))
+          || props.exploitDate === null ? 'delete-disabled' : null)} onClick={handleIxnClick}>
             <StyledExploitationLogButtonVector/>
           </div>
         </Box>

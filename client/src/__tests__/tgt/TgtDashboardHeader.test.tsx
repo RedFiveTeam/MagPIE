@@ -22,6 +22,7 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={false}
         displayHelperText={false}
+        displayExploitDateHelper={false}
         displayCopyTargets={() => {
         }}
       />);
@@ -42,6 +43,7 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={true}
         displayHelperText={false}
+        displayExploitDateHelper={false}
         displayCopyTargets={() => {
         }}
       />);
@@ -59,6 +61,7 @@ describe('TgtDashboardHeader', () => {
         addDate={addDateSpy}
         disabled={false}
         displayHelperText={true}
+        displayExploitDateHelper={false}
         displayCopyTargets={() => {
         }}
       />);

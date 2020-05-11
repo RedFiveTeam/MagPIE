@@ -82,7 +82,6 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   color: ${theme.color.fontPrimary};
   display: flex;
   width: 100%;
-  margin-bottom: 78px;
   
   .ixn-dash--header { 
     width: 100%;

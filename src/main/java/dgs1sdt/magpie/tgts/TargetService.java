@@ -306,5 +306,9 @@ public class TargetService {
   public long findNumByRfiId(long rfiId) {
     return targetRepository.findAllByRfiId(rfiId).size();
   }
-}
 
+  public void saveGetsTarget(Target target, Timestamp timestamp) {
+    targetRepository.save(target);
+    metricsService.addCreateTargetFromGets(target, timestamp);
+  }
+}

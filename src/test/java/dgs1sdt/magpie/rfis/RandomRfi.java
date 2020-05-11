@@ -158,8 +158,8 @@ public class RandomRfi {
       "",
       "",
       "",
-      ""
-    );
+      "",
+      "");
     this.randomize();
     return rfi;
   }

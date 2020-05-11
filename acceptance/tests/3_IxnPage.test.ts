@@ -14,6 +14,9 @@ Before((I) => {
 });
 
 Scenario('Should be able to navigate to and exit the interactions page', (I) => {
+  I.click('.add-date-button');
+  I.click('Cancel');
+
   I.fillField('input', '02012020');
 
   I.waitForText('TGT Name', 10);

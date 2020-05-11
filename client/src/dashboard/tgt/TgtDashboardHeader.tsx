@@ -15,6 +15,7 @@ interface OwnProps {
   addDate: () => void;
   disabled: boolean;
   displayHelperText: boolean;
+  displayExploitDateHelper: boolean;
   displayCopyTargets: () => void;
   className?: string;
 }
@@ -48,15 +49,21 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
           <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
         </div>
         <div className={'tgt-dash--header--right-section'}>
-          {props.displayHelperText ?
-            <div className={'header-helper-text'}>Add additional coverage dates</div>
+          {props.displayHelperText || props.displayExploitDateHelper ?
+            <div className={'header-helper-text'}>{
+              props.displayExploitDateHelper ?
+                'Add Coverage Date to Exploit TGTs'
+                :
+                'Add additional coverage dates'
+            }
+            </div>
             :
             null
           }
           <TextTooltip
             title={'Add Exploit Date'}
             PopperProps={{
-              className: 'header-tooltip'
+              className: 'header-tooltip',
             }}
             disableFocusListener={props.displayHelperText}
             disableHoverListener={props.displayHelperText}
@@ -71,7 +78,7 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
           <TextTooltip
             title={'Copy Targets'}
             PopperProps={{
-              className: 'header-tooltip'
+              className: 'header-tooltip',
             }}
           >
             <div className={classNames('copy-tgts-button header-button',
@@ -121,9 +128,12 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
   
   .header-helper-text {
     position: absolute;
+    text-align: end;
     font-size: ${theme.font.sizeRegion};
-    width: 250px;
-    margin-left: -250px;
+    font-weight: ${theme.font.weightBold};
+    width: 300px;
+    margin-left: -300px;
+    padding-right: 8px;
     height: 24px;
   }
   

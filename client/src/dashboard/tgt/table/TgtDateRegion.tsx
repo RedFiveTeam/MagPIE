@@ -83,6 +83,7 @@ export const TgtDateRegion: React.FC<Props> = props => {
         postExploitDate={props.postExploitDate}
         deleteExploitDate={props.deleteExploitDate}
         disabled={props.addingOrEditing}
+        highlight={props.highlight}
       />
       <div className={'tgt-input'}>
         {printTargets()}
@@ -187,26 +188,5 @@ export const StyledTgtDateRegion = styled(TgtDateRegion)`
     font-weight: normal;
     margin-bottom: 9px;
     padding-right: 7px;
-  }
-  
-  .add-tgt-button {
-    cursor: pointer;
-    box-shadow: -2px 2px 20px #000000;
-    width: 1212px;
-    height: 62px;
-    border-radius: 8px;
-    background: ${theme.color.backgroundInformation};
-    border: 2px solid ${theme.color.borderAddButton};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: ${theme.font.sizeMetricsHeader};
-    font-weight: ${theme.font.weightBold};
-    color: ${theme.color.primaryButton};
-    margin-top: 4px; 
-    
-    :hover {
-      box-shadow: 0 0 6px #FFFFFF;
-    }
   }
 `;

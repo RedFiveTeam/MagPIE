@@ -44,6 +44,19 @@ public class Target {
     this.allCallouts = "";
   }
 
+  public Target(long rfiId, String mgrs) {
+    this.rfiId = rfiId;
+    this.exploitDateId = -1;
+    this.mgrs = mgrs;
+    this.status = TargetStatus.NOT_STARTED;
+    this.name = "";
+    this.notes = "";
+    this.description = "";
+    this.hourlyRollup = "";
+    this.allCallouts = "";
+    this.deleted = null;
+  }
+
   public Target(TargetJson editTarget) {
     this.id = editTarget.getTargetId();
     this.rfiId = editTarget.getRfiId();

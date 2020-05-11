@@ -2,6 +2,8 @@ package dgs1sdt.magpie.rfis;
 
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
+import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ public class RfiService {
   private RfiRepository rfiRepository;
   private GetsClient getsClient;
   private MetricsService metricsService;
+  private TargetService targetService;
 
   @Autowired
   public RfiService(RfiRepository rfiRepository,
@@ -60,6 +64,11 @@ public class RfiService {
     this.rfiRepository = rfiRepository;
   }
 
+  @Autowired
+  public void setTargetService(TargetService targetService) {
+    this.targetService = targetService;
+  }
+
   @Scheduled(fixedDelay = 60000, initialDelay = 5000)
   public void fetchRfisFromGets() {
     log.trace("Fetching from GETS");
@@ -73,7 +82,8 @@ public class RfiService {
     } catch (Exception e) {
       log.error("Error fetching from GETS: " + e.getMessage());
     }
-    this.updatePrioritiesInRepo(rfiRepository);
+    this.updatePrioritiesInRepo();
+    this.populateGetsTargets();
   }
 
   public List<Rfi> fetchRfisFromRepo() {
@@ -94,13 +104,28 @@ public class RfiService {
     return pendingOpenAndLastThreeClosed;
   }
 
-  private void updatePrioritiesInRepo(RfiRepository rfiRepository) {
+  private void updatePrioritiesInRepo() {
     List<Rfi> allRfis = rfiRepository.findAll();
     rfiRepository.saveAll(
       Objects.requireNonNull(
         RfiPrioritizer.prioritize(allRfis)
       )
     );
+  }
+
+  private void populateGetsTargets() {
+    List<Rfi> openRfis = rfiRepository.findAllOpen();
+    Timestamp now = new Timestamp(new Date().getTime());
+    for (Rfi rfi : openRfis) {
+      if (targetService.getTargets(rfi.getId()).isEmpty()) {
+        String[] mgrsArray = rfi.getMgrsList().split(",");
+        for (String mgrs : mgrsArray) {
+          if (mgrs.length() == 15) {
+            targetService.saveGetsTarget(new Target(rfi.getId(), mgrs.toUpperCase()), now);
+          }
+        }
+      }
+    }
   }
 
   private boolean isPendingOpenOrRecentlyClosed(List<Rfi> lastThreeClosed, Rfi rfi) {

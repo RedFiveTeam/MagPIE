@@ -28,11 +28,11 @@ export const StyledTableHeader = styled(TableHeader)`
   font-family: ${theme.font.familyHeader};
   color: ${theme.color.fontPrimary};
   font-weight: ${theme.font.weightHeader};
-  font-size: ${theme.font.sizeHeaderSmall};
-  margin-top: 21px;
+  font-size: ${theme.font.sizeRegion};
+  margin-top: 46px;
   height: 33px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-bottom: 8px;
+  padding-left: 10px;
 `;
