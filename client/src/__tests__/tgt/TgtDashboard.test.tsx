@@ -60,8 +60,6 @@ describe('TgtDashboardContainer', () => {
   });
 
   it('should display the date dividers or not properly', () => {
-    expect(subject.find(StyledExploitDateDivider).length).toBe(1);
-
     let dates: ExploitDateModel[] = [
       new ExploitDateModel(2, 1, moment('2019-11-20').utc()),
       new ExploitDateModel(3, 1, moment('2019-11-21').utc()),
