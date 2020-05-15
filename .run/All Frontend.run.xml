@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All Frontend" type="JavaScriptTestRunnerJest">
+    <node-interpreter value="/usr/local/bin/node" />
+    <node-options value="" />
+    <jest-package value="$PROJECT_DIR$/client/node_modules/jest" />
+    <working-dir value="$PROJECT_DIR$/client" />
+    <envs />
+    <scope-kind value="ALL" />
+    <method v="2" />
+  </configuration>
+</component>
