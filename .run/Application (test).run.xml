@@ -6,6 +6,8 @@
     <envs>
       <env name="GETS_REQUEST_TIME_FRAME_IN_DAYS" value="20" />
       <env name="SPRING_PROFILES_ACTIVE" value="test" />
+      <env name="GETS_URI_OPEN_PENDING" value="RfisNewOpen.xml" />
+      <env name="GETS_URI_CLOSED" value="RfisClosed.xml" />
     </envs>
     <method v="2">
       <option name="Make" enabled="true" />
