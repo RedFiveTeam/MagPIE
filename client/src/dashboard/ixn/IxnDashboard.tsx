@@ -7,7 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from '../../store';
 import { StyledIxnDashboardHeader } from './IxnDashboardHeader';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
-import { exitIxnPage, saveRollup } from '../../store/ixn';
+import {
+  deleteIxn, deleteSegment,
+  exitIxnPage, navigateToIxnPage, saveRollup, setAddNote, setAddSegment, setEditIxn, setEditSegment, updateIxn,
+  updateSegment,
+} from '../../store/ixn';
 import theme, { rowStyles } from '../../resources/theme';
 import IxnModel from '../../store/ixn/IxnModel';
 import { useCookies } from 'react-cookie';
@@ -20,6 +24,7 @@ import { RollupMode, StyledRollupView } from './RollupView';
 import { IxnTableView } from './IxnTableView';
 import { Cookie } from '../../utils';
 import { RfiStatus } from '../../store/rfi/RfiModel';
+import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 
 interface Props {
   className?: string
@@ -33,11 +38,18 @@ export const IxnDashboard: React.FC<Props> = props => {
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
   const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
   const autofocus: boolean = useSelector(({ixnState}: ApplicationState) => ixnState.autofocus);
-
   const readOnly = useSelector(({tgtState}: ApplicationState) => tgtState.rfi).status === RfiStatus.CLOSED;
+  const addSegment = useSelector(({ixnState}: ApplicationState) => ixnState.addSegment);
+  const editSegment = useSelector(({ixnState}: ApplicationState) => ixnState.editSegment);
+  const editIxn = useSelector(({ixnState}: ApplicationState) => ixnState.editIxn);
+  const addNote = useSelector(({ixnState}: ApplicationState) => ixnState.addNote);
+  const dispatch = useDispatch();
+
+  const addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0 || readOnly;
 
   const [tgtAnalyst, setTgtAnalyst] = useState('');
   const [rollupMode, setRollupMode] = useState(false);
+  const [displayEeiNotes, setDisplayEeiNotes] = useState(false);
 
   const [cookies, setCookies] = useCookies(['magpie']);
   let cookie: Cookie = cookies.magpie;
@@ -45,6 +57,7 @@ export const IxnDashboard: React.FC<Props> = props => {
   const rowClasses = rowStyles();
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+  const classes = rowStyles();
 
   const displaySnackbar = (message: string) => {
     enqueueSnackbar(message, {
@@ -52,8 +65,6 @@ export const IxnDashboard: React.FC<Props> = props => {
       variant: 'info',
     });
   };
-
-  const dispatch = useDispatch();
 
   const handleCollapse = (segmentId: number) => {
     let segments = cookie.segments;
@@ -85,10 +96,9 @@ export const IxnDashboard: React.FC<Props> = props => {
     setRollupMode(false);
     let newTarget: TargetPostModel;
     if (mode === RollupMode.ALL_CALLOUTS) {
-      newTarget = {...convertToPostModel(target), allCallouts: rollup}
+      newTarget = {...convertToPostModel(target), allCallouts: rollup};
     } else {
-      newTarget = {...convertToPostModel(target), hourlyRollup: rollup}
-
+      newTarget = {...convertToPostModel(target), hourlyRollup: rollup};
     }
     dispatch(saveRollup(newTarget, dateString, cookie.userName));
     displaySnackbar('Rollup Saved');
@@ -98,6 +108,93 @@ export const IxnDashboard: React.FC<Props> = props => {
     displaySnackbar(message);
   };
 
+  const handleSetAddSegment = () => {
+    if (!addingOrEditing) {
+      dispatch(setAddSegment(true));
+    } else if (addSegment && segments.length > 0) {
+      dispatch(setAddSegment(false));
+    }
+  };
+
+  const handleSelectTarget = (target: TargetModel, dateString: string) => {
+    setDisplayEeiNotes(false);
+    setTimeout(() => {
+      dispatch(navigateToIxnPage(target, dateString));
+      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: target.id}});
+    }, 100);
+  };
+
+  const handleEditSegment = (segmentId: number) => {
+    if (!addingOrEditing) {
+      dispatch(setEditSegment(segmentId));
+    } else if (segmentId < 0) {
+      dispatch(setEditSegment(-1));
+    }
+  };
+
+  const handleEditIxn = (ixnId: number) => {
+    if (!addingOrEditing) {
+      dispatch(setEditIxn(ixnId));
+    } else if (ixnId < 0) {
+      dispatch(setEditIxn(-1));
+    }
+  };
+
+  const handleAddNote = (ixnId: number) => {
+    if (!addingOrEditing) {
+      dispatch(setAddNote(ixnId));
+    } else if (ixnId < 0) {
+      dispatch(setAddNote(-1));
+    }
+  };
+
+  const handlePostSegment = (segment: SegmentModel) => {
+    if (!readOnly) {
+      dispatch(updateSegment(segment));
+    }
+  };
+
+  const handlePostIxn = (ixn: IxnModel) => {
+    if (!readOnly) {
+      if (addNote > 0) {
+        enqueueSnackbar('Analyst Note Saved.', {
+          action: (key) => DismissSnackbarAction(key, closeSnackbar, classes.snackbarButton),
+          variant: 'info',
+        });
+      }
+      dispatch(updateIxn(ixn, cookie.userName));
+    }
+  };
+
+  const handleDeleteIxn = (ixn: IxnModel) => {
+    if (!readOnly) {
+      enqueueSnackbar('Interaction deleted', {
+        action: (key) =>
+          UndoSnackbarAction(key, ixn, handlePostIxn, closeSnackbar, classes.snackbarButton),
+        variant: 'info',
+      });
+      dispatch(deleteIxn(ixn));
+    }
+  };
+
+  const handleDeleteSegment = (segment: SegmentModel) => {
+    if (!readOnly) {
+      enqueueSnackbar('You deleted ' + segment.startTime.format('HH:mm:ss') + 'Z-' +
+                        segment.endTime.format('HH:mm:ss') + 'Z', {
+                        action: (key) => UndoSnackbarAction(key, segment, handlePostSegment, closeSnackbar,
+                                                            classes.snackbarButton),
+                        variant: 'info',
+                      });
+      dispatch(deleteSegment(segment));
+    }
+  };
+
+  const handleToggleDisplayEeiNotes = () => {
+    setDisplayEeiNotes(!displayEeiNotes);
+  };
+
+  const isAddSegmentDisabled = segments.length < 1 || addingOrEditing;
+
   return (
     <div className={classNames(props.className)}>
       <StyledIxnDashboardHeader
@@ -106,6 +203,11 @@ export const IxnDashboard: React.FC<Props> = props => {
         exitIxnPage={handleExitIxnPage}
         disableRollupButton={rollupMode || ixns.length === 0}
         showRollup={handleShowRollup}
+        toggleDisplayEeiNotes={handleToggleDisplayEeiNotes}
+        displayEeiNotes={displayEeiNotes}
+        displaySegmentHelperText={segments.length === 1}
+        disableAddSegment={isAddSegmentDisabled}
+        setAddSegment={handleSetAddSegment}
       />
       {
         rollupMode ?
@@ -133,6 +235,20 @@ export const IxnDashboard: React.FC<Props> = props => {
             userName={cookie.userName}
             dateString={moment(dateString, 'MM/DD/YYYY').format('DDMMMYY').toUpperCase()}
             readOnly={readOnly}
+            addSegment={addSegment}
+            editSegment={editSegment}
+            editIxn={editIxn}
+            addNote={addNote}
+            addingOrEditing={addingOrEditing}
+            selectTarget={handleSelectTarget}
+            handleSetAddSegment={handleSetAddSegment}
+            handleEditSegment={handleEditSegment}
+            handleEditIxn={handleEditIxn}
+            handleAddNote={handleAddNote}
+            handlePostSegment={handlePostSegment}
+            handlePostIxn={handlePostIxn}
+            handleDeleteIxn={handleDeleteIxn}
+            handleDeleteSegment={handleDeleteSegment}
           />
       }
     </div>
@@ -148,33 +264,16 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   flex-direction: column;
   align-items: center;
   
-  .add-segment-button-container {
-    height: 62px;
-    display: flex;
-    flex-shrink: 0;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .add-segment-button {
-    cursor: pointer; 
-    font-weight: bold;
-    font-size: 16px;
-    
-    :hover {
-      box-shadow: 0 0 8px #FFFFFF;
-    }
-  }
-
-  .add-segment-vector {
-    margin-left: -33px;
-    margin-bottom: -4px;
-    pointer-events: none;
-  }
-  
   AddDateVector {
     pointer-events: none;
+  }
+  
+  .ixn-dash {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
   }
   
   .ixn-dash-body {
@@ -183,6 +282,14 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     flex-direction: column;
     align-items: center;
   }
+  
+  .table-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    //padding-left: 30px;
+    width: 1410px;
+  }
 
   .header {
     margin-top: -25px;
@@ -190,33 +297,54 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .header-cell--analyst {
-    width: 154px;
+    width: 156px;
+  }
+  
+  .name {
+    width: 146px;
   }
   
   .header-cell--checker {
-    width: 154px;
+    width: 146px;
   }
   
   .header-cell--time {
-    width: 106px;
+    width: 95px;
+  }
+  
+  .time {
+    width: 98px;
   }
   
   .header-cell--callout {
-    width: 405px;
+    width: 410px;
+  }
+
+  .activity {
+    width: 406px;
   }
   
   .header-cell--id {
     text-align: center;
     padding-left: 5px;
-    width: 92px;
+    width: 95px;
+  }
+  
+  .track {
+    width: 75px;
+    text-align: center;
   }
   
   .header-cell--status {
-    width: 118px;
+    width: 110px;
+  }
+  
+  .status {
+    width: 110px;
   }
   
   .header-cell--delete-spacer {
-    width: 90px;
+    width: 65px;
   }
   
   .hidden-input {
@@ -226,54 +354,69 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .ixn-row-box {
-    min-height: 62px;
     margin-top: 8px;
-    background-color: ${theme.color.backgroundInformation};
     display: flex;
     flex-direction: row;
     align-items: center;
     font-weight: normal;
     margin-bottom: 9px;
-    padding-right: 7px;
     align-self: flex-start;
   }
   
-  .name {
-    width: 146px;
-  }
-  
-  .time {
-    width: 98px;
-  }
-
-  .activity {
-    width: 406px;
-  }
-  
-  .track {
-    width: 75px;
-    text-align: center;
-  }
-  
-  .status {
-    width: 110px;
-  }
-  
-  .note-edit-button-container {
+  .ixn-box-left {
+    background-color: ${theme.color.backgroundInformation};
+    border-bottom-left-radius: 8px;
+    border-top-left-radius: 8px;
     display: flex;
-    align-self: stretch;
-    border-left: 4px solid ${theme.color.backgroundBase};
-    padding-left: 4px;
-    width: 68px;
-    height: inherit;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 62px;
+    width: 1348px;
+    padding-left: 2px;
+  }
+  
+  .segment-divider-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .segment-divider-empty {
+    margin-top: 46px;
+  }
+  
+  .ixn-box-right {
+    background-color: ${theme.color.backgroundInformation};
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    width: 58px;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    align-self: stretch;
+    margin-left: 4px;
+    padding-left: 4px;
+    height: inherit;
     cursor: pointer;
     flex: 1 1 auto;
   }
   
   .exploitation-log-button-wrapper {
     display: flex;
+  }
+  
+  .segment-helper-text {
+    font-weight: ${theme.font.weightBold};
+    font-size: ${theme.font.sizeHeader};
+    line-height: ${theme.font.sizeHelperText};
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
   }
 `;

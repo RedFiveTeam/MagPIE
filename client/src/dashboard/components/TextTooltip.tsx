@@ -15,4 +15,18 @@ const TextTooltip = withStyles((localTheme: Theme) => ({
   },
 }))(Tooltip);
 
+// @ts-ignore
+export const EeiTooltip = withStyles((localTheme: Theme) => ({
+  tooltip: {
+    backgroundColor: theme.color.backgroundFocus,
+    color: theme.color.fontPrimary,
+    width: 'inherit',
+    height: 'fit-content',
+    borderRadius: 11,
+    fontSize: '16px',
+    fontWeight: 'normal',
+    textAlign: 'center',
+  },
+}))(Tooltip);
+
 export default TextTooltip;

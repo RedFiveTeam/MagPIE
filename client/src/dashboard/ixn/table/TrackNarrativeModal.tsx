@@ -2,12 +2,13 @@ import { Modal, TextField } from '@material-ui/core';
 import classNames from 'classnames';
 import * as React from 'react';
 import { useState } from 'react';
-import { longInputStyles, rowStyles } from '../../../resources/theme';
+import theme, { longInputStyles, rowStyles } from '../../../resources/theme';
 import IxnModel from '../../../store/ixn/IxnModel';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../../components/InformationalSnackbar';
 import styled from 'styled-components';
+import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 
 interface MyProps {
   setDisplay: (display: boolean) => void;
@@ -51,76 +52,95 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
   };
 
   return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open
-        onClose={() => props.setDisplay(false)}
-        style={{
-          top: '50%',
-          left: '50%',
-        }}
-        className={classNames('delete-modal', classes.modal, props.className)}
-        disableBackdropClick
-        disableEscapeKeyDown
-      >
-        <div className={classes.modalBody}>
-          <form className={classNames('track-narrative-form')}
-          >
-            <div className={classNames(classes.modalInputContainer, props.readOnly ? 'narrative-text-wrapper' : null)}>
-              <span><b>{props.ixn.track}</b></span>
-              {!props.readOnly ?
-                <TextField
-                  className={classNames('track-narrative', classes.modalTextfield)}
-                  value={trackNarrative}
-                  onChange={inputTrackNarrative}
-                  autoFocus
-                  multiline
-                  rows={25}
-                  InputProps={{
-                    disableUnderline: true,
-                  }}
-                  inputProps={{
-                    id: 'track-narrative-' + props.ixn.id,
-                    className: 'track-narrative-input',
-                  }}
-                />
-
-                :
-                <div className={'narrative-text'}>
-                  {trackNarrative}
-                </div>
-              }
-            </div>
-          </form>
-          <div className={classes.buttonSection}>
-            <div className={classes.spacer}>&nbsp;</div>
+    <Modal
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+      open
+      onClose={() => props.setDisplay(false)}
+      style={{
+        top: '50%',
+        left: '50%',
+      }}
+      className={classNames('narrative-modal', classes.modal, props.className)}
+      disableBackdropClick
+      disableEscapeKeyDown
+    >
+      <div className={classes.narrativeModalBody}>
+        <form className={classNames('track-narrative-form')}
+        >
+          <div className={'track-narrative-header'}>
+            <div>&nbsp;</div>
+            <span><b>{props.ixn.track}</b></span>
             <div
               className={classNames('cancel', classes.modalButton)}
               onClick={() => props.setDisplay(false)}
             >
-              Cancel
+              <DeleteButtonX/>
             </div>
-            <div
-              onClick={handleSave}
-              className={classNames('save', classes.modalButton, props.readOnly ? 'disabled' : null)}
-            >
-              SAVE
-            </div>
-            <CopyToClipboard onCopy={() => displaySnackbar('Copied to Clipboard')} text={trackNarrative}>
-              <div
-                className={classNames('copy-to-clipboard', classes.copyToClipboard)}
-              >
-                Copy to Clipboard
+          </div>
+          <div className={classNames('narrative-input', props.readOnly ? 'narrative-text-wrapper' : null)}>
+            {!props.readOnly ?
+              <TextField
+                className={classNames('track-narrative', classes.modalTextfield)}
+                value={trackNarrative}
+                onChange={inputTrackNarrative}
+                autoFocus
+                multiline
+                rows={27}
+                InputProps={{
+                  disableUnderline: true,
+                }}
+                inputProps={{
+                  id: 'track-narrative-' + props.ixn.id,
+                  className: 'track-narrative-input',
+                }}
+              />
+
+              :
+              <div className={'narrative-text'}>
+                {trackNarrative}
               </div>
-            </CopyToClipboard>
+            }
+          </div>
+        </form>
+        <div className={classes.modalConfirmation}>
+          <CopyToClipboard onCopy={() => displaySnackbar('Copied to Clipboard')} text={trackNarrative}>
+            <div
+              className={classNames('copy-to-clipboard', classes.copyToClipboard)}
+            >
+              Copy to Clipboard
+            </div>
+          </CopyToClipboard>
+          <div
+            onClick={handleSave}
+            className={classNames('save', classes.saveSubmitButton, classes.modalButton,
+                                  props.readOnly ? 'disabled' : null)}
+          >
+            SAVE
           </div>
         </div>
-      </Modal>
-  );
+      </div>
+    </Modal>
+  )
+    ;
 };
 
 export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
+  .track-narrative-header {
+    display: flex;
+    height: 28px;
+    align-self: stretch;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 942px;
+    padding: 2px;
+    margin-top: -2px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    background: ${theme.color.backgroundHighlighted};
+  }
+
   .narrative-text {
     margin-top: 8px;
     width: 100%;
@@ -138,5 +158,9 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     justify-content: flex-start !important;
     padding: 4px !important;
     overflow-y: auto !important;
+  }
+  
+  .narrative-input {
+    padding: 0 2px;
   }
 `;

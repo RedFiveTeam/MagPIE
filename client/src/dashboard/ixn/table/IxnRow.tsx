@@ -19,7 +19,7 @@ import { TrackNarrativeClickModel } from '../../../store/metrics/TrackNarrativeC
 import TextTooltip from '../../components/TextTooltip';
 import { MiniTrashcanButton } from '../../../resources/icons/MiniTrashcanButton';
 import { NoteButton } from '../../../resources/icons/NoteButton';
-import CancelButtonSmall from '../../../resources/icons/CancelButtonSmall';
+import { CancelButtonLarge } from '../../../resources/icons/CancelButtonSmall';
 
 interface MyProps {
   ixn: IxnModel;
@@ -120,77 +120,79 @@ export const IxnRow: React.FC<MyProps> = props => {
           className={classNames('ixn-row-box', props.disabled ? 'disabled' : null)}
           onDoubleClick={handleDoubleClick}
         >
-          <div className={classNames('ixn-data-cell', 'exploit-analyst', 'name')}>
-            {props.ixn.exploitAnalyst ? props.ixn.exploitAnalyst : '\xa0'}
-          </div>
-          <div className={classNames('ixn-data-cell', 'time')}>
-            {props.ixn.time.utc().format('HH:mm:ss') + 'Z'}
-          </div>
-          <div className={classNames('ixn-data-cell', 'activity')}>
-            {props.ixn.activity ? props.ixn.activity : '\xa0'}
-          </div>
-          <div className={classNames('ixn-data-cell', 'track', 'no-underline')}>
-            {props.ixn.track ?
-              <>
-                <TextTooltip title={'Track Narrative'}>
-                  <div className={'track-narrative-button'} onClick={handleTrackNarrativeClick}>
-                    <TrackNarrativeButton hasNarrative={false}/>
+          <div className={'ixn-box-left'}>
+            <div className={classNames('ixn-data-cell', 'exploit-analyst', 'name')}>
+              {props.ixn.exploitAnalyst ? props.ixn.exploitAnalyst : '\xa0'}
+            </div>
+            <div className={classNames('ixn-data-cell', 'time')}>
+              {props.ixn.time.utc().format('HH:mm:ss') + 'Z'}
+            </div>
+            <div className={classNames('ixn-data-cell', 'activity')}>
+              {props.ixn.activity ? props.ixn.activity : '\xa0'}
+            </div>
+            <div className={classNames('ixn-data-cell', 'track-analyst', 'name')}>
+              {props.ixn.trackAnalyst ? props.ixn.trackAnalyst : '\xa0'}
+            </div>
+            <div className={classNames('ixn-data-cell', 'status', 'no-underline')}>
+              <HtmlTooltip
+                title={
+                  <div className={'status-menu'}>
+                    <StyledIxnStatusPickerOutline/>
+                    <InProgressButton
+                      buttonClass={classNames(classes.inProgress, classes.clickable, 'in-progress-button')}
+                      onClick={() => submitStatusChange(IxnStatus.IN_PROGRESS)}/>
+                    <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, 'completed-button')}
+                                     onClick={() => submitStatusChange(IxnStatus.COMPLETED)}/>
+                    <DoesNotMeetEeiButton
+                      buttonClass={classNames(classes.doesNotMeetEei, classes.clickable, 'does-not-meet-eei-button')}
+                      onClick={() => submitStatusChange(IxnStatus.DOES_NOT_MEET_EEI)}/>
                   </div>
-                </TextTooltip>
-                <span>{props.ixn.track}</span>
-              </>
-              :
-              '\xa0'
-            }
-          </div>
-          <div className={classNames('ixn-data-cell', 'track-analyst', 'name')}>
-            {props.ixn.trackAnalyst ? props.ixn.trackAnalyst : '\xa0'}
-          </div>
-          <div className={classNames('ixn-data-cell', 'status', 'no-underline')}>
-            <HtmlTooltip
-              title={
-                <div className={'status-menu'}>
-                  <StyledIxnStatusPickerOutline/>
-                  <InProgressButton
-                    buttonClass={classNames(classes.inProgress, classes.clickable, 'in-progress-button')}
-                    onClick={() => submitStatusChange(IxnStatus.IN_PROGRESS)}/>
-                  <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, 'completed-button')}
-                                   onClick={() => submitStatusChange(IxnStatus.COMPLETED)}/>
-                  <DoesNotMeetEeiButton
-                    buttonClass={classNames(classes.doesNotMeetEei, classes.clickable, 'does-not-meet-eei-button')}
-                    onClick={() => submitStatusChange(IxnStatus.DOES_NOT_MEET_EEI)}/>
+                }
+                interactive
+                disableHoverListener={props.addingOrEditing}
+              >
+                <div className={'status-wrapper'}>
+                  {props.ixn.status === IxnStatus.NOT_STARTED ?
+                    <NotStartedButton buttonClass={classes.statusUnclickable}/>
+                    : props.ixn.status === IxnStatus.IN_PROGRESS ?
+                      <InProgressButton buttonClass={classes.statusUnclickable}/>
+                      : props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI ?
+                        <DoesNotMeetEeiButton buttonClass={classes.statusUnclickable}/>
+                        : <CompletedButton buttonClass={classes.statusUnclickable}/>}
                 </div>
+              </HtmlTooltip>
+            </div>
+            <div className={classNames('ixn-data-cell', 'track', 'no-underline')}>
+              {props.ixn.track ?
+                <>
+                  <TextTooltip title={'Track Narrative'}>
+                    <div className={'track-narrative-button'} onClick={handleTrackNarrativeClick}>
+                      <TrackNarrativeButton hasNarrative={false}/>
+                    </div>
+                  </TextTooltip>
+                  <span>{props.ixn.track}</span>
+                </>
+                :
+                '\xa0'
               }
-              interactive
-              disableHoverListener={props.addingOrEditing}
-            >
-              <div className={'status-wrapper'}>
-                {props.ixn.status === IxnStatus.NOT_STARTED ?
-                  <NotStartedButton buttonClass={classes.statusUnclickable}/>
-                  : props.ixn.status === IxnStatus.IN_PROGRESS ?
-                    <InProgressButton buttonClass={classes.statusUnclickable}/>
-                    : props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI ?
-                      <DoesNotMeetEeiButton buttonClass={classes.statusUnclickable}/>
-                      : <CompletedButton buttonClass={classes.statusUnclickable}/>}
-              </div>
-            </HtmlTooltip>
-          </div>
-          <div className={classNames('ixn-data-cell', 'lead-checker', 'name')}>
-            {props.ixn.leadChecker ? props.ixn.leadChecker : '\xa0'}
-          </div>
-          <div className={classNames('ixn-data-cell', 'final-checker', 'name')}>
-            {props.ixn.finalChecker ? props.ixn.finalChecker : '\xa0'}
+            </div>
+            <div className={classNames('ixn-data-cell', 'lead-checker', 'name')}>
+              {props.ixn.leadChecker ? props.ixn.leadChecker : '\xa0'}
+            </div>
+            <div className={classNames('ixn-data-cell', 'final-checker', 'name')}>
+              {props.ixn.finalChecker ? props.ixn.finalChecker : '\xa0'}
+            </div>
           </div>
           <DeleteCancelButton
             handleClick={handleNoteClick}
-            className={classNames('note-edit-button-container', displayNote ? 'note-button-extended' : null)}
+            className={classNames('ixn-box-right', displayNote ? 'note-button-extended' : null)}
             buttonClassName={'note-button'}
             title={!displayNote ? 'Analyst Notes' : 'Hide Notes'}
           >
             {!displayNote ?
               <NoteButton hasNote={props.ixn.note !== ''}/>
               :
-              <CancelButtonSmall/>
+              <CancelButtonLarge/>
             }
           </DeleteCancelButton>
         </Box>
@@ -225,7 +227,7 @@ export const StyledIxnRow = styled(IxnRow)`
   flex-direction: column;
 
   .ixn-data-cell {
-    margin: 14px 8px 8px 8px;
+    margin: 8px 4px 8px 4px;
     padding-bottom: 6px;
     overflow-wrap: break-word;
     border-bottom: 1px solid #FFFFFF;
@@ -254,26 +256,25 @@ export const StyledIxnRow = styled(IxnRow)`
     border-radius: 5px;
   }
   
-  .note-edit-button-container {
-    padding-bottom: 4px;
-  }
-  
   .note-button-extended {
+    width: 58px !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch !important;
     border-top-right-radius: 8px;
-    width: 75px !important;
+    padding-left: 4px;
     margin-right: -8px;
     background-color: ${theme.color.backgroundInformation};
     margin-bottom: -8px;
-    padding-right: 7px;
-    padding-bottom: 8px;
     z-index: 1;
     flex-grow: 0 !important;
-    align-self: stretch !important;
   }
   
   .note-container {
-    width: 1476px;
-    min-height: 62px;
+    width: 1410px;
+    min-height: 58px;
     border-radius: 8px 0 8px 8px;
     background-color: ${theme.color.backgroundInformation};
     margin: -4px 0 8px 0;

@@ -33,13 +33,15 @@ export const crayonBox = {
   forestGreen: '#204110',
   stoplightGreen: '#01734F',
   darkBlue: '#0C2028',
+  darkRedBlue: '#1B2326',//
   darkGreenBlue: '#02252E',//
   steelBlue: '#243237',//
   mediumBlue: '#1C455C',//
   mediumBlueGray: '#3C535B',//
   mediumGreenBlue: '#48788C',//
   mediumMediumBrightBlue: '#0A6EAA',//
-  mediumBrightBlue: '#0872B3',
+  mediumBrightBlue: '#0872B3',//
+  mediumBrightBrightBlue: '#0970AF',//
   brightBlue: '#1E98E5',//
   skyBlueGreen: '#6FB6CF',//
   skyBlue: '#82BFF9',

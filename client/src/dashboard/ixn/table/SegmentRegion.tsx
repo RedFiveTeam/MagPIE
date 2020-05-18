@@ -21,7 +21,7 @@ interface MyProps {
   deleteSegment: (segment: SegmentModel) => void;
   tgtAnalyst: string;
   setTgtAnalyst: (tgtAnalyst: string) => void;
-  setAddSegment: (addSegment: boolean) => void;
+  cancelAddSegment: () => void;
   editSegment: number;
   setEditSegment: (segmentId: number) => void;
   editIxn: number;
@@ -114,11 +114,12 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
         postSegment={props.postSegment}
         postIxn={props.postIxn}
         deleteSegment={props.deleteSegment}
-        setAddSegment={props.setAddSegment}
+        cancelAddSegment={props.cancelAddSegment}
         hasIxns={props.ixns.length > 0}
         editing={props.editSegment === props.segment.id}
         setEdit={props.setEditSegment}
         disabled={props.readOnly}
+        disableCancel={false}
       />
       {props.ixns.length > 0 ?
         <div className={classNames(props.collapsed ? 'expand-button' : 'collapse-button', 'expand-collapse')}
@@ -140,7 +141,7 @@ export const StyledSegmentRegion = styled(SegmentRegion)`
   padding-bottom: 20px;
   
   .expand-collapse {
-    width: 1500px;
+    width: 1400px;
     margin-top: -28px;
     height: 28px;
     z-index: 1;

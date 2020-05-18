@@ -19,10 +19,10 @@ interface MyProps {
   className?: string
 }
 
-const CancelButtonSmall: React.FC<MyProps> = (props) => {
+export const CancelButtonSmall: React.FC<MyProps> = (props) => {
   return (
     <Wrapper className={props.className}>
-      <svg height="23" width="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg height='23' width='23' viewBox='0 0 23 23' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path
           d={pathD}
           fill={theme.color.fontPrimary}/>
@@ -31,7 +31,18 @@ const CancelButtonSmall: React.FC<MyProps> = (props) => {
   );
 };
 
-export default CancelButtonSmall;
+export const CancelButtonLarge: React.FC<MyProps> = (props) => {
+  return (
+    <Wrapper className={props.className}>
+      <svg className='large' height='30' width='30' viewBox='0 0 23 23' fill='none'
+           xmlns='http://www.w3.org/2000/svg'>
+        <path
+          d={pathD}
+          fill={theme.color.fontPrimary}/>
+      </svg>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled('div')`
   svg {
@@ -42,4 +53,8 @@ const Wrapper = styled('div')`
       box-shadow: 0 0 6px #FFFFFF;
     }
  }
+ 
+  .large {
+    border-radius: 15px !important;
+  }
 `;

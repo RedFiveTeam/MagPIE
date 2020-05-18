@@ -27,12 +27,11 @@ export const TableHeader: React.FC<Props> = props => {
 export const StyledTableHeader = styled(TableHeader)`
   font-family: ${theme.font.familyHeader};
   color: ${theme.color.fontPrimary};
-  font-weight: ${theme.font.weightHeader};
+  font-weight: ${theme.font.weightBolder};
   font-size: ${theme.font.sizeRegion};
   margin-top: 46px;
   height: 33px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-left: 10px;
 `;

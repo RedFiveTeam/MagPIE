@@ -20,21 +20,17 @@ describe("Interactions Header", () => {
         dateString={"08/14/2020"}
         disableRollupButton={false}
         showRollup={showRollupSpy}
+        displayEeiNotes={false}
+        toggleDisplayEeiNotes={jest.fn()}
+        disableAddSegment={false}
+        setAddSegment={jest.fn()}
+        displaySegmentHelperText={false}
       />
     );
   });
 
-  it('should display the TGT number', () => {
-    expect(subject.text()).toContain("TGT: SDT20-123");
-  });
-
   it('should display the MGRS', () => {
     expect(subject.find('.ixn-dash--header--mgrs').text()).toContain("MGRS: 00ABC1234567890");
-  });
-
-  it('should display EEI Notes', () => {
-    expect(subject.find('.ixn-dash--header--notes').text()).toContain("EEI Notes: These are some EEI Notes to be " +
-      "displayed.");
   });
 
   it('should display the date in MM/DD/YYYY format', () => {
@@ -42,7 +38,6 @@ describe("Interactions Header", () => {
   });
 
   it('should display the export rollups button and execute the callback on click when not disabled', () => {
-    expect(subject.find('.rollup-button').text()).toContain('Export Rollups');
     subject.find('.rollup-button').simulate('click');
     subject = shallow(
       <IxnDashboardHeader
@@ -51,6 +46,11 @@ describe("Interactions Header", () => {
         dateString={"08/14/2020"}
         disableRollupButton={true}
         showRollup={showRollupSpy}
+        displayEeiNotes={false}
+        toggleDisplayEeiNotes={jest.fn()}
+        disableAddSegment={false}
+        setAddSegment={jest.fn()}
+        displaySegmentHelperText={false}
       />
     );
     subject.find('.rollup-button').simulate('click');

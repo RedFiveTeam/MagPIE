@@ -15,16 +15,18 @@ export const MiniSegmentDivider: React.FC<Props> = props => {
     <div className={classNames(props.className)}>
       <div className={'segment-divider-placeholder'}>
         <div className={'segment-divider--bar'}/>
-        <div className={'segment-divider--box'}>
-          <div className={'add-segment-form'}>
-            <div className={classNames('segment-value', 'segment-start')}>
-              {props.segment!.startTime.format('HH:mm:ss') + 'Z'}
-            </div>
-            <div className={'segment-spacer'}>
-              <span>-</span>
-            </div>
-            <div className={classNames('segment-value', 'segment-end')}>
-              {props.segment!.endTime.format('HH:mm:ss') + 'Z'}
+        <div className={'segment-divider--box-container'}>
+          <div className={'segment-divider--box'}>
+            <div className={'add-segment-form'}>
+              <div className={classNames('segment-value', 'segment-start')}>
+                {props.segment!.startTime.format('HH:mm:ss') + 'Z'}
+              </div>
+              <div className={'segment-spacer'}>
+                <span>-</span>
+              </div>
+              <div className={classNames('segment-value', 'segment-end')}>
+                {props.segment!.endTime.format('HH:mm:ss') + 'Z'}
+              </div>
             </div>
           </div>
         </div>
@@ -51,8 +53,8 @@ export const StyledMiniSegmentDivider = styled(MiniSegmentDivider)`
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    border: ${theme.color.regionDividerPrimary};
-    border: 2px solid;
+    background: radial-gradient(175px, ${theme.color.regionDividerPrimary}, ${theme.color.regionDividerSecondary});
+    z-index: 3;
   }
   
   .segment-spacer {
@@ -65,19 +67,30 @@ export const StyledMiniSegmentDivider = styled(MiniSegmentDivider)`
   
   .segment-divider--box {
     width: 306px;
-    height: 30px;
-    background: ${theme.color.backgroundHeader};
+    height: 26px;
+    margin-top: -4px;
+    background: ${theme.color.backgroundBase};
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
-    border: ${theme.color.regionDividerPrimary};
-    border: 4px solid;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-left: 36px;
-    padding-right: 36px;
-    z-index: 2;
+    padding: 4px 36px 0 36px;
+    z-index: 1;
+  }
+  .segment-divider--box-container {
+    width: 314px;
+    height: 30px;
+    background: radial-gradient(175px, ${theme.color.regionDividerPrimary}, ${theme.color.regionDividerSecondary});;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 4px 4px 4px;
+    z-index: 1;
   }
   
   .add-segment-form {

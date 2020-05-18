@@ -15,6 +15,7 @@ import { convertTimeStringToMoment } from '../../utils';
 import TgtTriangleVector from '../../resources/icons/TgtTriangleVector';
 import { postImportClick } from '../../store/metrics';
 import { ImportClickModel } from '../../store/metrics/ImportClickModel';
+import DeleteButtonX from '../../resources/icons/DeleteButtonX';
 
 interface MyProps {
   target: TargetModel;
@@ -163,51 +164,56 @@ export const RollupView: React.FC<MyProps> = (props) => {
   };
 
   return (
-    <div className={classNames(props.className, 'rollup-body')}>
+    <div className={classNames(props.className, 'rollup-body-container')}>
       <div className={'rollup'}>
-        <div className={classes.modalBody}>
-          <div className={'rollup-mode-toggle-button'} onClick={toggleMode}>
-            <Box
-              height={22}
-              width={98}
-              border={2}
-              borderRadius={11}
-              borderColor={theme.color.primaryButton}
-              bgcolor={theme.color.backgroundModal}
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-              paddingRight={0.1}
-              paddingLeft={0.9}
-              fontSize={11}
-              marginRight={'-22px'}
-              className={classNames('no-select', 'rollup-mode-button', 'left-button',
-                                    rollupMode === RollupMode.HOURLY_ROLLUP ? 'button-active' : 'button-inactive')}
-            >
-              <span>Hourly Rollup</span>
-              <div className={'icon icon-left'}><TgtTriangleVector/></div>
-            </Box>
-            <Box
-              height={22}
-              width={98}
-              border={2}
-              borderRadius={11}
-              borderColor={theme.color.primaryButton}
-              bgcolor={theme.color.backgroundModal}
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-              paddingRight={1.8}
-              paddingLeft={0.2}
-              fontSize={11}
-              className={classNames('no-select', 'rollup-mode-button',
-                                    rollupMode === RollupMode.ALL_CALLOUTS ? 'button-active' : 'button-inactive')}
-            >
-              <div className={'icon icon-right'}><TgtTriangleVector/></div>
-              <span>All Callouts</span>
-            </Box>
+        <div className={classes.rollupModalBody}>
+          <div className={'rollup-button-container'}>
+            <div className={'rollup-mode-toggle-button'} onClick={toggleMode}>
+              <Box
+                height={22}
+                width={98}
+                border={2}
+                borderRadius={11}
+                borderColor={theme.color.primaryButton}
+                bgcolor={theme.color.backgroundModal}
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                paddingRight={0.1}
+                paddingLeft={0.9}
+                fontSize={11}
+                marginRight={'-22px'}
+                className={classNames('no-select', 'rollup-mode-button', 'left-button',
+                                      rollupMode === RollupMode.HOURLY_ROLLUP ? 'button-active' : 'button-inactive')}
+              >
+                <span>Hourly Rollup</span>
+                <div className={'icon icon-left'}><TgtTriangleVector/></div>
+              </Box>
+              <Box
+                height={22}
+                width={98}
+                border={2}
+                borderRadius={11}
+                borderColor={theme.color.primaryButton}
+                bgcolor={theme.color.backgroundModal}
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                paddingRight={1.8}
+                paddingLeft={0.2}
+                fontSize={11}
+                className={classNames('no-select', 'rollup-mode-button',
+                                      rollupMode === RollupMode.ALL_CALLOUTS ? 'button-active' : 'button-inactive')}
+              >
+                <div className={'icon icon-right'}><TgtTriangleVector/></div>
+                <span>All Callouts</span>
+              </Box>
+            </div>
+            <div className={'rollup-close-button'} onClick={props.exitRollupMode}>
+              <DeleteButtonX/>
+            </div>
           </div>
           <form className={classNames('rollup-form')}>
             <div className={classNames(classes.modalInputContainer, props.readOnly ? 'rollup-text-wrapper' : null)}>
@@ -234,32 +240,26 @@ export const RollupView: React.FC<MyProps> = (props) => {
               }
             </div>
           </form>
-          <div className={classNames('button-section', classes.buttonSection)}>
-            <div className={classes.spacer}>&nbsp;</div>
-            <div
-              className={classNames('cancel', classes.modalButton)}
-              onClick={props.exitRollupMode}
-            >
-              Cancel
-            </div>
-            <div
-              onClick={handleSaveClick}
-              className={classNames('save', classes.modalButton, props.readOnly ? 'disabled' : null)}
-            >
-              SAVE
-            </div>
+          <div className={classNames('button-section', classes.modalConfirmation)}>
             <CopyToClipboard onCopy={() => props.displaySnackbar('Copied to Clipboard')}
                              text={rollupMode === RollupMode.ALL_CALLOUTS ? allCallouts : hourlyRollup}>
               <div className={classNames('copy-to-clipboard', classes.copyToClipboard)}>
                 Copy to Clipboard
               </div>
             </CopyToClipboard>
+            <div
+              onClick={handleSaveClick}
+              className={classNames('save', classes.saveSubmitButton, props.readOnly ? 'disabled' : null)}
+            >
+              Save Changes
+            </div>
           </div>
         </div>
       </div>
       {rollupMode === RollupMode.ALL_CALLOUTS ?
         <div
-          className={classNames('import-rollup-button', selectedIxns.length === 0 || props.readOnly ? 'disabled' : null)}
+          className={classNames('import-rollup-button',
+                                selectedIxns.length === 0 || props.readOnly ? 'disabled' : null)}
           onClick={importIxns}
         >
           <StyledImportRollupsButton/>
@@ -342,6 +342,7 @@ export const StyledRollupView = styled(RollupView)`
     margin-top: -4px;
     margin-bottom: 4px;
     border-radius: 11px;
+    cursor: pointer;
     
     :hover {
       box-shadow: 0 0 6px #FFF;
@@ -364,5 +365,18 @@ export const StyledRollupView = styled(RollupView)`
     justify-content: flex-start;
     padding: 4px;
     overflow-y: auto;
+  }
+  
+  .rollup-button-container {
+    width: 200px;
+    height: 30px;
+    display: flex;
+    align-self: flex-end;
+    flex-direction: row;
+    justify-content: space-between;       
+  }
+  
+  .rollup-close-button {
+    padding-top: 6px;
   }
 `;

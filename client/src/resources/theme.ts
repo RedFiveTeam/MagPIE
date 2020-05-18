@@ -47,10 +47,11 @@ const theme = {
     fontActive: crayonBox.notEggWhite,
     backgroundLoading: crayonBox.coolBlack,
     backgroundUsernameSuffix: crayonBox.warmGray,
-    backgroundInput: crayonBox.lessDarkGray,
+    backgroundInput: crayonBox.mediumBlueGray,
     fontUsernameSuffix: crayonBox.lighterGray,
-    loginIcon: crayonBox.mediumBrightBlue,
+    loginIcon: crayonBox.mediumBrightBlue,//
     backgroundSidebar: crayonBox.steelBlue,
+    backgroundIxnSidebar: crayonBox.darkRedBlue,//
     backgroundMetricsCard: crayonBox.darkBlue,
     fontMetricsHeader: crayonBox.brightBlue,
     modalInputBorder: crayonBox.subtlerGray,
@@ -61,6 +62,7 @@ const theme = {
     backgroundPillButton: crayonBox.darkGreenBlue,//
     fontSubHeader: crayonBox.lightBlueGray,//
     copyTgtBorder: crayonBox.lightCoolBlack,//
+    dateDividerBox: crayonBox.mediumBrightBrightBlue,//
   },
 
   font: {
@@ -81,6 +83,7 @@ const theme = {
     sizeRowSmall: '12px',
     sizeRowMedium: '14px',
     sizeMetricsHeader: '20px',
+    sizeHelperText: '28px',
     sizeModalHeader: '30px',
     sizeBigMetric: '40px',
   },
@@ -125,6 +128,11 @@ export const muiTheme = createMuiTheme(
         }
       },
       MuiDialogActions: {
+        root: {
+          background: theme.color.backgroundInformation
+        }
+      },
+      MuiCheckbox: {
         root: {
           background: theme.color.backgroundInformation
         }
@@ -245,6 +253,32 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       borderStyle: 'solid',
       paddingTop: '12px',
     },
+    //@ts-ignore
+    narrativeModalBody: {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      color: theme.color.deleteButton,
+      textAlign: 'center',
+      outline: 'none',
+      backgroundColor: theme.color.backgroundHighlighted,
+      borderRadius: 8
+    },
+    rollupModalBody: {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      color: theme.color.deleteButton,
+      textAlign: 'center',
+      outline: 'none',
+      backgroundColor: theme.color.backgroundHighlighted,
+      borderRadius: 8,
+      padding: '0 2px',
+    },
     modalConfirmation: {
       display: 'flex',
       flexDirection: 'row',
@@ -258,6 +292,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       boxShadow: '0px -2px 4px rgba(0, 0, 0, 0.5)',
       borderBottomRightRadius: '6px',
       borderBottomLeftRadius: '6px',
+      zIndex: 2,
     },
     modalButton: {
       cursor: 'pointer',
@@ -267,7 +302,11 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       },
     },
     modalTextfield: {
-      width: 900,
+      backgroundColor: theme.color.backgroundModal,
+      borderTopLeftRadius: '8px',
+      borderTopRightRadius: '8px',
+      padding: '0 4px',
+      width: '100%',
     },
     modalTextfieldReadonlyContainer: {
       overflowWrap: 'break-word',
@@ -286,13 +325,14 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       alignItems: 'center',
       width: 917,
       height: 534,
-      border: '1px solid ' + theme.color.modalInputBorder,
-      borderRadius: 8,
+      background: theme.color.backgroundModal,
+      borderTopRightRadius: 8,
+      borderTopLeftRadius: 8,
     },
     buttonSection: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
       alignItems: 'center',
       width: '100%',
       height: '40px',
@@ -301,16 +341,40 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       justifySelf: 'flex-end',
     },
     copyToClipboard: {
+      width: 208,
+      height: 38,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
       fontSize: theme.font.sizeRow,
+      borderRadius: 4,
       cursor: 'pointer',
-      width: 128,
+      border: '1px solid' + theme.color.primaryButton,
+      marginRight: '17px',
       '&:hover': {
-        textShadow: '0px 0px 4px #FFFFFF',
-      },
+        boxShadow: '0 0 6px #FFF'
+      }
     },
     spacer: {
       width: 128,
     },
+    saveSubmitButton: {
+      width: 208,
+      height: 38,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: theme.font.sizeRow,
+      borderRadius: 4,
+      cursor: 'pointer',
+      background: theme.color.primaryButton,
+      '&:hover': {
+        boxShadow: '0 0 6px #FFF'
+      }
+    },
+
   }));
 
 export default theme;

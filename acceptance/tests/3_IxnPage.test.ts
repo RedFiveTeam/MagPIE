@@ -32,8 +32,8 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.click('.navigate-to-tgt-button');
 
   I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
   I.waitForText('MGRS: 12QWE1231231231', 10);
+  I.waitForText('Date: 02/01/2020', 10);
 
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI DESCRIPTION:', 10);
@@ -41,23 +41,9 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
 
 Scenario('Should be able to add and cancel adding segments', (I) => {
   I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
-
-  //Add and cancel
-  I.click('.add-segment-button');
-  I.fillField('.segment-start', '12');
-  I.pressKey('Tab');
-  I.fillField('.segment-end', '12304');
-  I.click('.cancel-add-segment');
-
-  I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI DESCRIPTION:', 10);
-  I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
-  I.dontSee('12:00:00Z');
+  I.waitForText('MGRS: 12QWE1231231231', 10);
 
   //Add
-  I.click('.add-segment-button');
   I.fillField('.segment-start', '12');
   I.pressKey('Tab');
   I.fillField('.segment-end', '12304');
@@ -66,11 +52,24 @@ Scenario('Should be able to add and cancel adding segments', (I) => {
   I.waitForText('12:00:00Z');
   I.waitForText('12:30:40Z');
   I.dontSee('.segment-input-container');
+
+  //Cancel add
+  I.click('.add-segment-button');
+  I.fillField('.segment-start', '13');
+  I.pressKey('Tab');
+  I.fillField('.segment-end', '133');
+  I.click('.cancel-add-segment');
+
+  I.click('.ixn-dash--header--back-button');
+  I.waitForText('RFI DESCRIPTION:', 10);
+  I.click('.exploitation');
+  I.waitForText('MGRS: 12QWE1231231231', 10);
+  I.dontSee('13:00:00Z');
 });
 
 Scenario('Should be able to add ixns', (I) => {
   I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
+  I.waitForText('MGRS: 12QWE1231231231', 10);
 
   I.pressKey('Tab');
   I.fillField('.exploit-analyst', 'Billy Bob Joe');
@@ -109,7 +108,7 @@ Scenario('Should be able to see Tgt and Ixn counts on the RFI Description page',
 
 Scenario('Should be able to edit ixns', (I) => {
   I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
+  I.waitForText('MGRS: 12QWE1231231231', 10);
 
   I.doubleClick('.exploit-analyst');
   I.pressKey('Tab');
@@ -224,7 +223,7 @@ Scenario('Should be able to write and view track narratives', (I) => {
 
 Scenario('Should be able to write and view ixn notes', (I) => {
   I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
+  I.waitForText('MGRS: 12QWE1231231231', 10);
 
   I.click('.note-button');
   I.waitForElement('.note-input');
@@ -234,7 +233,7 @@ Scenario('Should be able to write and view ixn notes', (I) => {
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI DESCRIPTION:', 10);
   I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
+  I.waitForText('MGRS: 12QWE1231231231', 10);
   I.dontSee('These are some notes about an ixn');
 
   I.click('.note-button');
@@ -276,7 +275,7 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.seeInField('.rollup-input', '12:10:30Z - Person entered tgt from right side\n\n12:15:00Z -');
 
   I.fillField('.rollup', 'DO NOT SAVE THIS');
-  I.click('.cancel');
+  I.click('.rollup-close-button');
   I.dontSee('Copy to Clipboard');
 
   I.click('.rollup-button');
@@ -308,7 +307,7 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.seeInField('.rollup-input', 'Some things happened within this half hour block of time');
 
   I.fillField('.rollup', 'DO NOT SAVE THIS');
-  I.click('.cancel');
+  I.click('.rollup-close-button');
   I.dontSee('Copy to Clipboard');
 
   I.click('.rollup-button');
@@ -322,7 +321,7 @@ Scenario('Should be able to write and view rollups', (I) => {
 
 Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
+  I.waitForText('MGRS: 12QWE1231231231', 10);
 
   //Delete first ixn
   I.moveCursorTo('.ixn-row-box', 10, 10);
@@ -374,7 +373,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
 
 Scenario('Should be able to edit segments', (I) => {
   I.click('.exploitation');
-  I.waitForText('TGT:', 10);
+  I.waitForText('MGRS: 12QWE1231231231', 10);
 
   I.click('.edit-segment');
   I.fillField('.segment-start', '110000');
@@ -392,7 +391,7 @@ Scenario('Should be able to edit segments', (I) => {
 
 Scenario('Should be able to delete segments and undo segment delete', (I) => {
   I.click('.exploitation');
-  I.waitForText('TGT:', 10);
+  I.waitForText('MGRS: 12QWE1231231231', 10);
 
   //Delete segment w/o interactions and undo
   I.click('.delete-segment');
@@ -410,7 +409,7 @@ Scenario('Should be able to delete segments and undo segment delete', (I) => {
   I.waitForText('You deleted 11:00:00Z-12:00:00Z', 10);
 
   //Delete segment with interactions
-  I.click('.add-segment-button');
+  I.waitForElement('.segment-start');
   I.fillField('.segment-start', '12');
   I.pressKey('Tab');
   I.fillField('.segment-end', '12304');
@@ -441,8 +440,7 @@ Scenario('Should be able to delete segments and undo segment delete', (I) => {
 Scenario('Should display a modal when deleting targets with ixns', (I) => {
   //Add segment
   I.click('.exploitation');
-  I.waitForText('TGT: SDT20-123', 10);
-  I.click('.add-segment-button');
+  I.waitForText('MGRS: 12QWE1231231231', 10);
   I.fillField('.segment-start', '12');
   I.pressKey('Tab');
   I.fillField('.segment-end', '12304');

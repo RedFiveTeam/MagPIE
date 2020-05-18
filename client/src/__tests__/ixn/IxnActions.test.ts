@@ -20,21 +20,23 @@ describe('IXN Actions', () => {
 
   it('should return a proper navigate to ixn page object', () => {
     let action: any = loadIxnPage(target, '11/14/2020', segments, ixns, false);
-    expect(action).toEqual({
-      type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
-      target: target,
-      dateString: '11/14/2020',
-      segments: segments,
-      ixns: ixns,
-    });
+    expect(action).toEqual(
+      {
+        type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
+        target: target,
+        segments: segments,
+        ixns: ixns,
+        dateString: '11/14/2020',
+      });
 
     action = loadIxnPage(null, null, segments, ixns, false);
-    expect(action).toEqual({
-      type: IxnActionTypes.RELOAD_IXN_PAGE,
-      segments: segments,
-      ixns: ixns,
-      autofocus: false,
-    });
+    expect(action).toEqual(
+      {
+        type: IxnActionTypes.RELOAD_IXN_PAGE,
+        segments: segments,
+        ixns: ixns,
+        isLocalUpdate: false
+      });
   });
 
   it('should return a proper exit ixn page object', () => {

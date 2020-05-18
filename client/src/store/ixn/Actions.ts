@@ -7,7 +7,8 @@ import { IxnDeserializer } from './IxnDeserializer';
 import { TargetPostModel } from '../tgt/TargetPostModel';
 import { postTarget } from '../tgt';
 
-export const loadIxnPage = (target: TargetModel | null, dateString: string | null, segments: SegmentModel[], ixns: IxnModel[], autofocus: boolean) => {
+export const loadIxnPage = (target: TargetModel|null, dateString: string|null, segments: SegmentModel[],
+                            ixns: IxnModel[], isLocalUpdate: boolean) => {
   if (target) {
     return {
       type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
@@ -21,7 +22,7 @@ export const loadIxnPage = (target: TargetModel | null, dateString: string | nul
       type: IxnActionTypes.RELOAD_IXN_PAGE,
       segments: segments,
       ixns: ixns,
-      autofocus: autofocus,
+      isLocalUpdate: isLocalUpdate,
     };
   }
 };
@@ -29,6 +30,34 @@ export const loadIxnPage = (target: TargetModel | null, dateString: string | nul
 export const exitIxnPage = () => {
   return {
     type: IxnActionTypes.EXIT_IXN_PAGE,
+  };
+};
+
+export const setAddSegment = (addSegment: boolean) => {
+  return {
+    type: IxnActionTypes.ADD_SEGMENT,
+    addSegment: addSegment,
+  };
+};
+
+export const setEditSegment = (segmentId: number) => {
+  return {
+    type: IxnActionTypes.EDIT_SEGMENT,
+    editSegment: segmentId,
+  };
+};
+
+export const setEditIxn = (ixnId: number) => {
+  return {
+    type: IxnActionTypes.EDIT_IXN,
+    editIxn: ixnId,
+  };
+};
+
+export const setAddNote = (ixnId: number) => {
+  return {
+    type: IxnActionTypes.ADD_NOTE,
+    addNote: ixnId,
   };
 };
 
@@ -42,13 +71,14 @@ export const saveRollup = (newTarget: TargetPostModel, dateString: string, userN
       .catch((reason => {
         console.log(reason);
       }));
-  }
+  };
 };
 
 export const navigateToIxnPage = (target: TargetModel, dateString: string) => {
   return (dispatch: any) => {
     fetchSegments(target.id)
-      .then(segments => dispatch(fetchIxns(target.id, target, dateString, SegmentDeserializer.deserialize(segments), false)))
+      .then(segments => dispatch(
+        fetchIxns(target.id, target, dateString, SegmentDeserializer.deserialize(segments), false)))
       .catch((reason => {
         console.log(reason);
       }));
@@ -59,7 +89,8 @@ export const updateSegment = (segment: SegmentModel) => {
   return (dispatch: any) => {
     postSegment(segment)
       .then(response => fetchSegments(segment.targetId))
-      .then(segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments), true)))
+      .then(
+        segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments), false)))
       .catch((reason) => {
         console.log(reason);
       });
@@ -70,7 +101,8 @@ export const updateIxn = (ixn: IxnModel, userName: string) => {
   return (dispatch: any) => {
     postIxn(ixn, userName)
       .then(response => fetchSegments(ixn.targetId))
-      .then(segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments), !ixn.id)))
+      .then(
+        segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments), false)))
       .catch((reason) => {
         console.log(reason);
       });
@@ -85,11 +117,12 @@ export const fetchSegments = (targetId: number) => {
     }));
 };
 
-export const fetchIxns = (targetId: number, target: TargetModel | null, dateString: string | null, segments: SegmentModel[], autofocus: boolean) => {
+export const fetchIxns = (targetId: number, target: TargetModel|null, dateString: string|null, segments: SegmentModel[],
+                          isLocalUpdate: boolean) => {
   return (dispatch: any) => {
     return fetch('/api/ixn/' + targetId)
       .then(response => response.json())
-      .then(ixns => dispatch(loadIxnPage(target, dateString, segments, IxnDeserializer.deserialize(ixns), autofocus)))
+      .then(ixns => dispatch(loadIxnPage(target, dateString, segments, IxnDeserializer.deserialize(ixns), isLocalUpdate)))
       .catch((reason => {
         console.log(reason);
       }));
@@ -111,7 +144,8 @@ export const deleteSegment = (segment: SegmentModel) => {
   return (dispatch: any) => {
     return postSegmentDelete(segment.id!)
       .then(response => fetchSegments(segment.targetId))
-      .then(segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments), false)))
+      .then(
+        segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments), false)))
       .catch((reason) => {
         console.log(reason);
       });
@@ -120,13 +154,13 @@ export const deleteSegment = (segment: SegmentModel) => {
 
 export const postIxnDelete = (ixnId: number) => {
   return fetch('/api/ixn/' + ixnId,
-    {
-      method: 'delete',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    },
+               {
+                 method: 'delete',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+               },
   ).catch((reason) => {
     console.log('Failed to delete ixn: ' + reason);
   });
@@ -134,13 +168,13 @@ export const postIxnDelete = (ixnId: number) => {
 
 export const postSegmentDelete = (segmentId: number) => {
   return fetch('/api/ixn/segment/' + segmentId,
-    {
-      method: 'delete',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    },
+               {
+                 method: 'delete',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+               },
   ).catch((reason) => {
     console.log('Failed to delete segment: ' + reason);
   });
@@ -148,14 +182,14 @@ export const postSegmentDelete = (segmentId: number) => {
 
 export const postSegment = (segment: SegmentModel) => {
   return fetch('/api/ixn/segment/post',
-    {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(segment),
-    },
+               {
+                 method: 'post',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(segment),
+               },
   ).catch((reason) => {
     console.log('Failed to post segment: ' + reason);
   });
@@ -163,14 +197,14 @@ export const postSegment = (segment: SegmentModel) => {
 
 export const postIxn = (ixn: IxnModel, userName: string) => {
   return fetch('/api/ixn/post?userName=' + userName,
-    {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(ixn),
-    },
+               {
+                 method: 'post',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(ixn),
+               },
   ).catch((reason) => {
     console.log('Failed to post ixn: ' + reason);
   });
@@ -178,13 +212,13 @@ export const postIxn = (ixn: IxnModel, userName: string) => {
 
 export const postCancelAddSegment = (targetId: number) => {
   return fetch('/api/metrics/cancel-add-segment/' + targetId,
-    {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    },
+               {
+                 method: 'post',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+               },
   ).catch((reason) => {
     console.log('Failed to cancel-add-segment metric: ' + reason);
   });

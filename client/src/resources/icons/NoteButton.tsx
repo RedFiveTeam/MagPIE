@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import theme from '../theme';
 
 const pathD1 = 'M7.69868 7.59204L8.62034 6.84342L16.0317 15.9678L15.11 16.7164L7.69868 7.59204Z';
 const pathD2 = 'M8.34592 6.50601L7.42426 7.25463L6.87528 6.57875L7.79693 5.83013L8.34592 6.50601';
@@ -25,29 +26,29 @@ export const NoteButton: React.FC<MyProps> = (props: MyProps) => {
         null
       }
         <svg
-          width='23'
-          height='23'
+          width='30'
+          height='30'
           viewBox='0 0 23 23'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
         >
           <path
             d={pathD1}
-            fill={'white'}
+            fill={theme.color.primaryButton}
           />
           <path
             d={pathD2}
-            fill={'white'}
+            fill={theme.color.primaryButton}
           />
           <path
             d={pathD3}
-            fill={'white'}
+            fill={theme.color.primaryButton}
           />
           <path
             fillRule='evenodd'
             clipRule='evenodd'
             d={pathD4}
-            fill={'white'}
+            fill={theme.color.primaryButton}
           />
         </svg>
       {props.hasNote ?
@@ -68,6 +69,9 @@ const Wrapper = styled('div')`
   align-items: flex-start;
   justify-content: center;
   
+  
+  filter: drop-shadow(0px 2px 4px #000);
+  
   :hover {
     svg {
       box-shadow: 0 0 6px #FFFFFF;
@@ -75,7 +79,7 @@ const Wrapper = styled('div')`
   }
     
   svg {
-    border-radius: 11.5px;
+    border-radius: 15px;
   
   }
   .blue-circle-spacer {

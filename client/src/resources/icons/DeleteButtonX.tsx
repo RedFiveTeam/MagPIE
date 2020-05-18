@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import theme from '../theme';
 
 const pathD = 'M12.0001 10.9998C12.0001 10.7347 11.8947 10.4804 11.7072 10.2928L9.4142 7.99985L11.7072' +
   ' 5.70685C11.8947 5.51934 12.0001 5.26503 12.0001 4.99985C12.0001 4.73467 11.8947 4.48036 11.7072' +
@@ -19,8 +20,8 @@ interface MyProps {
 const DeleteButtonX: React.FC<MyProps> = (props) => {
   return (
     <Wrapper className={props.className}>
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="8" cy="8" r="8" fill="white"/>
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="8" fill={theme.color.primaryButton}/>
         <path
           d={pathD}
           fill="black"/>

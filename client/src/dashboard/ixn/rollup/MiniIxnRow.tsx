@@ -4,6 +4,7 @@ import { Box, Checkbox } from '@material-ui/core';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import { RollupMode } from '../RollupView';
+import theme from '../../../resources/theme';
 
 interface MyProps {
   ixn: IxnModel;
@@ -61,6 +62,7 @@ export const StyledMiniIxnRow = styled(MiniIxnRow)`
   .ixn-row-box {
     margin-top: 1px !important;
     margin-bottom: 1px !important;
+    background: ${theme.color.backgroundInformation};
   }
     
   .mini-activity {

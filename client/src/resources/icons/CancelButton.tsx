@@ -21,8 +21,14 @@ interface MyProps {
 const CancelButton: React.FC<MyProps> = (props) => {
   return (
     <Wrapper className={props.className}>
-      <svg width="30" height="30" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="18" cy="18" r="18" fill="none"/>
+      <svg
+        width={'30'}
+        height={'30'}
+        viewBox={'0 0 36 36'}
+        fill={'none'}
+        xmlns={'http://www.w3.org/2000/svg'}
+      >
+        <circle cx={'18'} cy={'18'} r={'18'} fill={'none'}/>
         <path
           d={pathD}
           fill={theme.color.primaryButton}/>

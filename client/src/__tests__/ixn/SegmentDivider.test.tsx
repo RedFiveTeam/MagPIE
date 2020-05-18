@@ -39,7 +39,7 @@ describe('Segment Divider', () => {
           postSegment={submitSegmentSpy}
           postIxn={jest.fn()}
           deleteSegment={deleteSegmentSpy}
-          setAddSegment={jest.fn()}
+          cancelAddSegment={jest.fn()}
           hasIxns={false}
           editing={false}
           setEdit={jest.fn()}
@@ -76,7 +76,7 @@ describe('Segment Divider', () => {
           postSegment={submitSegmentSpy}
           postIxn={jest.fn()}
           deleteSegment={deleteSegmentSpy}
-          setAddSegment={jest.fn()}
+          cancelAddSegment={jest.fn()}
           hasIxns={false}
           editing={true}
           setEdit={editSpy}
@@ -101,7 +101,7 @@ describe('Segment Divider', () => {
           postSegment={submitSegmentSpy}
           postIxn={jest.fn()}
           deleteSegment={deleteSegmentSpy}
-          setAddSegment={editSpy}
+          cancelAddSegment={editSpy}
           hasIxns={false}
           editing={true}
           setEdit={jest.fn()}
@@ -111,6 +111,6 @@ describe('Segment Divider', () => {
     );
 
     subject.find('.cancel-add-segment').simulate('click');
-    expect(editSpy).toHaveBeenCalledWith(false);
+    expect(editSpy).toHaveBeenCalled();
   });
 });

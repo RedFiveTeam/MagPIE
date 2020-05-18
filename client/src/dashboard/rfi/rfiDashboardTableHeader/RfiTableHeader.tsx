@@ -11,7 +11,7 @@ interface Props {
   className?: string;
 }
 
-export const RfiTableHeader: React.FC<Props> = props => {
+export const RfiTableHeader: React.FC<Props> = (props) => {
   return (
     <div className={classNames('header', props.className)}>
       <StyledHeaderCell

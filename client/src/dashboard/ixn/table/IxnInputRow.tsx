@@ -15,7 +15,7 @@ import InProgressButton from '../../components/statusButtons/InProgressButton';
 import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiButton';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
 import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton';
-import CancelButtonSmall from '../../../resources/icons/CancelButtonSmall';
+import { CancelButtonLarge } from '../../../resources/icons/CancelButtonSmall';
 
 interface MyProps {
   ixn: IxnModel|null;
@@ -251,98 +251,100 @@ export const IxnInputRow: React.FC<MyProps> = props => {
         >
           <Box
             borderRadius={8}
-            className={classNames('ixn-row-box', props.disabled ? 'disabled' : null, props.addingNote ? 'dark-bg' : null)}
+            className={classNames('ixn-row-box', props.disabled ? 'disabled' : null)}
           >
-            <div className={classes.margin}>
-              <TextField
-                className={classNames('exploit-analyst', 'name')}
-                value={exploitAnalyst}
-                placeholder="Name"
-                onChange={inputExploitAnalyst}
-                autoFocus={(props.autofocus && props.tgtAnalyst === '') || props.ixn !== null}
-              />
-            </div>
-            <div className={classes.margin}>
-              <Input
-                className={classNames('time')}
-                value={time}
-                onChange={inputTime}
-                inputComponent={IxnTimeTextMask as any}
-                error={(timeInvalidError && time !== '') || timeOutOfBoundsError}
-                onBlur={timeBlur}
-                required
-                inputProps={inputProps}
-                autoFocus={props.autofocus && props.tgtAnalyst !== ''}
-              />
-            </div>
-            <div className={classes.margin}>
-              <TextField
-                multiline
-                className={classNames('activity')}
-                value={activity}
-                onChange={inputActivity}
-                placeholder={'Activity'}
-              />
-            </div>
-            <div className={classNames(classes.margin, 'track')}>
-              {props.ixn && props.ixn.track ?
-                <>
-                  <TrackNarrativeButton className={'no-click'} hasNarrative={false}/>
-                  <span>{props.ixn.track}</span>
-                </>
-                :
-                '\xa0'
-              }
-            </div>
-            <div className={classes.margin}>
-              <TextField
-                className={classNames('track-analyst', 'name')}
-                value={trackAnalyst}
-                placeholder="Name"
-                onChange={inputTrackAnalyst}
-              />
-            </div>
-            <div className={classNames('status', classes.margin)}>
-              {props.ixn === null || props.ixn.status === IxnStatus.NOT_STARTED ?
-                <NotStartedButton buttonClass={classes.statusUnclickable}/>
-                : props.ixn.status === IxnStatus.IN_PROGRESS ?
-                  <InProgressButton buttonClass={classes.statusUnclickable}/>
-                  : props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI ?
-                    <DoesNotMeetEeiButton buttonClass={classes.statusUnclickable}/>
-                    : <CompletedButton buttonClass={classes.statusUnclickable}/>}
-            </div>
-            <div className={classes.margin}>
-              <TextField
-                className={classNames('lead-checker', 'name')}
-                value={leadChecker}
-                placeholder="Name"
-                onChange={inputLeadChecker}
-              />
-            </div>
-            <div className={classes.margin}>
-              <TextField
-                className={classNames('final-checker', 'name')}
-                value={finalChecker}
-                placeholder="Name"
-                onChange={inputFinalChecker}
-                onKeyDown={(e) => {
-                  if (e.which === 9 && !e.shiftKey) {
-                    setAction(RowAction.SUBMITTING);
-                  }
-                }}
-              />
+            <div className={classNames('ixn-box-left', props.addingNote ? 'dark-bg' : 'ixn-input-section')}>
+              <div className={'input-container'}>
+                <TextField
+                  className={classNames('exploit-analyst', 'name')}
+                  value={exploitAnalyst}
+                  placeholder="Name"
+                  onChange={inputExploitAnalyst}
+                  autoFocus={(props.autofocus && props.tgtAnalyst === '') || props.ixn !== null}
+                />
+              </div>
+              <div className={'input-container'}>
+                <Input
+                  className={classNames('time')}
+                  value={time}
+                  onChange={inputTime}
+                  inputComponent={IxnTimeTextMask as any}
+                  error={(timeInvalidError && time !== '') || timeOutOfBoundsError}
+                  onBlur={timeBlur}
+                  required
+                  inputProps={inputProps}
+                  autoFocus={props.autofocus && props.tgtAnalyst !== ''}
+                />
+              </div>
+              <div className={'input-container'}>
+                <TextField
+                  multiline
+                  className={classNames('activity')}
+                  value={activity}
+                  onChange={inputActivity}
+                  placeholder={'Callout'}
+                />
+              </div>
+              <div className={'input-container'}>
+                <TextField
+                  className={classNames('track-analyst', 'name')}
+                  value={trackAnalyst}
+                  placeholder="Name"
+                  onChange={inputTrackAnalyst}
+                />
+              </div>
+              <div className={classNames('status', 'input-container')}>
+                {props.ixn === null || props.ixn.status === IxnStatus.NOT_STARTED ?
+                  <NotStartedButton buttonClass={classes.statusUnclickable}/>
+                  : props.ixn.status === IxnStatus.IN_PROGRESS ?
+                    <InProgressButton buttonClass={classes.statusUnclickable}/>
+                    : props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI ?
+                      <DoesNotMeetEeiButton buttonClass={classes.statusUnclickable}/>
+                      : <CompletedButton buttonClass={classes.statusUnclickable}/>}
+              </div>
+              <div className={classNames('input-container', 'track')}>
+                {props.ixn && props.ixn.track ?
+                  <>
+                    <TrackNarrativeButton className={'no-click'} hasNarrative={false}/>
+                    <span>{props.ixn.track}</span>
+                  </>
+                  :
+                  '\xa0'
+                }
+              </div>
+              <div className={'input-container'}>
+                <TextField
+                  className={classNames('lead-checker', 'name')}
+                  value={leadChecker}
+                  placeholder="Name"
+                  onChange={inputLeadChecker}
+                />
+              </div>
+              <div className={'input-container'}>
+                <TextField
+                  className={classNames('final-checker', 'name')}
+                  value={finalChecker}
+                  placeholder="Name"
+                  onChange={inputFinalChecker}
+                  onKeyDown={(e) => {
+                    if (e.which === 9 && !e.shiftKey) {
+                      setAction(RowAction.SUBMITTING);
+                    }
+                  }}
+                />
+              </div>
             </div>
             <DeleteCancelButton
               handleClick={handleCancelClick}
               className={classNames(
-                'note-edit-button-container',
+                'ixn-box-right',
                 ((props.ixn === null && isBlank) ? 'delete-disabled' : null),
-                (props.addingNote ? 'note-button-extended' : null),
+                (props.addingNote ? 'note-button-extended' : 'ixn-input-section'),
               )}
               buttonClassName={'cancel-edit-ixn-button'}
               title={'Cancel Edit'}
             >
-              <CancelButtonSmall/>
+              <CancelButtonLarge/>
             </DeleteCancelButton>
           </Box>
           {props.addingNote ?
@@ -384,6 +386,11 @@ export const IxnInputRow: React.FC<MyProps> = props => {
 };
 
 export const StyledIxnInputRow = styled(IxnInputRow)`
+  .ixn-input-section {
+    border: 2px solid #48788C;
+    padding-left: 0 !important;
+  }
+  
   .input-error-msg {
     color: ${theme.color.fontError};
     font-size: ${theme.font.sizeRow};
@@ -396,11 +403,12 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
   }
   
   .track {
+    width: 75px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin: 0 8px 0 8px;
+    margin: 0 8px !important;
   }
   
   .delete-disabled {
@@ -427,22 +435,28 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
   
   .note-button-extended {
     border-top-right-radius: 8px;
-    width: 75px !important;
+    border-bottom-right-radius: 0 !important;
+    //width: 69px !important;
     margin-right: -8px;
-    background-color: ${theme.color.backgroundInformation};
+    background-color: ${theme.color.backgroundInput};
     margin-bottom: -8px;
     padding-right: 7px;
     padding-bottom: 8px;
     z-index: 1;
     flex-grow: 0 !important;
     align-self: stretch !important;
+    background-color: ${theme.color.backgroundInput} !important;
+  }
+  
+  .cancel-edit-ixn-button {
+    margin: 4px 0 0 ${(props) => props.addingNote ? '6px' : '1px'};
   }
   
   .note-container {
-    width: 1476px;
-    min-height: 62px;
+    width: 1410px;
+    min-height: 58px;
     border-radius: 8px 0 8px 8px;
-    background-color: ${theme.color.backgroundInformation};
+    background-color: ${theme.color.backgroundInput};
     margin: -4px 0 8px 0;
     padding: 8px;
     display:flex;
@@ -454,5 +468,9 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
     
   .dark-bg {
     background-color: ${theme.color.backgroundInput} !important;
+  }
+  
+  .input-container {
+    margin: 0 4px 6px 4px;
   }
 `;

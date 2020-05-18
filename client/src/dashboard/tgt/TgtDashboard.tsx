@@ -62,7 +62,7 @@ export enum Status {
   EDIT
 }
 
-export const TgtDashboard: React.FC<MyProps> = props => {
+export const TgtDashboard: React.FC<MyProps> = (props) => {
   const moment = require('moment');
   const classes = rowStyles();
   const [cookies, setCookies] = useCookies(['magpie']);
@@ -322,17 +322,17 @@ export const TgtDashboard: React.FC<MyProps> = props => {
           <div className={classes.modalBody}>
             <div className={'modal-text'}>Would you like to import <br/>targets from all previous dates?</div>
             <div className={classes.modalConfirmation}>
-          <span className={classNames('modal-no', classes.modalButton)} onClick={() => {
+          <div className={classNames('modal-no', classes.modalButton)} onClick={() => {
             setDisplayCopyAllTargets(false);
           }}>
             No
-          </span>
-              <span className={classNames('modal-yes', classes.modalButton)} onClick={() => {
+          </div>
+              <div className={classNames('modal-yes', classes.modalButton)} onClick={() => {
                 handlePostTargets(copyTgts, true);
                 setDisplayCopyAllTargets(false);
               }}>
             Yes
-          </span>
+          </div>
             </div>
           </div>
         </Modal>
@@ -371,7 +371,7 @@ export const TgtDashboard: React.FC<MyProps> = props => {
           />
         </div>
         <div className={'tgt-dash'}>
-          {props.targets.length > 0 && props.targets[0].exploitDateId == -1 ?
+          {props.targets.length > 0 && props.targets[0].exploitDateId === -1 ?
             <div className={'tgt-dash-body'}>
               {allNamesEntered ? null :
                 <span className={'name-input-helper'}>Input all target names to assign a coverage date</span>}

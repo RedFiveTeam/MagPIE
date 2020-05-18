@@ -17,6 +17,8 @@ import EditButton from '../../../resources/icons/EditButton';
 import { DeleteConfirmationModal } from '../../components/DeleteConfirmationModal';
 import { convertTimeStringToMoment, RowAction } from '../../../utils';
 import { postCancelAddSegment } from '../../../store/ixn';
+import TextTooltip from '../../components/TextTooltip';
+import { SegmentDividerTrashcanButton } from '../../../resources/icons/SegmentDividerTrashcanButton';
 
 interface Props {
   target: TargetModel;
@@ -24,11 +26,12 @@ interface Props {
   postSegment: (segment: SegmentModel) => void;
   postIxn: (ixn: IxnModel) => void;
   deleteSegment: (segment: SegmentModel) => void;
-  setAddSegment: (addSegment: boolean) => void;
+  cancelAddSegment: () => void;
   hasIxns: boolean;
   editing: boolean;
   setEdit: (segmentId: number) => void;
   disabled: boolean;
+  disableCancel: boolean;
   className?: string;
 }
 
@@ -158,7 +161,7 @@ export const SegmentDivider: React.FC<Props> = props => {
     if (props.segment) {
       props.setEdit(-1);
     } else {
-      props.setAddSegment(false);
+      props.cancelAddSegment();
       postCancelAddSegment(props.target.id)
         .catch(reason => console.log(reason));
     }
@@ -168,7 +171,7 @@ export const SegmentDivider: React.FC<Props> = props => {
     if (props.segment !== null) {
       props.deleteSegment(props.segment);
     } else {
-      props.setAddSegment(false);
+      props.cancelAddSegment();
       setDisplayModal(false);
     }
   };
@@ -191,15 +194,20 @@ export const SegmentDivider: React.FC<Props> = props => {
   return (
     <div className={classNames(props.className)}>
       <div className={'segment-divider-placeholder'}>
-        <div className={'segment-divider--bar'}/>
-        <div className={'segment-divider--box'}>
+        <div className={classNames('segment-divider--bar', props.editing ? 'highlighted' : null)}/>
+        <div className={classNames('segment-divider--box', props.editing ? 'highlighted-box' : null)}>
           {!props.editing ?
             <div className={'add-segment-form'}>
-              <div
-                className={classNames('delete-segment', 'delete-cancel-segment-wrapper', props.disabled? 'disabled' : null)}
-                onClick={handleDeleteClick}>
-                <DeleteButtonX className={'delete-cancel-segment'}/>
-              </div>
+              <TextTooltip
+                title={'Edit Segment'}
+              >
+                <div
+                  className={classNames('edit-segment', props.disabled ? 'disabled' : null)}
+                  onClick={handleEditClick}
+                >
+                  <EditButton/>
+                </div>
+              </TextTooltip>
               <div className={classNames('segment-value', 'segment-start')}>
                 {props.segment!.startTime.format('HH:mm:ss') + 'Z'}
               </div>
@@ -209,21 +217,25 @@ export const SegmentDivider: React.FC<Props> = props => {
               <div className={classNames('segment-value', 'segment-end')}>
                 {props.segment!.endTime.format('HH:mm:ss') + 'Z'}
               </div>
-              <div
-                className={classNames('edit-segment', props.disabled ? 'disabled' : null)}
-                onClick={handleEditClick}
+              <TextTooltip
+                title={'Delete Segment'}
               >
-                <EditButton/>
-              </div>
+                <div
+                  className={classNames('delete-segment', 'delete-cancel-segment-wrapper',
+                                        props.disabled ? 'disabled' : null)}
+                  onClick={handleDeleteClick}>
+                  <SegmentDividerTrashcanButton className={'delete-cancel-segment'}/>
+                </div>
+              </TextTooltip>
             </div>
             :
             <div className={'add-segment-form'}
                  onBlur={handleBlur}
             >
               <div
-                className={classNames('cancel-add-segment', 'delete-cancel-segment-wrapper')}
-                onClick={() => setAction(RowAction.DELETING)}>
-                <DeleteButtonX className={'delete-cancel-segment'}/>
+                className={'edit-segment disabled'}
+              >
+                <EditButton/>
               </div>
               <div className={'segment-value'}>
                 <FormControl>
@@ -284,11 +296,16 @@ export const SegmentDivider: React.FC<Props> = props => {
                   </div>
                 </FormControl>
               </div>
-              <div
-                className={'edit-segment'}
+              <TextTooltip
+                title={'Cancel Edit'}
               >
-                &nbsp;
-              </div>
+                <div
+                  className={classNames('cancel-add-segment', 'delete-cancel-segment-wrapper',
+                                        props.disableCancel ? 'disabled' : null)}
+                  onClick={() => setAction(RowAction.DELETING)}>
+                  <DeleteButtonX className={'delete-cancel-segment'}/>
+                </div>
+              </TextTooltip>
             </div>
           }
         </div>
@@ -311,14 +328,6 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  .segment-divider-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
   
   .segment-value {
     width: 72px;
@@ -338,12 +347,13 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
   
   .segment-divider--bar {
     margin-bottom: -4px;
-    width: 1500px;
+    width: 1410px;
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    background: radial-gradient(800px, ${theme.color.regionDividerPrimary}, ${theme.color.regionDividerSecondary});
-    z-index: 2;
+    background: radial-gradient(300px, ${theme.color.regionDividerPrimary}, ${theme.color.regionDividerSecondary});
+    z-index: 3;
+    box-shadow: -2px 2px 4px #000;
   }
   
   .segment-divider--box {
@@ -360,10 +370,11 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     padding-left: 36px;
     padding-right: 36px;
     z-index: 2;
+    box-shadow: -2px 2px 4px #000;
   }
   
   .add-segment-form {
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -391,26 +402,34 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
   }
   
   .delete-cancel-segment {
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
   }
   
   .delete-cancel-segment-wrapper {
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin-right: 24px;
-  }
-  
-  .edit-segment {
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     margin-left: 24px;
+  }
+  
+  .edit-segment {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-right: 24px;
     width: 12px;
+  }
+  
+  .highlighted {
+    background: ${theme.color.primaryButton} !important;
+  }
+  
+  .highlighted-box {
+    border-color: ${theme.color.primaryButton} !important;
   }
 `;

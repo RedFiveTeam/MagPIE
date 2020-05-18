@@ -31,6 +31,8 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
   let rfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.rfis);
   let sortKey: SortKeyModel = useSelector(({rfiState}: ApplicationState) => rfiState.sortKey);
 
+  const dispatch = useDispatch();
+
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const classes = rowStyles();
   const [cookies] = useCookies(['magpie']);
@@ -55,8 +57,6 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
     return newList;
   };
 
-  const dispatch = useDispatch();
-
   const handleReorderUndo = (rfiList: RfiModel[], rfiNum: string) => {
     dispatch(reprioritizeRfis(rfiList));
     postRfiPriorityUpdate(rfiList, `?undo=${rfiNum}&userName=${cookie.userName}`)
@@ -79,8 +79,8 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
           .filter((rfi) => rfi.status === RfiStatus.OPEN);
         dispatch(reorderRfis(rfiList, rfiNum, newIndex, cookie.userName));
         enqueueSnackbar('RFI ' + formatRfiNum(rfiNum) + ' Prioritized', {
-          action: (key) => PriorityUndoSnackbarAction(key, originalPriority, handleReorderUndo, closeSnackbar,
-                                                      classes.snackbarButton, rfiNum),
+          action: (key) => PriorityUndoSnackbarAction(key, originalPriority, handleReorderUndo,
+                                                      closeSnackbar, classes.snackbarButton, rfiNum),
           variant: 'info',
         });
       }

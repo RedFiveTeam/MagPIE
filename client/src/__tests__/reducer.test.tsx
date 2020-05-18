@@ -420,6 +420,10 @@ describe('reducer', () => {
                  dateString: '11/14/2020',
                  ixns: ixns,
                  autofocus: false,
+                 addNote: -1,
+                 addSegment: false,
+                 editIxn: -1,
+                 editSegment: -1,
                });
 
     let newSegments = [
@@ -451,6 +455,11 @@ describe('reducer', () => {
                  segments: newSegments,
                  dateString: '11/14/2020',
                  ixns: newIxns,
+                 addNote: -1,
+                 addSegment: false,
+                 autofocus: undefined,
+                 editIxn: -1,
+                 editSegment: -1,
                });
   });
 
@@ -471,15 +480,19 @@ describe('reducer', () => {
 
     state = ixnReducer(state, exitIxnPage);
 
-    expect(state)
-      .toEqual({
-                 viewIxnPage: false,
-                 target: target,
-                 dateString: '11/11/2011',
-                 segments: [],
-                 ixns: [],
-                 autofocus: false,
-               });
+    expect(state).toEqual(
+      {
+        viewIxnPage: false,
+        target: target,
+        dateString: '11/11/2011',
+        segments: [],
+        ixns: [],
+        autofocus: false,
+        addNote: -1,
+        addSegment: true,
+        editIxn: -1,
+        editSegment: -1,
+      });
   });
 
   it('should handle UPDATE_TGT_SUCCESS', () => {

@@ -4,8 +4,10 @@ import classNames from 'classnames';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import theme from '../../resources/theme';
-import { Box } from '@material-ui/core';
-import RollupIcon from '../../resources/icons/RollupIcon';
+import EeiNotesIcon from '../../resources/icons/EeiNotesIcon';
+import AddSegmentIcon from '../../resources/icons/AddSegmentIcon';
+import ExportRollupsIcon from '../../resources/icons/ExportRollupsIcon';
+import { EeiTooltip } from '../components/TextTooltip';
 
 interface Props {
   exitIxnPage: () => void;
@@ -13,63 +15,76 @@ interface Props {
   dateString: string;
   disableRollupButton: boolean;
   showRollup: () => void;
+  displayEeiNotes: boolean;
+  toggleDisplayEeiNotes: () => void;
+  disableAddSegment: boolean;
+  setAddSegment: () => void;
+  displaySegmentHelperText: boolean;
   className?: string;
 }
 
 export const IxnDashboardHeader: React.FC<Props> = props => {
 
+  const handleRollupClick = () => {
+    if (!props.disableRollupButton) {
+      props.showRollup();
+    }
+  };
+
   return (
     <div className={classNames(props.className)}>
       <div className={'ixn-dash--header'}>
-        <div className={'ixn-dash--header--back-button'} onClick={props.exitIxnPage}>
-          <StyledBackButtonVector/>
-        </div>
-        <div className={'ixn-dash--header--mgrs-date-container'}>
-          <div className={'ixn-dash--header--mgrs'}>
-            <b>MGRS:</b> {props.target.mgrs}
+        <div className={'ixn-dash--header--left-side'}>
+          <div className={'ixn-dash--header--back-button'} onClick={props.exitIxnPage}>
+            <StyledBackButtonVector/>
           </div>
-          <div className={'ixn-dash--header--date'}>
-            <b>Date:</b> {props.dateString}
+          <div className={'ixn-dash--header--mgrs-date-container'}>
+            <div className={'ixn-dash--header--mgrs'}>
+              <b>MGRS:</b> {props.target.mgrs}
+            </div>
+            <div className={'ixn-dash--header--date'}>
+              <b>Date:</b> {props.dateString}
+            </div>
           </div>
         </div>
-        <div className={'rollup-button-container'}>
-          <div className={classNames('rollup-button', props.disableRollupButton ? 'disabled' : null)}
-               onClick={() => {if (!props.disableRollupButton) props.showRollup()}}
+        <div className={'smallbord-container'}>
+          <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
+        </div>
+        <div className={'ixn-dash--header--buttons'}>
+          {props.displaySegmentHelperText ?
+            <span className={'header-helper-text'}>Add an Additional Segment</span>
+            :
+            null
+          }
+          <div
+            className={classNames('ixn-dash--header--button add-segment-button',
+                                  props.disableAddSegment ? 'disabled' : null)}
+            onClick={props.setAddSegment}
           >
-            <Box
-              className={'rollup-box no-select'}
-              height={32}
-              width={123}
-              border={2}
-              borderRadius={16}
-              borderColor={theme.color.primaryButton}
-              bgcolor={theme.color.backgroundModal}
-              display="flex"
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-              paddingRight={0.25}
-              paddingLeft={1.25}
-              zIndex={1000}
-              color={theme.color.fontPrimary}
-              fontSize={12}
-              fontWeight={'bold'}
-            >
-              Export Rollups
-              <RollupIcon/>
-            </Box>
+            <AddSegmentIcon/>
           </div>
-        </div>
-        <div className={'ixn-dash--header--tgt-name-container'}>
-          <span className={'ixn-dash--header--tgt-name'}>
-            TGT: {props.target.name}
-          </span>
-        </div>
-        <div className={'ixn-dash--header--notes'}>
-          <span><b>EEI Notes:</b> {props.target.notes}</span>
-        </div>
-        <div className={'ixn-dash--header--filler'}>
-          &nbsp;
+          <EeiTooltip
+            arrow
+            title={props.target.notes}
+            placement={'bottom-end'}
+            interactive
+            leaveDelay={100}
+            open={props.displayEeiNotes}
+          >
+            <div
+              className={'ixn-dash--header--button eei-notes-button'}
+              onClick={props.toggleDisplayEeiNotes}
+            >
+              <EeiNotesIcon/>
+            </div>
+          </EeiTooltip>
+          <div
+            className={classNames('ixn-dash--header--button', 'rollup-button',
+                                  props.disableRollupButton ? 'disabled' : null)}
+            onClick={handleRollupClick}
+          >
+            <ExportRollupsIcon/>
+          </div>
         </div>
       </div>
     </div>
@@ -81,7 +96,14 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   font-family: ${theme.font.familyRow};
   color: ${theme.color.fontPrimary};
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   width: 100%;
+  
+  .ixn-dash--header--left-side {
+    display: flex;
+    flex-direction: row;
+  }
   
   .ixn-dash--header { 
     width: 100%;
@@ -109,8 +131,7 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex: 1 1;
-    min-width: 400px;
+    width: 400px;
     font-size: 20px;
   }
   
@@ -130,13 +151,22 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
     font-weight: ${theme.font.weightMedium};
   }
   
-  .ixn-dash--header--notes {
-    flex: 1 1;
-    min-width: 400px;
+  .ixn-dash--header--buttons {
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 148px;
+    justify-content: space-between;
+    align-items: center;
     overflow-y: auto;
     height: 59px;
-    padding-right: 10px;
+    padding: 5px;
     font-size: 18px;
+    margin-right: 29px;
+    margin-left: 283px;
+  }
+  
+  .ixn-dash--header--button {
+    cursor: pointer;
   }
   
   .ixn-dash--header--filler {
@@ -151,5 +181,16 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
     :hover {
       box-shadow: 0 0 6px #FFFFFF;
     }
+  }
+  
+  .header-helper-text {
+    position: absolute;
+    text-align: end;
+    font-size: ${theme.font.sizeRegion};
+    line-height: 21px;
+    width: 300px;
+    margin-left: -300px;
+    padding-right: 8px;
+    height: 24px;
   }
 `;

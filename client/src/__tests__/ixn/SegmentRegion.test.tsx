@@ -23,15 +23,15 @@ describe("Segment Region", () => {
       target={target}
       segment={segment}
       ixns={interactions}
-      postSegment={(segment: SegmentModel) => {}}
-      postIxn={(ixn: IxnModel) => {}}
-      deleteIxn={(ixn: IxnModel) => {}}
+      postSegment={jest.fn()}
+      postIxn={jest.fn()}
+      deleteIxn={jest.fn()}
       tgtAnalyst={''}
-      setTgtAnalyst={(tgtAnalyst) => {}}
-      deleteSegment={(segment: SegmentModel) => {}}
-      setAddSegment={(addSegment: boolean) => {}}
+      setTgtAnalyst={jest.fn()}
+      deleteSegment={jest.fn()}
+      cancelAddSegment={jest.fn()}
       editSegment={-1}
-      setEditSegment={(segmentId: number) => {}}
+      setEditSegment={jest.fn()}
       editIxn={-1}
       setEditIxn={jest.fn()}
       addingOrEditing={false}
