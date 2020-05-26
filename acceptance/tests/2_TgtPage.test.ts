@@ -84,8 +84,7 @@ Scenario('Should prompt user to save new targets retrieved from GETS', (I) => {
   I.click('OK');
 
   I.waitForText('Created');
-  I.seeElement('.exploit-date-divider');
-
+  I.waitForElement('.exploit-date-divider');
 
   I.click('.add-date-button');
   I.waitForText('OK');
