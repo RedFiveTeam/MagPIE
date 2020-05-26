@@ -137,9 +137,9 @@ export const TgtInputRow: React.FC<MyProps> = props => {
   const validateAllAndSubmit = () => {
     let nameErrorLocal = strongMatchNameError(name);
     let mgrsErrorLocal = strongMatchMgrsError(mgrs);
-
     setNameError(nameErrorLocal);
     setMgrsError(mgrsErrorLocal);
+
     if (!strongValidateName) {
       setStrongValidateName(nameErrorLocal);
     }
@@ -186,6 +186,8 @@ export const TgtInputRow: React.FC<MyProps> = props => {
     id: 'description-input',
   };
 
+  const enterKey = 13;
+  const tabKey = 9;
 
   return (
     <div className={props.className}>
@@ -196,8 +198,8 @@ export const TgtInputRow: React.FC<MyProps> = props => {
         <MuiThemeProvider theme={rowTheme}>
           <form className={classNames('tgt-form', props.target ? 'edit-tgt-form' : 'add-tgt-form')}
                 onBlur={onBlur}
-                onKeyPress={(e) => {
-                  if (e.which === 13) {
+                onKeyPress={(key) => {
+                  if (key.which === enterKey) {
                     validateAllAndSubmit();
                   }
                 }}
@@ -256,8 +258,8 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                 value={description}
                 label={props.target || description !== '' ? '' : 'TGT Description'}
                 onChange={inputDescription}
-                onKeyDown={(e: any) => {
-                  if (e.keyCode === 9 && !e.shiftKey) {
+                onKeyDown={(key: any) => {
+                  if (key.keyCode === tabKey && !key.shiftKey) {
                     validateAllAndSubmit();
                   }
                 }}

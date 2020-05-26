@@ -33,7 +33,6 @@ const reducer: Reducer<IxnState> = (state = initState, action: any) => {
       };
     case IxnActionTypes.RELOAD_IXN_PAGE:
       if (!action.isLocalUpdate) {
-        console.log(action.segments);
         return {
           ...state,
           segments: action.segments,

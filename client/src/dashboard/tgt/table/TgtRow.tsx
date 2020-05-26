@@ -47,7 +47,7 @@ export const TgtRow: React.FC<Props> = props => {
         setHighlighted(false);
       }, 5000);
     }
-  }, []);
+  }, [props.highlight]);
 
   const submitStatusChange = (status: TargetStatus) => {
     let newTarget: TargetPostModel = {...convertToPostModel(props.target), status: status};

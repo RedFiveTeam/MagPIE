@@ -35,6 +35,13 @@ interface MyProps {
   handleDeleteIxn: (ixn: IxnModel) => void;
   handleDeleteSegment: (segment: SegmentModel) => void;
   addingOrEditing: boolean;
+  setEditingElement: (e: Element|null) => void;
+  setNavigating: (isNavigating: boolean) => void;
+  navigating: boolean;
+  navigateYes: boolean;
+  setNavigate: (target: TargetModel|null) => void;
+  setNavigateYes: (navigateYes: boolean) => void;
+  setSegmentChanged: (isSegmentChanged: boolean) => void;
   className?: string;
 }
 
@@ -68,6 +75,13 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
           addNote={props.addNote}
           setAddNote={props.handleAddNote}
           readOnly={props.readOnly}
+          setEditingElement={props.setEditingElement}
+          setNavigating={props.setNavigating}
+          setSegmentChanged={props.setSegmentChanged}
+          navigating={props.navigating}
+          setNavigate={props.setNavigate}
+          navigateYes={props.navigateYes}
+          setNavigateYes={props.setNavigateYes}
         />,
     );
   }
@@ -79,7 +93,6 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
         selectTarget={props.selectTarget}
       />
       <div className={'ixn-dash-body'}>
-
         {props.segments.length > 0 ?
           <StyledTableHeader
             headers={['Exploit Analyst', 'Time', 'Callout', 'Track Analyst', 'Track Status', 'Track ID',
@@ -104,6 +117,13 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
               editing={true}
               disabled={false}
               disableCancel={props.segments.length === 0}
+              setEditingElement={props.setEditingElement}
+              setNavigating={props.setNavigating}
+              navigating={props.navigating}
+              setNavigate={props.setNavigate}
+              navigateYes={props.navigateYes}
+              setNavigateYes={props.setNavigateYes}
+              setSegmentChanged={props.setSegmentChanged}
             />
             :
             null

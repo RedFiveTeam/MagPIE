@@ -43,6 +43,13 @@ describe("Segment Region", () => {
       addNote={-1}
       setAddNote={jest.fn()}
       readOnly={false}
+      navigateYes={false}
+      navigating={false}
+      setEditingElement={jest.fn()}
+      setNavigateYes={jest.fn()}
+      setNavigating={jest.fn()}
+      setNavigate={jest.fn()}
+      setSegmentChanged={jest.fn()}
     />
   );
 

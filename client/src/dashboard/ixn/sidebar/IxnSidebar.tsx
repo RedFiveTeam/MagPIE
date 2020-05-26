@@ -87,8 +87,8 @@ export const StyledIxnSidebar = styled(IxnSidebar)`
     background: linear-gradient(90deg, ${theme.color.backgroundBase} 0%, ${theme.color.backgroundIxnSidebar} 58px, 
       ${theme.color.backgroundBase} 58px);
     height: calc(100vh - 63px);
-    width: 65px;
-    margin-right: 5px;
+    width: 70px;
+    margin-right: 10px;
   }
   
   .mini-tgt-table {

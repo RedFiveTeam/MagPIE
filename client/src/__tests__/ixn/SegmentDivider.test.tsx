@@ -12,16 +12,16 @@ describe('Segment Divider', () => {
   let target: TargetModel = new TargetModel(1, 1, 1, 'SDT12-123', '12QWE1231231231', 'These are the notes',
                                             'This is a description', TargetStatus.NOT_STARTED, '', '');
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1,
-    moment.unix(
-      12 * 3600 + //HH
-      34 * 60 + //MM
-      56, //SS
-    ).utc(),
-    moment.unix(
-      13 * 3600 + //HH
-      2 * 60 //MM
-      , //SS
-    ).utc(),
+                                               moment.unix(
+                                                 12 * 3600 + //HH
+                                                 34 * 60 + //MM
+                                                 56, //SS
+                                               ).utc(),
+                                               moment.unix(
+                                                 13 * 3600 + //HH
+                                                 2 * 60 //MM
+                                                 , //SS
+                                               ).utc(),
   );
   let deleteSegmentSpy: jest.Mock = jest.fn();
   console.log = jest.fn();
@@ -45,6 +45,13 @@ describe('Segment Divider', () => {
           setEdit={jest.fn()}
           disabled={false}
           disableCancel={false}
+          navigateYes={false}
+          navigating={false}
+          setEditingElement={jest.fn()}
+          setNavigateYes={jest.fn()}
+          setNavigating={jest.fn()}
+          setNavigate={jest.fn()}
+          setSegmentChanged={jest.fn()}
         />
       </SnackbarProvider>,
     );
@@ -83,6 +90,13 @@ describe('Segment Divider', () => {
           setEdit={editSpy}
           disabled={false}
           disableCancel={false}
+          navigateYes={true}
+          navigating={false}
+          setEditingElement={jest.fn()}
+          setNavigateYes={jest.fn()}
+          setNavigating={jest.fn()}
+          setNavigate={jest.fn()}
+          setSegmentChanged={jest.fn()}
         />
       </SnackbarProvider>,
     );
@@ -109,6 +123,13 @@ describe('Segment Divider', () => {
           setEdit={jest.fn()}
           disabled={false}
           disableCancel={false}
+          navigateYes={true}
+          navigating={false}
+          setEditingElement={jest.fn()}
+          setNavigateYes={jest.fn()}
+          setNavigating={jest.fn()}
+          setNavigate={jest.fn()}
+          setSegmentChanged={jest.fn()}
         />
       </SnackbarProvider>,
     );

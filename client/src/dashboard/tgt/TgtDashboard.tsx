@@ -227,6 +227,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
       setNavigating(true);
       setNavigate(rfi);
     } else {
+      setAddDate(false);
       setCookies('magpie', {...cookie, viewState: {rfiId: rfi.id}});
       dispatch(loadTgtPage(rfi, true));
     }
@@ -646,6 +647,7 @@ export const StyledTgtDashboard = styled(
   
   .tgt-table-header {
     flex: 0 0 27px;
+    padding-left: 11px;
     padding-right: 15px;
     align-self: flex-start;
   }

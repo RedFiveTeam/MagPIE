@@ -7,17 +7,19 @@ import theme from '../../resources/theme';
 import EeiNotesIcon from '../../resources/icons/EeiNotesIcon';
 import AddSegmentIcon from '../../resources/icons/AddSegmentIcon';
 import ExportRollupsIcon from '../../resources/icons/ExportRollupsIcon';
-import { EeiTooltip } from '../components/TextTooltip';
+import TextTooltip, { EeiTooltip } from '../components/TextTooltip';
 
 interface Props {
   exitIxnPage: () => void;
   target: TargetModel;
   dateString: string;
+  disableButtons: boolean;
+  disableAddSegment: boolean;
   disableRollupButton: boolean;
+  disableEeiButton: boolean;
   showRollup: () => void;
   displayEeiNotes: boolean;
   toggleDisplayEeiNotes: () => void;
-  disableAddSegment: boolean;
   setAddSegment: () => void;
   displaySegmentHelperText: boolean;
   className?: string;
@@ -26,7 +28,7 @@ interface Props {
 export const IxnDashboardHeader: React.FC<Props> = props => {
 
   const handleRollupClick = () => {
-    if (!props.disableRollupButton) {
+    if (!props.disableButtons) {
       props.showRollup();
     }
   };
@@ -56,13 +58,15 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
             :
             null
           }
-          <div
-            className={classNames('ixn-dash--header--button add-segment-button',
-                                  props.disableAddSegment ? 'disabled' : null)}
-            onClick={props.setAddSegment}
-          >
-            <AddSegmentIcon/>
-          </div>
+          <TextTooltip title={'Add Segment'}>
+            <div
+              className={classNames('ixn-dash--header--button add-segment-button',
+                                    props.disableButtons || props.disableAddSegment ? 'disabled' : null)}
+              onClick={props.setAddSegment}
+            >
+              <AddSegmentIcon/>
+            </div>
+          </TextTooltip>
           <EeiTooltip
             arrow
             title={props.target.notes}
@@ -71,20 +75,25 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
             leaveDelay={100}
             open={props.displayEeiNotes}
           >
+            <TextTooltip title={'EEI Notes'}>
             <div
-              className={'ixn-dash--header--button eei-notes-button'}
+              className={classNames('ixn-dash--header--button eei-notes-button',
+                                    props.disableButtons || props.disableEeiButton ? 'disabled' : null)}
               onClick={props.toggleDisplayEeiNotes}
             >
               <EeiNotesIcon/>
             </div>
+            </TextTooltip>
           </EeiTooltip>
-          <div
-            className={classNames('ixn-dash--header--button', 'rollup-button',
-                                  props.disableRollupButton ? 'disabled' : null)}
-            onClick={handleRollupClick}
-          >
-            <ExportRollupsIcon/>
-          </div>
+          <TextTooltip title={'Export Rollups'}>
+            <div
+              className={classNames('ixn-dash--header--button', 'rollup-button',
+                                    props.disableButtons || props.disableRollupButton ? 'disabled' : null)}
+              onClick={handleRollupClick}
+            >
+              <ExportRollupsIcon/>
+            </div>
+          </TextTooltip>
         </div>
       </div>
     </div>

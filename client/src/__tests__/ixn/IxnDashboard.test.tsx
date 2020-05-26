@@ -39,6 +39,7 @@ describe('Interactions Dashboard', () => {
   const moment = require('moment');
   const cookies = new Cookies();
   cookies.set('magpie', {username: 'billy', segments: []});
+  console.error = jest.fn();
   console.log = jest.fn();
 
   beforeEach(() => {

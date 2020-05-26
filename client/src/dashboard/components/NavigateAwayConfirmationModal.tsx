@@ -19,12 +19,14 @@ export const NavigateAwayConfirmationModal: React.FC<MyProps> = (props) => {
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
       open={props.display}
+      disableBackdropClick
+      disableEscapeKeyDown
       onClose={() => props.setDisplay(false)}
       style={{
         top: '50%',
         left: '50%',
       }}
-      className={classNames('delete-modal', classes.deleteModal)}
+      className={classNames('delete-modal navigate-modal', classes.deleteModal)}
     >
       <div className={classes.modalBody}>
         <div className={'modal-text'}>{props.message}</div>

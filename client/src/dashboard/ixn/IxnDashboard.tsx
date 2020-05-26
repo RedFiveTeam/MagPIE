@@ -8,9 +8,8 @@ import { ApplicationState } from '../../store';
 import { StyledIxnDashboardHeader } from './IxnDashboardHeader';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import {
-  deleteIxn, deleteSegment,
-  exitIxnPage, navigateToIxnPage, saveRollup, setAddNote, setAddSegment, setEditIxn, setEditSegment, updateIxn,
-  updateSegment,
+  deleteIxn, deleteSegment, exitIxnPage, navigateToIxnPage, saveRollup, setAddNote, setAddSegment, setEditIxn,
+  setEditSegment, updateIxn, updateSegment,
 } from '../../store/ixn';
 import theme, { rowStyles } from '../../resources/theme';
 import IxnModel from '../../store/ixn/IxnModel';
@@ -25,6 +24,7 @@ import { IxnTableView } from './IxnTableView';
 import { Cookie } from '../../utils';
 import { RfiStatus } from '../../store/rfi/RfiModel';
 import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
+import { NavigateAwayConfirmationModal } from '../components/NavigateAwayConfirmationModal';
 
 interface Props {
   className?: string
@@ -50,6 +50,12 @@ export const IxnDashboard: React.FC<Props> = props => {
   const [tgtAnalyst, setTgtAnalyst] = useState('');
   const [rollupMode, setRollupMode] = useState(false);
   const [displayEeiNotes, setDisplayEeiNotes] = useState(false);
+
+  const [navigate, setNavigate] = useState(null as TargetModel|null);
+  const [navigating, setNavigating] = useState(false);
+  const [navigateYes, setNavigateYes] = useState(false);
+  const [editingElement, setEditingElement] = useState(null as Element|null);
+  const [isSegmentChanged, setIsSegmentChanged] = useState(false);
 
   const [cookies, setCookies] = useCookies(['magpie']);
   let cookie: Cookie = cookies.magpie;
@@ -77,10 +83,39 @@ export const IxnDashboard: React.FC<Props> = props => {
   };
 
   const handleExitIxnPage = () => {
-    setTimeout(() => {
+    if (addingOrEditing && isSegmentChanged && !navigateYes) {
+      setNavigating(true);
+      setNavigate(null);
+    } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
       dispatch(exitIxnPage());
-    }, 250);
+    }
+  };
+
+  const handleNavigate = () => {
+    setNavigateYes(true);
+    if (element === 'segment' && navigate !== null) {
+      dispatch(navigateToIxnPage(navigate, dateString));
+    } else if (element === 'segment' && navigate === null) {
+      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
+      dispatch(exitIxnPage());
+    } else if (element === 'callout' && navigate !== null) {
+      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: navigate.id}});
+      dispatch(navigateToIxnPage(navigate, dateString));
+    }
+  };
+
+  const handleSelectTarget = (newTarget: TargetModel, dateString: string) => {
+    setDisplayEeiNotes(false);
+    setNavigate(newTarget);
+    if (editIxn > 0 || editSegment > 0) {
+      setNavigating(true);
+    } else {
+      setTimeout(() => {
+        dispatch(navigateToIxnPage(newTarget, dateString));
+        setCookies('magpie', {...cookie, viewState: {rfiId: newTarget.rfiId, tgtId: newTarget.id}});
+      }, 100);
+    }
   };
 
   const handleShowRollup = () => {
@@ -111,17 +146,9 @@ export const IxnDashboard: React.FC<Props> = props => {
   const handleSetAddSegment = () => {
     if (!addingOrEditing) {
       dispatch(setAddSegment(true));
-    } else if (addSegment && segments.length > 0) {
+    } else {
       dispatch(setAddSegment(false));
     }
-  };
-
-  const handleSelectTarget = (target: TargetModel, dateString: string) => {
-    setDisplayEeiNotes(false);
-    setTimeout(() => {
-      dispatch(navigateToIxnPage(target, dateString));
-      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: target.id}});
-    }, 100);
   };
 
   const handleEditSegment = (segmentId: number) => {
@@ -194,6 +221,7 @@ export const IxnDashboard: React.FC<Props> = props => {
   };
 
   const isAddSegmentDisabled = segments.length < 1 || addingOrEditing;
+  const element = editIxn > 0 ? 'callout' : 'segment';
 
   return (
     <div className={classNames(props.className)}>
@@ -201,12 +229,14 @@ export const IxnDashboard: React.FC<Props> = props => {
         target={target}
         dateString={dateString}
         exitIxnPage={handleExitIxnPage}
+        disableButtons={addingOrEditing}
         disableRollupButton={rollupMode || ixns.length === 0}
+        disableEeiButton={target.notes === ''}
+        disableAddSegment={isAddSegmentDisabled}
         showRollup={handleShowRollup}
         toggleDisplayEeiNotes={handleToggleDisplayEeiNotes}
         displayEeiNotes={displayEeiNotes}
         displaySegmentHelperText={segments.length === 1}
-        disableAddSegment={isAddSegmentDisabled}
         setAddSegment={handleSetAddSegment}
       />
       {
@@ -240,6 +270,10 @@ export const IxnDashboard: React.FC<Props> = props => {
             editIxn={editIxn}
             addNote={addNote}
             addingOrEditing={addingOrEditing}
+            setEditingElement={setEditingElement}
+            navigating={navigating}
+            setNavigating={setNavigating}
+            setNavigate={setNavigate}
             selectTarget={handleSelectTarget}
             handleSetAddSegment={handleSetAddSegment}
             handleEditSegment={handleEditSegment}
@@ -249,8 +283,21 @@ export const IxnDashboard: React.FC<Props> = props => {
             handlePostIxn={handlePostIxn}
             handleDeleteIxn={handleDeleteIxn}
             handleDeleteSegment={handleDeleteSegment}
+            navigateYes={navigateYes}
+            setNavigateYes={setNavigateYes}
+            setSegmentChanged={setIsSegmentChanged}
           />
       }
+      {navigating ?
+        <NavigateAwayConfirmationModal
+          message={`You haven't saved the ${element} you were editing.`}
+          display={true}
+          setDisplay={() => setNavigating(false)}
+          handleYes={handleNavigate}
+          focusedElement={editingElement}
+        />
+        :
+        null}
     </div>
   );
 };

@@ -1,8 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="pie" />
+    <module name="magpie" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="dgs1sdt.magpie.Application" />
-    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+    <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
     <envs>
       <env name="GETS_REQUEST_TIME_FRAME_IN_DAYS" value="20" />
       <env name="SPRING_PROFILES_ACTIVE" value="prod" />

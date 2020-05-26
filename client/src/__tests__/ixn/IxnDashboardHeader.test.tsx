@@ -10,6 +10,8 @@ describe("Interactions Header", () => {
   let exitSpy: jest.Mock;
   let showRollupSpy: jest.Mock;
 
+  console.log = jest.fn();
+
   beforeEach(() => {
    exitSpy = jest.fn();
    showRollupSpy = jest.fn();
@@ -18,6 +20,8 @@ describe("Interactions Header", () => {
         target={target}
         exitIxnPage={exitSpy}
         dateString={"08/14/2020"}
+        disableButtons={false}
+        disableEeiButton={false}
         disableRollupButton={false}
         showRollup={showRollupSpy}
         displayEeiNotes={false}
@@ -44,6 +48,8 @@ describe("Interactions Header", () => {
         target={target}
         exitIxnPage={exitSpy}
         dateString={"08/14/2020"}
+        disableButtons={true}
+        disableEeiButton={false}
         disableRollupButton={true}
         showRollup={showRollupSpy}
         displayEeiNotes={false}

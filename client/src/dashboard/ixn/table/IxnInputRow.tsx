@@ -30,6 +30,11 @@ interface MyProps {
   disabled: boolean;
   addingNote: boolean;
   setAddNote: (ixnId: number) => void;
+  setEditingElement: (e: Element|null) => void;
+  setNavigating: (isNavigating: boolean) => void;
+  navigating: boolean;
+  navigateYes: boolean;
+  setNavigateYes: (navigateYes: boolean) => void;
   className?: string;
 }
 
@@ -69,6 +74,12 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const [timeOutOfBoundsError, setTimeOutOfBoundsError] = React.useState(false);
   const [action, setAction] = useState(RowAction.NONE);
 
+  useEffect(() => {
+    if (props.navigateYes) {
+      resetAction();
+    }
+  }, [props.navigating])
+
   const resetAction = () => {
     setTimeout(() => {
       setAction(RowAction.NONE);
@@ -78,17 +89,12 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const handleAction = () => {
     switch (action) {
       case RowAction.DELETING:
-        if (props.ixn) {
+        if (props.ixn && ixnUnChanged) {
           props.setEditIxn(-1);
           props.setAddNote(-1);
           resetAction();
         } else {
-          setExploitAnalyst('');
-          setTime('');
-          setActivity('');
-          setTrackAnalyst('');
-          setLeadChecker('');
-          setFinalChecker('');
+          props.setNavigating(true);
           resetAction();
         }
         break;
@@ -191,13 +197,30 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     }
   };
 
+  const ixnUnChanged = (props.ixn ?
+    exploitAnalyst === props.ixn.exploitAnalyst &&
+    time === props.ixn.time.format('HH:mm:ss') &&
+    activity === props.ixn.activity &&
+    trackAnalyst === props.ixn.trackAnalyst &&
+    leadChecker === props.ixn.leadChecker &&
+    finalChecker === props.ixn.finalChecker
+    :
+    true);
+
   function formBlur(event: any) {
     let currentTarget: any = event.currentTarget;
+
     setTimeout(() => {
-      if (!currentTarget.contains(document.activeElement) && action === RowAction.NONE) {
-        setAction(RowAction.SUBMITTING);
+      if (!currentTarget.contains(document.activeElement) && action !== RowAction.DELETING) {
+        if (ixnUnChanged) {
+          setAction(RowAction.SUBMITTING);
+        } else {
+          props.setNavigating(true);
+        }
+      } else {
+        props.setEditingElement(document.activeElement);
       }
-    }, 200);
+    }, 300);
   }
 
   const validateAndSubmit = () => {
@@ -238,12 +261,15 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     leadChecker === '' &&
     finalChecker === '';
 
+  const enterKey = 13;
+  const tabKey = 9;
+
   return (
     <div className={props.className} id={'ixn-row-input'}>
       <ThemeProvider theme={rowTheme}>
         <form className={classNames('ixn-form', 'edit-ixn-form')}
-              onKeyPress={(e) => {
-                if (e.which === 13) {
+              onKeyPress={(key) => {
+                if (key.which === enterKey) {
                   setAction(RowAction.SUBMITTING);
                 }
               }}
@@ -326,8 +352,8 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                   value={finalChecker}
                   placeholder="Name"
                   onChange={inputFinalChecker}
-                  onKeyDown={(e) => {
-                    if (e.which === 9 && !e.shiftKey) {
+                  onKeyDown={(key) => {
+                    if (key.which === tabKey && !key.shiftKey) {
                       setAction(RowAction.SUBMITTING);
                     }
                   }}

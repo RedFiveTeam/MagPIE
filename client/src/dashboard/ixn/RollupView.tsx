@@ -378,5 +378,6 @@ export const StyledRollupView = styled(RollupView)`
   
   .rollup-close-button {
     padding-top: 6px;
+    padding-right: 3px;
   }
 `;

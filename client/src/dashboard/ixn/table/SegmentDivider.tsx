@@ -32,6 +32,13 @@ interface Props {
   setEdit: (segmentId: number) => void;
   disabled: boolean;
   disableCancel: boolean;
+  setEditingElement: (e: Element|null) => void;
+  setNavigating: (isNavigating: boolean) => void;
+  navigating: boolean;
+  setNavigate: (target: TargetModel|null) => void;
+  navigateYes: boolean;
+  setNavigateYes: (navigateYes: boolean) => void;
+  setSegmentChanged: (isSegmentChanged: boolean) => void;
   className?: string;
 }
 
@@ -72,36 +79,65 @@ export const SegmentDivider: React.FC<Props> = props => {
   const classes = useStyles();
 
   const [segmentStartString, setSegmentStartString] =
-    React.useState(props.segment ? props.segment.startTime.format('HH:mm:ss') : '__:__:__');
+    useState(props.segment ? props.segment.startTime.format('HH:mm:ss') : '__:__:__');
   const [segmentEndString, setSegmentEndString] =
-    React.useState(props.segment ? props.segment.endTime.format('HH:mm:ss') : '__:__:__');
+    useState(props.segment ? props.segment.endTime.format('HH:mm:ss') : '__:__:__');
   const [segmentStartError, setSegmentStartError] = React.useState(false);
   const [segmentEndError, setSegmentEndError] = React.useState(false);
   const [displayModal, setDisplayModal] = React.useState(false);
   const [action, setAction] = useState(RowAction.NONE);
 
-  const resetAction = () => {
-    setTimeout(() => {
-      setAction(RowAction.NONE);
-    }, 1000);
-  };
-
   useEffect(() => {
+    const handleNavigate = () => {
+      if (props.segment !== null &&
+        ((segmentStartString !== props.segment.startTime.format('HH:mm:ss')) ||
+          (segmentEndString !== props.segment.endTime.format('HH:mm:ss')))) {
+        props.setNavigating(true);
+      } else {
+        if (props.segment) {
+          props.setEdit(-1);
+        } else if (props.segment === null && segmentStartString === '__:__:__' && segmentEndString === '__:__:__') {
+          props.cancelAddSegment();
+          postCancelAddSegment(props.target.id)
+            .catch(reason => console.log(reason));
+        }
+      }
+    };
+
+    const resetAction = () => {
+      setTimeout(() => {
+        setAction(RowAction.NONE);
+      }, 1000);
+    };
+
     switch (action) {
       case (RowAction.DELETING):
         if (props.editing) {
-          handleCancel();
+          handleNavigate();
         } else {
           handleDelete();
         }
         resetAction();
         break;
       case (RowAction.SUBMITTING):
-        validateAndSubmit();
-        resetAction();
+        setTimeout(() => {
+          validateAndSubmit();
+          resetAction();
+        }, 200);
         break;
     }
   }, [action]);
+
+  useEffect(() => {
+    if (props.segment && props.navigating && props.navigateYes) {
+      setSegmentStartString(props.segment.startTime.format('HH:mm:ss'));
+      setSegmentEndString(props.segment.endTime.format('HH:mm:ss'));
+      props.setEdit(-1);
+    }
+    if (props.navigating) {
+      props.setNavigateYes(false);
+    }
+  }, [props.navigating]);
 
   const segmentError = (segment: string): boolean => {
     segment = segment.replace(/_/g, '0');
@@ -110,13 +146,22 @@ export const SegmentDivider: React.FC<Props> = props => {
 
   const changeStart = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newTime = event.target.value;
-
+    if (props.segment ? newTime === props.segment.startTime.format('HH:mm:ss') : newTime === '__:__:__') {
+      props.setSegmentChanged(false);
+    } else {
+      props.setSegmentChanged(true);
+    }
     setSegmentStartString(newTime);
     setSegmentStartError(segmentError(newTime));
   };
 
   const changeEnd = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newTime = event.target.value;
+    if (props.segment ? newTime === props.segment.endTime.format('HH:mm:ss') : newTime === '__:__:__') {
+      props.setSegmentChanged(false);
+    } else {
+      props.setSegmentChanged(true);
+    }
     setSegmentEndString(newTime);
     setSegmentEndError(segmentError(newTime));
   };
@@ -157,16 +202,6 @@ export const SegmentDivider: React.FC<Props> = props => {
     }
   };
 
-  const handleCancel = () => {
-    if (props.segment) {
-      props.setEdit(-1);
-    } else {
-      props.cancelAddSegment();
-      postCancelAddSegment(props.target.id)
-        .catch(reason => console.log(reason));
-    }
-  };
-
   const handleDelete = () => {
     if (props.segment !== null) {
       props.deleteSegment(props.segment);
@@ -178,18 +213,34 @@ export const SegmentDivider: React.FC<Props> = props => {
 
   const handleEditClick = () => {
     if (props.segment && props.segment.id) {
+      setSegmentStartString(props.segment.startTime.format('HH:mm:ss'));
+      setSegmentEndString(props.segment.endTime.format('HH:mm:ss'));
       props.setEdit(props.segment.id);
     }
   };
 
   const handleBlur = (event: any) => {
+    props.setNavigateYes(false);
+    props.setNavigate(props.target);
     let currentTarget: any = event.currentTarget;
     setTimeout(() => {
       if (!currentTarget.contains(document.activeElement) && action === RowAction.NONE) {
-        setAction(RowAction.SUBMITTING);
+        if (props.segment !== null &&
+          (segmentStartString !== props.segment.startTime.format('HH:mm:ss') ||
+            segmentEndString !== props.segment.endTime.format('HH:mm:ss'))) {
+          props.setNavigating(true);
+        } else if (props.segment === null && (segmentStartString.match(/[0-9]/) || segmentEndString.match(/[0-9]/))) {
+          props.setNavigating(true);
+        } else {
+          setAction(RowAction.DELETING);
+        }
+      } else {
+        props.setEditingElement(document.activeElement);
       }
-    }, 500);
+    }, 200);
   };
+
+  const enterKey = 13;
 
   return (
     <div className={classNames(props.className)}>
@@ -197,7 +248,7 @@ export const SegmentDivider: React.FC<Props> = props => {
         <div className={classNames('segment-divider--bar', props.editing ? 'highlighted' : null)}/>
         <div className={classNames('segment-divider--box', props.editing ? 'highlighted-box' : null)}>
           {!props.editing ?
-            <div className={'add-segment-form'}>
+            <div className={'segment-form'}>
               <TextTooltip
                 title={'Edit Segment'}
               >
@@ -229,7 +280,7 @@ export const SegmentDivider: React.FC<Props> = props => {
               </TextTooltip>
             </div>
             :
-            <div className={'add-segment-form'}
+            <div className={'segment-form add-segment-form'}
                  onBlur={handleBlur}
             >
               <div
@@ -244,6 +295,7 @@ export const SegmentDivider: React.FC<Props> = props => {
                       className={classNames('segment-start')}
                       value={segmentStartString}
                       onChange={changeStart}
+                      onFocus={() => props.setEditingElement(document.activeElement)}
                       inputComponent={SegmentTextMask as any}
                       disableUnderline
                       endAdornment={
@@ -256,12 +308,13 @@ export const SegmentDivider: React.FC<Props> = props => {
                       }
                       autoFocus={true}
                       error={segmentStartError}
-                      onKeyPress={(e) => {
-                        if (e.which === 13) {
+                      onKeyPress={(key) => {
+                        if (key.which === enterKey) {
                           setAction(RowAction.SUBMITTING);
                         }
                       }}
-                      onBlur={() => setSegmentStartString(segmentStartString.replace(/_/g, '0'))}
+                      onBlur={() => !segmentStartString.match(/[0-9]/) ? () => {
+                      } : setSegmentStartString(segmentStartString.replace(/_/g, '0'))}
                     />
                   </div>
                 </FormControl>
@@ -276,6 +329,7 @@ export const SegmentDivider: React.FC<Props> = props => {
                       className={classNames('segment-end')}
                       value={segmentEndString}
                       onChange={changeEnd}
+                      onFocus={() => props.setEditingElement(document.activeElement)}
                       inputComponent={SegmentTextMask as any}
                       disableUnderline
                       endAdornment={
@@ -286,12 +340,13 @@ export const SegmentDivider: React.FC<Props> = props => {
                         </InputAdornment>
                       }
                       error={segmentEndError}
-                      onKeyPress={(e) => {
-                        if (e.which === 13) {
+                      onKeyPress={(key) => {
+                        if (key.which === enterKey) {
                           setAction(RowAction.SUBMITTING);
                         }
                       }}
-                      onBlur={() => setSegmentEndString(segmentEndString.replace(/_/g, '0'))}
+                      onBlur={() => !segmentEndString.match(/[0-9]/) ? () => {
+                      } : setSegmentEndString(segmentEndString.replace(/_/g, '0'))}
                     />
                   </div>
                 </FormControl>
@@ -373,7 +428,7 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     box-shadow: -2px 2px 4px #000;
   }
   
-  .add-segment-form {
+  .segment-form {
     display: flex;
     flex-direction: row;
     justify-content: center;

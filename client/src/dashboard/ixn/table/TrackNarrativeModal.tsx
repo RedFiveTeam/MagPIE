@@ -9,6 +9,7 @@ import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../../components/InformationalSnackbar';
 import styled from 'styled-components';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
+import { NavigateAwayConfirmationModal } from '../../components/NavigateAwayConfirmationModal';
 
 interface MyProps {
   setDisplay: (display: boolean) => void;
@@ -22,16 +23,18 @@ interface MyProps {
 export const TrackNarrativeModal: React.FC<MyProps> = props => {
   const classes = longInputStyles();
   const rowClasses = rowStyles();
+  const initNarrative = props.dateString + '\n\nSTART\n\n\n\nSTOP';
 
   const [trackNarrative, setTrackNarrative] = useState(
     props.ixn.trackNarrative === '' ?
-      props.dateString + '\n\nSTART\n\n\n\nSTOP'
+      initNarrative
       :
       props.ixn.trackNarrative,
   );
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
+  const [navigating, setNavigating] = useState(false);
   const inputTrackNarrative = (event: any) => {
     setTrackNarrative(event.target.value);
   };
@@ -73,7 +76,15 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
             <span><b>{props.ixn.track}</b></span>
             <div
               className={classNames('cancel', classes.modalButton)}
-              onClick={() => props.setDisplay(false)}
+              onClick={
+                () =>
+                  (props.ixn.trackNarrative === '' && trackNarrative === initNarrative) ||
+                  props.ixn.trackNarrative === trackNarrative
+                    ?
+                    props.setDisplay(false)
+                    :
+                    setNavigating(true)
+              }
             >
               <DeleteButtonX/>
             </div>
@@ -119,6 +130,16 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
             SAVE
           </div>
         </div>
+        {navigating ?
+          <NavigateAwayConfirmationModal
+            message={`You haven't saved the track narrative you were editing.`}
+            display={true}
+            setDisplay={setNavigating}
+            handleYes={() => props.setDisplay(false)}
+            focusedElement={null}
+          />
+          :
+          null}
       </div>
     </Modal>
   )
@@ -128,7 +149,7 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
 export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
   .track-narrative-header {
     display: flex;
-    height: 28px;
+    height: 30px;
     align-self: stretch;
     flex-direction: row;
     justify-content: space-between;
@@ -162,5 +183,10 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
   
   .narrative-input {
     padding: 0 2px;
+  }
+  
+  .cancel {
+    padding-top: 3px;
+    padding-right: 3px;
   }
 `;

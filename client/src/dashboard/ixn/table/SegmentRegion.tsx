@@ -35,6 +35,13 @@ interface MyProps {
   addNote: number;
   setAddNote: (ixnId: number) => void;
   readOnly: boolean;
+  setEditingElement: (e: Element|null) => void;
+  setNavigating: (isNavigating: boolean) => void;
+  setSegmentChanged: (isSegmentChanged: boolean) => void;
+  navigating: boolean;
+  setNavigate: (target: TargetModel|null) => void;
+  navigateYes: boolean;
+  setNavigateYes: (navigateYes: boolean) => void;
   className?: string;
 }
 
@@ -62,6 +69,11 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
           disabled={(ixn === null && (props.addNote > 0 || props.editIxn > 0)) || props.readOnly}
           addingNote={ixn !== null && props.addNote === ixn.id}
           setAddNote={props.setAddNote}
+          setEditingElement={props.setEditingElement}
+          navigating={props.navigating}
+          navigateYes={props.navigateYes}
+          setNavigateYes={props.setNavigateYes}
+          setNavigating={props.setNavigating}
           />
         :
         <StyledIxnRow
@@ -120,6 +132,13 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
         setEdit={props.setEditSegment}
         disabled={props.readOnly}
         disableCancel={false}
+        setEditingElement={props.setEditingElement}
+        setNavigating={props.setNavigating}
+        navigating={props.navigating}
+        navigateYes={props.navigateYes}
+        setNavigate={props.setNavigate}
+        setNavigateYes={props.setNavigateYes}
+        setSegmentChanged={props.setSegmentChanged}
       />
       {props.ixns.length > 0 ?
         <div className={classNames(props.collapsed ? 'expand-button' : 'collapse-button', 'expand-collapse')}

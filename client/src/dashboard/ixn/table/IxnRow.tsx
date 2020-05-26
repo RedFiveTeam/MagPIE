@@ -167,7 +167,7 @@ export const IxnRow: React.FC<MyProps> = props => {
                 <>
                   <TextTooltip title={'Track Narrative'}>
                     <div className={'track-narrative-button'} onClick={handleTrackNarrativeClick}>
-                      <TrackNarrativeButton hasNarrative={false}/>
+                      <TrackNarrativeButton hasNarrative={props.ixn.trackNarrative !== ''}/>
                     </div>
                   </TextTooltip>
                   <span>{props.ixn.track}</span>
