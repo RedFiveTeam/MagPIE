@@ -174,7 +174,7 @@ describe('Interactions Dashboard', () => {
 
     subject.find('.rollup-button').simulate('click');
 
-    expect(subject.find('.rollup-body').exists()).toBeTruthy();
+    expect(subject.find('.rollup').exists()).toBeTruthy();
     expect(subject.find(StyledMiniSegmentRegion).exists()).toBeTruthy();
     expect(subject.find(StyledMiniSegmentDivider).exists()).toBeTruthy();
     expect(subject.find(StyledMiniIxnRow).exists()).toBeTruthy();

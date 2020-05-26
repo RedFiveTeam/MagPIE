@@ -457,7 +457,7 @@ describe('reducer', () => {
                  ixns: newIxns,
                  addNote: -1,
                  addSegment: false,
-                 autofocus: undefined,
+                 autofocus: true,
                  editIxn: -1,
                  editSegment: -1,
                });
