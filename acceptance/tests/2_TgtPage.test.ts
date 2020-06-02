@@ -66,7 +66,7 @@ Scenario('Should prompt user to save new targets retrieved from GETS', (I) => {
   I.click('.navigate-to-tgt-button');
 
   I.dontSee('Input all target names to assign a coverage date');
-  I.see('Add Coverage Date to Exploit TGTs');
+  I.waitForText('Add Coverage Date to Exploit TGTs', 3);
 
   I.click('.add-tgt-button');
   I.fillField('.tgt-name-input-new', 'SDT20-004');
