@@ -66,3 +66,11 @@ code {
 .MuiTooltip-arrow:before {
     border-color: transparent transparent #3c535b transparent !important;
 }
+
+.dismiss-snackbar {
+    background: #1C455C !important;
+}
+
+.dismiss-snackbar:hover {
+    background: rgba(30, 152, 229, 0.1) !important;
+}
