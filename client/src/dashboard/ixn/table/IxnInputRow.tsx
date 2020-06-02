@@ -78,7 +78,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     if (props.navigateYes) {
       resetAction();
     }
-  }, [props.navigating])
+  }, [props.navigating, props.navigateYes])
 
   const resetAction = () => {
     setTimeout(() => {

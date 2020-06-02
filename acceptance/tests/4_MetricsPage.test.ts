@@ -2,22 +2,70 @@
 
 Feature('Metrics Page');
 
-Scenario ('Should log and display GETS click metrics', (I) => {
+Scenario('Should log and display GETS click metrics', (I) => {
   I.amOnPage('/metrics');
 
   I.waitForText('GETS Clicks');
-  I.see('Open', '.gets-clicks');
-  I.see('New', '.gets-clicks');
-  I.see('1', '.gets-clicks');
+  within('.gets-clicks', () => {
+    I.see('Open');
+    I.see('New');
+    I.see('1');
+  });
 });
 
-Scenario ('Should display other metrics', (I) => {
-  I.amOnPage('/metrics');
-
+Scenario('Should display RFI status metrics', (I) => {
   I.waitForText('Avg RFI Spent in Status', 10);
-  I.see('Open', '.workflow-time');
-  I.see('New', '.workflow-time');
-  I.see('0 d', '.workflow-time');
+  within('.workflow-time', () => {
+    I.see('Open');
+    I.see('New');
+    I.see('0 d');
+  });
+});
+
+Scenario('Should display deletion metrics', (I) => {
+  I.waitForText('Avg Deletions');
+  within('.deletions', () => {
+    I.see('Dates');
+    I.see('Targets');
+    I.see('Segments');
+    I.see('Interactions');
+    I.see('6', locate('.card-row').at(1));
+    I.see('5', locate('.card-row').at(2));
+    I.see('4', locate('.card-row').at(3));
+    I.see('3', locate('.card-row').at(4));
+  });
+});
+
+Scenario('Should display undo metrics', (I) => {
+  I.waitForText('Avg Undo Actions');
+  within('.undos', () => {
+    I.see('Dates');
+    I.see('Targets');
+    I.see('Segments');
+    I.see('Interactions');
+    I.see('1', locate('.card-row').at(1));
+    I.see('1', locate('.card-row').at(2));
+    I.see('1', locate('.card-row').at(3));
+    I.see('1', locate('.card-row').at(4));
+  });
+});
+
+Scenario('Should display edit metrics', (I) => {
+  I.waitForText('Avg Edits');
+  within('.edits', () => {
+    I.see('Dates');
+    I.see('Targets');
+    I.see('Segments');
+    I.see('Interactions');
+    I.see('1', locate('.card-row').at(1));
+    I.see('6', locate('.card-row').at(2));
+    I.see('1', locate('.card-row').at(3));
+    I.see('9', locate('.card-row').at(4));
+  });
+});
+
+Scenario('Should display other metrics', (I) => {
+  I.amOnPage('/metrics');
 
   I.waitForText('Avg Targets Created', 10);
   I.see('11', '.tgts-created');
@@ -25,42 +73,12 @@ Scenario ('Should display other metrics', (I) => {
   I.waitForText('Avg Interactions Created', 10);
   I.see('4', '.ixns-created');
 
-  I.waitForText('Avg Deletions');
-  I.see('Dates', '.deletions');
-  I.see('Targets', '.deletions');
-  I.see('Segments', '.deletions');
-  I.see('Interactions', '.deletions');
-  I.see('6', locate('.deletions').find('.card-row').at(1));
-  I.see('5', locate('.deletions').find('.card-row').at(2));
-  I.see('3', locate('.deletions').find('.card-row').at(3));
-  I.see('3', locate('.deletions').find('.card-row').at(4));
-
   I.waitForText('Avg Logins');
   I.see('2', '.logins');
-
-  I.waitForText('Avg Undo Actions');
-  I.see('Dates', '.undos');
-  I.see('Targets', '.undos');
-  I.see('Segments', '.undos');
-  I.see('Interactions', '.undos');
-  I.see('1', locate('.undos').find('.card-row').at(1));
-  I.see('1', locate('.undos').find('.card-row').at(2));
-  I.see('1', locate('.undos').find('.card-row').at(3));
-  I.see('1', locate('.undos').find('.card-row').at(4));
-
-  I.waitForText('Avg Edits');
-  I.see('Dates', '.edits');
-  I.see('Targets', '.edits');
-  I.see('Segments', '.edits');
-  I.see('Interactions', '.edits');
-  I.see('1', locate('.edits').find('.card-row').at(1));
-  I.see('6', locate('.edits').find('.card-row').at(2));
-  I.see('1', locate('.edits').find('.card-row').at(3));
-  I.see('7', locate('.edits').find('.card-row').at(4));
 
   I.waitForText('Avg Prioritization Actions');
   I.see('0', '.prioritizations');
 
   I.waitForText('LTIOVs Met');
-  I.see('0%', '.ltiovs-met')
+  I.see('0%', '.ltiovs-met');
 });

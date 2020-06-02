@@ -344,6 +344,7 @@ Scenario('Should be able to copy targets', (I) => {
   I.click('.dismiss-snackbar');
 
   I.waitForText('Would you like to import', 10);
+  I.waitForElement('.modal-no');
   I.click('.modal-no');
 
   I.click('.copy-tgts-button');

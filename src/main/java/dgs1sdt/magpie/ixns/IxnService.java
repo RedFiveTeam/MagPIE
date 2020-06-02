@@ -79,7 +79,7 @@ public class IxnService {
       .collect(Collectors.toList());
   }
 
-  public void postSegment(SegmentJson segmentJson) {
+  public Segment postSegment(SegmentJson segmentJson) {
     Segment newSegment = new Segment(segmentJson);
 
     if (segmentJson.getId() > 0) {
@@ -106,6 +106,11 @@ public class IxnService {
       long lastSegmentId = segmentRepository.findAll().get(segmentRepository.findAll().size() - 1).getId();
       this.metricsService.addCreateSegment(lastSegmentId, segmentJson);
     }
+
+    if (!(segmentJson.getId() > 0)) {
+      return segmentRepository.findAll().get(segmentRepository.findAll().size() - 1);
+    }
+    return new Segment();
   }
 
   public void postIxn(IxnJson ixnJson, String userName) {

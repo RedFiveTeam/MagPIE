@@ -39,7 +39,7 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.waitForText('RFI DESCRIPTION:', 3);
 });
 
-Scenario('Should be able to add and cancel adding segments', (I) => {
+Scenario('Should be able to add, undo adding, and cancel adding segments', (I) => {
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -48,6 +48,20 @@ Scenario('Should be able to add and cancel adding segments', (I) => {
   I.pressKey('Tab');
   I.fillField('.segment-end', '12304');
   I.pressKey('Enter');
+
+  //Undo Add
+  I.waitForText('Created');
+  I.click('.undo-button');
+  I.dontSee('12:00:00Z');
+
+  //redo add
+  I.fillField('.segment-start', '12');
+  I.pressKey('Tab');
+  I.fillField('.segment-end', '12304');
+  I.pressKey('Enter');
+  I.waitForText('Created');
+  I.waitForElement('.dismiss-snackbar');
+  I.click('.dismiss-snackbar');
 
   I.waitForText('12:00:00Z');
   I.waitForText('12:30:40Z');
@@ -250,7 +264,7 @@ Scenario('Should be able to write and view track narratives', (I) => {
   I.dontSeeInField('.track-narrative-input', 'DO NOT SAVE THIS');
 });
 
-Scenario('Should be able to write and view ixn notes', (I) => {
+Scenario('Should be able to add, undo add, and view analyst notes', (I) => {
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -258,16 +272,20 @@ Scenario('Should be able to write and view ixn notes', (I) => {
   I.waitForElement('.note-input');
   I.fillField('.note-input', 'These are some notes about an ixn');
   I.pressKey('Enter');
-
-  I.click('.ixn-dash--header--back-button');
-  I.waitForText('RFI DESCRIPTION:', 3);
-  I.click('.exploitation');
-  I.waitForText('MGRS: 12QWE1231231231', 3);
-  I.dontSee('These are some notes about an ixn');
+  I.waitForText('Analyst Note Saved');
 
   I.click('.note-button');
   I.waitForElement('.note-input');
   I.seeInField('.note-input', 'These are some notes about an ixn');
+  I.click('.undo-button');
+
+  I.click('.note-button');
+  I.waitForElement('.note-input');
+  I.dontSee('These are some notes about an ixn');
+  I.fillField('.note-input', 'These are some notes about an ixn');
+  I.pressKey('Enter');
+  I.waitForText('Analyst Note Saved');
+  I.click('.dismiss-snackbar');
 });
 
 Scenario('Should be able to write and view rollups', (I) => {

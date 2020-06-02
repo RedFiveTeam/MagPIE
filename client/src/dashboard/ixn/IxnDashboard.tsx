@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import classNames from 'classnames';
@@ -26,11 +26,11 @@ import { RfiStatus } from '../../store/rfi/RfiModel';
 import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { NavigateAwayConfirmationModal } from '../components/NavigateAwayConfirmationModal';
 
-interface Props {
+interface MyProps {
   className?: string
 }
 
-export const IxnDashboard: React.FC<Props> = props => {
+export const IxnDashboard: React.FC<MyProps> = (props) => {
   const moment = require('moment');
 
   const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
@@ -43,7 +43,18 @@ export const IxnDashboard: React.FC<Props> = props => {
   const editSegment = useSelector(({ixnState}: ApplicationState) => ixnState.editSegment);
   const editIxn = useSelector(({ixnState}: ApplicationState) => ixnState.editIxn);
   const addNote = useSelector(({ixnState}: ApplicationState) => ixnState.addNote);
+  const newSegment = useSelector(({ixnState}: ApplicationState) => ixnState.newSegment);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (newSegment) {
+      enqueueSnackbar(`${newSegment.startTime.format('HH:mm:ss')} - ${newSegment.endTime.format('HH:mm:ss')} Created`, {
+        action: (key) =>
+          UndoSnackbarAction(key, newSegment, handleDeleteSegmentSkipSnackbar, closeSnackbar, classes.snackbarButton),
+        variant: 'info',
+      });
+    }
+  }, [newSegment]);
 
   const addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0 || readOnly;
 
@@ -182,15 +193,21 @@ export const IxnDashboard: React.FC<Props> = props => {
   };
 
   const handlePostIxn = (ixn: IxnModel) => {
+    let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
     if (!readOnly) {
-      if (addNote > 0) {
+      if (addNote > 0 && oldIxn !== undefined) {
         enqueueSnackbar('Analyst Note Saved.', {
-          action: (key) => DismissSnackbarAction(key, closeSnackbar, classes.snackbarButton),
+          action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
+                                              classes.snackbarButton),
           variant: 'info',
         });
       }
       dispatch(updateIxn(ixn, cookie.userName));
     }
+  };
+
+  const handlePostIxnSkipSnackbar = (ixn: IxnModel) => {
+    dispatch(updateIxn(ixn, cookie.userName));
   };
 
   const handleDeleteIxn = (ixn: IxnModel) => {
@@ -212,6 +229,12 @@ export const IxnDashboard: React.FC<Props> = props => {
                                                             classes.snackbarButton),
                         variant: 'info',
                       });
+      dispatch(deleteSegment(segment));
+    }
+  };
+
+  const handleDeleteSegmentSkipSnackbar = (segment: SegmentModel) => {
+    if (!readOnly) {
       dispatch(deleteSegment(segment));
     }
   };

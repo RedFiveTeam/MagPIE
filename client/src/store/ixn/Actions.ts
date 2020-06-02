@@ -8,7 +8,7 @@ import { TargetPostModel } from '../tgt/TargetPostModel';
 import { postTarget } from '../tgt';
 
 export const loadIxnPage = (target: TargetModel|null, dateString: string|null, segments: SegmentModel[],
-                            ixns: IxnModel[], isLocalUpdate: boolean) => {
+                            ixns: IxnModel[], isLocalUpdate: boolean, newSegment?: SegmentModel) => {
   if (target) {
     return {
       type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
@@ -23,6 +23,7 @@ export const loadIxnPage = (target: TargetModel|null, dateString: string|null, s
       segments: segments,
       ixns: ixns,
       isLocalUpdate: isLocalUpdate,
+      newSegment: newSegment,
     };
   }
 };
@@ -86,11 +87,23 @@ export const navigateToIxnPage = (target: TargetModel, dateString: string) => {
 };
 
 export const updateSegment = (segment: SegmentModel) => {
+  let newSegment: SegmentModel|undefined;
   return (dispatch: any) => {
     postSegment(segment)
-      .then(response => fetchSegments(segment.targetId))
+      .then(response => response.json())
+      .then(newSegmentResponse => {
+        console.log('new seg response' + newSegmentResponse);
+        if (newSegmentResponse) {
+          newSegment = SegmentDeserializer.deserialize(newSegmentResponse)[0];
+          return fetchSegments(segment.targetId);
+        } else {
+          console.log('im an edit');
+          return fetchSegments(segment.targetId);
+        }
+      })
       .then(
-        segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments), false)))
+        segments => dispatch(fetchIxns(segment.targetId, null, null, SegmentDeserializer.deserialize(segments), false,
+                                       newSegment)))
       .catch((reason) => {
         console.log(reason);
       });
@@ -118,11 +131,12 @@ export const fetchSegments = (targetId: number) => {
 };
 
 export const fetchIxns = (targetId: number, target: TargetModel|null, dateString: string|null, segments: SegmentModel[],
-                          isLocalUpdate: boolean) => {
+                          isLocalUpdate: boolean, newSegment?: SegmentModel) => {
   return (dispatch: any) => {
     return fetch('/api/ixn/' + targetId)
       .then(response => response.json())
-      .then(ixns => dispatch(loadIxnPage(target, dateString, segments, IxnDeserializer.deserialize(ixns), isLocalUpdate)))
+      .then(ixns => dispatch(loadIxnPage(target, dateString, segments, IxnDeserializer.deserialize(ixns), isLocalUpdate,
+                                         newSegment)))
       .catch((reason => {
         console.log(reason);
       }));
@@ -190,9 +204,7 @@ export const postSegment = (segment: SegmentModel) => {
                  },
                  body: JSON.stringify(segment),
                },
-  ).catch((reason) => {
-    console.log('Failed to post segment: ' + reason);
-  });
+  );
 };
 
 export const postIxn = (ixn: IxnModel, userName: string) => {

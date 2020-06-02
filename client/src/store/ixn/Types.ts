@@ -23,4 +23,5 @@ export interface IxnState {
   readonly editSegment: number;
   readonly editIxn: number;
   readonly addNote: number;
+  readonly newSegment: SegmentModel | undefined;
 }
