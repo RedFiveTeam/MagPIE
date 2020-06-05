@@ -13,8 +13,8 @@ describe('Target Row', () => {
   let target: TargetModel = new TargetModel(1, 1, 3, 'SDT12-123', '12QWE1231231231', 'These are the notes',
                                             'This is a description', TargetStatus.NOT_STARTED, '', '');
   let rfiTest = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', undefined, RfiStatus.OPEN, '', '', '',
-                             'space forse', '', '', '', '', '', moment('2019-11-20').utc(), 'USLT',
-                             'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0);
+                             'space forse', '', '', '', '', '', moment(
+      '2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0, undefined);
   let exploitDate = new ExploitDateModel(1, 1, moment('2019-11-20').utc());
   let deleteSpy: jest.Mock;
   let navToIxnPageSpy: jest.Mock;

@@ -520,6 +520,34 @@ public class MetricsService {
     return new long[]{0, 0};
   }
 
+  public long getEstimatedCompletionTime() {
+    int totalTimeOpen = 0;
+    int numberRfis = 0;
+
+    List<Rfi> closedRfis = rfiRepository.findAllClosedWithDefinedReceiveDate();
+
+    for (int i = 0; i < closedRfis.size() && numberRfis < 3; i++) {
+      Rfi rfi = closedRfis.get(i);
+      MetricChangeRfi metricOpen = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(rfi.getRfiNum());
+      MetricChangeRfi metricClose = metricChangeRfiRepository.findStatusChangeToClosedByRfiNum(rfi.getRfiNum());
+      if (metricOpen != null && metricClose != null &&
+        metricClose.getDatetime().getTime() - metricOpen.getDatetime().getTime() > MILLISECONDS_IN_A_DAY) {
+
+        Date openTime = metricOpen.getDatetime();
+        Date closedTime = metricClose.getDatetime();
+        long daysOpen = (closedTime.getTime() - openTime.getTime()) / MILLISECONDS_IN_A_DAY;
+        totalTimeOpen += daysOpen;
+        numberRfis++;
+      }
+    }
+
+    if (numberRfis > 0) {
+      return MILLISECONDS_IN_A_DAY * (totalTimeOpen / numberRfis);
+    }
+
+    return -1;
+  }
+
   public long getAverageTgtCreationsPerWeek() {
     return getAveragePerWeek(metricCreateTargetRepository.findAll());
   }
@@ -700,5 +728,14 @@ public class MetricsService {
 
   public MetricCreateTargetFromGets addCreateTargetFromGets(Target target, Timestamp timestamp) {
     return metricCreateTargetFromGetsRepository.save(new MetricCreateTargetFromGets(target, timestamp));
+  }
+
+  public Date getRfiCloseDate(String rfiNum) {
+    try {
+      return metricChangeRfiRepository.findStatusChangeToClosedByRfiNum(rfiNum).getDatetime();
+    } catch (NullPointerException e) {
+      log.trace("Close date not found for RFI " + rfiNum);
+      return null;
+    }
   }
 }

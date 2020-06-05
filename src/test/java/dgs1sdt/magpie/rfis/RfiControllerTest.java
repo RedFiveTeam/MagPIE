@@ -2,6 +2,7 @@ package dgs1sdt.magpie.rfis;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.ixns.*;
+import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDateRepository;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
@@ -67,6 +68,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
   IxnController ixnController;
   @Autowired
   TargetController targetController;
+  @Autowired
+  MetricsService metricsService;
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -474,5 +477,39 @@ public class RfiControllerTest extends BaseIntegrationTest {
       .then()
       .statusCode(200)
       .body("[0].startDate", equalTo("2020-12-11T00:00:00.000+0000"));
+  }
+
+  private long convertDaysToMS(int days) {
+    return ((long) days) * 86400000L;
+  }
+
+  @Test
+  public void returnsRfisWithEstimatedAndActualCompletionDates() {
+    Rfi rfi1 =
+      new Rfi("SDT20-321", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(30)), "", "", "This is a ", "", "",
+        "", "", "", "", "", "justifiction", "");
+    rfi1.setReceiveDate(new Timestamp(convertDaysToMS(0)));
+    MetricChangeRfi rfi1open = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(1)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi1close =
+      new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(3)), "status", "OPEN", "CLOSED");
+
+    rfiRepository.save(rfi1);
+    metricChangeRfiRepository.saveAll(Arrays.asList(rfi1open, rfi1close));
+
+    assertEquals(convertDaysToMS(2), metricsService.getEstimatedCompletionTime());
+
+    Rfi rfi2 =
+      new Rfi("SDT20-322", "", "OPEN", new Date(), "", new Date(convertDaysToMS(30)), "", "", "This is a ", "", "",
+        "", "", "", "", "", "justifiction", "");
+    MetricChangeRfi rfi2open = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(10)), "status", "NEW", "OPEN");
+
+    rfiRepository.save(rfi2);
+    metricChangeRfiRepository.save(rfi2open);
+
+    RfiGet rfi1get = rfiController.getAllRfis().get(0);
+    RfiGet rfi2get = rfiController.getAllRfis().get(1);
+
+    assertEquals(new Date(convertDaysToMS(3)), rfi1get.getCompletionDate());
+    assertEquals(new Date(convertDaysToMS(12)), rfi2get.getCompletionDate());
   }
 }

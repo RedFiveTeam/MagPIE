@@ -69,11 +69,22 @@ public class RfiController {
     List<Rfi> rfis = this.rfiService.fetchRfisFromRepo();
     List<RfiGet> rfiGetList = new ArrayList<>();
 
+    long estimatedCompletionTimeInMS = metricsService.getEstimatedCompletionTime();
+
     for(Rfi rfi : rfis) {
       long tgtCount = targetService.findNumByRfiId(rfi.getId());
       long ixnCount = ixnService.findNumByRfiId(rfi.getId());
       Date startDate = metricsService.getRfiStartDate(rfi.getRfiNum());
-      rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate));
+
+      if (rfi.getStatus().equals("NEW")) {
+        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null));
+      } else if (rfi.getStatus().equals("OPEN")) {
+        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, estimatedCompletionTimeInMS));
+      } else {
+        Date closeDate = metricsService.getRfiCloseDate(rfi.getRfiNum());
+        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate));
+      }
+
     }
 
     return rfiGetList;

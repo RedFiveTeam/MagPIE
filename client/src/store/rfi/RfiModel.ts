@@ -29,6 +29,7 @@ export default class RfiModel {
     public priority: number,
     public tgtCount: number,
     public ixnCount: number,
-    ) {
+    public completionDate: Moment|undefined,
+  ) {
   }
 }

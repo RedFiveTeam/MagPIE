@@ -700,4 +700,46 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     assertEquals(67, metricsService.getLtiovMetPercentage());
   }
+
+  @Test
+  public void returnsEstimatedCompletionTime() {
+    assertEquals(-1, metricsService.getEstimatedCompletionTime());
+
+    Rfi rfi1 =
+      new Rfi("SDT20-321", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(30)), "", "", "This is a ", "", "",
+        "", "", "", "", "", "justifiction", "");
+    rfi1.setReceiveDate(new Timestamp(convertDaysToMS(0)));
+    Rfi rfi2 = new Rfi("SDT20-322", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(20)), "", "",
+      "This is a justifiction", "", "", "", "", "", "", "", "", "");
+    rfi1.setReceiveDate(new Timestamp(convertDaysToMS(1)));
+    Rfi rfi3 = new Rfi("SDT20-323", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(35)), "", "",
+      "This is a justifiction", "", "", "", "", "", "", "", "", "");
+    rfi1.setReceiveDate(new Timestamp(convertDaysToMS(3)));
+    Rfi rfi4 =
+      new Rfi("SDT20-324", "", "CLOSED", new Date(), "", null, "", "", "This is a justifiction", "", "", "", "", "", "",
+        "", "", "");
+    rfi1.setReceiveDate(new Timestamp(convertDaysToMS(9)));
+
+    MetricChangeRfi rfi1open = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(1)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi1close = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(3)), "status", "OPEN", "CLOSED");
+
+    MetricChangeRfi rfi2open = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(2)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi2close = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(5)), "status", "OPEN", "CLOSED");
+
+    MetricChangeRfi rfi3open = new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(4)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi3close = new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(8)), "status", "OPEN", "CLOSED");
+
+    MetricChangeRfi rfi4open = new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(10)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi4close = new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(12)), "status", "OPEN", "CLOSED");
+
+    rfiRepository.save(rfi1);
+    metricChangeRfiRepository.saveAll(Arrays.asList(rfi1open, rfi1close));
+
+    assertEquals(convertDaysToMS(2), metricsService.getEstimatedCompletionTime());
+
+    rfiRepository.saveAll(Arrays.asList(rfi2, rfi3, rfi4));
+    metricChangeRfiRepository.saveAll(Arrays.asList(rfi2open, rfi2close, rfi3open, rfi3close, rfi4open, rfi4close));
+
+    assertEquals(convertDaysToMS(3), metricsService.getEstimatedCompletionTime());
+  }
 }

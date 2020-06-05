@@ -31,8 +31,9 @@ public class RfiGet {
   private long tgtCount;
   private long ixnCount;
   private Date startDate;
+  private Date completionDate;
 
-  public RfiGet(Rfi rfi, long tgtCount, long ixnCount, Date startDate) {
+  public RfiGet(Rfi rfi, long tgtCount, long ixnCount, Date startDate, long completionTimeInMS) {
     this.id = rfi.getId();
     this.description = rfi.getDescription();
     this.justification = rfi.getJustification();
@@ -55,5 +56,36 @@ public class RfiGet {
     this.tgtCount = tgtCount;
     this.ixnCount = ixnCount;
     this.startDate = startDate;
+    if (completionTimeInMS > 0 && startDate != null) {
+      this.completionDate = new Date(startDate.getTime() + completionTimeInMS);
+    } else {
+      this.completionDate = null;
+    }
+  }
+
+  public RfiGet(Rfi rfi, long tgtCount, long ixnCount, Date startDate, Date completionDate) {
+    this.id = rfi.getId();
+    this.description = rfi.getDescription();
+    this.justification = rfi.getJustification();
+    this.rfiNum = rfi.getRfiNum();
+    this.getsUrl = rfi.getGetsUrl();
+    this.status = rfi.getStatus();
+    this.lastUpdate = rfi.getLastUpdate();
+    this.customerTitle = rfi.getCustomerTitle();
+    this.customerGivenName = rfi.getCustomerGivenName();
+    this.customerSurname = rfi.getCustomerSurname();
+    this.customerEmail = rfi.getCustomerEmail();
+    this.customerUnit = rfi.getCustomerUnit();
+    this.customerCommPhone = rfi.getCustomerCommPhone();
+    this.customerDsnPhone = rfi.getCustomerDsnPhone();
+    this.customerSvoip = rfi.getCustomerSvoip();
+    this.customerTsvoip = rfi.getCustomerTsvoip();
+    this.ltiov = rfi.getLtiov();
+    this.country = rfi.getCountry();
+    this.priority = rfi.getPriority();
+    this.tgtCount = tgtCount;
+    this.ixnCount = ixnCount;
+    this.startDate = startDate;
+    this.completionDate = completionDate;
   }
 }

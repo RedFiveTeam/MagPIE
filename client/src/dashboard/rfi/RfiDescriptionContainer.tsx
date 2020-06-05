@@ -15,10 +15,8 @@ interface MyProps {
   className?: string
 }
 
-export const RfiDescriptionContainer: React.FC<MyProps> = ({
-                                                             rfi, loadTgtPage, postGetsClick,
-                                                             className,
-                                                           }) => {
+export const RfiDescriptionContainer: React.FC<MyProps> = (
+  {rfi, loadTgtPage, postGetsClick, className}) => {
   const [cookies, setCookies] = useCookies(['magpie']);
   let cookie: Cookie = cookies.magpie;
 
@@ -54,6 +52,15 @@ export const RfiDescriptionContainer: React.FC<MyProps> = ({
         </div>
       </div>
       <div className={'body'}>
+        {rfi && rfi.completionDate ?
+          <>
+            <span className={'header header-projected-completion'}>{(rfi.status === RfiStatus.CLOSED ? '' :
+              'Projected ') + 'Completion Date'}</span>
+            <span className={'text-body projected-completion'}>{rfi.completionDate.format('DD MMMM YYYY')}</span>
+          </>
+          :
+          null
+        }
         <span className={'header'}>RFI Description</span>
         <span className={'text-body'}>{rfi ? rfi.description : null}</span>
         <span className={'header'}>Justification</span>
@@ -144,11 +151,20 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     margin: 8px 0;
   }
   
+  .header-projected-completion {
+    font-size: ${theme.font.sizeMetricsHeader};
+    font-weight: ${theme.font.weightBold};
+  }
+  
   .text-body {
     padding-left: 5px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+  }
+  
+  .projected-completion {
+    font-weight: ${theme.font.weightBolder};
   }
 
 `;
