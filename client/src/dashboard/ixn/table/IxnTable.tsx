@@ -20,7 +20,7 @@ export const StyledIxnTable = styled(IxnTable)`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding-right: 12px;
+  padding-right: 20px;
   padding-left: 12px;
   max-height: calc(100vh - 215px)
 `;

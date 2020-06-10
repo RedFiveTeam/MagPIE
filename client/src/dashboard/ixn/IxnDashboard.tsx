@@ -56,17 +56,26 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     }
   }, [newSegment]);
 
+  enum Navigate {
+    BACK,
+    CANCEL_ADD_SEGMENT,
+    CANCEL_EDIT_SEGMENT,
+    CANCEL_EDIT_IXN
+  }
+
   const addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0 || readOnly;
 
   const [tgtAnalyst, setTgtAnalyst] = useState('');
   const [rollupMode, setRollupMode] = useState(false);
   const [displayEeiNotes, setDisplayEeiNotes] = useState(false);
 
-  const [navigate, setNavigate] = useState(null as TargetModel|null);
+  const [navigate, setNavigate] = useState(Navigate.BACK as TargetModel|Navigate);
   const [navigating, setNavigating] = useState(false);
-  const [navigateYes, setNavigateYes] = useState(false);
   const [editingElement, setEditingElement] = useState(null as Element|null);
   const [isSegmentChanged, setIsSegmentChanged] = useState(false);
+  const [isIxnChanged, setIsIxnChanged] = useState(false);
+
+  let isNavigating = false;
 
   const [cookies, setCookies] = useCookies(['magpie']);
   let cookie: Cookie = cookies.magpie;
@@ -94,9 +103,11 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handleExitIxnPage = () => {
-    if (addingOrEditing && isSegmentChanged && !navigateYes) {
+    if (editIxn > 0 || (editSegment > 0 && isSegmentChanged) ||
+      (addSegment && (segments.length > 0 || isSegmentChanged))) {
       setNavigating(true);
-      setNavigate(null);
+      isNavigating = true;
+      setNavigate(Navigate.BACK);
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
       dispatch(exitIxnPage());
@@ -104,24 +115,29 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handleNavigate = () => {
-    setNavigateYes(true);
-    if (element === 'segment' && navigate !== null) {
-      dispatch(navigateToIxnPage(navigate, dateString));
-    } else if (element === 'segment' && navigate === null) {
+    if (navigate === Navigate.BACK) {
       setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
       dispatch(exitIxnPage());
-    } else if (element === 'callout' && navigate !== null) {
+    } else if (navigate === Navigate.CANCEL_ADD_SEGMENT) {
+      dispatch(setAddSegment(false));
+    } else if (navigate === Navigate.CANCEL_EDIT_IXN) {
+      dispatch(setEditIxn(-1));
+    } else if (navigate === Navigate.CANCEL_EDIT_SEGMENT) {
+      dispatch(setEditSegment(-1));
+    } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: navigate.id}});
       dispatch(navigateToIxnPage(navigate, dateString));
     }
   };
 
   const handleSelectTarget = (newTarget: TargetModel, dateString: string) => {
-    setDisplayEeiNotes(false);
-    setNavigate(newTarget);
-    if (editIxn > 0 || editSegment > 0) {
+    if (editIxn > 0 || (editSegment > 0 && isSegmentChanged) ||
+      (addSegment && (segments.length > 0 || isSegmentChanged))) {
       setNavigating(true);
+      isNavigating = true;
+      setNavigate(newTarget);
     } else {
+      setDisplayEeiNotes(false);
       setTimeout(() => {
         dispatch(navigateToIxnPage(newTarget, dateString));
         setCookies('magpie', {...cookie, viewState: {rfiId: newTarget.rfiId, tgtId: newTarget.id}});
@@ -157,6 +173,11 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
   const handleSetAddSegment = () => {
     if (!addingOrEditing) {
       dispatch(setAddSegment(true));
+    } else if (isSegmentChanged) {
+      console.log('segment changed');
+      setNavigating(true);
+      isNavigating = true;
+      setNavigate(Navigate.CANCEL_ADD_SEGMENT);
     } else {
       dispatch(setAddSegment(false));
     }
@@ -166,7 +187,13 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     if (!addingOrEditing) {
       dispatch(setEditSegment(segmentId));
     } else if (segmentId < 0) {
-      dispatch(setEditSegment(-1));
+      if (isSegmentChanged) {
+        setNavigating(true);
+        isNavigating = true;
+        setNavigate(Navigate.CANCEL_EDIT_SEGMENT);
+      } else {
+        dispatch(setEditSegment(-1));
+      }
     }
   };
 
@@ -174,7 +201,13 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     if (!addingOrEditing) {
       dispatch(setEditIxn(ixnId));
     } else if (ixnId < 0) {
-      dispatch(setEditIxn(-1));
+      if (isIxnChanged) {
+        setNavigating(true);
+        isNavigating = true;
+        setNavigate(Navigate.CANCEL_EDIT_IXN);
+      } else {
+        dispatch(setEditIxn(-1));
+      }
     }
   };
 
@@ -186,23 +219,25 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     }
   };
 
-  const handlePostSegment = (segment: SegmentModel) => {
-    if (!readOnly) {
-      dispatch(updateSegment(segment));
+  const handlePostIxn = (ixn: IxnModel) => {
+    if (!navigating) {
+      let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
+      if (!readOnly) {
+        if (addNote > 0 && oldIxn !== undefined) {
+          enqueueSnackbar('Analyst Note Saved.', {
+            action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
+                                                classes.snackbarButton),
+            variant: 'info',
+          });
+        }
+        dispatch(updateIxn(ixn, cookie.userName));
+      }
     }
   };
 
-  const handlePostIxn = (ixn: IxnModel) => {
-    let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
-    if (!readOnly) {
-      if (addNote > 0 && oldIxn !== undefined) {
-        enqueueSnackbar('Analyst Note Saved.', {
-          action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
-                                              classes.snackbarButton),
-          variant: 'info',
-        });
-      }
-      dispatch(updateIxn(ixn, cookie.userName));
+  const handlePostSegment = (segment: SegmentModel) => {
+    if (!isNavigating && !navigating && !readOnly) {
+      dispatch(updateSegment(segment));
     }
   };
 
@@ -294,9 +329,6 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
             addNote={addNote}
             addingOrEditing={addingOrEditing}
             setEditingElement={setEditingElement}
-            navigating={navigating}
-            setNavigating={setNavigating}
-            setNavigate={setNavigate}
             selectTarget={handleSelectTarget}
             handleSetAddSegment={handleSetAddSegment}
             handleEditSegment={handleEditSegment}
@@ -306,16 +338,18 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
             handlePostIxn={handlePostIxn}
             handleDeleteIxn={handleDeleteIxn}
             handleDeleteSegment={handleDeleteSegment}
-            navigateYes={navigateYes}
-            setNavigateYes={setNavigateYes}
             setSegmentChanged={setIsSegmentChanged}
+            setIxnChanged={setIsIxnChanged}
           />
       }
       {navigating ?
         <NavigateAwayConfirmationModal
           message={`You haven't saved the ${element} you were editing.`}
           display={true}
-          setDisplay={() => setNavigating(false)}
+          setDisplay={() => {
+            setNavigating(false);
+            isNavigating = false;
+          }}
           handleYes={handleNavigate}
           focusedElement={editingElement}
         />

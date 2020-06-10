@@ -45,12 +45,7 @@ describe('Segment Divider', () => {
           setEdit={jest.fn()}
           disabled={false}
           disableCancel={false}
-          navigateYes={false}
-          navigating={false}
           setEditingElement={jest.fn()}
-          setNavigateYes={jest.fn()}
-          setNavigating={jest.fn()}
-          setNavigate={jest.fn()}
           setSegmentChanged={jest.fn()}
         />
       </SnackbarProvider>,
@@ -90,12 +85,7 @@ describe('Segment Divider', () => {
           setEdit={editSpy}
           disabled={false}
           disableCancel={false}
-          navigateYes={true}
-          navigating={false}
           setEditingElement={jest.fn()}
-          setNavigateYes={jest.fn()}
-          setNavigating={jest.fn()}
-          setNavigate={jest.fn()}
           setSegmentChanged={jest.fn()}
         />
       </SnackbarProvider>,
@@ -123,12 +113,7 @@ describe('Segment Divider', () => {
           setEdit={jest.fn()}
           disabled={false}
           disableCancel={false}
-          navigateYes={true}
-          navigating={false}
           setEditingElement={jest.fn()}
-          setNavigateYes={jest.fn()}
-          setNavigating={jest.fn()}
-          setNavigate={jest.fn()}
           setSegmentChanged={jest.fn()}
         />
       </SnackbarProvider>,

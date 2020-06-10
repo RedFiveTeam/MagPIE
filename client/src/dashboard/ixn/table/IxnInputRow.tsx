@@ -31,10 +31,7 @@ interface MyProps {
   addingNote: boolean;
   setAddNote: (ixnId: number) => void;
   setEditingElement: (e: Element|null) => void;
-  setNavigating: (isNavigating: boolean) => void;
-  navigating: boolean;
-  navigateYes: boolean;
-  setNavigateYes: (navigateYes: boolean) => void;
+  setIxnChanged: (isIxnChanged: boolean) => void;
   className?: string;
 }
 
@@ -74,11 +71,19 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const [timeOutOfBoundsError, setTimeOutOfBoundsError] = React.useState(false);
   const [action, setAction] = useState(RowAction.NONE);
 
+  const ixnChanged = (props.ixn ?
+    exploitAnalyst !== props.ixn.exploitAnalyst ||
+    time !== props.ixn.time.format('HH:mm:ss') ||
+    activity !== props.ixn.activity ||
+    trackAnalyst !== props.ixn.trackAnalyst ||
+    leadChecker !== props.ixn.leadChecker ||
+    finalChecker !== props.ixn.finalChecker
+    :
+    false);
+
   useEffect(() => {
-    if (props.navigateYes) {
-      resetAction();
-    }
-  }, [props.navigating, props.navigateYes])
+    props.setIxnChanged(ixnChanged);
+  }, [ixnChanged]);
 
   const resetAction = () => {
     setTimeout(() => {
@@ -89,12 +94,11 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const handleAction = () => {
     switch (action) {
       case RowAction.DELETING:
-        if (props.ixn && ixnUnChanged) {
+        if (props.ixn) {
           props.setEditIxn(-1);
           props.setAddNote(-1);
           resetAction();
         } else {
-          props.setNavigating(true);
           resetAction();
         }
         break;
@@ -197,26 +201,12 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     }
   };
 
-  const ixnUnChanged = (props.ixn ?
-    exploitAnalyst === props.ixn.exploitAnalyst &&
-    time === props.ixn.time.format('HH:mm:ss') &&
-    activity === props.ixn.activity &&
-    trackAnalyst === props.ixn.trackAnalyst &&
-    leadChecker === props.ixn.leadChecker &&
-    finalChecker === props.ixn.finalChecker
-    :
-    true);
-
   function formBlur(event: any) {
     let currentTarget: any = event.currentTarget;
 
     setTimeout(() => {
       if (!currentTarget.contains(document.activeElement) && action !== RowAction.DELETING) {
-        if (ixnUnChanged) {
-          setAction(RowAction.SUBMITTING);
-        } else {
-          props.setNavigating(true);
-        }
+        setAction(RowAction.SUBMITTING);
       } else {
         props.setEditingElement(document.activeElement);
       }

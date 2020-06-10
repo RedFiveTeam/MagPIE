@@ -36,12 +36,8 @@ interface MyProps {
   handleDeleteSegment: (segment: SegmentModel) => void;
   addingOrEditing: boolean;
   setEditingElement: (e: Element|null) => void;
-  setNavigating: (isNavigating: boolean) => void;
-  navigating: boolean;
-  navigateYes: boolean;
-  setNavigate: (target: TargetModel|null) => void;
-  setNavigateYes: (navigateYes: boolean) => void;
   setSegmentChanged: (isSegmentChanged: boolean) => void;
+  setIxnChanged: (isIxnChanged: boolean) => void;
   className?: string;
 }
 
@@ -76,12 +72,8 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
           setAddNote={props.handleAddNote}
           readOnly={props.readOnly}
           setEditingElement={props.setEditingElement}
-          setNavigating={props.setNavigating}
           setSegmentChanged={props.setSegmentChanged}
-          navigating={props.navigating}
-          setNavigate={props.setNavigate}
-          navigateYes={props.navigateYes}
-          setNavigateYes={props.setNavigateYes}
+          setIxnChanged={props.setIxnChanged}
         />,
     );
   }
@@ -103,7 +95,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
         }
         <StyledIxnTable>
           {printSegmentRegions()}
-          {props.addSegment ?
+          {props.addSegment && !props.readOnly ?
             <StyledSegmentDivider
               className={'segment-divider-placeholder segment-divider-empty'}
               target={props.target}
@@ -118,17 +110,12 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
               disabled={false}
               disableCancel={props.segments.length === 0}
               setEditingElement={props.setEditingElement}
-              setNavigating={props.setNavigating}
-              navigating={props.navigating}
-              setNavigate={props.setNavigate}
-              navigateYes={props.navigateYes}
-              setNavigateYes={props.setNavigateYes}
               setSegmentChanged={props.setSegmentChanged}
             />
             :
             null
           }
-          {props.segments.length < 1 ?
+          {props.segments.length < 1 && !props.readOnly ?
           <span className={'segment-helper-text'}>Input a Start And Stop Time For Your Segment</span> : null}
         </StyledIxnTable>
         {/*Prevents user from tabbing out of page to address bar*/}

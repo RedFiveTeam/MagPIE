@@ -431,7 +431,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
                 :
                 null
               }
-              <StyledTgtTable displayHelperText={props.exploitDates.length === 0}>
+              <StyledTgtTable displayHelperText={props.exploitDates.length === 0 && props.rfi.status !== RfiStatus.CLOSED}>
                 {printDates(props.exploitDates)}
                 {addDate ?
                   <StyledExploitDateDivider

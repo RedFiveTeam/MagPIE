@@ -33,11 +33,6 @@ interface Props {
   disabled: boolean;
   disableCancel: boolean;
   setEditingElement: (e: Element|null) => void;
-  setNavigating: (isNavigating: boolean) => void;
-  navigating: boolean;
-  setNavigate: (target: TargetModel|null) => void;
-  navigateYes: boolean;
-  setNavigateYes: (navigateYes: boolean) => void;
   setSegmentChanged: (isSegmentChanged: boolean) => void;
   className?: string;
 }
@@ -87,33 +82,22 @@ export const SegmentDivider: React.FC<Props> = props => {
   const [displayModal, setDisplayModal] = React.useState(false);
   const [action, setAction] = useState(RowAction.NONE);
 
+  const resetAction = () => {
+    setTimeout(() => {
+      setAction(RowAction.NONE);
+    }, 1000);
+  };
+
   useEffect(() => {
-    const handleNavigate = () => {
-      if (props.segment !== null &&
-        ((segmentStartString !== props.segment.startTime.format('HH:mm:ss')) ||
-          (segmentEndString !== props.segment.endTime.format('HH:mm:ss')))) {
-        props.setNavigating(true);
-      } else {
-        if (props.segment) {
-          props.setEdit(-1);
-        } else if (props.segment === null && segmentStartString === '__:__:__' && segmentEndString === '__:__:__') {
-          props.cancelAddSegment();
-          postCancelAddSegment(props.target.id)
-            .catch(reason => console.log(reason));
-        }
-      }
-    };
-
-    const resetAction = () => {
-      setTimeout(() => {
-        setAction(RowAction.NONE);
-      }, 1000);
-    };
-
     switch (action) {
       case (RowAction.DELETING):
         if (props.editing) {
-          handleNavigate();
+          if (props.segment) {
+            props.setEdit(-1);
+          } else {
+            props.cancelAddSegment();
+            postCancelAddSegment(props.target.id)
+          }
         } else {
           handleDelete();
         }
@@ -128,17 +112,6 @@ export const SegmentDivider: React.FC<Props> = props => {
     }
   }, [action]);
 
-  useEffect(() => {
-    if (props.segment && props.navigating && props.navigateYes) {
-      setSegmentStartString(props.segment.startTime.format('HH:mm:ss'));
-      setSegmentEndString(props.segment.endTime.format('HH:mm:ss'));
-      props.setEdit(-1);
-    }
-    if (props.navigating) {
-      props.setNavigateYes(false);
-    }
-  }, [props.navigating]);
-
   const segmentError = (segment: string): boolean => {
     segment = segment.replace(/_/g, '0');
     return segment.match(/([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/) === null;
@@ -146,7 +119,12 @@ export const SegmentDivider: React.FC<Props> = props => {
 
   const changeStart = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newTime = event.target.value;
-    if (props.segment ? newTime === props.segment.startTime.format('HH:mm:ss') : newTime === '__:__:__') {
+    if (props.segment ?
+      newTime === props.segment.startTime.format('HH:mm:ss') && segmentEndString ===
+      props.segment.endTime.format('HH:mm:ss')
+      :
+      newTime === '__:__:__' && segmentEndString === '__:__:__'
+    ) {
       props.setSegmentChanged(false);
     } else {
       props.setSegmentChanged(true);
@@ -157,7 +135,12 @@ export const SegmentDivider: React.FC<Props> = props => {
 
   const changeEnd = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newTime = event.target.value;
-    if (props.segment ? newTime === props.segment.endTime.format('HH:mm:ss') : newTime === '__:__:__') {
+    if (props.segment ?
+      newTime === props.segment.endTime.format('HH:mm:ss') && segmentStartString ===
+      props.segment.startTime.format('HH:mm:ss')
+      :
+      newTime === '__:__:__' && segmentStartString === '__:__:__'
+    ) {
       props.setSegmentChanged(false);
     } else {
       props.setSegmentChanged(true);
@@ -167,29 +150,32 @@ export const SegmentDivider: React.FC<Props> = props => {
   };
 
   const validateAndSubmit = () => {
-    setSegmentStartString(segmentStartString.replace(/_/g, '0'));
-    setSegmentEndString(segmentEndString.replace(/_/g, '0'));
-    let segmentStartErrorLocal = segmentError(segmentStartString.replace(/_/g, '0'));
-    let segmentEndErrorLocal = segmentError(segmentEndString.replace(/_/g, '0'));
+    if (segmentEndString !== '__:__:__' && action !== RowAction.DELETING) {
 
-    setSegmentStartError(segmentStartErrorLocal);
-    setSegmentEndError(segmentEndErrorLocal);
+      setSegmentStartString(segmentStartString.replace(/_/g, '0'));
+      setSegmentEndString(segmentEndString.replace(/_/g, '0'));
+      let segmentStartErrorLocal = segmentError(segmentStartString.replace(/_/g, '0'));
+      let segmentEndErrorLocal = segmentError(segmentEndString.replace(/_/g, '0'));
 
-    if (!segmentStartErrorLocal && !segmentEndErrorLocal) {
-      let segmentStart = convertTimeStringToMoment(segmentStartString);
-      let segmentEnd = convertTimeStringToMoment(segmentEndString);
-      if (segmentStart.isBefore(segmentEnd)) {
-        let segment = new SegmentModel(
-          props.segment ? props.segment.id : null,
-          props.target.rfiId,
-          props.target.exploitDateId,
-          props.target.id,
-          segmentStart,
-          segmentEnd,
-        );
-        props.postSegment(segment);
-      } else {
-        setSegmentStartError(true);
+      setSegmentStartError(segmentStartErrorLocal);
+      setSegmentEndError(segmentEndErrorLocal);
+
+      if (!segmentStartErrorLocal && !segmentEndErrorLocal) {
+        let segmentStart = convertTimeStringToMoment(segmentStartString);
+        let segmentEnd = convertTimeStringToMoment(segmentEndString);
+        if (segmentStart.isBefore(segmentEnd)) {
+          let segment = new SegmentModel(
+            props.segment ? props.segment.id : null,
+            props.target.rfiId,
+            props.target.exploitDateId,
+            props.target.id,
+            segmentStart,
+            segmentEnd,
+          );
+          props.postSegment(segment);
+        } else {
+          setSegmentStartError(true);
+        }
       }
     }
   };
@@ -220,24 +206,14 @@ export const SegmentDivider: React.FC<Props> = props => {
   };
 
   const handleBlur = (event: any) => {
-    props.setNavigateYes(false);
-    props.setNavigate(props.target);
     let currentTarget: any = event.currentTarget;
     setTimeout(() => {
-      if (!currentTarget.contains(document.activeElement) && action === RowAction.NONE) {
-        if (props.segment !== null &&
-          (segmentStartString !== props.segment.startTime.format('HH:mm:ss') ||
-            segmentEndString !== props.segment.endTime.format('HH:mm:ss'))) {
-          props.setNavigating(true);
-        } else if (props.segment === null && (segmentStartString.match(/[0-9]/) || segmentEndString.match(/[0-9]/))) {
-          props.setNavigating(true);
-        } else {
-          setAction(RowAction.DELETING);
-        }
+      if (!currentTarget.contains(document.activeElement) && action !== RowAction.DELETING) {
+        setAction(RowAction.SUBMITTING);
       } else {
         props.setEditingElement(document.activeElement);
       }
-    }, 200);
+    }, 300);
   };
 
   const enterKey = 13;
@@ -357,7 +333,7 @@ export const SegmentDivider: React.FC<Props> = props => {
                 <div
                   className={classNames('cancel-add-segment', 'delete-cancel-segment-wrapper',
                                         props.disableCancel ? 'disabled' : null)}
-                  onClick={() => setAction(RowAction.DELETING)}>
+                  onClick={handleDeleteClick}>
                   <DeleteButtonX className={'delete-cancel-segment'}/>
                 </div>
               </TextTooltip>

@@ -157,6 +157,7 @@ Scenario('Should be able to edit ixns', (I) => {
   I.click('.cancel-edit-ixn-button');
 
   I.waitForElement('.navigate-modal');
+  I.wait(1);
   I.click('.modal-no');
 
   I.wait(1);
@@ -164,6 +165,8 @@ Scenario('Should be able to edit ixns', (I) => {
 
   I.waitForElement('.navigate-modal');
   I.click('.modal-yes');
+
+  I.wait(1);
 
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI DESCRIPTION:', 3);
@@ -427,6 +430,7 @@ Scenario('Should be able to edit and cancel editing segments', (I) => {
 
   I.click('.cancel-add-segment');
   I.waitForElement('.navigate-modal');
+  I.wait(1);
   I.click('.modal-no');
 
   I.wait(1);
