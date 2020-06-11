@@ -2,13 +2,14 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { RfiRow } from '../../dashboard/rfi/region/RfiRow';
+import ExceedsLTIOVIcon from '../../resources/icons/ExceedsLTIOVIcon';
 
 describe('RFIRow', () => {
   let subject: ShallowWrapper;
   const moment = require('moment');
   let rfi = new RfiModel(1, '2020-00123', 'google.com', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '',
-                         '', moment('2019-11-20')
-                           .utc(), 'CAN', 'hi', 'Just a fiction', 1, 12, 345, undefined);
+    '', moment('2019-11-20')
+      .utc(), 'CAN', 'hi', 'Just a fiction', 1, 12, 345, undefined);
   let selectSpy: jest.Mock;
 
   beforeEach(() => {
@@ -74,8 +75,7 @@ describe('RFIRow', () => {
     subject = shallow(
       <RfiRow
         rfi={newRfi}
-        scrollRegionRef={() => {
-        }}
+        scrollRegionRef={jest.fn()}
         prioritizing
         selected={false}
         selectRfi={selectSpy}
@@ -90,5 +90,39 @@ describe('RFIRow', () => {
     subject.find('.rfi-row').simulate('click');
     expect(selectSpy).toHaveBeenCalledTimes(1);
     expect(selectSpy).toHaveBeenCalledWith(rfi.id);
+  });
+
+  it('should display a popover when the projected completion date exceeds the LTIOV and is not closed', () => {
+    let exceedRfi = {...rfi, completionDate: rfi.ltiov + moment(1)};
+    let closedRfi = {...rfi, status: RfiStatus.CLOSED};
+
+    expect(subject.find('.popover--LTIOV').exists()).toBeFalsy();
+    expect(subject.find(ExceedsLTIOVIcon).exists()).toBeFalsy();
+
+    subject = shallow(
+      <RfiRow
+        rfi={closedRfi}
+        scrollRegionRef={jest.fn()}
+        prioritizing
+        selected={false}
+        selectRfi={selectSpy}
+      />,
+    );
+
+    expect(subject.find('.popover--LTIOV').exists()).toBeFalsy();
+    expect(subject.find(ExceedsLTIOVIcon).exists()).toBeFalsy();
+
+    subject = shallow(
+      <RfiRow
+        rfi={exceedRfi}
+        scrollRegionRef={jest.fn()}
+        prioritizing
+        selected={false}
+        selectRfi={selectSpy}
+      />,
+    );
+
+    expect(subject.find('.popover--LTIOV').exists()).toBeTruthy();
+    expect(subject.find(ExceedsLTIOVIcon).exists()).toBeTruthy();
   });
 });

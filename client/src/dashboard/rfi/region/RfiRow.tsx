@@ -5,6 +5,8 @@ import RfiModel, { RfiStatus } from '../../../store/rfi/RfiModel';
 import theme from '../../../resources/theme';
 import IconDnDBurger from '../../../resources/icons/DnDBurgerVector';
 import { formatRfiNum } from '../../../utils';
+import ExceedsLTIOVIcon from '../../../resources/icons/ExceedsLTIOVIcon';
+import TextTooltip from '../../components/TextTooltip';
 
 interface Props {
   rfi: RfiModel;
@@ -62,6 +64,11 @@ export const RfiRow: React.FC<Props> = props => {
         <span className={classNames('cell', 'cell--count')}>
           {props.rfi.status === RfiStatus.PENDING ? '-' : props.rfi.ixnCount}
         </span>
+        {props.rfi.completionDate && props.rfi.ltiov && props.rfi.status !== RfiStatus.CLOSED &&
+        (props.rfi.completionDate > props.rfi.ltiov) ?
+          <TextTooltip title={'The LTIOV expires before \nProjected Completion Date.'}>
+            <div className={'popover--LTIOV'}><ExceedsLTIOVIcon/></div>
+          </TextTooltip> : null}
       </div>
     </div>
   );
@@ -139,6 +146,13 @@ export const StyledRfiRow = styled(RfiRow)`
   
   .cell--count {
     width: 30px;
+  }
+  
+  .popover--LTIOV {
+    align-self: flex-start;
+    margin-left: -30px;
+    margin-top: -5px;
+    margin-right: -5px;
   }
 `;
 
