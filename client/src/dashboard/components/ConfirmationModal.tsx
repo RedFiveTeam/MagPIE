@@ -8,10 +8,11 @@ interface MyProps {
   message: string;
   setDisplay: (display: boolean) => void;
   handleYes: () => void;
+  message2?: string;
   focusedElement?: Element|null;
 }
 
-export const NavigateAwayConfirmationModal: React.FC<MyProps> = (props) => {
+export const ConfirmationModal: React.FC<MyProps> = (props) => {
   const classes = longInputStyles();
 
   return (
@@ -30,13 +31,13 @@ export const NavigateAwayConfirmationModal: React.FC<MyProps> = (props) => {
     >
       <div className={classes.modalBody}>
         <div className={'modal-text'}>{props.message}</div>
-        <div className={'modal-text'}>Do you want to leave without saving?</div>
+        <div className={'modal-text'}>{props.message2 ? props.message2 : 'Do you want to leave without saving?'}</div>
         <div className={classes.modalConfirmation}>
           <span className={classNames('modal-yes', classes.modalButton)} onClick={() => {
             props.handleYes();
             props.setDisplay(false);
           }}>
-            Leave Page
+            {props.message2 ? 'Yes' : 'Leave Page'}
           </span>
           <span className={classNames('modal-no', classes.modalButton)} onClick={() => {
             props.setDisplay(false);
@@ -46,7 +47,7 @@ export const NavigateAwayConfirmationModal: React.FC<MyProps> = (props) => {
               }
             }, 200);
           }}>
-            Stay on Page
+            {props.message2 ? 'No' : 'Stay on Page'}
           </span>
         </div>
       </div>

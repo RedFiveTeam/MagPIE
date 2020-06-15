@@ -24,7 +24,7 @@ import { IxnTableView } from './IxnTableView';
 import { Cookie } from '../../utils';
 import { RfiStatus } from '../../store/rfi/RfiModel';
 import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
-import { NavigateAwayConfirmationModal } from '../components/NavigateAwayConfirmationModal';
+import { ConfirmationModal } from '../components/ConfirmationModal';
 
 interface MyProps {
   className?: string
@@ -343,7 +343,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
           />
       }
       {navigating ?
-        <NavigateAwayConfirmationModal
+        <ConfirmationModal
           message={`You haven't saved the ${element} you were editing.`}
           display={true}
           setDisplay={() => {

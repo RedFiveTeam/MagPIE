@@ -33,6 +33,13 @@ public class IxnController {
     return ixnService.getIxns(targetId);
   }
 
+  @PostMapping(path = "/check-renumber")
+  public boolean checkRenumber(@Valid @RequestBody IxnJson ixnJson) {
+    Ixn ixn = new Ixn(ixnJson);
+    ixn.setId(ixnJson.getId());
+    return ixnService.checkRenumber(ixn);
+  }
+
   @PostMapping(path = "/segment/post")
   public Segment postSegment(@Valid @RequestBody SegmentJson segmentJson) {
     return ixnService.postSegment(segmentJson);

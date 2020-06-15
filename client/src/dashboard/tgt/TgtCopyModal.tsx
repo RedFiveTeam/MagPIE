@@ -10,7 +10,7 @@ import { StyledCopyTargetsButton } from '../../resources/icons/ImportRollupsButt
 import DeleteButtonX from '../../resources/icons/DeleteButtonX';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavigateAwayConfirmationModal } from '../components/NavigateAwayConfirmationModal';
+import { ConfirmationModal } from '../components/ConfirmationModal';
 
 interface MyProps {
   display: boolean;
@@ -386,7 +386,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
             </div>
           </div>
         }
-        <NavigateAwayConfirmationModal
+        <ConfirmationModal
           message={'You haven\'t saved all the targets you\'ve copied.'}
           display={displayConfirmationModal}
           setDisplay={setDisplayConfirmationModal}

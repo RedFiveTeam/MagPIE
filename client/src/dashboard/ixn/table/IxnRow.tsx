@@ -20,6 +20,7 @@ import TextTooltip from '../../components/TextTooltip';
 import { MiniTrashcanButton } from '../../../resources/icons/MiniTrashcanButton';
 import { NoteButton } from '../../../resources/icons/NoteButton';
 import { CancelButtonLarge } from '../../../resources/icons/CancelButtonSmall';
+import { ConfirmationModal } from '../../components/ConfirmationModal';
 
 interface MyProps {
   ixn: IxnModel;
@@ -34,7 +35,8 @@ interface MyProps {
   dateString: string;
   setAddNote: (ixnId: number) => void;
   disabled: boolean;
-  readOnly: boolean
+  readOnly: boolean;
+  // willTriggerTrackModal: boolean;
   className?: string;
 }
 
@@ -52,6 +54,16 @@ export const IxnRow: React.FC<MyProps> = props => {
   const classes = rowStyles();
   const [displayTrackNarrative, setDisplayTrackNarrative] = useState(false);
   const [displayNote, setDisplayNote] = useState(false);
+  const [ixnToPost, setIxnToPost] = useState(props.ixn);
+  const [displayModal, setDisplayModal] = useState(false);
+
+  // useEffect(() => {
+  //   if (props.willTriggerTrackModal && status !== props.ixn.status) {
+  //     setDisplayModal(true);
+  //   } else {
+  //     submitStatusChange(status);
+  //   }
+  // }, [status]);
 
   const handleDeleteClick = () => {
     props.deleteIxn(props.ixn);
@@ -61,9 +73,53 @@ export const IxnRow: React.FC<MyProps> = props => {
     props.setEditIxn(props.ixn.id!);
   };
 
+  const finishCheckRenumbering = (willRenumber: boolean, ixn: IxnModel) => {
+    if (willRenumber) {
+      setDisplayModal(true);
+      setIxnToPost(ixn);
+    } else {
+      props.postIxn(ixn);
+    }
+  };
+
+  const checkRenumbering = (ixn: IxnModel) => {
+    fetch('/api/ixn/check-renumber',
+          {
+            method: 'post',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ixn),
+          },
+    )
+      .then(response => response.json())
+      .then(willRenumber => finishCheckRenumbering(willRenumber, ixn))
+      .catch((reason) => {
+        console.log('Failed to delete: ' + reason);
+      });
+  };
+
   const submitStatusChange = (status: IxnStatus) => {
     let ixn: IxnModel = {...props.ixn, status: status};
-    props.postIxn(ixn);
+
+    if (
+      ( //Going from not having a track ID to having one
+        (props.ixn.status === IxnStatus.NOT_STARTED || props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI)
+        &&
+        (status === IxnStatus.IN_PROGRESS || status === IxnStatus.COMPLETED)
+      )
+      ||
+      ( //Going from having a track ID to not having one
+        (props.ixn.status === IxnStatus.IN_PROGRESS || props.ixn.status === IxnStatus.COMPLETED)
+        &&
+        status === IxnStatus.DOES_NOT_MEET_EEI
+      )
+    ) {
+      checkRenumbering(ixn);
+    } else {
+      props.postIxn(ixn);
+    }
   };
 
   const handleSubmitTrackNarrative = (trackNarrative: string) => {
@@ -94,7 +150,7 @@ export const IxnRow: React.FC<MyProps> = props => {
   };
 
   return (
-    <div className={props.className} id={'ixn-row-' + props.segment.id + '-' + props.ixn.id}>
+    <div className={classNames(props.className, 'ixn-row')} id={'ixn-row-' + props.segment.id + '-' + props.ixn.id}>
       <HtmlTooltip
         title={
           <div className={'delete-container'}>
@@ -217,78 +273,93 @@ export const IxnRow: React.FC<MyProps> = props => {
         :
         null
       }
+      {displayModal ?
+        <ConfirmationModal
+          display={true}
+          message={'Generating a track for this callout will renumber all previous track ID’s and all track narratives.'}
+          message2={'Do you want to continue?'}
+          setDisplay={() => {
+            setDisplayModal(false);
+          }}
+          handleYes={() => {
+            setDisplayModal(false);
+            props.postIxn(ixnToPost);
+          }}
+        />
+        :
+        null}
     </div>
   );
 };
 
 export const StyledIxnRow = styled(IxnRow)`
-  display: flex;
-  overflow: hidden;
-  flex-direction: column;
+      display: flex;
+      overflow: hidden;
+      flex-direction: column;
 
-  .ixn-data-cell {
-    margin: 8px 4px 8px 4px;
-    padding-bottom: 6px;
-    overflow-wrap: break-word;
-    border-bottom: 1px solid #FFFFFF;
-  }
-  
-  .track {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 8px 0 8px;
-  }
-  
-  .no-underline {
-    border:none;
-  }
-  
-  .track-narrative-input-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    width: 917px;
-    height: 534px;
-    border: 2px aliceblue;
-    border-radius: 5px;
-  }
-  
-  .note-button-extended {
-    width: 58px !important;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    align-self: stretch !important;
-    border-top-right-radius: 8px;
-    padding-left: 4px;
-    margin-right: -8px;
-    background-color: ${theme.color.backgroundInformation};
-    margin-bottom: -8px;
-    z-index: 1;
-    flex-grow: 0 !important;
-  }
-  
-  .note-container {
-    width: 1410px;
-    min-height: 58px;
-    border-radius: 8px 0 8px 8px;
-    background-color: ${theme.color.backgroundInformation};
-    margin: -4px 0 8px 0;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    z-index: 50 !important;
-    position: relative;
-    word-wrap: break-word;
-  }
-  
-  .note {
-    margin: 0 !important;
-    width: 100%;
-  }
-`;
+      .ixn-data-cell {
+      margin: 8px 4px 8px 4px;
+      padding-bottom: 6px;
+      overflow-wrap: break-word;
+      border-bottom: 1px solid #FFFFFF;
+    }
+
+      .track {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 8px 0 8px;
+    }
+
+      .no-underline {
+      border:none;
+    }
+
+      .track-narrative-input-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      width: 917px;
+      height: 534px;
+      border: 2px aliceblue;
+      border-radius: 5px;
+    }
+
+      .note-button-extended {
+      width: 58px !important;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      align-self: stretch !important;
+      border-top-right-radius: 8px;
+      padding-left: 4px;
+      margin-right: -8px;
+      background-color: ${theme.color.backgroundInformation};
+      margin-bottom: -8px;
+      z-index: 1;
+      flex-grow: 0 !important;
+    }
+
+      .note-container {
+      width: 1410px;
+      min-height: 58px;
+      border-radius: 8px 0 8px 8px;
+      background-color: ${theme.color.backgroundInformation};
+      margin: -4px 0 8px 0;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      z-index: 50 !important;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+      .note {
+      margin: 0 !important;
+      width: 100%;
+    }
+      `;

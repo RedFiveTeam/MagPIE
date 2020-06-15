@@ -177,9 +177,20 @@ Scenario('Should be able to edit ixns', (I) => {
 
 Scenario('Should be able to assign status, edit track narratives, and see tracks generate', (I) => {
   I.click('.exploitation');
-  I.waitForText('Status', 3);
+  I.waitForText('MGRS: 12QWE1231231231', 3);
 
-  I.moveCursorTo('.status-wrapper');
+  // I.pressKey('Tab');
+  // I.fillField('.exploit-analyst', 'Billy Bob Joseph');
+  // I.pressKey('Tab');
+  // I.fillField('.time', '1201');
+  // I.pressKey('Tab');
+  // I.fillField('.activity', 'This happened first');
+  // I.pressKey('Enter');
+  // I.waitForText('12:01:00Z', 3);
+  // I.waitForText('Billy Bob Joseph', 3);
+  // I.waitForText('This happened first', 3);
+
+  I.moveCursorTo(locate('.status-wrapper').at(2));
   I.waitForElement('.in-progress-button');
   I.click('.in-progress-button');
 
@@ -188,21 +199,51 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.click('.exploitation');
 
   I.waitForText('In Progress', 3);
-  I.see('123-001');
+  I.waitForText('123-001');
 
-  I.moveCursorTo('.status-wrapper');
+  I.moveCursorTo(locate('.status-wrapper').at(1));
   I.waitForElement('.completed-button');
   I.click('.completed-button');
+
+  I.waitForElement('.navigate-modal');
+  I.waitForElement('.modal-no');
+  I.click('.modal-no');
+
+  within(locate('.ixn-row').at(1), () => {
+    I.dontSee('Complete');
+  });
+
+  I.moveCursorTo(locate('.status-wrapper').at(1));
+  I.waitForElement('.completed-button');
+  I.click('.completed-button');
+
+  I.waitForElement('.navigate-modal');
+  I.waitForElement('.modal-yes');
+  I.click('.modal-yes');
+
+  within(locate('.ixn-row').at(1), () => {
+    I.waitForText('Complete');
+  });
+
+  within(locate('.ixn-row').at(1), () => {
+    I.see('Complete', '.status-wrapper');
+    I.see('123-001', '.track');
+  });
+
+  within(locate('.ixn-row').at(2), () => {
+    I.see('In Progress', '.status-wrapper');
+    I.see('123-002', '.track');
+  });
 
   I.click('.ixn-dash--header--back-button');
   I.waitForText('RFI DESCRIPTION:', 3);
   I.click('.exploitation');
 
   I.waitForText('Complete', 3);
-  I.see('123-001');
-  I.dontSee('In Progress');
+  I.waitForText('123-001');
+  I.waitForText('123-002');
 
-  I.moveCursorTo('.status-wrapper');
+  I.moveCursorTo(locate('.status-wrapper').at(2));
   I.waitForElement('.does-not-meet-eei-button');
   I.click('.does-not-meet-eei-button');
 
@@ -211,22 +252,22 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.click('.exploitation');
 
   I.waitForText('EEI', 3);
-  I.dontSee('Completed');
-  I.dontSee('123-001');
+  within(locate('.ixn-row').at(2), () => {
+    I.dontSee('Complete');
+  });
+  I.dontSee('123-002');
 });
 
 Scenario('Should be able to write and view track narratives', (I) => {
   I.click('.exploitation');
   I.waitForText('Status', 3);
-  I.click('.status-wrapper');
-  I.waitForElement('.completed-button');
-  I.click('.completed-button');
 
   I.click('.track-narrative-button');
   I.waitForText('Copy to Clipboard');
 
-  I.fillField('.track-narrative', '3 already present PERS were in the CY S of BLDG 1. 2 Pers entered the S entrance of ' +
-    'BLDG 1 and 1 PERS entered the W entrance of BLDG 2.');
+  I.fillField('.track-narrative',
+              '3 already present PERS were in the CY S of BLDG 1. 2 Pers entered the S entrance of ' +
+                'BLDG 1 and 1 PERS entered the W entrance of BLDG 2.');
   I.pressKey('Enter');
   I.fillField('.track-narrative', '02:11Z - 1 PERS entered the N entrance of BLDG 20 (exited S entrance of BLDG 9 at ' +
     '02:10:11).');

@@ -9,7 +9,7 @@ import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../../components/InformationalSnackbar';
 import styled from 'styled-components';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
-import { NavigateAwayConfirmationModal } from '../../components/NavigateAwayConfirmationModal';
+import { ConfirmationModal } from '../../components/ConfirmationModal';
 
 interface MyProps {
   setDisplay: (display: boolean) => void;
@@ -131,7 +131,7 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
           </div>
         </div>
         {navigating ?
-          <NavigateAwayConfirmationModal
+          <ConfirmationModal
             message={`You haven't saved the track narrative you were editing.`}
             display={true}
             setDisplay={setNavigating}

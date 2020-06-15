@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class IxnServiceTest extends BaseIntegrationTest {
   @Autowired
@@ -81,6 +81,163 @@ public class IxnServiceTest extends BaseIntegrationTest {
     assertEquals("123-004", ixn4.getTrack());
     assertEquals("123-005", ixn5.getTrack());
     assertEquals("123-006", ixn6.getTrack());
+  }
+
+  @Test
+  public void updatesTrackNumbersInTrackNarratives() throws Exception {
+    setupIxns();
+    long rfiId = rfiRepository.findAll().get(0).getId();
+    ixnService.assignTracks(rfiId, "SDT12-123");
+
+    Ixn ixn1 = ixnRepository.findAll().get(0); //123-003
+    Ixn ixn2 = ixnRepository.findAll().get(1); //Not Started
+    Ixn ixn3 = ixnRepository.findAll().get(2); //123-004
+
+    ixn1.setTrackNarrative(
+      "11NOV20\n" +
+        "\n" +
+        "START\n" +
+        "\n" +
+        "Things happened also track #123-003 and 123-004\n" +
+        "\n" +
+        "STOP"
+    );
+
+    ixnRepository.save(ixn1);
+
+    ixn3.setTrackNarrative(
+      "11NOV20\n" +
+        "\n" +
+        "START\n" +
+        "\n" +
+        "Things happened also track #123-002, 123-004 and 123-005\n" +
+        "\n" +
+        "STOP"
+    );
+
+    ixnRepository.save(ixn3);
+
+    ixn2.setStatus(IxnStatus.IN_PROGRESS);
+
+    ixnRepository.save(ixn2);
+    ixnService.assignTracks(rfiId, "SDT12-123");  //ixn2 -> 123-004, ixn3 -> 123-005
+
+    ixn1 = ixnRepository.findAll().get(0); //123-003
+    ixn3 = ixnRepository.findAll().get(2); //123-005
+
+    assertEquals(
+      "11NOV20\n" +
+        "\n" +
+        "START\n" +
+        "\n" +
+        "Things happened also track #123-003 and 123-005\n" +
+        "\n" +
+        "STOP"
+      ,
+      ixn1.getTrackNarrative()
+    );
+
+    assertEquals(
+      "11NOV20\n" +
+        "\n" +
+        "START\n" +
+        "\n" +
+        "Things happened also track #123-002, 123-005 and 123-006\n" +
+        "\n" +
+        "STOP"
+      ,
+      ixn3.getTrackNarrative()
+    );
+
+
+    ixn2.setStatus(IxnStatus.DOES_NOT_MEET_EEI);
+
+    ixnRepository.save(ixn2);
+    ixnService.assignTracks(rfiId, "SDT12-123");  //ixn2 -> none, ixn3 -> 123-004
+
+    ixn1 = ixnRepository.findAll().get(0); //123-003
+    ixn3 = ixnRepository.findAll().get(2); //123-004
+
+    assertEquals(
+      "11NOV20\n" +
+        "\n" +
+        "START\n" +
+        "\n" +
+        "Things happened also track #123-003 and 123-004\n" +
+        "\n" +
+        "STOP"
+      ,
+      ixn1.getTrackNarrative()
+    );
+
+    assertEquals(
+      "11NOV20\n" +
+        "\n" +
+        "START\n" +
+        "\n" +
+        "Things happened also track #123-002, 123-004 and 123-005\n" +
+        "\n" +
+        "STOP"
+      ,
+      ixn3.getTrackNarrative()
+    );
+
+  }
+
+  @Test
+  public void determinesIfAStatusChangeWouldCauseATrackRenumbering() throws Exception {
+    setupIxns();
+    long rfiId = rfiRepository.findAll().get(0).getId();
+    ixnService.assignTracks(rfiId, "SDT12-123");
+
+    long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
+    long target1Id = targetRepository.findAll().get(0).getId();
+    long segment1Id = segmentRepository.findAll().get(0).getId();
+
+    //Add new track at the end - should not renumber
+    ixnRepository.save(
+      new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(567000).getTime()), "", "", "",
+        IxnStatus.NOT_STARTED, "", ""));
+    Ixn newIxn = ixnRepository.findAll().get(10);
+    newIxn.setStatus(IxnStatus.IN_PROGRESS);
+    assertFalse(ixnService.checkRenumber(newIxn));
+
+    //remove track from end - should not renumber
+    Ixn oldIxn1 = ixnRepository.findAll().get(4);
+    oldIxn1.setStatus(IxnStatus.DOES_NOT_MEET_EEI);
+    assertFalse(ixnService.checkRenumber(oldIxn1));
+
+    //Add track in middle - should renumber
+    Ixn oldIxn2 = ixnRepository.findAll().get(1);
+    oldIxn2.setStatus(IxnStatus.IN_PROGRESS);
+    assertTrue(ixnService.checkRenumber(oldIxn2));
+
+    //Remove track from middle - should renumber
+    Ixn oldIxn3 = ixnRepository.findAll().get(0);
+    oldIxn3.setStatus(IxnStatus.DOES_NOT_MEET_EEI);
+    assertTrue(ixnService.checkRenumber(oldIxn3));
+
+
+    //Adding or removing with only 1 track
+    ixnRepository.deleteAll();
+
+    ixnRepository.save(
+      new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(567000).getTime()), "", "", "",
+        IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(
+      new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(678000).getTime()), "", "", "",
+        IxnStatus.NOT_STARTED, "", ""));
+    ixnRepository.save(
+      new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(789000).getTime()), "", "", "",
+        IxnStatus.NOT_STARTED, "", ""));
+
+    Ixn ixnToChange = ixnRepository.findAll().get(1);
+    ixnToChange.setStatus(IxnStatus.IN_PROGRESS);
+    assertFalse(ixnService.checkRenumber(ixnToChange));
+
+    ixnRepository.save(ixnToChange);
+    ixnToChange.setStatus(IxnStatus.DOES_NOT_MEET_EEI);
+    assertFalse(ixnService.checkRenumber(ixnToChange));
   }
 
   private void setupIxns() throws Exception {

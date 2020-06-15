@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -179,12 +180,7 @@ public class IxnService {
     List<Target> targets = targetRepository.findAllByRfiIdAndName(rfiId, targetName);
     List<Ixn> ixns = new ArrayList<>();
 
-    //sort targets by exploit date
-    targets.sort((target1, target2) -> {
-      ExploitDate date1 = exploitDateRepository.findById(target1.getExploitDateId()).get();
-      ExploitDate date2 = exploitDateRepository.findById(target2.getExploitDateId()).get();
-      return date1.getExploitDate().compareTo(date2.getExploitDate());
-    });
+    sortTargetsByExploitDate(targets);
 
     for (Target target : targets) {
       List<Ixn> targetIxns = ixnRepository.findAllInProgressOrCompleteByTargetId(target.getId())
@@ -194,14 +190,53 @@ public class IxnService {
       ixns.addAll(targetIxns);
     }
 
+    List<String> renamings = new ArrayList<>();
+
     int trackNum = 1;
-    for (Ixn ixn : ixns) {
-      String trackId = targetName.substring(6) + "-" + StringUtils.leftPad(String.valueOf(trackNum), 3, '0');
-      ixn.setTrack(trackId);
+    for (Ixn ixnWithTrackIdToUpdate : ixns) {
+      String newTrackId = targetName.substring(6) + "-" + StringUtils.leftPad(String.valueOf(trackNum), 3, '0');
+      String oldTrackId = ixnWithTrackIdToUpdate.getTrack();
+      ixnWithTrackIdToUpdate.setTrack(newTrackId);
+      if (!oldTrackId.equals(newTrackId) && !oldTrackId.isEmpty()) {
+        renamings.add(oldTrackId);
+        renamings.add(newTrackId);
+      }
+
       trackNum++;
     }
+    parseTrackNarrativeUpdates(ixns, renamings);
 
     ixnRepository.saveAll(ixns);
+  }
+
+  private void sortTargetsByExploitDate(List<Target> targets) {
+    targets.sort((target1, target2) -> {
+      ExploitDate date1 = exploitDateRepository.findById(target1.getExploitDateId()).get();
+      ExploitDate date2 = exploitDateRepository.findById(target2.getExploitDateId()).get();
+      return date1.getExploitDate().compareTo(date2.getExploitDate());
+    });
+  }
+
+  private void parseTrackNarrativeUpdates(List<Ixn> ixns, List<String> renamings) {
+    for (Ixn ixnWithNarrativeToUpdate : ixns) {
+      String newNarrative = ixnWithNarrativeToUpdate.getTrackNarrative();
+      if (renamings.size() > 0 &&
+        Integer.parseInt(renamings.get(0).replace("-", "")) < Integer.parseInt(renamings.get(1).replace("-", ""))
+        && ixnWithNarrativeToUpdate.getTrackNarrative() != null &&
+        !ixnWithNarrativeToUpdate.getTrackNarrative().equals("")) {
+
+        for (int i = renamings.size() - 2; i >= 0; i -= 2) {
+          System.out.println(renamings.get(i) + " -> " + renamings.get(i + 1));
+          newNarrative = newNarrative.replaceAll(Pattern.quote(renamings.get(i)), renamings.get(i + 1));
+        }
+      } else {
+
+        for (int i = 0; i < renamings.size(); i += 2) {
+          newNarrative = newNarrative.replaceAll(Pattern.quote(renamings.get(i)), renamings.get(i + 1));
+        }
+      }
+      ixnWithNarrativeToUpdate.setTrackNarrative(newNarrative);
+    }
   }
 
   public List<Segment> getDeletedSegments() {
@@ -215,5 +250,43 @@ public class IxnService {
       .filter(ixn -> segmentRepository.findById(ixn.getSegmentId()).get().getDeleted() == null)
       .filter(ixn -> targetRepository.findById(ixn.getTargetId()).get().getDeleted() == null)
       .count();
+  }
+
+  public boolean checkRenumber(Ixn newIxn) {
+    String targetName = targetRepository.findById(newIxn.getTargetId()).get().getName();
+    List<Target> targets = targetRepository.findAllByRfiIdAndName(newIxn.getRfiId(), targetName);
+    List<Ixn> ixns = new ArrayList<>();
+
+    sortTargetsByExploitDate(targets);
+
+    for (Target target : targets) {
+      List<Ixn> targetIxns = ixnRepository.findAllInProgressOrCompleteByTargetId(target.getId())
+        .stream().filter(ixn -> segmentRepository.findById(ixn.getSegmentId()).get().getDeleted() == null)
+        .sorted((Comparator.comparing(Ixn::getTime)))
+        .collect(Collectors.toList());
+      ixns.addAll(targetIxns);
+    }
+
+    if (ixns.size() == 0) {
+      return false;
+    }
+
+    //If the new IXN is at the end, return false, otherwise return true
+    if (newIxn.getStatus().equals(IxnStatus.DOES_NOT_MEET_EEI)) {
+      //Removing a track
+      return ixns.get(ixns.size() - 1).getId() != newIxn.getId();
+    } else {
+      //Adding a track
+      Ixn lastIxn = ixns.get(ixns.size() - 1);
+      long lastIxnDate =
+        exploitDateRepository.findById(lastIxn.getExploitDateId()).get().getExploitDate().getTime()
+          +
+          lastIxn.getTime().getTime();
+      long newIxnDate =
+        exploitDateRepository.findById(newIxn.getExploitDateId()).get().getExploitDate().getTime()
+          +
+          newIxn.getTime().getTime();
+      return newIxnDate < lastIxnDate;
+    }
   }
 }

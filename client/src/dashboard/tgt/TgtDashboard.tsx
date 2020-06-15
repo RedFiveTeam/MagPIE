@@ -38,7 +38,7 @@ import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { navigateToIxnPage } from '../../store/ixn';
 import { useSnackbar } from 'notistack';
 import { StyledRfiSidebar } from './sidebar/RfiSidebar';
-import { NavigateAwayConfirmationModal } from '../components/NavigateAwayConfirmationModal';
+import { ConfirmationModal } from '../components/ConfirmationModal';
 import { StyledTgtCopyModal } from './TgtCopyModal';
 import { StyledTgtInputRow } from './table/TgtInputRow';
 import { StyledTgtRow } from './table/TgtRow';
@@ -462,7 +462,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
             <input className={'hidden-input'}/>
           </div>
           {navigating ?
-            <NavigateAwayConfirmationModal
+            <ConfirmationModal
               message={'You haven\'t saved the target you were editing.'}
               display={true}
               setDisplay={setNavigating}
