@@ -32,6 +32,7 @@ describe('RFI table', () => {
 
   it('should display the header', () => {
     expect(subject.find('img').prop('src')).toBe('smallbord.png');
+    expect(subject.find('.metrics-button').exists()).toBeTruthy();
     expect(subject.find('.refresh-button').exists()).toBeTruthy();
   });
 });

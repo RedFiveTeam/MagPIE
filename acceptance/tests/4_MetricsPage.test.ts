@@ -2,6 +2,15 @@
 
 Feature('Metrics Page');
 
+// Scenario('Should be able to navigate to the metrics page', (I) => {
+//   I.waitForElement('.metrics-button');
+//   I.click('.metrics-button');
+//   I.waitForText('GETS Clicks');
+//   I.waitForElement('.metrics-header--back-button');
+//   I.click('.metrics-header--back-button');
+//   I.waitForText('Customer');
+// });
+
 Scenario('Should log and display GETS click metrics', (I) => {
   I.amOnPage('/metrics');
 
@@ -81,4 +90,19 @@ Scenario('Should display other metrics', (I) => {
 
   I.waitForText('LTIOVs Met');
   I.see('0%', '.ltiovs-met');
+});
+
+Scenario('Should be able to navigate to the rfi page and back', (I) => {
+  I.amOnPage('/');
+  I.waitForText('Don\'t have an account?', 10);
+  I.fillField('.username-input', 'Sdt.Test');
+  I.pressKey('Enter');
+
+  I.waitForElement('.metrics-button');
+  I.click('.metrics-button');
+  I.waitForText('GETS Clicks');
+
+  I.waitForElement('.metrics-header--back-button');
+  I.click('.metrics-header--back-button');
+  I.waitForText('Customer');
 });

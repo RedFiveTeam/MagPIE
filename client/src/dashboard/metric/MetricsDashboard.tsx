@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import theme from '../../resources/theme';
-import MagpieFullLogo from '../../resources/icons/MagpieFullLogo';
 import { fetchMetric } from '../../store/metrics';
 import { Metric, MetricCardData, StyledMetricCard } from './MetricsCard';
+import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
+
 
 interface MyProps {
-  className?: string
+  className?: string;
 }
 
 export const MetricsDashboard: React.FC<MyProps> = (props) => {
@@ -115,15 +116,22 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
 
   return (
     <div className={classNames(props.className, 'metrics-dashboard')}>
-      <div className={'metrics-sidebar'}><MagpieFullLogo/></div>
+      <div className='metrics-header'>
+        <a href={'/'} className={'metrics-header--back-button'}>
+          <StyledBackButtonVector/>
+        </a>
+          <div className={'smallbord-container'}>
+            <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
+          </div>
+        </div>
       <div className={'metrics-container'}>
         {workflowTime[0] > -1 ?
           <StyledMetricCard
             data={new MetricCardData('Avg RFI Spent in Status',
-              [
-                new Metric(workflowTime[0] + ' d', 'Open'),
-                new Metric(workflowTime[1] + ' d', 'New'),
-              ])}
+                                     [
+                                       new Metric(workflowTime[0] + ' d', 'Open'),
+                                       new Metric(workflowTime[1] + ' d', 'New'),
+                                     ])}
             className={'workflow-time'}
           />
           :
@@ -148,10 +156,10 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
         {getsClicks[0] > -1 ?
           <StyledMetricCard
             data={new MetricCardData('GETS Clicks',
-              [
-                new Metric(getsClicks[0], 'Open'),
-                new Metric(getsClicks[1], 'New'),
-              ])}
+                                     [
+                                       new Metric(getsClicks[0], 'Open'),
+                                       new Metric(getsClicks[1], 'New'),
+                                     ])}
             className={'gets-clicks'}
           />
           :
@@ -160,12 +168,12 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
         {deletions[0] > -1 ?
           <StyledMetricCard
             data={new MetricCardData('Avg Deletions',
-              [
-                new Metric(deletions[0], 'Dates'),
-                new Metric(deletions[1], 'Targets'),
-                new Metric(deletions[2], 'Segments'),
-                new Metric(deletions[3], 'Interactions'),
-              ])}
+                                     [
+                                       new Metric(deletions[0], 'Dates'),
+                                       new Metric(deletions[1], 'Targets'),
+                                       new Metric(deletions[2], 'Segments'),
+                                       new Metric(deletions[3], 'Interactions'),
+                                     ])}
             className={'deletions'}
           />
           :
@@ -182,12 +190,12 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
         {undos[0] > -1 ?
           <StyledMetricCard
             data={new MetricCardData('Avg Undo Actions',
-              [
-                new Metric(undos[0], 'Dates'),
-                new Metric(undos[1], 'Targets'),
-                new Metric(undos[2], 'Segments'),
-                new Metric(undos[3], 'Interactions'),
-              ])}
+                                     [
+                                       new Metric(undos[0], 'Dates'),
+                                       new Metric(undos[1], 'Targets'),
+                                       new Metric(undos[2], 'Segments'),
+                                       new Metric(undos[3], 'Interactions'),
+                                     ])}
             className={'undos'}
           />
           :
@@ -196,12 +204,12 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
         {edits[0] > -1 ?
           <StyledMetricCard
             data={new MetricCardData('Avg Edits',
-              [
-                new Metric(edits[0], 'Dates'),
-                new Metric(edits[1], 'Targets'),
-                new Metric(edits[2], 'Segments'),
-                new Metric(edits[3], 'Interactions'),
-              ])}
+                                     [
+                                       new Metric(edits[0], 'Dates'),
+                                       new Metric(edits[1], 'Targets'),
+                                       new Metric(edits[2], 'Segments'),
+                                       new Metric(edits[3], 'Interactions'),
+                                     ])}
             className={'edits'}
           />
           :
@@ -230,7 +238,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
 
 export const StyledMetricsDashboard = styled(MetricsDashboard)`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: stretch;
   height: 100vh;
   width: 100%;
@@ -239,6 +247,28 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
   font-size: ${theme.font.sizeHeader};
   font-weight: ${theme.font.weightHeader};
   color: ${theme.color.fontActive};
+  
+  .metrics-header { 
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: ${theme.color.backgroundHeader};
+    margin-bottom: 17px;
+    flex: 0 0 63px;
+  }
+  
+  .metrics-header--back-button {
+    cursor: pointer;
+    padding-left: 18px;
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    color: ${theme.color.backgroundAction};
+  }
   
   .metrics-sidebar {
     flex: 0 0 134px;
@@ -252,12 +282,13 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
   
   .metrics-container {
     width: 100%;
-    padding: 75px 15px 0 15px;
+    padding: 0 15px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: flex-start;
     align-content: flex-start;
     flex-wrap: wrap;
+    overflow-y: auto;
   }
 `;

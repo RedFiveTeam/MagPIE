@@ -19,6 +19,7 @@ import { useSnackbar } from 'notistack';
 import { PriorityUndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { Cookie, formatRfiNum } from '../../utils';
 import { useCookies } from 'react-cookie';
+import MetricsButtonIcon from '../../resources/icons/MetricsButtonIcon';
 
 interface MyProps {
   className?: string;
@@ -149,13 +150,20 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
         <div className={'smallbord-container'}>
           <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
         </div>
-        <TextTooltip title={'Refresh from GETS'}>
-          <div className={'refresh-button'}
-               onClick={handleRefreshClick}
-          >
-            <StyledRefreshButtonVector className={refreshing ? 'refreshing' : undefined}/>
-          </div>
-        </TextTooltip>
+        <div className={'button-container'}>
+          <TextTooltip title={'Metrics'}>
+            <a href={'/metrics'} className={'metrics-button'}>
+              <MetricsButtonIcon/>
+            </a>
+          </TextTooltip>
+          <TextTooltip title={'Refresh from GETS'}>
+            <div className={'refresh-button'}
+                 onClick={handleRefreshClick}
+            >
+              <StyledRefreshButtonVector className={refreshing ? 'refreshing' : undefined}/>
+            </div>
+          </TextTooltip>
+        </div>
       </div>
       <div className={'rfi-dash--body'}>
         <StyledRfiTable
@@ -214,6 +222,14 @@ export const StyledRfiDashboard = styled(RfiDashboard)`
   
   .refresh-spacer {
     width: 21px;
+  }
+  
+  .button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 75px;
   }
   
   .refreshing {

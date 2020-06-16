@@ -276,7 +276,7 @@ export const IxnRow: React.FC<MyProps> = props => {
       {displayModal ?
         <ConfirmationModal
           display={true}
-          message={'Generating a track for this callout will renumber all previous track ID’s and all track narratives.'}
+          message={'Generating a track for this callout will renumber all previous track IDs and all track narratives.'}
           message2={'Do you want to continue?'}
           setDisplay={() => {
             setDisplayModal(false);
