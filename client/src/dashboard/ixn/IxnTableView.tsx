@@ -25,6 +25,7 @@ interface MyProps {
   editSegment: number;
   editIxn: number;
   addNote: number;
+  highlight: number;
   selectTarget: (target: TargetModel, dateString: string) => void;
   handleSetAddSegment: () => void;
   handleEditSegment: (segmentId: number) => void;
@@ -74,6 +75,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
           setEditingElement={props.setEditingElement}
           setSegmentChanged={props.setSegmentChanged}
           setIxnChanged={props.setIxnChanged}
+          highlight={props.highlight}
         />,
     );
   }
@@ -120,9 +122,6 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
         </StyledIxnTable>
         {/*Prevents user from tabbing out of page to address bar*/}
         <input className={'hidden-input'}/>
-      </div>
-      <div className={'ixn-dash-spacer'}>
-        &nbsp;
       </div>
     </div>
   );

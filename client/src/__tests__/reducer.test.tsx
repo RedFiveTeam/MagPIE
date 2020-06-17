@@ -430,6 +430,7 @@ describe('reducer', () => {
                  addSegment: false,
                  editIxn: -1,
                  editSegment: -1,
+                 highlight: -1,
                });
 
     let newSegments = [
@@ -466,6 +467,8 @@ describe('reducer', () => {
                  autofocus: true,
                  editIxn: -1,
                  editSegment: -1,
+                 highlight: -1,
+                 newSegment: undefined,
                });
   });
 
@@ -498,6 +501,8 @@ describe('reducer', () => {
         addSegment: true,
         editIxn: -1,
         editSegment: -1,
+        highlight: -1,
+        newSegment: undefined,
       });
   });
 

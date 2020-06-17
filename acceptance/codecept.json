@@ -20,6 +20,6 @@
     "I": "./steps_file.ts"
   },
   "bootstrap": false,
-  "mocha": {},
+  "mocha": { "bail": true },
   "name": "pie"
 }

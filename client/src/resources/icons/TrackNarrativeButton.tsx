@@ -18,12 +18,12 @@ const TrackNarrativeButton: React.FC<MyProps> = (props) => {
       <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d={pathD}
-          fill="white"/>
+          fill="#1E98E5"/>
       </svg>
       {props.hasNarrative ?
         <svg className={'blue-circle'} width="6" height="6" viewBox="0 0 6 6" fill="none"
              xmlns="http://www.w3.org/2000/svg">
-          <circle cx="3" cy="3" r="3" fill="#1E98E5"/>
+          <circle cx="3" cy="3" r="3" fill="#77D6F5"/>
         </svg>
         :
         null
@@ -47,8 +47,8 @@ const Wrapper = styled('div')`
   margin-bottom: 2px;
   
   .blue-circle {
-    margin-top: -18px;
-    margin-left: 2px;
+    margin-top: -23px;
+    margin-left: 1px;
   }
 
   :hover {

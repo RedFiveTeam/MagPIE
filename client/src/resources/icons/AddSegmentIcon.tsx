@@ -29,15 +29,15 @@ const AddSegmentIcon: React.FC<MyProps> = (props) => {
         />
         <path
           d={pathD2}
-          fill={theme.color.backgroundBase}
+          fill={theme.color.backgroundInformation}
         />
         <path
           d={pathD3}
-          fill={theme.color.backgroundBase}
+          fill={theme.color.backgroundInformation}
         />
         <path
           d={pathD4}
-          fill={theme.color.backgroundBase}
+          fill={theme.color.backgroundInformation}
         />
       </svg>
     </Wrapper>

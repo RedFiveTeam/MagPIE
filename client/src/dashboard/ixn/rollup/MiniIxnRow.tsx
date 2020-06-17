@@ -60,8 +60,7 @@ export const StyledMiniIxnRow = styled(MiniIxnRow)`
   }
   
   .ixn-row-box {
-    margin-top: 1px !important;
-    margin-bottom: 1px !important;
+    margin: 1px 0 1px 2px !important;
     background: ${theme.color.backgroundInformation};
   }
     

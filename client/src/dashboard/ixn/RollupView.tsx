@@ -52,8 +52,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
   };
 
   const initHourlyRollup = (): string => {
-    return 'Activity Rollup (' + props.target.name + ')\n\n' +
-      props.dateString + '\n\n' +
+    return '\n\n' +
       mapSegmentStrings() +
       'Note:';
   };
@@ -64,9 +63,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
                                                      props.target.hourlyRollup);
   const [allCallouts, setAllCallouts] = useState(
     props.target.allCallouts === '' ?
-      'Activity Rollup (' + props.target.name + ')\n\n' +
-      props.dateString + '\n\n\n\n' +
-      'Note:'
+      '\n\n\n\nNote:'
       : props.target.allCallouts,
   );
   const [selectedIxns, setSelectedIxns] = useState([] as number[]);
@@ -156,12 +153,13 @@ export const RollupView: React.FC<MyProps> = (props) => {
 
     allIxns.sort((ixn1, ixn2) => ixn1.time.isSame(ixn2.time) ? 0 : ixn1.time.isBefore(ixn2.time) ? -1 : 1);
 
-    let rollup = allCallouts.substring(0, allCallouts.indexOf(props.dateString) + 7) + '\n\n' + mapIxns(allIxns) +
-      allCallouts.substr(allCallouts.indexOf('Note:'));
+    let rollup = '\n' + mapIxns(allIxns) + allCallouts.substr(allCallouts.indexOf('Note:'));
 
     setAllCallouts(rollup);
     setSelectedIxns([]);
   };
+
+  const preRollupText = 'Activity Rollup (' + props.target.name + ')\n\n' + props.dateString;
 
   return (
     <div className={classNames(props.className, 'rollup-body-container')}>
@@ -217,6 +215,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
           </div>
           <form className={classNames('rollup-form')}>
             <div className={classNames(classes.modalInputContainer, props.readOnly ? 'rollup-text-wrapper' : null)}>
+              <div className={'pre-rollup-text rollup-text'}>{preRollupText}</div>
               {!props.readOnly ?
                 <TextField
                   className={classNames('rollup', classes.modalTextfield)}
@@ -224,7 +223,11 @@ export const RollupView: React.FC<MyProps> = (props) => {
                   onChange={handleInput}
                   autoFocus
                   multiline
-                  rows={27}
+                  rows={rollupMode === RollupMode.ALL_CALLOUTS ?
+                    allCallouts.split('\n').length
+                    :
+                    hourlyRollup.split('\n').length
+                  }
                   InputProps={{
                     disableUnderline: true,
                   }}
@@ -235,14 +238,15 @@ export const RollupView: React.FC<MyProps> = (props) => {
                 />
                 :
                 <div className={'rollup-text'}>
-                  {rollupMode === RollupMode.ALL_CALLOUTS ? allCallouts : hourlyRollup}
+                  {preRollupText + '\n' + (rollupMode === RollupMode.ALL_CALLOUTS ? allCallouts : hourlyRollup)}
                 </div>
               }
             </div>
           </form>
           <div className={classNames('button-section', classes.modalConfirmation)}>
             <CopyToClipboard onCopy={() => props.displaySnackbar('Copied to Clipboard')}
-                             text={rollupMode === RollupMode.ALL_CALLOUTS ? allCallouts : hourlyRollup}>
+                             text={preRollupText + '\n' +
+                             (rollupMode === RollupMode.ALL_CALLOUTS ? allCallouts : hourlyRollup)}>
               <div className={classNames('copy-to-clipboard', classes.copyToClipboard)}>
                 Copy to Clipboard
               </div>
@@ -351,6 +355,7 @@ export const StyledRollupView = styled(RollupView)`
   
   .rollup-text {
     width: 100%;
+    padding-left: 3px;
     align-self: flex-start;
     justify-self: flex-start;
     word-wrap: break-word;
@@ -379,5 +384,13 @@ export const StyledRollupView = styled(RollupView)`
   .rollup-close-button {
     padding-top: 6px;
     padding-right: 3px;
+  }
+  
+  .rollup-input {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-top: -6px;
+    overflow: hidden;
   }
 `;

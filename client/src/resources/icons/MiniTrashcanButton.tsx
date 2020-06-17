@@ -18,8 +18,8 @@ const pathD = 'M10 20C15.5228 20 20 15.5228 20 10C20 4.47715 15.5228 0 10 0C4.47
   '7.07653C12.5061 7.07653 12.6954 7.30675 12.6783 7.57741Z';
 
 interface MyProps {
-  onClick: () => void;
   tooltip: string
+  onClick?: () => void;
   className?: string
 }
 

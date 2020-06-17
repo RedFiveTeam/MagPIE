@@ -7,6 +7,7 @@ import { SnackbarProvider } from 'notistack';
 
 describe('IxnRow', () => {
   const moment = require('moment');
+  console.log = jest.fn();
   let subject: ReactWrapper;
   let ixn = new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(
     (5 * 3600 +
@@ -35,6 +36,7 @@ describe('IxnRow', () => {
       >
         <IxnRow
           ixn={ixn}
+          highlight={-1}
           segment={segment}
           postIxn={jest.fn()}
           deleteIxn={jest.fn()}

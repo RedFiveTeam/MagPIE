@@ -4,12 +4,12 @@ import classNames from 'classnames';
 import theme from '../../../resources/theme';
 import ScrollShadow from '../../components/scroll-shadow';
 
-interface Props {
+interface MyProps {
   displayHelperText: boolean;
   className?: string;
 }
 
-export const TgtTable: React.FC<Props> = props => {
+export const TgtTable: React.FC<MyProps> = (props) => {
   return (
     <div className={classNames('tgt-table-wrapper', props.className)} id={'tgt-table-scrollable-region'}>
       <ScrollShadow

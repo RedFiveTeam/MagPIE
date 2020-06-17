@@ -338,8 +338,9 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.click('.rollup-button');
 
   I.waitForText('Copy to Clipboard');
-  I.seeInField('.rollup-input', 'Activity Rollup (SDT20-123)');
-  I.seeInField('.rollup-input', '01FEB20');
+  I.waitForElement('.rollup-input');
+  I.see('Activity Rollup (SDT20-123)');
+  I.see('01FEB20');
   I.seeInField('.rollup-input', 'Note:');
   I.see('12:00:00Z');
   I.see('12:30:40Z');
@@ -376,8 +377,8 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.click('.rollup-mode-toggle-button');
   I.waitForElement('.rollup-input');
 
-  I.seeInField('.rollup-input', 'Activity Rollup (SDT20-123)');
-  I.seeInField('.rollup-input', '01FEB20');
+  I.see('Activity Rollup (SDT20-123)');
+  I.see('01FEB20');
   I.seeInField('.rollup-input', '1200Z - 1230Z:');
   I.seeInField('.rollup-input', 'Note:');
   I.dontSeeInField('.rollup-input', '12:10:30Z - Person entered tgt from right side\n\n12:15:00Z -');
@@ -415,7 +416,9 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
   //Delete first ixn
-  I.moveCursorTo('.ixn-row-box', 10, 3);
+  I.moveCursorTo('.smallbord-container');
+  I.wait(1);
+  I.moveCursorTo('.ixn-row');
   I.waitForElement('.delete-ixn-button');
   I.click('.delete-ixn-button');
 
@@ -426,7 +429,9 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.dontSee('Person entered tgt from right side');
 
   //Delete second ixn and undo
-  I.moveCursorTo('.ixn-row-box', 10, 3);
+  I.moveCursorTo('.smallbord-container');
+  I.wait(1);
+  I.moveCursorTo('.ixn-row');
   I.waitForElement('.delete-ixn-button');
   I.click('.delete-ixn-button');
 
@@ -441,7 +446,9 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.waitForText('Person entered tgt from right side', 3);
 
   //Delete second ixn
-  I.moveCursorTo('.ixn-row-box', 10, 3);
+  I.moveCursorTo('.smallbord-container');
+  I.wait(1);
+  I.moveCursorTo('.ixn-row');
   I.waitForElement('.delete-ixn-button');
   I.click('.delete-ixn-button');
 

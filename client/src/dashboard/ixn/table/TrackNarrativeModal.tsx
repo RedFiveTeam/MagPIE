@@ -114,7 +114,7 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
             }
           </div>
         </form>
-        <div className={classes.modalConfirmation}>
+        <div className={classNames('button-section', classes.modalConfirmation)}>
           <CopyToClipboard onCopy={() => displaySnackbar('Copied to Clipboard')} text={trackNarrative}>
             <div
               className={classNames('copy-to-clipboard', classes.copyToClipboard)}

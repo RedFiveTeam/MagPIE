@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import IxnModel, { IxnStatus } from '../../../store/ixn/IxnModel';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
@@ -36,7 +36,7 @@ interface MyProps {
   setAddNote: (ixnId: number) => void;
   disabled: boolean;
   readOnly: boolean;
-  // willTriggerTrackModal: boolean;
+  highlight: number;
   className?: string;
 }
 
@@ -52,18 +52,22 @@ const HtmlTooltip = withStyles((theme: Theme) => ({
 
 export const IxnRow: React.FC<MyProps> = props => {
   const classes = rowStyles();
+
   const [displayTrackNarrative, setDisplayTrackNarrative] = useState(false);
   const [displayNote, setDisplayNote] = useState(false);
   const [ixnToPost, setIxnToPost] = useState(props.ixn);
   const [displayModal, setDisplayModal] = useState(false);
+  const [highlighted, setHighlighted] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
-  // useEffect(() => {
-  //   if (props.willTriggerTrackModal && status !== props.ixn.status) {
-  //     setDisplayModal(true);
-  //   } else {
-  //     submitStatusChange(status);
-  //   }
-  // }, [status]);
+  useEffect(() => {
+    if (props.highlight === props.ixn.id) {
+      setHighlighted(true);
+      setTimeout(() => {
+        setHighlighted(false);
+      }, 5000);
+    }
+  }, [props.highlight]);
 
   const handleDeleteClick = () => {
     props.deleteIxn(props.ixn);
@@ -150,109 +154,100 @@ export const IxnRow: React.FC<MyProps> = props => {
   };
 
   return (
-    <div className={classNames(props.className, 'ixn-row')} id={'ixn-row-' + props.segment.id + '-' + props.ixn.id}>
-      <HtmlTooltip
-        title={
-          <div className={'delete-container'}>
-            <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-ixn-button'} tooltip={'Delete Callout'}/>
-          </div>}
-        placement={'bottom-end'}
-        PopperProps={{
-          popperOptions: {
-            modifiers: {
-              offset: {
-                enabled: true,
-                offset: '45px, -35px',
-              },
-            },
-          },
-        }}
-        interactive
-        disableHoverListener={props.addingOrEditing}
-        leaveDelay={100}
+    <div className={classNames(props.className, 'ixn-row')}
+         id={'ixn-row-' + props.segment.id + '-' + props.ixn.id}
+         onMouseEnter={() => setShowDelete(true)}
+         onMouseLeave={() => setShowDelete(false)}
+    >
+      <Box
+        borderRadius={8}
+        className={classNames('ixn-row-box', props.disabled ? 'disabled' : null)}
+        onDoubleClick={handleDoubleClick}
       >
-        <Box
-          borderRadius={8}
-          className={classNames('ixn-row-box', props.disabled ? 'disabled' : null)}
-          onDoubleClick={handleDoubleClick}
-        >
-          <div className={'ixn-box-left'}>
-            <div className={classNames('ixn-data-cell', 'exploit-analyst', 'name')}>
-              {props.ixn.exploitAnalyst ? props.ixn.exploitAnalyst : '\xa0'}
-            </div>
-            <div className={classNames('ixn-data-cell', 'time')}>
-              {props.ixn.time.utc().format('HH:mm:ss') + 'Z'}
-            </div>
-            <div className={classNames('ixn-data-cell', 'activity')}>
-              {props.ixn.activity ? props.ixn.activity : '\xa0'}
-            </div>
-            <div className={classNames('ixn-data-cell', 'track-analyst', 'name')}>
-              {props.ixn.trackAnalyst ? props.ixn.trackAnalyst : '\xa0'}
-            </div>
-            <div className={classNames('ixn-data-cell', 'status', 'no-underline')}>
-              <HtmlTooltip
-                title={
-                  <div className={'status-menu'}>
-                    <StyledIxnStatusPickerOutline/>
-                    <InProgressButton
-                      buttonClass={classNames(classes.inProgress, classes.clickable, 'in-progress-button')}
-                      onClick={() => submitStatusChange(IxnStatus.IN_PROGRESS)}/>
-                    <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, 'completed-button')}
-                                     onClick={() => submitStatusChange(IxnStatus.COMPLETED)}/>
-                    <DoesNotMeetEeiButton
-                      buttonClass={classNames(classes.doesNotMeetEei, classes.clickable, 'does-not-meet-eei-button')}
-                      onClick={() => submitStatusChange(IxnStatus.DOES_NOT_MEET_EEI)}/>
-                  </div>
-                }
-                interactive
-                disableHoverListener={props.addingOrEditing}
-              >
-                <div className={'status-wrapper'}>
-                  {props.ixn.status === IxnStatus.NOT_STARTED ?
-                    <NotStartedButton buttonClass={classes.statusUnclickable}/>
-                    : props.ixn.status === IxnStatus.IN_PROGRESS ?
-                      <InProgressButton buttonClass={classes.statusUnclickable}/>
-                      : props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI ?
-                        <DoesNotMeetEeiButton buttonClass={classes.statusUnclickable}/>
-                        : <CompletedButton buttonClass={classes.statusUnclickable}/>}
-                </div>
-              </HtmlTooltip>
-            </div>
-            <div className={classNames('ixn-data-cell', 'track', 'no-underline')}>
-              {props.ixn.track ?
-                <>
-                  <TextTooltip title={'Track Narrative'}>
-                    <div className={'track-narrative-button'} onClick={handleTrackNarrativeClick}>
-                      <TrackNarrativeButton hasNarrative={props.ixn.trackNarrative !== ''}/>
-                    </div>
-                  </TextTooltip>
-                  <span>{props.ixn.track}</span>
-                </>
-                :
-                '\xa0'
-              }
-            </div>
-            <div className={classNames('ixn-data-cell', 'lead-checker', 'name')}>
-              {props.ixn.leadChecker ? props.ixn.leadChecker : '\xa0'}
-            </div>
-            <div className={classNames('ixn-data-cell', 'final-checker', 'name')}>
-              {props.ixn.finalChecker ? props.ixn.finalChecker : '\xa0'}
-            </div>
+        <div className={classNames('ixn-box-left', highlighted ? 'highlighted' : null)}>
+          <div className={classNames('ixn-data-cell', 'exploit-analyst', 'name')}>
+            {props.ixn.exploitAnalyst ? props.ixn.exploitAnalyst : '\xa0'}
           </div>
-          <DeleteCancelButton
-            handleClick={handleNoteClick}
-            className={classNames('ixn-box-right', displayNote ? 'note-button-extended' : null)}
-            buttonClassName={'note-button'}
-            title={!displayNote ? 'Analyst Notes' : 'Hide Notes'}
-          >
-            {!displayNote ?
-              <NoteButton hasNote={props.ixn.note !== ''}/>
+          <div className={classNames('ixn-data-cell', 'time')}>
+            {props.ixn.time.utc().format('HH:mm:ss') + 'Z'}
+          </div>
+          <div className={classNames('ixn-data-cell', 'activity')}>
+            {props.ixn.activity ? props.ixn.activity : '\xa0'}
+          </div>
+          <div className={classNames('ixn-data-cell', 'track-analyst', 'name')}>
+            {props.ixn.trackAnalyst ? props.ixn.trackAnalyst : '\xa0'}
+          </div>
+          <div className={classNames('ixn-data-cell', 'status', 'no-underline')}>
+            <HtmlTooltip
+              title={
+                <div className={'status-menu'}>
+                  <StyledIxnStatusPickerOutline/>
+                  <InProgressButton
+                    buttonClass={classNames(classes.inProgress, classes.clickable, 'in-progress-button')}
+                    onClick={() => submitStatusChange(IxnStatus.IN_PROGRESS)}/>
+                  <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, 'completed-button')}
+                                   onClick={() => submitStatusChange(IxnStatus.COMPLETED)}/>
+                  <DoesNotMeetEeiButton
+                    buttonClass={classNames(classes.doesNotMeetEei, classes.clickable, 'does-not-meet-eei-button')}
+                    onClick={() => submitStatusChange(IxnStatus.DOES_NOT_MEET_EEI)}/>
+                </div>
+              }
+              interactive
+              disableHoverListener={props.addingOrEditing}
+            >
+              <div className={'status-wrapper'}>
+                {props.ixn.status === IxnStatus.NOT_STARTED ?
+                  <NotStartedButton buttonClass={classes.statusUnclickable}/>
+                  : props.ixn.status === IxnStatus.IN_PROGRESS ?
+                    <InProgressButton buttonClass={classes.statusUnclickable}/>
+                    : props.ixn.status === IxnStatus.DOES_NOT_MEET_EEI ?
+                      <DoesNotMeetEeiButton buttonClass={classes.statusUnclickable}/>
+                      : <CompletedButton buttonClass={classes.statusUnclickable}/>}
+              </div>
+            </HtmlTooltip>
+          </div>
+          <div className={classNames('ixn-data-cell', 'track', 'no-underline')}>
+            {props.ixn.track ?
+              <>
+                <TextTooltip title={'Track Narrative'}>
+                  <div className={'track-narrative-button'} onClick={handleTrackNarrativeClick}>
+                    <TrackNarrativeButton hasNarrative={props.ixn.trackNarrative !== ''}/>
+                  </div>
+                </TextTooltip>
+                <span>{props.ixn.track}</span>
+              </>
               :
-              <CancelButtonLarge/>
+              '\xa0'
             }
-          </DeleteCancelButton>
-        </Box>
-      </HtmlTooltip>
+          </div>
+          <div className={classNames('ixn-data-cell', 'lead-checker', 'name')}>
+            {props.ixn.leadChecker ? props.ixn.leadChecker : '\xa0'}
+          </div>
+          <div className={classNames('ixn-data-cell', 'final-checker', 'name')}>
+            {props.ixn.finalChecker ? props.ixn.finalChecker : '\xa0'}
+          </div>
+        </div>
+        <DeleteCancelButton
+          handleClick={handleNoteClick}
+          className={classNames('ixn-box-right', highlighted ? 'highlighted' : null,
+                                displayNote ? 'note-button-extended' : null)}
+          buttonClassName={'note-button'}
+          title={!displayNote ? 'Analyst Notes' : 'Hide Notes'}
+        >
+          {!displayNote ?
+            <NoteButton hasNote={props.ixn.note !== ''}/>
+            :
+            <CancelButtonLarge/>
+          }
+        </DeleteCancelButton>
+      </Box>
+      <div className={'delete-container'}>
+        {showDelete && !props.readOnly ?
+          <MiniTrashcanButton className={'delete-ixn-button'} tooltip={'Delete Callout'} onClick={handleDeleteClick}/>
+          :
+          '\xa0'
+        }
+      </div>
       {displayNote ?
         <div className={'note-container'}>
           <div className={'ixn-data-cell note'}>
@@ -293,73 +288,84 @@ export const IxnRow: React.FC<MyProps> = props => {
 };
 
 export const StyledIxnRow = styled(IxnRow)`
-      display: flex;
-      overflow: hidden;
-      flex-direction: column;
+           display: flex;
+           overflow: hidden;
+           flex-direction: column;
+           padding-top: 3px;
 
-      .ixn-data-cell {
-      margin: 8px 4px 8px 4px;
-      padding-bottom: 6px;
-      overflow-wrap: break-word;
-      border-bottom: 1px solid #FFFFFF;
-    }
+           .ixn-data-cell {
+           margin: 8px 4px 8px 4px;
+           padding-bottom: 6px;
+           overflow-wrap: break-word;
+           border-bottom: 1px solid #FFFFFF;
+           }
 
-      .track {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      margin: 0 8px 0 8px;
-    }
+           .track {
+           display: flex;
+           flex-direction: column;
+           justify-content: space-between;
+           align-items: center;
+           margin: 0 8px 0 8px;
+           }
 
-      .no-underline {
-      border:none;
-    }
+           .no-underline {
+           border:none;
+           }
 
-      .track-narrative-input-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: center;
-      width: 917px;
-      height: 534px;
-      border: 2px aliceblue;
-      border-radius: 5px;
-    }
+           .track-narrative-input-container {
+           display: flex;
+           flex-direction: column;
+           justify-content: space-around;
+           align-items: center;
+           width: 917px;
+           height: 534px;
+           border: 2px aliceblue;
+           border-radius: 5px;
+           }
 
-      .note-button-extended {
-      width: 58px !important;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      align-self: stretch !important;
-      border-top-right-radius: 8px;
-      padding-left: 4px;
-      margin-right: -8px;
-      background-color: ${theme.color.backgroundInformation};
-      margin-bottom: -8px;
-      z-index: 1;
-      flex-grow: 0 !important;
-    }
+           .note-button-extended {
+           width: 58px !important;
+           display: flex;
+           flex-direction: row;
+           justify-content: center;
+           align-items: center;
+           align-self: stretch !important;
+           border-top-right-radius: 8px;
+           padding-left: 4px;
+           margin-right: -8px;
+           background-color: ${theme.color.backgroundInformation};
+           margin-bottom: -10px;
+           z-index: 1;
+           flex-grow: 0 !important;
+           }
 
-      .note-container {
-      width: 1410px;
-      min-height: 58px;
-      border-radius: 8px 0 8px 8px;
-      background-color: ${theme.color.backgroundInformation};
-      margin: -4px 0 8px 0;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      z-index: 50 !important;
-      position: relative;
-      word-wrap: break-word;
-    }
+           .note-container {
+           width: 1410px;
+           min-height: 58px;
+           border-radius: 8px 0 8px 8px;
+           background-color: ${theme.color.backgroundInformation};
+           margin: 0 0 8px 0;
+           padding: 8px;
+           display: flex;
+           flex-direction: column;
+           justify-content: flex-end;
+           z-index: 50 !important;
+           position: relative;
+           word-wrap: break-word;
+           }
 
-      .note {
-      margin: 0 !important;
-      width: 100%;
-    }
-      `;
+           .note {
+           margin: 0 !important;
+           width: 100%;
+           }
+
+           .highlighted {
+           background: ${theme.color.backgroundHighlighted} !important;
+           }
+
+           .delete-container {
+           height: 20px;
+           width: 20px;
+           margin: -80px 0 55px 1410px
+           }
+           `;

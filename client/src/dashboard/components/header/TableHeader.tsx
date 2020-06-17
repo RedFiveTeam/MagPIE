@@ -30,6 +30,7 @@ export const StyledTableHeader = styled(TableHeader)`
   font-weight: ${theme.font.weightBolder};
   font-size: ${theme.font.sizeRegion};
   margin-top: 46px;
+  margin-right: 20px;
   height: 33px;
   display: flex;
   flex-direction: row;

@@ -19,7 +19,7 @@ import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import { MiniTrashcanButton } from '../../../resources/icons/MiniTrashcanButton';
 import HtmlTooltip from '../../components/HtmlToolTip';
 
-interface Props {
+interface MyProps {
   target: TargetModel;
   exploitDate: ExploitDateModel|null;
   rfi: RfiModel;
@@ -33,11 +33,12 @@ interface Props {
   className?: string;
 }
 
-export const TgtRow: React.FC<Props> = props => {
+export const TgtRow: React.FC<MyProps> = (props) => {
   const classes = rowStyles();
 
   const [displayModal, setDisplayModal] = useState(false);
   const [highlighted, setHighlighted] = useState(true);
+  const [showDelete, setShowDelete] = useState(false);
 
   useEffect(() => {
     if (!props.highlight) {
@@ -103,92 +104,77 @@ export const TgtRow: React.FC<Props> = props => {
   };
 
   return (
-    <div className={props.className}>
-      <HtmlTooltip
-        title={
-          <div className={'delete-container'}>
-            <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-tgt-button'} tooltip={'Delete Target'}/>
-          </div>}
-        placement={'bottom-end'}
-        PopperProps={{
-          popperOptions: {
-            modifiers: {
-              offset: {
-                enabled: true,
-                offset: '45px, -35px',
-              },
-            },
-          },
-        }}
-        interactive
-        disableHoverListener={props.addingOrEditing}
-        leaveDelay={100}
+    <div className={props.className} onMouseEnter={() => setShowDelete(true)} onMouseLeave={() => setShowDelete(false)}>
+      <Box
+        borderRadius={8}
+        className={classNames('tgt-form-box', highlighted && props.highlight ? 'highlighted' : null)}
       >
-        <Box
-          borderRadius={8}
-          className={classNames('tgt-form-box', highlighted && props.highlight ? 'highlighted' : null)}
+        <div className={'tgt-form'}
+             onDoubleClick={handleDoubleClick}
         >
-          <div className={'tgt-form'}
-               onDoubleClick={handleDoubleClick}
-          >
-            <div className={'data-cell-container'}>
-              <div className={classNames('data-cell', 'tgt-name')}>
-                {props.target.name === '' ? '\xa0' : props.target.name}
-              </div>
-              <div className={'data-bottom'}>&nbsp;</div>
+          <div className={'data-cell-container'}>
+            <div className={classNames('data-cell', 'tgt-name')}>
+              {props.target.name === '' ? '\xa0' : props.target.name}
             </div>
-            <div className={'data-cell-container'}>
-              <div className={classNames('data-cell', 'mgrs')}>
-                {props.target.mgrs}
-              </div>
-              <div className={'data-bottom'}>&nbsp;</div>
-            </div>
-            <div className={'data-cell-container'}>
-              <div className={classNames('data-cell', 'notes')}>
-                <div className={'data-notes'}>
-                  {props.target.notes === '' ? '\xa0' : props.target.notes}
-                </div>
-              </div>
-              <div className={'data-bottom'}>&nbsp;</div>
-            </div>
-            <div className={'data-cell-container'}>
-              <div className={classNames('data-cell', 'description')}>
-                <div className={'data-description'}>
-                  {props.target.description === '' ? '\xa0' : props.target.description}
-                </div>
-              </div>
-              <div className={'data-bottom'}>&nbsp;</div>
-            </div>
+            <div className={'data-bottom'}>&nbsp;</div>
           </div>
-          <HtmlTooltip
-            title={
-              <div className={'status-menu'}>
-                <StyledTgtStatusPickerOutline/>
-                <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable, classes.tgtClickable)}
-                                  onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
-                <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, classes.tgtClickable)}
-                                 onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
-              </div>
-            }
-            interactive
-            disableHoverListener={props.addingOrEditing || props.exploitDate === null}
-          >
-            <div
-              className={'status-wrapper'}>
-              {props.target.status === TargetStatus.NOT_STARTED ?
-                <NotStartedButton buttonClass={classes.statusUnclickable}/>
-                : (props.target.status === TargetStatus.IN_PROGRESS ?
-                  <InProgressButton buttonClass={classes.statusUnclickable}/>
-                  :
-                  <CompletedButton buttonClass={classes.statusUnclickable}/>)
-              }</div>
-          </HtmlTooltip>
-          <div className={classNames('exploitation', (props.addingOrEditing && !(props.rfi.status === RfiStatus.CLOSED))
-          || props.exploitDate === null ? 'delete-disabled' : null)} onClick={handleIxnClick}>
-            <StyledExploitationLogButtonVector/>
+          <div className={'data-cell-container'}>
+            <div className={classNames('data-cell', 'mgrs')}>
+              {props.target.mgrs}
+            </div>
+            <div className={'data-bottom'}>&nbsp;</div>
           </div>
-        </Box>
-      </HtmlTooltip>
+          <div className={'data-cell-container'}>
+            <div className={classNames('data-cell', 'notes')}>
+              <div className={'data-notes'}>
+                {props.target.notes === '' ? '\xa0' : props.target.notes}
+              </div>
+            </div>
+            <div className={'data-bottom'}>&nbsp;</div>
+          </div>
+          <div className={'data-cell-container'}>
+            <div className={classNames('data-cell', 'description')}>
+              <div className={'data-description'}>
+                {props.target.description === '' ? '\xa0' : props.target.description}
+              </div>
+            </div>
+            <div className={'data-bottom'}>&nbsp;</div>
+          </div>
+        </div>
+        <HtmlTooltip
+          title={
+            <div className={'status-menu'}>
+              <StyledTgtStatusPickerOutline/>
+              <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable, classes.tgtClickable)}
+                                onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
+              <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, classes.tgtClickable)}
+                               onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
+            </div>
+          }
+          interactive
+          disableHoverListener={props.addingOrEditing || props.exploitDate === null}
+        >
+          <div
+            className={'status-wrapper'}>
+            {props.target.status === TargetStatus.NOT_STARTED ?
+              <NotStartedButton buttonClass={classes.statusUnclickable}/>
+              : (props.target.status === TargetStatus.IN_PROGRESS ?
+                <InProgressButton buttonClass={classes.statusUnclickable}/>
+                :
+                <CompletedButton buttonClass={classes.statusUnclickable}/>)
+            }</div>
+        </HtmlTooltip>
+        <div className={classNames('exploitation', (props.addingOrEditing && !(props.rfi.status === RfiStatus.CLOSED))
+        || props.exploitDate === null ? 'delete-disabled' : null)} onClick={handleIxnClick}>
+          <StyledExploitationLogButtonVector/>
+        </div>
+      </Box>
+      {showDelete && props.rfi.status !== RfiStatus.CLOSED ?
+        <div className={'delete-container'}>
+          <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-tgt-button'} tooltip={'Delete Target'}/>
+        </div>
+        :
+        <div className={'delete-container'}>&nbsp;</div>}
       <DeleteConfirmationModal
         deletingItem={props.target.name}
         display={displayModal}
@@ -307,5 +293,11 @@ export const StyledTgtRow = styled(TgtRow)`
   
   .highlighted {
     background: ${theme.color.backgroundHighlighted} !important;
+  }
+  
+  .delete-container {
+    height: 20px;
+    width: 20px;
+    margin: -75px 0 55px 1212px
   }
 `;

@@ -16,6 +16,7 @@ import DoesNotMeetEeiButton from '../../components/statusButtons/DoesNotMeetEeiB
 import CompletedButton from '../../components/statusButtons/CompletedButton';
 import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton';
 import { CancelButtonLarge } from '../../../resources/icons/CancelButtonSmall';
+import CollapseNotesButton from '../../../resources/icons/CollapseNoteButton';
 
 interface MyProps {
   ixn: IxnModel|null;
@@ -99,6 +100,15 @@ export const IxnInputRow: React.FC<MyProps> = props => {
           props.setAddNote(-1);
           resetAction();
         } else {
+          setExploitAnalyst('');
+          setTime('');
+          setActivity('');
+          setTrackAnalyst('');
+          setLeadChecker('');
+          setFinalChecker('');
+          setNote('');
+          setTimeInvalidError(false);
+          setTimeOutOfBoundsError(false);
           resetAction();
         }
         break;
@@ -244,13 +254,14 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     id: 'ixn-time-' + (props.ixn !== null ? props.ixn.id!.toString() : (props.segment.id) + '-new'),
   };
 
-  let isBlank = exploitAnalyst === '' &&
+  const isBlank = (exploitAnalyst === '' || exploitAnalyst === props.tgtAnalyst) &&
     (time === '' || time === '__:__:__') &&
     activity === '' &&
     trackAnalyst === '' &&
     leadChecker === '' &&
     finalChecker === '';
 
+  const highlight = (props.ixn ? ixnChanged : !isBlank);
   const enterKey = 13;
   const tabKey = 9;
 
@@ -269,7 +280,8 @@ export const IxnInputRow: React.FC<MyProps> = props => {
             borderRadius={8}
             className={classNames('ixn-row-box', props.disabled ? 'disabled' : null)}
           >
-            <div className={classNames('ixn-box-left', props.addingNote ? 'dark-bg' : 'ixn-input-section')}>
+            <div className={classNames('ixn-box-left', highlight ? 'highlighted' : null,
+                                       props.addingNote ? 'dark-bg' : 'ixn-input-section')}>
               <div className={'input-container'}>
                 <TextField
                   className={classNames('exploit-analyst', 'name')}
@@ -321,7 +333,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
               <div className={classNames('input-container', 'track')}>
                 {props.ixn && props.ixn.track ?
                   <>
-                    <TrackNarrativeButton className={'no-click'} hasNarrative={false}/>
+                    <TrackNarrativeButton className={'no-click'} hasNarrative={props.ixn.trackNarrative.length > 0}/>
                     <span>{props.ixn.track}</span>
                   </>
                   :
@@ -351,16 +363,18 @@ export const IxnInputRow: React.FC<MyProps> = props => {
               </div>
             </div>
             <DeleteCancelButton
-              handleClick={handleCancelClick}
+              handleClick={props.ixn && props.addingNote && props.ixn.note !== note ?
+                () => setAction(RowAction.SUBMITTING) : handleCancelClick}
               className={classNames(
                 'ixn-box-right',
+                highlight ? 'highlighted' : null,
                 ((props.ixn === null && isBlank) ? 'delete-disabled' : null),
                 (props.addingNote ? 'note-button-extended' : 'ixn-input-section'),
               )}
               buttonClassName={'cancel-edit-ixn-button'}
-              title={'Cancel Edit'}
+              title={props.addingNote ? 'Collapse Note' : 'Cancel Edit'}
             >
-              <CancelButtonLarge/>
+              {props.addingNote ? <CollapseNotesButton/> : <CancelButtonLarge/>}
             </DeleteCancelButton>
           </Box>
           {props.addingNote ?
@@ -452,7 +466,6 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
   .note-button-extended {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 0 !important;
-    //width: 69px !important;
     margin-right: -8px;
     background-color: ${theme.color.backgroundInput};
     margin-bottom: -8px;
@@ -488,5 +501,10 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
   
   .input-container {
     margin: 0 4px 6px 4px;
+  }
+  
+  .highlighted {
+    background: ${theme.color.backgroundHighlighted} !important;
+    border: 2px solid ${theme.color.backgroundHighlighted} !important;
   }
 `;

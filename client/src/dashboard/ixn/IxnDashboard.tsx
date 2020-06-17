@@ -44,6 +44,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
   const editIxn = useSelector(({ixnState}: ApplicationState) => ixnState.editIxn);
   const addNote = useSelector(({ixnState}: ApplicationState) => ixnState.addNote);
   const newSegment = useSelector(({ixnState}: ApplicationState) => ixnState.newSegment);
+  const highlight = useSelector(({ixnState}: ApplicationState) => ixnState.highlight);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -230,7 +231,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
             variant: 'info',
           });
         }
-        dispatch(updateIxn(ixn, cookie.userName));
+        dispatch(updateIxn(ixn, cookie.userName, ixn.id === null));
       }
     }
   };
@@ -286,6 +287,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
       <StyledIxnDashboardHeader
         target={target}
         dateString={dateString}
+        rollupMode={rollupMode}
         exitIxnPage={handleExitIxnPage}
         disableButtons={addingOrEditing}
         disableRollupButton={rollupMode || ixns.length === 0}
@@ -296,6 +298,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
         displayEeiNotes={displayEeiNotes}
         displaySegmentHelperText={segments.length === 1}
         setAddSegment={handleSetAddSegment}
+        exitRollupMode={handleExitRollupMode}
       />
       {
         rollupMode ?
@@ -340,6 +343,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
             handleDeleteSegment={handleDeleteSegment}
             setSegmentChanged={setIsSegmentChanged}
             setIxnChanged={setIsIxnChanged}
+            highlight={highlight}
           />
       }
       {navigating ?
@@ -381,7 +385,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .ixn-dash-body {
-    height: calc(100vh - 141px);
+    height: 685px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -391,7 +395,6 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    //padding-left: 30px;
     width: 1410px;
   }
 

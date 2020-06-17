@@ -22,5 +22,5 @@ export const StyledIxnTable = styled(IxnTable)`
   overflow-y: auto;
   padding-right: 20px;
   padding-left: 12px;
-  max-height: calc(100vh - 215px)
+  max-height: 630px;
 `;

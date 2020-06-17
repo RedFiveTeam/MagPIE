@@ -323,17 +323,17 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
           <div className={classes.modalBody}>
             <div className={'modal-text'}>Would you like to import <br/>targets from all previous dates?</div>
             <div className={classes.modalConfirmation}>
-          <div className={classNames('modal-no', classes.modalButton)} onClick={() => {
-            setDisplayCopyAllTargets(false);
-          }}>
-            No
-          </div>
+              <div className={classNames('modal-no', classes.modalButton)} onClick={() => {
+                setDisplayCopyAllTargets(false);
+              }}>
+                No
+              </div>
               <div className={classNames('modal-yes', classes.modalButton)} onClick={() => {
                 handlePostTargets(copyTgts, true);
                 setDisplayCopyAllTargets(false);
               }}>
-            Yes
-          </div>
+                Yes
+              </div>
             </div>
           </div>
         </Modal>
@@ -431,7 +431,8 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
                 :
                 null
               }
-              <StyledTgtTable displayHelperText={props.exploitDates.length === 0 && props.rfi.status !== RfiStatus.CLOSED}>
+              <StyledTgtTable
+                displayHelperText={props.exploitDates.length === 0 && props.rfi.status !== RfiStatus.CLOSED}>
                 {printDates(props.exploitDates)}
                 {addDate ?
                   <StyledExploitDateDivider
@@ -454,10 +455,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
             </div>
           }
           <div className={'tgt-dash--rfi-description-container'}>
-            <div
-              className={'tgt-dash--rfi-description-box'}
-            >&nbsp;</div>
-
+            <div className={'tgt-dash--rfi-description-box'}>&nbsp;</div>
             <div className={'tgt-dash--rfi-description'}>RFI DESCRIPTION: {props.rfi.description}</div>
             <input className={'hidden-input'}/>
           </div>

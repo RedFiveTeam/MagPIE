@@ -8,7 +8,8 @@ import { TargetPostModel } from '../tgt/TargetPostModel';
 import { postTarget } from '../tgt';
 
 export const loadIxnPage = (target: TargetModel|null, dateString: string|null, segments: SegmentModel[],
-                            ixns: IxnModel[], isLocalUpdate: boolean, newSegment?: SegmentModel) => {
+                            ixns: IxnModel[], isLocalUpdate: boolean, newSegment?: SegmentModel,
+                            isNewIxn?: boolean) => {
   if (target) {
     return {
       type: IxnActionTypes.NAVIGATE_TO_IXN_PAGE,
@@ -24,6 +25,7 @@ export const loadIxnPage = (target: TargetModel|null, dateString: string|null, s
       ixns: ixns,
       isLocalUpdate: isLocalUpdate,
       newSegment: newSegment,
+      isNewIxn: isNewIxn,
     };
   }
 };
@@ -92,12 +94,10 @@ export const updateSegment = (segment: SegmentModel) => {
     postSegment(segment)
       .then(response => response.json())
       .then(newSegmentResponse => {
-        console.log('new seg response' + newSegmentResponse);
         if (newSegmentResponse) {
           newSegment = SegmentDeserializer.deserialize(newSegmentResponse)[0];
           return fetchSegments(segment.targetId);
         } else {
-          console.log('im an edit');
           return fetchSegments(segment.targetId);
         }
       })
@@ -110,12 +110,13 @@ export const updateSegment = (segment: SegmentModel) => {
   };
 };
 
-export const updateIxn = (ixn: IxnModel, userName: string) => {
+export const updateIxn = (ixn: IxnModel, userName: string, isNewIxn?: boolean) => {
   return (dispatch: any) => {
     postIxn(ixn, userName)
       .then(response => fetchSegments(ixn.targetId))
       .then(
-        segments => dispatch(fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments), false)))
+        segments => dispatch(
+          fetchIxns(ixn.targetId, null, null, SegmentDeserializer.deserialize(segments), false, undefined, isNewIxn)))
       .catch((reason) => {
         console.log(reason);
       });
@@ -131,12 +132,12 @@ export const fetchSegments = (targetId: number) => {
 };
 
 export const fetchIxns = (targetId: number, target: TargetModel|null, dateString: string|null, segments: SegmentModel[],
-                          isLocalUpdate: boolean, newSegment?: SegmentModel) => {
+                          isLocalUpdate: boolean, newSegment?: SegmentModel, isNewIxn?: boolean) => {
   return (dispatch: any) => {
     return fetch('/api/ixn/' + targetId)
       .then(response => response.json())
       .then(ixns => dispatch(loadIxnPage(target, dateString, segments, IxnDeserializer.deserialize(ixns), isLocalUpdate,
-                                         newSegment)))
+                                         newSegment, isNewIxn)))
       .catch((reason => {
         console.log(reason);
       }));

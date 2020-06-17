@@ -49,7 +49,8 @@ export const StyledMiniSegmentDivider = styled(MiniSegmentDivider)`
   
   .segment-divider--bar {
     margin-bottom: -4px;
-    width: 464px;
+    margin-left: 2px;
+    width: 459px;
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;

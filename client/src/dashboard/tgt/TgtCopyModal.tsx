@@ -542,7 +542,7 @@ export const StyledTgtCopyModal = styled(TgtCopyModal)`
   
   .tgt-copy--button-container {
     width: 100%;
-    height: 60px;
+    height: 64px;
     display: flex;
     flex-direction: row;
     align-items: center;

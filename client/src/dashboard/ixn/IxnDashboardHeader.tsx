@@ -9,8 +9,10 @@ import AddSegmentIcon from '../../resources/icons/AddSegmentIcon';
 import ExportRollupsIcon from '../../resources/icons/ExportRollupsIcon';
 import TextTooltip, { EeiTooltip } from '../components/TextTooltip';
 
-interface Props {
+interface MyProps {
   exitIxnPage: () => void;
+  exitRollupMode: () => void;
+  rollupMode: boolean;
   target: TargetModel;
   dateString: string;
   disableButtons: boolean;
@@ -25,7 +27,7 @@ interface Props {
   className?: string;
 }
 
-export const IxnDashboardHeader: React.FC<Props> = props => {
+export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
 
   const handleRollupClick = () => {
     if (!props.disableButtons) {
@@ -37,7 +39,8 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
     <div className={classNames(props.className)}>
       <div className={'ixn-dash--header'}>
         <div className={'ixn-dash--header--left-side'}>
-          <div className={'ixn-dash--header--back-button'} onClick={props.exitIxnPage}>
+          <div className={'ixn-dash--header--back-button'}
+               onClick={props.rollupMode ? props.exitRollupMode : props.exitIxnPage}>
             <StyledBackButtonVector/>
           </div>
           <div className={'ixn-dash--header--mgrs-date-container'}>
@@ -75,14 +78,14 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
             leaveDelay={100}
             open={props.displayEeiNotes}
           >
-            <TextTooltip title={'EEI Notes'}>
-            <div
-              className={classNames('ixn-dash--header--button eei-notes-button',
-                                    props.disableButtons || props.disableEeiButton ? 'disabled' : null)}
-              onClick={props.toggleDisplayEeiNotes}
-            >
-              <EeiNotesIcon/>
-            </div>
+            <TextTooltip title={props.displayEeiNotes ? '' : 'EEI Notes'}>
+              <div
+                className={classNames('ixn-dash--header--button eei-notes-button',
+                                      props.disableButtons || props.disableEeiButton ? 'disabled' : null)}
+                onClick={props.toggleDisplayEeiNotes}
+              >
+                <EeiNotesIcon/>
+              </div>
             </TextTooltip>
           </EeiTooltip>
           <TextTooltip title={'Export Rollups'}>

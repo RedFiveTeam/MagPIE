@@ -49,14 +49,14 @@ export const PriorityUndoSnackbarAction = (key: any, data: RfiModel[],
           postPriority(data, rfiNum);
           closeSnackbar(key);
         }}
-        className={className}
+        className={classNames(className, 'undo-button')}
       >
         UNDO
       </Button>
       <IconButton
         onClick={() => closeSnackbar(key)}
         color={'primary'}
-        className={className}
+        className={classNames(className, 'dismiss-snackbar')}
       >
         <SnackbarDismissIcon/>
       </IconButton>

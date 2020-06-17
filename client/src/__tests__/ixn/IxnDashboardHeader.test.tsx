@@ -17,6 +17,8 @@ describe("Interactions Header", () => {
    showRollupSpy = jest.fn();
     subject = shallow(
       <IxnDashboardHeader
+        exitRollupMode={jest.fn}
+        rollupMode={false}
         target={target}
         exitIxnPage={exitSpy}
         dateString={"08/14/2020"}
@@ -45,6 +47,8 @@ describe("Interactions Header", () => {
     subject.find('.rollup-button').simulate('click');
     subject = shallow(
       <IxnDashboardHeader
+        exitRollupMode={jest.fn}
+        rollupMode={false}
         target={target}
         exitIxnPage={exitSpy}
         dateString={"08/14/2020"}

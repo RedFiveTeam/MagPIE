@@ -112,31 +112,6 @@ export const muiTheme = createMuiTheme(
           background: '#000000'
         }
       },
-      MuiDialogContent: {
-        root: {
-          background: theme.color.backgroundInformation
-        }
-      },
-      MuiIconButton: {
-        root: {
-          background: theme.color.backgroundInformation,
-        }
-      },
-      MuiButtonBase: {
-        root: {
-          background: theme.color.backgroundInformation,
-        }
-      },
-      MuiDialogActions: {
-        root: {
-          background: theme.color.backgroundInformation
-        }
-      },
-      MuiCheckbox: {
-        root: {
-          background: theme.color.backgroundInformation
-        }
-      }
     },
     palette: muiPalette,
   });
@@ -321,10 +296,12 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
     modalInputContainer: {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-around',
+      justifyContent: 'flex-start',
       alignItems: 'center',
       width: 917,
       height: 534,
+      overflow: 'auto',
+      padding: '6px 2px',
       background: theme.color.backgroundModal,
       borderTopRightRadius: 8,
       borderTopLeftRadius: 8,

@@ -2,75 +2,75 @@
 
 
 body {
+  overflow: hidden !important;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', sans-serif;
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  monospace;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .no-select {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
 }
 
 .disabled {
-    opacity: 0.5;
-    pointer-events: none;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .smallbord-container {
-    position: absolute;
-    left: 50%;
-    top: 1px;
-    margin-left: -90px;
-    padding-left: 20px;
+  position: absolute;
+  left: 50%;
+  top: 1px;
+  margin-left: -90px;
+  padding-left: 20px;
 }
 
 .menu-item {
-    font-family: Roboto !important;
-    font-style: normal !important;
-    font-weight: bold !important;
-    font-size: 24px !important;
+  font-family: Roboto !important;
+  font-style: normal !important;
+  font-weight: bold !important;
+  font-size: 24px !important;
 }
 
 .menu-item:hover {
-    font-weight: 700 !important;
-    text-shadow: 0 0 2px #FFF !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 2px #FFF !important;
 }
 
 .header-tooltip {
-    z-index: 10001 !important;
+  z-index: 10001 !important;
 }
 
 .MuiPickersCalendarHeader-iconButton {
-    background: none !important;
+  background: none !important;
 }
 
 .MuiPickersCalendarHeader-iconButton:hover {
-    background-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .MuiTooltip-arrow:before {
-    border-color: transparent transparent #3c535b transparent !important;
+  border-color: transparent transparent #3c535b transparent !important;
 }
 
 .dismiss-snackbar {
-    background: #1C455C !important;
+  background: #1C455C !important;
 }
 
 .dismiss-snackbar:hover {
-    background: rgba(30, 152, 229, 0.1) !important;
+  background: rgba(30, 152, 229, 0.1) !important;
 }

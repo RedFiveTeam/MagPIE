@@ -15,6 +15,7 @@ const initState: IxnState = {
   editIxn: -1,
   addNote: -1,
   newSegment: undefined,
+  highlight: -1,
 };
 
 const reducer: Reducer<IxnState> = (state = initState, action: any) => {
@@ -31,6 +32,7 @@ const reducer: Reducer<IxnState> = (state = initState, action: any) => {
         editSegment: -1,
         editIxn: -1,
         addNote: -1,
+        highlight: -1,
       };
     case IxnActionTypes.RELOAD_IXN_PAGE:
       if (!action.isLocalUpdate) {
@@ -56,6 +58,9 @@ const reducer: Reducer<IxnState> = (state = initState, action: any) => {
           editSegment: -1,
           editIxn: -1,
           addNote: -1,
+          highlight: action.isNewIxn ? action.ixns.reduce((prev: any, current: any) => {
+            return (prev!.id > current!.id) ? prev : current;
+          }).id : -1,
         };
       } else {
         return {

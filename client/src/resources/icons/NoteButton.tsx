@@ -32,6 +32,7 @@ export const NoteButton: React.FC<MyProps> = (props: MyProps) => {
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
         >
+          <circle cx="15" cy="15" r="15" fill={theme.color.backgroundInformation}/>
           <path
             d={pathD1}
             fill={theme.color.primaryButton}
@@ -54,7 +55,7 @@ export const NoteButton: React.FC<MyProps> = (props: MyProps) => {
       {props.hasNote ?
         <svg className={'blue-circle'} width="6" height="6" viewBox="0 0 6 6" fill="none"
              xmlns="http://www.w3.org/2000/svg">
-          <circle cx="3" cy="3" r="3" fill="#1E98E5"/>
+          <circle cx="3" cy="3" r="3" fill="#77D6F5"/>
         </svg>
         :
         null
@@ -68,8 +69,7 @@ const Wrapper = styled('div')`
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  
-  
+  margin-left: -4px;
   filter: drop-shadow(0px 2px 4px #000);
   
   :hover {
@@ -82,11 +82,13 @@ const Wrapper = styled('div')`
     border-radius: 15px;
   
   }
+  
   .blue-circle-spacer {
-  width: 8px;
+    width: 3px;
   }
   
   .blue-circle {
-    margin-left: 2px;
+    margin-left: -3px;
+    margin-top: -3px;
   }
 `;

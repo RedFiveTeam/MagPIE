@@ -25,7 +25,7 @@ export const CancelButtonSmall: React.FC<MyProps> = (props) => {
       <svg height='23' width='23' viewBox='0 0 23 23' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path
           d={pathD}
-          fill={theme.color.fontPrimary}/>
+          fill={theme.color.primaryButton}/>
       </svg>
     </Wrapper>
   );
@@ -38,7 +38,7 @@ export const CancelButtonLarge: React.FC<MyProps> = (props) => {
            xmlns='http://www.w3.org/2000/svg'>
         <path
           d={pathD}
-          fill={theme.color.fontPrimary}/>
+          fill={theme.color.primaryButton}/>
       </svg>
     </Wrapper>
   );
