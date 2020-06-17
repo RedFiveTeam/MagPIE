@@ -15,6 +15,7 @@ const initState: RfiState = {
   openRfis: [] as RfiModel[],
   closedRfis: [] as RfiModel[],
   loading: true,
+  viewUserMetricsPage: false
 };
 
 function flipSortKey(sortKey: SortKeyModel, field: Field) {
@@ -77,6 +78,16 @@ const reducer: Reducer<RfiState> = (state = initState, action: any) => {
         ...filterRfis(sortedRfis),
         rfis: sortedRfis,
         sortKey: newSortKey,
+      };
+    case RfiActionTypes.NAVIGATE_USER_METRICS_PAGE:
+      return {
+        ...state,
+        viewUserMetricsPage: true,
+      };
+    case RfiActionTypes.EXIT_USER_METRICS_PAGE:
+      return {
+        ...state,
+        viewUserMetricsPage: false,
       };
     default:
       return {...state};

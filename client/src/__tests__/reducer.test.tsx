@@ -93,6 +93,7 @@ describe('reducer', () => {
                 openRfis: [],
                 closedRfis: [],
                 loading: true,
+                viewUserMetricsPage: false,
               });
   });
 
@@ -120,6 +121,7 @@ describe('reducer', () => {
                 openRfis: sortedRfis,
                 closedRfis: [],
                 loading: true,
+                viewUserMetricsPage: false,
               });
   });
 
@@ -354,7 +356,7 @@ describe('reducer', () => {
                 pendingRfis: [],
                 openRfis: sortedRfis,
                 closedRfis: [],
-                loading: true,
+                loading: true, viewUserMetricsPage: false,
               });
   });
 
@@ -389,6 +391,7 @@ describe('reducer', () => {
         openRfis: sortedRfis,
         closedRfis: [],
         loading: false,
+        viewUserMetricsPage: false,
       });
   });
 
@@ -532,5 +535,27 @@ describe('reducer', () => {
         highlight: false,
       },
     );
+  });
+
+  it('should handle NAVIGATE_USER_METRICS_PAGE and EXIT_USER_METRICS_PAGE', () => {
+    let setupRfis = {
+      type: RfiActionTypes.FETCH_RFI_SUCCESS,
+      rfis: singleStatusRfiList,
+    };
+    let state = rfiReducer(undefined, setupRfis);
+
+    let navToUserMetricsPage = {
+      type: RfiActionTypes.NAVIGATE_USER_METRICS_PAGE,
+    };
+    state = rfiReducer(state, navToUserMetricsPage);
+
+    expect(state.viewUserMetricsPage).toBeTruthy();
+
+    let exitUserMetricsPage = {
+      type: RfiActionTypes.EXIT_USER_METRICS_PAGE,
+    };
+    state = rfiReducer(state, exitUserMetricsPage);
+
+    expect(state.viewUserMetricsPage).toBeFalsy();
   });
 });

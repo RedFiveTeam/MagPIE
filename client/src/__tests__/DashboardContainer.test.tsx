@@ -9,6 +9,7 @@ import { StyledLoginDashboard } from '../dashboard/login/LoginDashboard';
 import RfiModel, { RfiStatus } from '../store/rfi/RfiModel';
 import { ExploitDateModel } from '../store/tgt/ExploitDateModel';
 import { TargetModel, TargetStatus } from '../store/tgt/TargetModel';
+import { StyledUserMetricsDashboard } from '../dashboard/userMetrics/UserMetricsDashboard';
 
 describe('WorkflowContainer', () => {
   const moment = require('moment');
@@ -31,6 +32,7 @@ describe('WorkflowContainer', () => {
         loading={true}
         viewTgtPage={false}
         viewIxnPage={false}
+        viewUserMetricsPage={false}
         rfi={undefined}
         cookie={undefined}
         navigateToIxnPage={jest.fn()}
@@ -43,6 +45,7 @@ describe('WorkflowContainer', () => {
     expect(subject.find(StyledLoginDashboard).exists()).toBeTruthy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledTgtDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledUserMetricsDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledIxnDashboard).exists()).toBeFalsy();
   });
 
@@ -59,6 +62,7 @@ describe('WorkflowContainer', () => {
         loading={true}
         viewTgtPage={false}
         viewIxnPage={false}
+        viewUserMetricsPage={false}
         rfi={undefined}
         cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
         navigateToIxnPage={jest.fn()}
@@ -71,6 +75,7 @@ describe('WorkflowContainer', () => {
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledTgtDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledUserMetricsDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledIxnDashboard).exists()).toBeFalsy();
   });
 
@@ -87,6 +92,7 @@ describe('WorkflowContainer', () => {
         loading={false}
         viewTgtPage={false}
         viewIxnPage={false}
+        viewUserMetricsPage={false}
         rfi={rfi}
         cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
         navigateToIxnPage={jest.fn()}
@@ -100,6 +106,7 @@ describe('WorkflowContainer', () => {
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeTruthy();
     expect(subject.find(StyledTgtDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledUserMetricsDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledIxnDashboard).exists()).toBeFalsy();
   });
 
@@ -116,6 +123,7 @@ describe('WorkflowContainer', () => {
         loading={false}
         viewTgtPage={true}
         viewIxnPage={false}
+        viewUserMetricsPage={false}
         rfi={rfi}
         cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
         navigateToIxnPage={jest.fn()}
@@ -128,6 +136,7 @@ describe('WorkflowContainer', () => {
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledTgtDashboard).exists()).toBeTruthy();
+    expect(subject.find(StyledUserMetricsDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledIxnDashboard).exists()).toBeFalsy();
   });
 
@@ -144,6 +153,7 @@ describe('WorkflowContainer', () => {
         loading={false}
         viewTgtPage={true}
         viewIxnPage={true}
+        viewUserMetricsPage={false}
         rfi={rfi}
         cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
         navigateToIxnPage={jest.fn()}
@@ -156,6 +166,38 @@ describe('WorkflowContainer', () => {
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledTgtDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledUserMetricsDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledIxnDashboard).exists()).toBeTruthy();
+  });
+
+  it('should display the user metrics page when user navigates through metrics button', () => {
+    subject = shallow(
+      <DashboardContainer
+        fetchRfis={jest.fn()}
+        fetchLocalUpdate={jest.fn()}
+        loadTgtPage={jest.fn()}
+        postSiteVisit={() => {
+          return new Promise((resolve, reject) => {
+          });
+        }}
+        loading={false}
+        viewTgtPage={false}
+        viewIxnPage={false}
+        viewUserMetricsPage={true}
+        rfi={undefined}
+        cookie={{userName: 'billy.bob.joe', segments: [], viewState: {rfiId: undefined, tgtId: undefined}}}
+        navigateToIxnPage={jest.fn()}
+        loadSuccess={jest.fn()}
+        tgts={[]}
+        exploitDates={[]}
+        rfis={[]}
+      />);
+
+    expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
+    expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledRfiDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledTgtDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledIxnDashboard).exists()).toBeFalsy();
+    expect(subject.find(StyledUserMetricsDashboard).exists()).toBeTruthy();
   });
 });

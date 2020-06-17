@@ -742,4 +742,26 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     assertEquals(convertDaysToMS(3), metricsService.getEstimatedCompletionTime());
   }
+
+  @Test
+  public void returnsRfisCompletedWithinDateRange() {
+    MetricChangeRfi rfi1open = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(1)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi1close = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(3)), "status", "OPEN", "CLOSED");
+
+    MetricChangeRfi rfi2open = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(2)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi2close = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(5)), "status", "OPEN", "CLOSED");
+
+    MetricChangeRfi rfi3open = new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(4)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi3close = new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(8)), "status", "OPEN", "CLOSED");
+
+    MetricChangeRfi rfi4open = new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(10)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi4close = new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(12)), "status", "OPEN", "CLOSED");
+
+    metricChangeRfiRepository.saveAll(Arrays.asList(rfi1open, rfi1close, rfi2open, rfi2close, rfi3open, rfi3close, rfi4open,
+      rfi4close));
+
+    assertEquals(2,
+      metricsService.getRfisCompleted(new Date(4 * MetricsService.MILLISECONDS_IN_A_DAY),
+        new Date(9 * MetricsService.MILLISECONDS_IN_A_DAY)));
+  }
 }

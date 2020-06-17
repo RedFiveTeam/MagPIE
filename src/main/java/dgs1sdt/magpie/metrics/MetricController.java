@@ -8,14 +8,16 @@ import dgs1sdt.magpie.metrics.clickImport.MetricClickImport;
 import dgs1sdt.magpie.metrics.clickImport.MetricClickImportJson;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
-import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
-import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
+import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
+import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping(MetricController.URI)
@@ -97,6 +99,15 @@ public class MetricController {
   @GetMapping(path = "/percent-rfis-met-ltiov")
   public int getLtiovMetPercentage() {
     return metricsService.getLtiovMetPercentage();
+  }
+
+  // USER METRICS
+  @GetMapping(path = "/rfis-completed")
+  public long getRfisCompleted(
+    @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
+    @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
+    ) {
+    return metricsService.getRfisCompleted(startDate, endDate);
   }
 
   @PostMapping(path = "/site-visit")

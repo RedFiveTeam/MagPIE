@@ -8,7 +8,7 @@ import { ApplicationState } from '../../store';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { fetchLocalUpdate, reorderRfis } from '../../store/rfi/Thunks';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
-import { postRfiPriorityUpdate, reprioritizeRfis, sortRfis } from '../../store/rfi';
+import { loadUserMetricsPage, postRfiPriorityUpdate, reprioritizeRfis, sortRfis } from '../../store/rfi';
 import { StyledRfiDescriptionContainer } from './RfiDescriptionContainer';
 import { loadTgtPage } from '../../store/tgt/Thunks';
 import GetsClickRequestModel from '../../store/metrics/GetsClickRequestModel';
@@ -100,6 +100,10 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
     dispatch(postGetsClick(new GetsClickRequestModel(rfi.status, rfi.getsUrl)));
   };
 
+  const handleLoadUserMetricsPage = () => {
+    dispatch(loadUserMetricsPage());
+  };
+
   const handleRefreshClick = () => {
     setRefreshing(true);
     fetch('/api/rfi/refresh', {method: 'get'});
@@ -152,9 +156,9 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
         </div>
         <div className={'button-container'}>
           <TextTooltip title={'Metrics'}>
-            <a href={'/metrics'} className={'metrics-button'}>
+            <div className={'metrics-button'} onClick={handleLoadUserMetricsPage}>
               <MetricsButtonIcon/>
-            </a>
+            </div>
           </TextTooltip>
           <TextTooltip title={'Refresh from GETS'}>
             <div className={'refresh-button'}

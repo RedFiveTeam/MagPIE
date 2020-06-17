@@ -17,6 +17,7 @@ import { navigateToIxnPage } from '../store/ixn';
 import { TargetModel } from '../store/tgt/TargetModel';
 import { ExploitDateModel } from '../store/tgt/ExploitDateModel';
 import { loadSuccess } from '../store/rfi';
+import { StyledUserMetricsDashboard } from './userMetrics/UserMetricsDashboard';
 
 interface Props {
   fetchRfis: () => void;
@@ -24,6 +25,7 @@ interface Props {
   fetchLocalUpdate: () => void;
   loadTgtPage: (rfi: RfiModel, firstLoad: boolean) => void;
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
+  viewUserMetricsPage: boolean;
   loadSuccess: () => void;
   rfi: RfiModel|undefined;
   rfis: RfiModel[];
@@ -111,6 +113,10 @@ export class DashboardContainer extends React.Component<Props, any> {
       return <StyledTgtDashboard/>;
     }
 
+    if (this.props.viewUserMetricsPage) {
+      return <StyledUserMetricsDashboard/>;
+    }
+
     return (
       <div className={classNames('rm-dashboard', this.props.className)}>
         <StyledRfiDashboard/>
@@ -127,6 +133,7 @@ const mapStateToProps = ({rfiState, tgtState, ixnState}: ApplicationState) => ({
   rfis: rfiState.rfis,
   tgts: tgtState.targets,
   exploitDates: tgtState.exploitDates,
+  viewUserMetricsPage: rfiState.viewUserMetricsPage
 });
 
 const mapDispatchToProps = {

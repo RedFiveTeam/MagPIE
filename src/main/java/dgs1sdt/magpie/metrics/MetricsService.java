@@ -738,4 +738,9 @@ public class MetricsService {
       return null;
     }
   }
+
+  public long getRfisCompleted(Date startDate, Date endDate) {
+    return metricChangeRfiRepository.findStatusChangeToClosedBetweenDateRange(
+      startDate, endDate).size();
+  }
 }

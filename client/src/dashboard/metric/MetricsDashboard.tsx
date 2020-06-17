@@ -5,8 +5,6 @@ import classNames from 'classnames';
 import theme from '../../resources/theme';
 import { fetchMetric } from '../../store/metrics';
 import { Metric, MetricCardData, StyledMetricCard } from './MetricsCard';
-import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
-
 
 interface MyProps {
   className?: string;
@@ -117,9 +115,6 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   return (
     <div className={classNames(props.className, 'metrics-dashboard')}>
       <div className='metrics-header'>
-        <a href={'/'} className={'metrics-header--back-button'}>
-          <StyledBackButtonVector/>
-        </a>
           <div className={'smallbord-container'}>
             <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
           </div>
@@ -257,17 +252,6 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
     background: ${theme.color.backgroundHeader};
     margin-bottom: 17px;
     flex: 0 0 63px;
-  }
-  
-  .metrics-header--back-button {
-    cursor: pointer;
-    padding-left: 18px;
-    width: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    color: ${theme.color.backgroundAction};
   }
   
   .metrics-sidebar {
