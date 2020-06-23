@@ -46,6 +46,7 @@ describe("Segment Region", () => {
       setEditingElement={jest.fn()}
       setSegmentChanged={jest.fn()}
       setIxnChanged={jest.fn()}
+      highlight={-1}
     />
   );
 
