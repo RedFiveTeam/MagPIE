@@ -106,11 +106,20 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
                   className: 'track-narrative-input',
                 }}
               />
-
               :
-              <div className={'narrative-text'}>
-                {trackNarrative}
-              </div>
+              <TextField
+                className={classNames('track-narrative uneditable', classes.modalTextfield)}
+                value={trackNarrative}
+                multiline
+                rows={27}
+                InputProps={{
+                  disableUnderline: true,
+                }}
+                inputProps={{
+                  id: 'track-narrative-' + props.ixn.id,
+                  className: 'track-narrative-input',
+                }}
+              />
             }
           </div>
         </form>
@@ -177,7 +186,7 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     flex-direction: column !important;
     align-items: center !important;
     justify-content: flex-start !important;
-    padding: 4px !important;
+    //padding: 4px !important;
     overflow-y: auto !important;
   }
   
@@ -188,5 +197,13 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
   .cancel {
     padding-top: 3px;
     padding-right: 3px;
+  }
+  
+  .button-section {
+    height: 64px;
+  }
+  
+  .uneditable {
+    pointer-events: none;
   }
 `;

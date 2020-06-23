@@ -195,7 +195,7 @@ Scenario('Should be able to add tgts', (I) => {
   I.waitForText('SDT20-123', 10);
   I.seeElement('.add-tgt-button');
   I.dontSeeElement('.add-tgt-button-disabled');
-  I.see('12QWE1231231231');
+  I.see('12QWE1231231231');  // failed once missing 12QWE1231231231
   I.see('notes');
   I.see('desc');
 });
@@ -318,7 +318,7 @@ Scenario('Should be able to delete and undo delete tgts', (I) => {
   I.click(locate('.rfi-row').at(3));
   I.click('.navigate-to-tgt-button');
 
-  I.dontSeeElement('.tgt-form-box');
+  I.dontSeeElement('.tgt-form-box'); // failed still seeing element (once)
   I.click('.delete-date');
 });
 
