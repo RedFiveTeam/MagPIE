@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import IxnModel, { IxnStatus } from '../../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../../store/ixn/IxnModel';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import classNames from 'classnames';
@@ -21,6 +21,8 @@ import { MiniTrashcanButton } from '../../../resources/icons/MiniTrashcanButton'
 import { NoteButton } from '../../../resources/icons/NoteButton';
 import { CancelButtonLarge } from '../../../resources/icons/CancelButtonSmall';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
+import { ApprovedIcon, RejectedIcon } from '../../../resources/icons/CompletedIcon';
+import { getLastName } from '../../../utils';
 
 interface MyProps {
   ixn: IxnModel;
@@ -36,7 +38,6 @@ interface MyProps {
   setAddNote: (ixnId: number) => void;
   disabled: boolean;
   readOnly: boolean;
-  // willTriggerTrackModal: boolean;
   className?: string;
 }
 
@@ -56,14 +57,6 @@ export const IxnRow: React.FC<MyProps> = props => {
   const [displayNote, setDisplayNote] = useState(false);
   const [ixnToPost, setIxnToPost] = useState(props.ixn);
   const [displayModal, setDisplayModal] = useState(false);
-
-  // useEffect(() => {
-  //   if (props.willTriggerTrackModal && status !== props.ixn.status) {
-  //     setDisplayModal(true);
-  //   } else {
-  //     submitStatusChange(status);
-  //   }
-  // }, [status]);
 
   const handleDeleteClick = () => {
     props.deleteIxn(props.ixn);
@@ -101,7 +94,7 @@ export const IxnRow: React.FC<MyProps> = props => {
   };
 
   const submitStatusChange = (status: IxnStatus) => {
-    let ixn: IxnModel = {...props.ixn, status: status};
+    let ixn: IxnModel = {...props.ixn, status: status, approvalStatus: IxnApprovalStatus.NOT_REVIEWED};
 
     if (
       ( //Going from not having a track ID to having one
@@ -149,6 +142,18 @@ export const IxnRow: React.FC<MyProps> = props => {
     }
   };
 
+  const handleApprove = () => {
+    let ixn: IxnModel = {...props.ixn, approvalStatus: IxnApprovalStatus.APPROVED, checker: props.userName};
+    props.postIxn(ixn);
+  };
+
+  const handleReject = () => {
+    let ixn: IxnModel = {
+      ...props.ixn, approvalStatus: IxnApprovalStatus.REJECTED, status: IxnStatus.IN_PROGRESS, checker: props.userName,
+    };
+    props.postIxn(ixn);
+  };
+
   return (
     <div className={classNames(props.className, 'ixn-row')} id={'ixn-row-' + props.segment.id + '-' + props.ixn.id}>
       <HtmlTooltip
@@ -176,7 +181,10 @@ export const IxnRow: React.FC<MyProps> = props => {
           className={classNames('ixn-row-box', props.disabled ? 'disabled' : null)}
           onDoubleClick={handleDoubleClick}
         >
-          <div className={'ixn-box-left'}>
+          <div
+            className={classNames('ixn-box-left',
+                                  props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ? 'red-border'
+                                    : props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ? 'green-border' : null)}>
             <div className={classNames('ixn-data-cell', 'exploit-analyst', 'name')}>
               {props.ixn.exploitAnalyst ? props.ixn.exploitAnalyst : '\xa0'}
             </div>
@@ -232,16 +240,41 @@ export const IxnRow: React.FC<MyProps> = props => {
                 '\xa0'
               }
             </div>
-            <div className={classNames('ixn-data-cell', 'lead-checker', 'name')}>
-              {props.ixn.leadChecker ? props.ixn.leadChecker : '\xa0'}
-            </div>
-            <div className={classNames('ixn-data-cell', 'final-checker', 'name')}>
-              {props.ixn.finalChecker ? props.ixn.finalChecker : '\xa0'}
+            <div className={classNames('ixn-data-cell', 'checker',
+                                       props.ixn.approvalStatus === IxnApprovalStatus.NOT_REVIEWED ?
+                                         'no-underline'
+                                         :
+                                         null)}>
+              {props.ixn.approvalStatus !== IxnApprovalStatus.NOT_REVIEWED ? getLastName(props.ixn.checker) : null}
+
+              {props.ixn.approvalStatus === IxnApprovalStatus.NOT_REVIEWED && props.ixn.status === IxnStatus.COMPLETED ?
+                <>
+                  <div className={'approve-button approve-reject-button no-select'} onClick={handleApprove}>Approve
+                  </div>
+
+                  <div className={'reject-button approve-reject-button no-select'} onClick={handleReject}>Reject</div>
+                </>
+                :
+                props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ?
+                  <TextTooltip title={'Reject'}>
+                    <div className={'approved-button'} onClick={handleReject}>
+                      <ApprovedIcon/>
+                    </div>
+                  </TextTooltip>
+                  : props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ?
+                  <RejectedIcon/>
+                  :
+                  '\xa0'
+              }
+
             </div>
           </div>
           <DeleteCancelButton
             handleClick={handleNoteClick}
-            className={classNames('ixn-box-right', displayNote ? 'note-button-extended' : null)}
+            className={classNames('ixn-box-right', displayNote ? 'note-button-extended' : null,
+                                  props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ? 'red-border'
+                                    : props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ? 'green-border' : null,
+            )}
             buttonClassName={'note-button'}
             title={!displayNote ? 'Analyst Notes' : 'Hide Notes'}
           >
@@ -293,73 +326,112 @@ export const IxnRow: React.FC<MyProps> = props => {
 };
 
 export const StyledIxnRow = styled(IxnRow)`
-      display: flex;
-      overflow: hidden;
-      flex-direction: column;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  
+  .red-border {
+    border: 2px solid ${theme.color.buttonDoesNotMeetEei};
+  }
+  
+  .green-border {
+    border: 2px solid ${theme.color.complete};
+  }
 
-      .ixn-data-cell {
-      margin: 8px 4px 8px 4px;
-      padding-bottom: 6px;
-      overflow-wrap: break-word;
-      border-bottom: 1px solid #FFFFFF;
+  .ixn-data-cell {
+    margin: 8px 4px 8px 4px;
+    padding-bottom: 6px;
+    overflow-wrap: break-word;
+    border-bottom: 1px solid #FFFFFF;
+  }
+  
+  .track-narrative-button {
+    margin-right: 2px !important;
+  }
+  
+  .approve-reject-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 63px;
+    height: 32px;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    box-shadow: 0 2px 4px #000000;
+    cursor: pointer;
+        
+    :hover {
+      box-shadow: 0 0 6px #FFF;
     }
+  }
+  
+  .approve-button {
+    border: 2px solid ${theme.color.complete};
+  }
+  
+  .reject-button {
+     border: 2px solid ${theme.color.buttonDoesNotMeetEei};
+  }
 
-      .track {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      margin: 0 8px 0 8px;
-    }
+  .track {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 8px 0 8px;
+  }
 
-      .no-underline {
-      border:none;
-    }
+  .no-underline {
+    border:none;
+  }
 
-      .track-narrative-input-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: center;
-      width: 917px;
-      height: 534px;
-      border: 2px aliceblue;
-      border-radius: 5px;
-    }
+  .track-narrative-input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 917px;
+    height: 534px;
+    border: 2px aliceblue;
+    border-radius: 5px;
+  }
 
-      .note-button-extended {
-      width: 58px !important;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      align-self: stretch !important;
-      border-top-right-radius: 8px;
-      padding-left: 4px;
-      margin-right: -8px;
-      background-color: ${theme.color.backgroundInformation};
-      margin-bottom: -8px;
-      z-index: 1;
-      flex-grow: 0 !important;
-    }
+  .note-button-extended {
+    width: 58px !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch !important;
+    border-top-right-radius: 8px;
+    padding-left: 4px;
+    margin-right: -8px;
+    background-color: ${theme.color.backgroundInformation};
+    margin-bottom: -8px;
+    z-index: 1;
+    flex-grow: 0 !important;
+  }
 
-      .note-container {
-      width: 1410px;
-      min-height: 58px;
-      border-radius: 8px 0 8px 8px;
-      background-color: ${theme.color.backgroundInformation};
-      margin: -4px 0 8px 0;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      z-index: 50 !important;
-      position: relative;
-      word-wrap: break-word;
-    }
+  .note-container {
+    width: 1410px;
+    min-height: 58px;
+    border-radius: 8px 0 8px 8px;
+    background-color: ${theme.color.backgroundInformation};
+    margin: -4px 0 8px 0;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 50 !important;
+    position: relative;
+    word-wrap: break-word;
+  }
 
-      .note {
-      margin: 0 !important;
-      width: 100%;
-    }
-      `;
+  .note {
+    margin: 0 !important;
+    width: 100%;
+  }
+`;

@@ -9,7 +9,7 @@ import AddSegmentIcon from '../../resources/icons/AddSegmentIcon';
 import ExportRollupsIcon from '../../resources/icons/ExportRollupsIcon';
 import TextTooltip, { EeiTooltip } from '../components/TextTooltip';
 
-interface Props {
+interface MyProps {
   exitIxnPage: () => void;
   target: TargetModel;
   dateString: string;
@@ -25,7 +25,7 @@ interface Props {
   className?: string;
 }
 
-export const IxnDashboardHeader: React.FC<Props> = props => {
+export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
 
   const handleRollupClick = () => {
     if (!props.disableButtons) {
@@ -67,7 +67,7 @@ export const IxnDashboardHeader: React.FC<Props> = props => {
               <AddSegmentIcon/>
             </div>
           </TextTooltip>
-          <EeiTooltip
+          <EeiTooltip //Why is this a tooltip w/in a tooltip? What's the functionality?
             arrow
             title={props.target.notes}
             placement={'bottom-end'}

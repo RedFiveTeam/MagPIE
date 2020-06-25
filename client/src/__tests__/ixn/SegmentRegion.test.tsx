@@ -4,7 +4,7 @@ import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
 import { SegmentRegion } from '../../dashboard/ixn/table/SegmentRegion';
 import { StyledSegmentDivider } from '../../dashboard/ixn/table/SegmentDivider';
-import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledIxnRow } from '../../dashboard/ixn/table/IxnRow';
 import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 
@@ -15,8 +15,10 @@ describe("Segment Region", () => {
                                             '', '');
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1, moment(0), moment(1));
   let interactions: IxnModel[] = [
-    new IxnModel(1, 1, 1, 1, 1, 'Bob', moment(0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', '', ''),
-    new IxnModel(2, 1, 1, 1, 1, 'Bob', moment(0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', '', ''),
+    new IxnModel(1, 1, 1, 1, 1, 'Bob', moment(
+      0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED),
+    new IxnModel(2, 1, 1, 1, 1, 'Bob', moment(
+      0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED),
   ];
   subject = shallow(
     <SegmentRegion

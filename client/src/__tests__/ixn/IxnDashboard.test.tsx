@@ -11,7 +11,7 @@ import { StyledTableHeader } from '../../dashboard/components/header/TableHeader
 import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 import { SnackbarProvider } from 'notistack';
 import { Cookies, CookiesProvider } from 'react-cookie';
-import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledMiniSegmentRegion } from '../../dashboard/ixn/rollup/MiniSegmentRegion';
 import { StyledMiniSegmentDivider } from '../../dashboard/ixn/rollup/MiniSegmentDivider';
 import { StyledMiniIxnRow } from '../../dashboard/ixn/rollup/MiniIxnRow';
@@ -153,8 +153,8 @@ describe('Interactions Dashboard', () => {
         target: target,
         dateString: '11/11/2011',
         segments: [new SegmentModel(1, 1, 1, 1, moment(12345), moment(56789))],
-        ixns: [new IxnModel(1, 1, 1, 1, 1, 'Billy Bob Joe', moment(23456), 'Things happened', '', '',
-                            IxnStatus.NOT_STARTED, '', '', '', '')],
+        ixns: [new IxnModel(1, 1, 1, 1, 1, 'Billy Bob Joe', moment(
+          23456), 'Things happened', '', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED)],
       },
     };
 

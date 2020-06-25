@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
-import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 import { StyledMiniSegmentDivider } from '../../dashboard/ixn/rollup/MiniSegmentDivider';
 import { StyledMiniIxnRow } from '../../dashboard/ixn/rollup/MiniIxnRow';
@@ -13,8 +13,10 @@ describe("Mini Segment Region", () => {
   let subject: ShallowWrapper;
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1, moment(0), moment(1));
   let interactions: IxnModel[] = [
-    new IxnModel(1, 1, 1, 1, 1, 'Bob', moment(0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', '', ''),
-    new IxnModel(2, 1, 1, 1, 1, 'Bob', moment(0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', '', ''),
+    new IxnModel(1, 1, 1, 1, 1, 'Bob', moment(
+      0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED),
+    new IxnModel(2, 1, 1, 1, 1, 'Bob', moment(
+      0), 'Bob did stuff', '123-123', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED),
   ];
   subject = shallow(
     <MiniSegmentRegion

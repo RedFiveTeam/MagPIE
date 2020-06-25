@@ -51,17 +51,17 @@ public class MetricChangeIxn implements TimestampMetric {
       case "status":
         newData = newIxn.getStatus();
         break;
-      case "lead_checker":
-        newData = newIxn.getLeadChecker();
-        break;
-      case "final_checker":
-        newData = newIxn.getFinalChecker();
+      case "checker":
+        newData = newIxn.getChecker();
         break;
       case "track_narrative":
         newData = newIxn.getTrackNarrative();
         break;
       case "note":
         newData = newIxn.getNote();
+        break;
+      case "approval_status":
+        newData = newIxn.getApprovalStatus();
         break;
       default:
         throw new Exception();

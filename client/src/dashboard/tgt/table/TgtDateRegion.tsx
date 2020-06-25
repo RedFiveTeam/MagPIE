@@ -12,7 +12,7 @@ import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../../store/tgt/ExploitDatePostModel';
 import classNames from 'classnames';
 
-interface Props {
+interface MyProps {
   rfi: RfiModel;
   addDate: boolean;
   setAddDate: (addDate: boolean) => void;
@@ -35,7 +35,7 @@ interface Props {
   className?: string;
 }
 
-export const TgtDateRegion: React.FC<Props> = props => {
+export const TgtDateRegion: React.FC<MyProps> = (props) => {
 
   function printTargets() {
     return props.targets.map(

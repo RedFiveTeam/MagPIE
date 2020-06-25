@@ -8,7 +8,7 @@ interface DeleteButtonProps {
   className?: string;
 }
 
-export const DeleteCancelButton: React.FC<DeleteButtonProps> = props => {
+export const DeleteCancelButton: React.FC<DeleteButtonProps> = (props) => {
 
   return (
     <div className={props.className}

@@ -12,7 +12,7 @@ import {
   setEditSegment, updateIxn, updateSegment,
 } from '../../store/ixn';
 import theme, { rowStyles } from '../../resources/theme';
-import IxnModel from '../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus } from '../../store/ixn/IxnModel';
 import { useCookies } from 'react-cookie';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { useSnackbar } from 'notistack';
@@ -31,333 +31,340 @@ interface MyProps {
 }
 
 export const IxnDashboard: React.FC<MyProps> = (props) => {
-  const moment = require('moment');
+    const moment = require('moment');
 
-  const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
-  const dateString: string = useSelector(({ixnState}: ApplicationState) => ixnState.dateString);
-  const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
-  const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
-  const autofocus: boolean = useSelector(({ixnState}: ApplicationState) => ixnState.autofocus);
-  const readOnly = useSelector(({tgtState}: ApplicationState) => tgtState.rfi).status === RfiStatus.CLOSED;
-  const addSegment = useSelector(({ixnState}: ApplicationState) => ixnState.addSegment);
-  const editSegment = useSelector(({ixnState}: ApplicationState) => ixnState.editSegment);
-  const editIxn = useSelector(({ixnState}: ApplicationState) => ixnState.editIxn);
-  const addNote = useSelector(({ixnState}: ApplicationState) => ixnState.addNote);
-  const newSegment = useSelector(({ixnState}: ApplicationState) => ixnState.newSegment);
-  const dispatch = useDispatch();
+    const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
+    const dateString: string = useSelector(({ixnState}: ApplicationState) => ixnState.dateString);
+    const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
+    const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
+    const autofocus: boolean = useSelector(({ixnState}: ApplicationState) => ixnState.autofocus);
+    const readOnly = useSelector(({tgtState}: ApplicationState) => tgtState.rfi).status === RfiStatus.CLOSED;
+    const addSegment = useSelector(({ixnState}: ApplicationState) => ixnState.addSegment);
+    const editSegment = useSelector(({ixnState}: ApplicationState) => ixnState.editSegment);
+    const editIxn = useSelector(({ixnState}: ApplicationState) => ixnState.editIxn);
+    const addNote = useSelector(({ixnState}: ApplicationState) => ixnState.addNote);
+    const newSegment = useSelector(({ixnState}: ApplicationState) => ixnState.newSegment);
+    const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (newSegment) {
-      enqueueSnackbar(`${newSegment.startTime.format('HH:mm:ss')} - ${newSegment.endTime.format('HH:mm:ss')} Created`, {
-        action: (key) =>
-          UndoSnackbarAction(key, newSegment, handleDeleteSegmentSkipSnackbar, closeSnackbar, classes.snackbarButton),
+    useEffect(() => {
+      if (newSegment) {
+        enqueueSnackbar(`${newSegment.startTime.format('HH:mm:ss')} - ${newSegment.endTime.format('HH:mm:ss')} Created`, {
+          action: (key) =>
+            UndoSnackbarAction(key, newSegment, handleDeleteSegmentSkipSnackbar, closeSnackbar, classes.snackbarButton),
+          variant: 'info',
+        });
+      }
+    }, [newSegment]);
+
+    enum Navigate {
+      BACK,
+      CANCEL_ADD_SEGMENT,
+      CANCEL_EDIT_SEGMENT,
+      CANCEL_EDIT_IXN
+    }
+
+    const addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0 || readOnly;
+
+    const [tgtAnalyst, setTgtAnalyst] = useState('');
+    const [rollupMode, setRollupMode] = useState(false);
+    const [displayEeiNotes, setDisplayEeiNotes] = useState(false);
+
+    const [navigate, setNavigate] = useState(Navigate.BACK as TargetModel|Navigate);
+    const [navigating, setNavigating] = useState(false);
+    const [editingElement, setEditingElement] = useState(null as Element|null);
+    const [isSegmentChanged, setIsSegmentChanged] = useState(false);
+    const [isIxnChanged, setIsIxnChanged] = useState(false);
+
+    let isNavigating = false;
+
+    const [cookies, setCookies] = useCookies(['magpie']);
+    let cookie: Cookie = cookies.magpie;
+
+    const rowClasses = rowStyles();
+
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const classes = rowStyles();
+
+    const displaySnackbar = (message: string) => {
+      enqueueSnackbar(message, {
+        action: (key) => DismissSnackbarAction(key, closeSnackbar, rowClasses.snackbarButton),
         variant: 'info',
       });
-    }
-  }, [newSegment]);
+    };
 
-  enum Navigate {
-    BACK,
-    CANCEL_ADD_SEGMENT,
-    CANCEL_EDIT_SEGMENT,
-    CANCEL_EDIT_IXN
-  }
-
-  const addingOrEditing = addSegment || editSegment > 0 || editIxn > 0 || addNote > 0 || readOnly;
-
-  const [tgtAnalyst, setTgtAnalyst] = useState('');
-  const [rollupMode, setRollupMode] = useState(false);
-  const [displayEeiNotes, setDisplayEeiNotes] = useState(false);
-
-  const [navigate, setNavigate] = useState(Navigate.BACK as TargetModel|Navigate);
-  const [navigating, setNavigating] = useState(false);
-  const [editingElement, setEditingElement] = useState(null as Element|null);
-  const [isSegmentChanged, setIsSegmentChanged] = useState(false);
-  const [isIxnChanged, setIsIxnChanged] = useState(false);
-
-  let isNavigating = false;
-
-  const [cookies, setCookies] = useCookies(['magpie']);
-  let cookie: Cookie = cookies.magpie;
-
-  const rowClasses = rowStyles();
-
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-  const classes = rowStyles();
-
-  const displaySnackbar = (message: string) => {
-    enqueueSnackbar(message, {
-      action: (key) => DismissSnackbarAction(key, closeSnackbar, rowClasses.snackbarButton),
-      variant: 'info',
-    });
-  };
-
-  const handleCollapse = (segmentId: number) => {
-    let segments = cookie.segments;
-    if (segments.includes(segmentId)) {
-      segments.splice(segments.indexOf(segmentId), 1);
-    } else {
-      segments.push(segmentId);
-    }
-    setCookies('magpie', {...cookie, segments: segments});
-  };
-
-  const handleExitIxnPage = () => {
-    if (editIxn > 0 || (editSegment > 0 && isSegmentChanged) ||
-      (addSegment && (segments.length > 0 || isSegmentChanged))) {
-      setNavigating(true);
-      isNavigating = true;
-      setNavigate(Navigate.BACK);
-    } else {
-      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
-      dispatch(exitIxnPage());
-    }
-  };
-
-  const handleNavigate = () => {
-    if (navigate === Navigate.BACK) {
-      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
-      dispatch(exitIxnPage());
-    } else if (navigate === Navigate.CANCEL_ADD_SEGMENT) {
-      dispatch(setAddSegment(false));
-    } else if (navigate === Navigate.CANCEL_EDIT_IXN) {
-      dispatch(setEditIxn(-1));
-    } else if (navigate === Navigate.CANCEL_EDIT_SEGMENT) {
-      dispatch(setEditSegment(-1));
-    } else {
-      setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: navigate.id}});
-      dispatch(navigateToIxnPage(navigate, dateString));
-    }
-  };
-
-  const handleSelectTarget = (newTarget: TargetModel, dateString: string) => {
-    if (editIxn > 0 || (editSegment > 0 && isSegmentChanged) ||
-      (addSegment && (segments.length > 0 || isSegmentChanged))) {
-      setNavigating(true);
-      isNavigating = true;
-      setNavigate(newTarget);
-    } else {
-      setDisplayEeiNotes(false);
-      setTimeout(() => {
-        dispatch(navigateToIxnPage(newTarget, dateString));
-        setCookies('magpie', {...cookie, viewState: {rfiId: newTarget.rfiId, tgtId: newTarget.id}});
-      }, 100);
-    }
-  };
-
-  const handleShowRollup = () => {
-    setRollupMode(true);
-    postRollupClick(new RollupClickModel(target.id, cookie.userName));
-  };
-
-  const handleExitRollupMode = () => {
-    setRollupMode(false);
-  };
-
-  const handleSaveRollup = (mode: RollupMode, rollup: string) => {
-    setRollupMode(false);
-    let newTarget: TargetPostModel;
-    if (mode === RollupMode.ALL_CALLOUTS) {
-      newTarget = {...convertToPostModel(target), allCallouts: rollup};
-    } else {
-      newTarget = {...convertToPostModel(target), hourlyRollup: rollup};
-    }
-    dispatch(saveRollup(newTarget, dateString, cookie.userName));
-    displaySnackbar('Rollup Saved');
-  };
-
-  const handleDisplaySnackbar = (message: string) => {
-    displaySnackbar(message);
-  };
-
-  const handleSetAddSegment = () => {
-    if (!addingOrEditing) {
-      dispatch(setAddSegment(true));
-    } else if (isSegmentChanged) {
-      console.log('segment changed');
-      setNavigating(true);
-      isNavigating = true;
-      setNavigate(Navigate.CANCEL_ADD_SEGMENT);
-    } else {
-      dispatch(setAddSegment(false));
-    }
-  };
-
-  const handleEditSegment = (segmentId: number) => {
-    if (!addingOrEditing) {
-      dispatch(setEditSegment(segmentId));
-    } else if (segmentId < 0) {
-      if (isSegmentChanged) {
-        setNavigating(true);
-        isNavigating = true;
-        setNavigate(Navigate.CANCEL_EDIT_SEGMENT);
+    const handleCollapse = (segmentId: number) => {
+      let segments = cookie.segments;
+      if (segments.includes(segmentId)) {
+        segments.splice(segments.indexOf(segmentId), 1);
       } else {
-        dispatch(setEditSegment(-1));
+        segments.push(segmentId);
       }
-    }
-  };
+      setCookies('magpie', {...cookie, segments: segments});
+    };
 
-  const handleEditIxn = (ixnId: number) => {
-    if (!addingOrEditing) {
-      dispatch(setEditIxn(ixnId));
-    } else if (ixnId < 0) {
-      if (isIxnChanged) {
+    const handleExitIxnPage = () => {
+      if (editIxn > 0 || (editSegment > 0 && isSegmentChanged) ||
+        (addSegment && (segments.length > 0 || isSegmentChanged))) {
         setNavigating(true);
         isNavigating = true;
-        setNavigate(Navigate.CANCEL_EDIT_IXN);
+        setNavigate(Navigate.BACK);
       } else {
+        setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
+        dispatch(exitIxnPage());
+      }
+    };
+
+    const handleNavigate = () => {
+      if (navigate === Navigate.BACK) {
+        setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
+        dispatch(exitIxnPage());
+      } else if (navigate === Navigate.CANCEL_ADD_SEGMENT) {
+        dispatch(setAddSegment(false));
+      } else if (navigate === Navigate.CANCEL_EDIT_IXN) {
         dispatch(setEditIxn(-1));
+      } else if (navigate === Navigate.CANCEL_EDIT_SEGMENT) {
+        dispatch(setEditSegment(-1));
+      } else {
+        setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: navigate.id}});
+        dispatch(navigateToIxnPage(navigate, dateString));
       }
-    }
-  };
+    };
 
-  const handleAddNote = (ixnId: number) => {
-    if (!addingOrEditing) {
-      dispatch(setAddNote(ixnId));
-    } else if (ixnId < 0) {
-      dispatch(setAddNote(-1));
-    }
-  };
+    const handleSelectTarget = (newTarget: TargetModel, dateString: string) => {
+      if (editIxn > 0 || (editSegment > 0 && isSegmentChanged) ||
+        (addSegment && (segments.length > 0 || isSegmentChanged))) {
+        setNavigating(true);
+        isNavigating = true;
+        setNavigate(newTarget);
+      } else {
+        setDisplayEeiNotes(false);
+        setTimeout(() => {
+          dispatch(navigateToIxnPage(newTarget, dateString));
+          setCookies('magpie', {...cookie, viewState: {rfiId: newTarget.rfiId, tgtId: newTarget.id}});
+        }, 100);
+      }
+    };
 
-  const handlePostIxn = (ixn: IxnModel) => {
-    if (!navigating) {
-      let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
-      if (!readOnly) {
-        if (addNote > 0 && oldIxn !== undefined) {
-          enqueueSnackbar('Analyst Note Saved.', {
-            action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
-                                                classes.snackbarButton),
-            variant: 'info',
-          });
+    const handleShowRollup = () => {
+      setRollupMode(true);
+      postRollupClick(new RollupClickModel(target.id, cookie.userName));
+    };
+
+    const handleExitRollupMode = () => {
+      setRollupMode(false);
+    };
+
+    const handleSaveRollup = (mode: RollupMode, rollup: string) => {
+      setRollupMode(false);
+      let newTarget: TargetPostModel;
+      if (mode === RollupMode.ALL_CALLOUTS) {
+        newTarget = {...convertToPostModel(target), allCallouts: rollup};
+      } else {
+        newTarget = {...convertToPostModel(target), hourlyRollup: rollup};
+      }
+      dispatch(saveRollup(newTarget, dateString, cookie.userName));
+      displaySnackbar('Rollup Saved');
+    };
+
+    const handleDisplaySnackbar = (message: string) => {
+      displaySnackbar(message);
+    };
+
+    const handleSetAddSegment = () => {
+      if (!addingOrEditing) {
+        dispatch(setAddSegment(true));
+      } else if (isSegmentChanged) {
+        console.log('segment changed');
+        setNavigating(true);
+        isNavigating = true;
+        setNavigate(Navigate.CANCEL_ADD_SEGMENT);
+      } else {
+        dispatch(setAddSegment(false));
+      }
+    };
+
+    const handleEditSegment = (segmentId: number) => {
+      if (!addingOrEditing) {
+        dispatch(setEditSegment(segmentId));
+      } else if (segmentId < 0) {
+        if (isSegmentChanged) {
+          setNavigating(true);
+          isNavigating = true;
+          setNavigate(Navigate.CANCEL_EDIT_SEGMENT);
+        } else {
+          dispatch(setEditSegment(-1));
         }
-        dispatch(updateIxn(ixn, cookie.userName));
       }
-    }
-  };
+    };
 
-  const handlePostSegment = (segment: SegmentModel) => {
-    if (!isNavigating && !navigating && !readOnly) {
-      dispatch(updateSegment(segment));
-    }
-  };
+    const handleEditIxn = (ixnId: number) => {
+      if (!addingOrEditing) {
+        dispatch(setEditIxn(ixnId));
+      } else if (ixnId < 0) {
+        if (isIxnChanged) {
+          setNavigating(true);
+          isNavigating = true;
+          setNavigate(Navigate.CANCEL_EDIT_IXN);
+        } else {
+          dispatch(setEditIxn(-1));
+        }
+      }
+    };
 
-  const handlePostIxnSkipSnackbar = (ixn: IxnModel) => {
-    dispatch(updateIxn(ixn, cookie.userName));
-  };
+    const handleAddNote = (ixnId: number) => {
+      if (!addingOrEditing) {
+        dispatch(setAddNote(ixnId));
+      } else if (ixnId < 0) {
+        dispatch(setAddNote(-1));
+      }
+    };
 
-  const handleDeleteIxn = (ixn: IxnModel) => {
-    if (!readOnly) {
-      enqueueSnackbar('Interaction deleted', {
-        action: (key) =>
-          UndoSnackbarAction(key, ixn, handlePostIxn, closeSnackbar, classes.snackbarButton),
-        variant: 'info',
-      });
-      dispatch(deleteIxn(ixn));
-    }
-  };
+    const handlePostIxn = (ixn: IxnModel) => {
+      if (!navigating) {
+        let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
+        if (!readOnly) {
+          if (addNote > 0 && oldIxn !== undefined) {
+            enqueueSnackbar('Analyst Note Saved.', {
+              action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
+                                                  classes.snackbarButton),
+              variant: 'info',
+            });
+          }
+          dispatch(updateIxn(ixn, cookie.userName));
+          if (ixn.approvalStatus === IxnApprovalStatus.REJECTED && oldIxn && oldIxn.approvalStatus !==
+            IxnApprovalStatus.REJECTED) {
+            setTimeout(() => {
+              handleAddNote(ixn.id!);
+            }, 500);
+          }
+        }
+      }
+    };
 
-  const handleDeleteSegment = (segment: SegmentModel) => {
-    if (!readOnly) {
-      enqueueSnackbar('You deleted ' + segment.startTime.format('HH:mm:ss') + 'Z-' +
-                        segment.endTime.format('HH:mm:ss') + 'Z', {
-                        action: (key) => UndoSnackbarAction(key, segment, handlePostSegment, closeSnackbar,
-                                                            classes.snackbarButton),
-                        variant: 'info',
-                      });
-      dispatch(deleteSegment(segment));
-    }
-  };
+    const handlePostSegment = (segment: SegmentModel) => {
+      if (!isNavigating && !navigating && !readOnly) {
+        dispatch(updateSegment(segment));
+      }
+    };
 
-  const handleDeleteSegmentSkipSnackbar = (segment: SegmentModel) => {
-    if (!readOnly) {
-      dispatch(deleteSegment(segment));
-    }
-  };
+    const handlePostIxnSkipSnackbar = (ixn: IxnModel) => {
+      dispatch(updateIxn(ixn, cookie.userName));
+    };
 
-  const handleToggleDisplayEeiNotes = () => {
-    setDisplayEeiNotes(!displayEeiNotes);
-  };
+    const handleDeleteIxn = (ixn: IxnModel) => {
+      if (!readOnly) {
+        enqueueSnackbar('Interaction deleted', {
+          action: (key) =>
+            UndoSnackbarAction(key, ixn, handlePostIxn, closeSnackbar, classes.snackbarButton),
+          variant: 'info',
+        });
+        dispatch(deleteIxn(ixn));
+      }
+    };
 
-  const isAddSegmentDisabled = segments.length < 1 || addingOrEditing;
-  const element = editIxn > 0 ? 'callout' : 'segment';
+    const handleDeleteSegment = (segment: SegmentModel) => {
+      if (!readOnly) {
+        enqueueSnackbar('You deleted ' + segment.startTime.format('HH:mm:ss') + 'Z-' +
+                          segment.endTime.format('HH:mm:ss') + 'Z', {
+                          action: (key) => UndoSnackbarAction(key, segment, handlePostSegment, closeSnackbar,
+                                                              classes.snackbarButton),
+                          variant: 'info',
+                        });
+        dispatch(deleteSegment(segment));
+      }
+    };
 
-  return (
-    <div className={classNames(props.className)}>
-      <StyledIxnDashboardHeader
-        target={target}
-        dateString={dateString}
-        exitIxnPage={handleExitIxnPage}
-        disableButtons={addingOrEditing}
-        disableRollupButton={rollupMode || ixns.length === 0}
-        disableEeiButton={target.notes === ''}
-        disableAddSegment={isAddSegmentDisabled}
-        showRollup={handleShowRollup}
-        toggleDisplayEeiNotes={handleToggleDisplayEeiNotes}
-        displayEeiNotes={displayEeiNotes}
-        displaySegmentHelperText={segments.length === 1}
-        setAddSegment={handleSetAddSegment}
-      />
-      {
-        rollupMode ?
-          <StyledRollupView
-            target={target}
-            dateString={moment(dateString, 'MM/DD/YYYY').format('DDMMMYY').toUpperCase()}
-            segments={segments}
-            ixns={ixns}
-            exitRollupMode={handleExitRollupMode}
-            saveRollup={handleSaveRollup}
-            displaySnackbar={handleDisplaySnackbar}
-            userName={cookie.userName}
-            readOnly={readOnly}
+    const handleDeleteSegmentSkipSnackbar = (segment: SegmentModel) => {
+      if (!readOnly) {
+        dispatch(deleteSegment(segment));
+      }
+    };
+
+    const handleToggleDisplayEeiNotes = () => {
+      setDisplayEeiNotes(!displayEeiNotes);
+    };
+
+    const isAddSegmentDisabled = segments.length < 1 || addingOrEditing;
+    const element = editIxn > 0 ? 'callout' : 'segment';
+
+    return (
+      <div className={classNames(props.className)}>
+        <StyledIxnDashboardHeader
+          target={target}
+          dateString={dateString}
+          exitIxnPage={handleExitIxnPage}
+          disableButtons={addingOrEditing}
+          disableRollupButton={rollupMode || ixns.length === 0}
+          disableEeiButton={target.notes === ''}
+          disableAddSegment={isAddSegmentDisabled}
+          showRollup={handleShowRollup}
+          toggleDisplayEeiNotes={handleToggleDisplayEeiNotes}
+          displayEeiNotes={displayEeiNotes}
+          displaySegmentHelperText={segments.length === 1}
+          setAddSegment={handleSetAddSegment}
+        />
+        {
+          rollupMode ?
+            <StyledRollupView
+              target={target}
+              dateString={moment(dateString, 'MM/DD/YYYY').format('DDMMMYY').toUpperCase()}
+              segments={segments}
+              ixns={ixns}
+              exitRollupMode={handleExitRollupMode}
+              saveRollup={handleSaveRollup}
+              displaySnackbar={handleDisplaySnackbar}
+              userName={cookie.userName}
+              readOnly={readOnly}
+            />
+            :
+            <IxnTableView
+              target={target}
+              segments={segments}
+              ixns={ixns}
+              autofocus={autofocus}
+              tgtAnalyst={tgtAnalyst}
+              setTgtAnalyst={setTgtAnalyst}
+              collapsedSegments={cookie.segments}
+              collapse={handleCollapse}
+              userName={cookie.userName}
+              dateString={moment(dateString, 'MM/DD/YYYY').format('DDMMMYY').toUpperCase()}
+              readOnly={readOnly}
+              addSegment={addSegment}
+              editSegment={editSegment}
+              editIxn={editIxn}
+              addNote={addNote}
+              addingOrEditing={addingOrEditing}
+              setEditingElement={setEditingElement}
+              selectTarget={handleSelectTarget}
+              handleSetAddSegment={handleSetAddSegment}
+              handleEditSegment={handleEditSegment}
+              handleEditIxn={handleEditIxn}
+              handleAddNote={handleAddNote}
+              handlePostSegment={handlePostSegment}
+              handlePostIxn={handlePostIxn}
+              handleDeleteIxn={handleDeleteIxn}
+              handleDeleteSegment={handleDeleteSegment}
+              setSegmentChanged={setIsSegmentChanged}
+              setIxnChanged={setIsIxnChanged}
+            />
+        }
+        {navigating ?
+          <ConfirmationModal
+            message={`You haven't saved the ${element} you were editing.`}
+            display={true}
+            setDisplay={() => {
+              setNavigating(false);
+              isNavigating = false;
+            }}
+            handleYes={handleNavigate}
+            focusedElement={editingElement}
           />
           :
-          <IxnTableView
-            target={target}
-            segments={segments}
-            ixns={ixns}
-            autofocus={autofocus}
-            tgtAnalyst={tgtAnalyst}
-            setTgtAnalyst={setTgtAnalyst}
-            collapsedSegments={cookie.segments}
-            collapse={handleCollapse}
-            userName={cookie.userName}
-            dateString={moment(dateString, 'MM/DD/YYYY').format('DDMMMYY').toUpperCase()}
-            readOnly={readOnly}
-            addSegment={addSegment}
-            editSegment={editSegment}
-            editIxn={editIxn}
-            addNote={addNote}
-            addingOrEditing={addingOrEditing}
-            setEditingElement={setEditingElement}
-            selectTarget={handleSelectTarget}
-            handleSetAddSegment={handleSetAddSegment}
-            handleEditSegment={handleEditSegment}
-            handleEditIxn={handleEditIxn}
-            handleAddNote={handleAddNote}
-            handlePostSegment={handlePostSegment}
-            handlePostIxn={handlePostIxn}
-            handleDeleteIxn={handleDeleteIxn}
-            handleDeleteSegment={handleDeleteSegment}
-            setSegmentChanged={setIsSegmentChanged}
-            setIxnChanged={setIsIxnChanged}
-          />
-      }
-      {navigating ?
-        <ConfirmationModal
-          message={`You haven't saved the ${element} you were editing.`}
-          display={true}
-          setDisplay={() => {
-            setNavigating(false);
-            isNavigating = false;
-          }}
-          handleYes={handleNavigate}
-          focusedElement={editingElement}
-        />
-        :
-        null}
-    </div>
-  );
-};
+          null}
+      </div>
+    );
+  }
+;
 
 export const StyledIxnDashboard = styled(IxnDashboard)`
   font-size: ${theme.font.sizeRow};
@@ -408,6 +415,10 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     width: 146px;
   }
   
+  .checker {
+    width: 136px !important;
+  }
+  
   .header-cell--checker {
     width: 146px;
   }
@@ -421,11 +432,11 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .header-cell--callout {
-    width: 410px;
+    width: 574px;
   }
 
   .activity {
-    width: 406px;
+    width: 570px;
   }
   
   .header-cell--id {
@@ -462,6 +473,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: flex-start;
     font-weight: normal;
     margin-bottom: 9px;
     align-self: flex-start;
@@ -474,7 +486,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 62px;
     width: 1348px;
     padding-left: 2px;
@@ -522,5 +534,12 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     justify-content: flex-end;
     align-items: center;
     text-align: center;
+  }
+   
+  .checker {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 `;

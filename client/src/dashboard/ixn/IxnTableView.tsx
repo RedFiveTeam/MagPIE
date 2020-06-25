@@ -88,7 +88,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
         {props.segments.length > 0 ?
           <StyledTableHeader
             headers={['Exploit Analyst', 'Time', 'Callout', 'Track Analyst', 'Track Status', 'Track ID',
-              'Lead Checker', 'Final Checker', 'delete-spacer']}
+              'Checker', 'delete-spacer']}
           />
           :
           null

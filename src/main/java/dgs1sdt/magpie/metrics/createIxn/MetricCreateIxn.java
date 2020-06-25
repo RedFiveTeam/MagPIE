@@ -30,8 +30,7 @@ public class MetricCreateIxn implements TimestampMetric {
   private String activity;
   private String track;
   private String trackAnalyst;
-  private String leadChecker;
-  private String finalChecker;
+  private String checker;
 
   private Timestamp timestamp;
   private String userName;
@@ -46,8 +45,7 @@ public class MetricCreateIxn implements TimestampMetric {
     this.time = ixn.getTime();
     this.activity = ixn.getActivity();
     this.trackAnalyst = ixn.getTrackAnalyst();
-    this.leadChecker = ixn.getLeadChecker();
-    this.finalChecker = ixn.getFinalChecker();
+    this.checker = ixn.getChecker();
     this.timestamp = new Timestamp(new Date().getTime());
     this.userName = userName.toLowerCase();
   }

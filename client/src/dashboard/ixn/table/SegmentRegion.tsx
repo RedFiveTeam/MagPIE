@@ -45,70 +45,74 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
   const [adding, setAdding] = useState(false);
 
   const printRows = () => {
-    let ixns: (IxnModel | null)[] = Array.from(props.ixns);
-    if (!ixns.includes(null) && !props.readOnly)
-      ixns.push(null); //input row--mapped to force a re-render
+    let ixns: (IxnModel|null)[] = Array.from(props.ixns);
+    if (!ixns.includes(null) && !props.readOnly) {
+      ixns.push(null);
+    } //input row--mapped to force a re-render
 
-    return ixns.map((ixn: IxnModel | null, index: number) =>
+    return ixns.map((ixn: IxnModel|null, index: number) =>
                       (ixn === null || props.editIxn === ixn.id || props.addNote === ixn.id) ?
-        <StyledIxnInputRow
-          ixn={ixn}
-          key={index}
-          segment={props.segment}
-          postIxn={props.postIxn}
-          deleteIxn={props.deleteIxn}
-          tgtAnalyst={props.tgtAnalyst}
-          setTgtAnalyst={props.setTgtAnalyst}
-          setEditIxn={props.setEditIxn}
-          autofocus={props.autofocus}
-          setAdding={setAdding}
-          disabled={(ixn === null && (props.addNote > 0 || props.editIxn > 0)) || props.readOnly}
-          addingNote={ixn !== null && props.addNote === ixn.id}
-          setAddNote={props.setAddNote}
-          setEditingElement={props.setEditingElement}
-          setIxnChanged={props.setIxnChanged}
-          />
-        :
-        <StyledIxnRow
-          ixn={ixn}
-          key={index}
-          segment={props.segment}
-          postIxn={props.postIxn}
-          deleteIxn={props.deleteIxn}
-          tgtAnalyst={props.tgtAnalyst}
-          setTgtAnalyst={props.setTgtAnalyst}
-          setEditIxn={props.setEditIxn}
-          addingOrEditing={props.addingOrEditing}
-          userName={props.userName}
-          dateString={props.dateString}
-          setAddNote={props.setAddNote}
-          disabled={props.addNote > 0 || props.editIxn > 0}
-          readOnly={props.readOnly}
-        />,
+                        <StyledIxnInputRow
+                          ixn={ixn}
+                          key={index}
+                          segment={props.segment}
+                          postIxn={props.postIxn}
+                          deleteIxn={props.deleteIxn}
+                          tgtAnalyst={props.tgtAnalyst}
+                          setTgtAnalyst={props.setTgtAnalyst}
+                          setEditIxn={props.setEditIxn}
+                          autofocus={props.autofocus}
+                          setAdding={setAdding}
+                          disabled={(ixn === null && (props.addNote > 0 || props.editIxn > 0)) || props.readOnly}
+                          addingNote={ixn !== null && props.addNote === ixn.id}
+                          setAddNote={props.setAddNote}
+                          setEditingElement={props.setEditingElement}
+                          setIxnChanged={props.setIxnChanged}
+                        />
+                        :
+                        <StyledIxnRow
+                          ixn={ixn}
+                          key={index}
+                          segment={props.segment}
+                          postIxn={props.postIxn}
+                          deleteIxn={props.deleteIxn}
+                          tgtAnalyst={props.tgtAnalyst}
+                          setTgtAnalyst={props.setTgtAnalyst}
+                          setEditIxn={props.setEditIxn}
+                          addingOrEditing={props.addingOrEditing}
+                          userName={props.userName}
+                          dateString={props.dateString}
+                          setAddNote={props.setAddNote}
+                          disabled={props.addNote > 0 || props.editIxn > 0}
+                          readOnly={props.readOnly}
+                        />,
     );
   };
 
   const handleCollapseClick = () => {
-    if (props.ixns.filter((ixn) => ixn !== null && ixn.id === props.editIxn).length > 0)
+    if (props.ixns.filter((ixn) => ixn !== null && ixn.id === props.editIxn).length > 0) {
       setTimeout(() => {
         let element = document.getElementById('ixn-time-' + props.editIxn);
-        if (element !== null)
+        if (element !== null) {
           element.focus();
-        else
+        } else {
           props.setCollapsed(props.segment.id!);
+        }
       }, 500);
-    else if (adding)
+    } else if (adding) {
       setTimeout(() => {
         if (document.getElementsByClassName('input-error-msg').length === 0) {
           props.setCollapsed(props.segment.id!);
         } else {
           let element = document.getElementById('ixn-time-' + props.segment.id! + '-new');
-          if (element !== null)
+          if (element !== null) {
             element.focus();
+          }
         }
       }, 500);
-    else
+    } else {
       props.setCollapsed(props.segment.id!);
+    }
   };
 
   return (

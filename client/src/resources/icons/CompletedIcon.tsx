@@ -1,5 +1,6 @@
 import * as React from 'react';
 import theme from '../theme';
+import styled from 'styled-components';
 
 const pathD = 'M12 24C18.6274 24 24 18.6274 24 12C24 5.37259 18.6274 0 12 0C5.37259 0 0 5.37259 0 12C0 18.6274 5.3725' +
   '9 24 12 24ZM5.20703 19.7917H9.12396L6.87381 12.2917H5.20703V19.7917ZM15.2077 8.95833H20.208C20.4612 8.9585 20.711' +
@@ -29,6 +30,89 @@ const CompletedIcon = () => {
   );
 };
 
+
+
+interface MyProps {
+  className?: string;
+}
+
+export const ApprovedIcon: React.FC<MyProps> = (props) => {
+  return (
+    <div className={props.className}>
+      <AcceptedWrapper>
+        <svg
+          className="accept-icon"
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d={pathD}
+            fillRule="evenodd"
+            clipRule="evenodd"
+            fill={theme.color.complete}
+          />
+        </svg>
+      </AcceptedWrapper>
+    </div>
+  )
+};
+
+export const RejectedIcon: React.FC<MyProps> = (props) => {
+  return (
+    <div className={props.className}>
+      <RejectedWrapper>
+        <svg
+          className="reject-icon"
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d={pathD}
+            fillRule="evenodd"
+            clipRule="evenodd"
+            fill={theme.color.rejectIcon}
+          />
+        </svg>
+      </RejectedWrapper>
+    </div>
+  )
+};
+
+const AcceptedWrapper = styled('div')`
+  display: flex;  
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #FFF;
+  border-radius: 12px;
+  width: 24px;
+  height: 24px;
+  background-color: ${theme.color.backgroundPillButton};
+  cursor: pointer;
+  
+  :hover {
+    box-shadow: 0 0 6px #FFF;
+  }
+`;
+
+const RejectedWrapper = styled('div')`
+  display: flex;  
+  justify-content: center;
+  align-items: center;
+  border: 1px solid ${theme.color.subduedOutline};
+  border-radius: 12px;
+  width: 24px;
+  height: 24px;
+  background-color: ${theme.color.backgroundPillButton};
+  
+  svg {
+    transform: rotate(180deg);
+  }
+`;
+
 export default CompletedIcon;
-
-

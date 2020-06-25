@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
 import { MiniIxnRow } from '../../dashboard/ixn/rollup/MiniIxnRow';
 import { RollupMode } from '../../dashboard/ixn/RollupView';
 
@@ -10,7 +10,7 @@ describe('Mini Ixn Row', () => {
   let ixn = new IxnModel(23, 1, 1, 1, 1, 'Billy Bob', moment(
     (5 * 3600 +
       30 * 60 +
-      15) * 1000), 'Dudes did stuff', '123-234', '', IxnStatus.NOT_STARTED, '', '', '', '');
+      15) * 1000), 'Dudes did stuff', '123-234', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED);
 
   beforeEach(() => {
     subject = shallow(
