@@ -285,7 +285,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     setDisplayEeiNotes(!displayEeiNotes);
   };
 
-  const isAddSegmentDisabled = segments.length < 1 || addingOrEditing;
+  const isAddSegmentDisabled = segments.length < 1 || addingOrEditing || rollupMode;
   const element = editIxn > 0 ? 'callout' : 'segment';
 
   return (
@@ -543,5 +543,9 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+  
+  .ixn-body-spacer {
+    width: 70px;
   }
 `;

@@ -123,6 +123,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
         {/*Prevents user from tabbing out of page to address bar*/}
         <input className={'hidden-input'}/>
       </div>
+      <div className={'ixn-body-spacer'}>&nbsp;</div>
     </div>
   );
 };

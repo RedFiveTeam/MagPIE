@@ -97,6 +97,7 @@ describe('IxnRow', () => {
           setAddNote={setInputNoteSpy}
           disabled={false}
           readOnly={false}
+          highlight={-1}
         />
       </SnackbarProvider>,
     );
@@ -126,6 +127,7 @@ describe('IxnRow', () => {
           setAddNote={setInputNoteSpy}
           disabled={false}
           readOnly={false}
+          highlight={-1}
         />
       </SnackbarProvider>,
     );
@@ -154,6 +156,7 @@ describe('IxnRow', () => {
           userName={'billy'}
           setAddNote={setInputNoteSpy}
           disabled={false}
+          highlight={-1}
           readOnly={false}
         />
       </SnackbarProvider>,
