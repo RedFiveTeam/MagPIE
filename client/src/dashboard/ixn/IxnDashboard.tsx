@@ -12,7 +12,7 @@ import {
   setEditSegment, updateIxn, updateSegment,
 } from '../../store/ixn';
 import theme, { rowStyles } from '../../resources/theme';
-import IxnModel from '../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus } from '../../store/ixn/IxnModel';
 import { useCookies } from 'react-cookie';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { useSnackbar } from 'notistack';
@@ -220,21 +220,27 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     }
   };
 
-  const handlePostIxn = (ixn: IxnModel) => {
-    if (!navigating) {
-      let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
-      if (!readOnly) {
-        if (addNote > 0 && oldIxn !== undefined) {
-          enqueueSnackbar('Analyst Note Saved.', {
-            action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
-                                                classes.snackbarButton),
-            variant: 'info',
-          });
+    const handlePostIxn = (ixn: IxnModel) => {
+      if (!navigating) {
+        let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
+        if (!readOnly) {
+          if (addNote > 0 && oldIxn !== undefined) {
+            enqueueSnackbar('Analyst Note Saved.', {
+              action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
+                                                  classes.snackbarButton),
+              variant: 'info',
+            });
+          }
+          dispatch(updateIxn(ixn, cookie.userName, ixn.id === null));
+          if (ixn.approvalStatus === IxnApprovalStatus.REJECTED && oldIxn && oldIxn.approvalStatus !==
+            IxnApprovalStatus.REJECTED) {
+            setTimeout(() => {
+              handleAddNote(ixn.id!);
+            }, 500);
+          }
         }
-        dispatch(updateIxn(ixn, cookie.userName, ixn.id === null));
       }
-    }
-  };
+    };
 
   const handlePostSegment = (segment: SegmentModel) => {
     if (!isNavigating && !navigating && !readOnly) {
@@ -411,6 +417,10 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     width: 146px;
   }
   
+  .checker {
+    width: 136px !important;
+  }
+  
   .header-cell--checker {
     width: 146px;
   }
@@ -424,11 +434,11 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .header-cell--callout {
-    width: 410px;
+    width: 574px;
   }
 
   .activity {
-    width: 406px;
+    width: 570px;
   }
   
   .header-cell--id {
@@ -465,6 +475,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: flex-start;
     font-weight: normal;
     margin-bottom: 9px;
     align-self: flex-start;
@@ -477,7 +488,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 62px;
     width: 1348px;
     padding-left: 2px;
@@ -525,5 +536,12 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     justify-content: flex-end;
     align-items: center;
     text-align: center;
+  }
+   
+  .checker {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 `;

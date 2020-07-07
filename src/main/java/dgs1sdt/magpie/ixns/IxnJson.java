@@ -20,14 +20,14 @@ public class IxnJson {
   private String activity;
   private String trackAnalyst;
   private String status;
-  private String leadChecker;
-  private String finalChecker;
+  private String checker;
   private String trackNarrative;
   private String note;
+  private String approvalStatus;
 
   public IxnJson(long rfiId, long exploitDateId, long targetId, long segmentId, String exploitAnalyst, Timestamp time,
-                 String activity, String trackAnalyst, String status, String leadChecker, String finalChecker,
-                 String trackNarrative, String note) {
+                 String activity, String trackAnalyst, String status, String checker,
+                 String trackNarrative, String note, String approvalStatus) {
     this.rfiId = rfiId;
     this.exploitDateId = exploitDateId;
     this.targetId = targetId;
@@ -37,9 +37,9 @@ public class IxnJson {
     this.activity = activity;
     this.trackAnalyst = trackAnalyst;
     this.status = status;
-    this.leadChecker = leadChecker;
-    this.finalChecker = finalChecker;
+    this.checker = checker;
     this.trackNarrative = trackNarrative;
     this.note = note;
+    this.approvalStatus = approvalStatus;
   }
 }

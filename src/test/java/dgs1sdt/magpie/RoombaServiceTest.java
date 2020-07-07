@@ -1,6 +1,7 @@
 package dgs1sdt.magpie;
 
 import dgs1sdt.magpie.ixns.*;
+import dgs1sdt.magpie.metrics.IxnApprovalStatus;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
@@ -111,34 +112,34 @@ public class RoombaServiceTest extends BaseIntegrationTest {
 
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(123000).getTime()), "", "", "",
-        IxnStatus.IN_PROGRESS, "", "")); //123-003
+        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-003
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(234000).getTime()), "", "", "",
-        IxnStatus.NOT_STARTED, "", ""));
+        IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(345000).getTime()), "", "", "",
-        IxnStatus.IN_PROGRESS, "", "")); //123-004
+        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-004
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(456000).getTime()), "", "", "",
-        IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+        IxnStatus.DOES_NOT_MEET_EEI, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(567000).getTime()), "", "", "",
-        IxnStatus.COMPLETED, "", "")); //123-005
+        IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-005
 
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(123000).getTime()), "", "", "",
-        IxnStatus.NOT_STARTED, "", ""));
+        IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(234000).getTime()), "", "", "",
-        IxnStatus.NOT_STARTED, "", ""));
+        IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(345000).getTime()), "", "", "",
-        IxnStatus.IN_PROGRESS, "", ""));  //123-001
+        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED));  //123-001
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(456000).getTime()), "", "", "",
-        IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+        IxnStatus.DOES_NOT_MEET_EEI, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(567000).getTime()), "", "", "",
-        IxnStatus.COMPLETED, "", "")); //123-002
+        IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-002
   }
 }

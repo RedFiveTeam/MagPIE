@@ -7,6 +7,12 @@ export enum IxnStatus {
   DOES_NOT_MEET_EEI = 'DOES_NOT_MEET_EEI',
 }
 
+export enum IxnApprovalStatus {
+  NOT_REVIEWED = 'NOT_REVIEWED',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
 export default class IxnModel {
   constructor(
     public id: number|null,
@@ -20,10 +26,10 @@ export default class IxnModel {
     public track: string,
     public trackAnalyst: string,
     public status: IxnStatus,
-    public leadChecker: string,
-    public finalChecker: string,
+    public checker: string,
     public trackNarrative: string,
     public note: string,
+    public approvalStatus: IxnApprovalStatus,
   ) {
   }
 }

@@ -110,8 +110,6 @@ Scenario('Should be able to add ixns', (I) => {
   I.pressKey('Tab');
   I.pressKey('Tab');
   I.pressKey('Tab');
-  I.pressKey('Tab');
-  I.pressKey('Tab');
   I.waitForText('12:15:00Z', 3);
 
   I.fillField('.time', '13');
@@ -178,17 +176,6 @@ Scenario('Should be able to edit ixns', (I) => {
 Scenario('Should be able to assign status, edit track narratives, and see tracks generate', (I) => {
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
-
-  // I.pressKey('Tab');
-  // I.fillField('.exploit-analyst', 'Billy Bob Joseph');
-  // I.pressKey('Tab');
-  // I.fillField('.time', '1201');
-  // I.pressKey('Tab');
-  // I.fillField('.activity', 'This happened first');
-  // I.pressKey('Enter');
-  // I.waitForText('12:01:00Z', 3);
-  // I.waitForText('Billy Bob Joseph', 3);
-  // I.waitForText('This happened first', 3);
 
   I.moveCursorTo(locate('.status-wrapper').at(2));
   I.waitForElement('.in-progress-button');
@@ -409,6 +396,33 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.waitForElement('.rollup-input');
 
   I.dontSeeInField('.rollup-input', 'DO NOT SAVE THIS');
+});
+
+Scenario('Should be able to accept and reject tracks', (I) => {
+  I.click('.exploitation');
+  I.waitForText('MGRS: 12QWE1231231231', 3);
+
+  I.moveCursorTo(locate('.status-wrapper').at(1));
+  I.waitForElement('.completed-button');
+  I.click('.completed-button');
+
+  I.waitForElement('.approve-reject-button', 3);
+  I.click('.reject-button');
+  I.waitForElement('.note-input', 3);
+  I.waitForElement('.reject-icon');
+  //last name of the user sdt.test
+  I.waitForText('Test');
+  I.pressKey('Enter');
+
+  I.moveCursorTo(locate('.status-wrapper').at(1));
+  I.waitForElement('.completed-button');
+  I.click('.completed-button');
+
+  I.waitForElement('.approve-reject-button', 3);
+  I.click('.approve-button');
+  //last name of the user sdt.test
+  I.waitForElement('.accept-icon');
+  I.waitForText('Test');
 });
 
 Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {

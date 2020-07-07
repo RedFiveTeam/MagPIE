@@ -70,7 +70,7 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
               <AddSegmentIcon/>
             </div>
           </TextTooltip>
-          <EeiTooltip
+          <EeiTooltip //Why is this a tooltip w/in a tooltip? What's the functionality?
             arrow
             title={props.target.notes}
             placement={'bottom-end'}

@@ -60,7 +60,7 @@ Scenario('Should display edit metrics', (I) => {
     I.see('1', locate('.card-row').at(1));
     I.see('6', locate('.card-row').at(2));
     I.see('1', locate('.card-row').at(3));
-    I.see('8', locate('.card-row').at(4));
+    I.see('11', locate('.card-row').at(4));
   });
 });
 

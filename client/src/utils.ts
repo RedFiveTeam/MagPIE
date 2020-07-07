@@ -23,6 +23,24 @@ export const convertTimeStringToMoment = (time: string): Moment => {
   return moment(timeDate).utc();
 };
 
+export const getLastName = (userName: string): string => {
+  //billy.b.josephs123.mil
+  let sections: string[] = userName.split('.');
+  if (sections.length === 1) {
+    return sections[0];
+  } else if (sections.length === 2) {
+    return sections[1];
+  } else {
+    let lastPart = sections[sections.length - 1];
+    if (lastPart === 'mil' || lastPart === 'civ' || lastPart === 'ctr' || lastPart.match(/[A-z]/) === null) {
+      lastPart = sections[sections.length - 2];
+    }
+    lastPart = lastPart.replace(/[0-9]/g, '');
+    lastPart = lastPart[0].toUpperCase() + lastPart.substring(1);
+    return lastPart;
+  }
+};
+
 export enum RowAction {
   NONE,
   DELETING,

@@ -63,6 +63,8 @@ const theme = {
     fontSubHeader: crayonBox.lightBlueGray,//
     copyTgtBorder: crayonBox.lightCoolBlack,//
     dateDividerBox: crayonBox.mediumBrightBrightBlue,//
+    subduedOutline: crayonBox.anotherGray,//
+    rejectIcon: crayonBox.subduedTomatoRed,//
   },
 
   font: {

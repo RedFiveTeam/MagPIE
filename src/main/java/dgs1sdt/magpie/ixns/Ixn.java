@@ -26,16 +26,16 @@ public class Ixn {
   private String track;
   private String trackAnalyst;
   private String status;
-  private String leadChecker;
-  private String finalChecker;
+  private String checker;
+  private String approvalStatus;
 
   @Column(length = 65535)
   private String trackNarrative;
   private String note;
 
   public Ixn(long rfiId, long exploitDateId, long targetId, long segmentId, String exploitAnalyst, Timestamp time,
-             String activity, String track, String trackAnalyst, String status, String leadChecker,
-             String finalChecker) {
+             String activity, String track, String trackAnalyst, String status, String checker,
+             String approvalStatus) {
     this.rfiId = rfiId;
     this.exploitDateId = exploitDateId;
     this.targetId = targetId;
@@ -46,10 +46,10 @@ public class Ixn {
     this.track = track;
     this.trackAnalyst = trackAnalyst;
     this.status = status;
-    this.leadChecker = leadChecker;
-    this.finalChecker = finalChecker;
+    this.checker = checker;
     this.trackNarrative = "";
     this.note = "";
+    this.approvalStatus = approvalStatus;
   }
 
   public Ixn(IxnJson ixnJson) {
@@ -63,10 +63,10 @@ public class Ixn {
     this.track = "";
     this.trackAnalyst = ixnJson.getTrackAnalyst();
     this.status = ixnJson.getStatus();
-    this.leadChecker = ixnJson.getLeadChecker();
-    this.finalChecker = ixnJson.getFinalChecker();
+    this.checker = ixnJson.getChecker();
     this.trackNarrative = ixnJson.getTrackNarrative();
     this.note = ixnJson.getNote();
+    this.approvalStatus = ixnJson.getApprovalStatus();
   }
 
   public List<String> compare(IxnJson other) {
@@ -113,19 +113,11 @@ public class Ixn {
     }
 
     try {
-      if (!this.leadChecker.equals(other.getLeadChecker())) {
-        diff.add("lead_checker");
+      if (!this.checker.equals(other.getChecker())) {
+        diff.add("checker");
       }
     } catch (NullPointerException e) {
-      diff.add("lead_checker");
-    }
-
-    try {
-      if (!this.finalChecker.equals(other.getFinalChecker())) {
-        diff.add("final_checker");
-      }
-    } catch (NullPointerException e) {
-      diff.add("final_checker");
+      diff.add("checker");
     }
 
     try {
@@ -142,6 +134,14 @@ public class Ixn {
       }
     } catch (NullPointerException e) {
       diff.add("note");
+    }
+
+    try {
+      if (!this.approvalStatus.equals(other.getApprovalStatus())) {
+        diff.add("approval_status");
+      }
+    } catch (NullPointerException e) {
+      diff.add("approval_status");
     }
 
     return diff;

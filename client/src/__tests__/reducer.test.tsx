@@ -8,7 +8,7 @@ import { TgtActionTypes, tgtReducer } from '../store/tgt';
 import { ixnReducer } from '../store/ixn/Reducer';
 import { IxnActionTypes } from '../store/ixn';
 import { SegmentModel } from '../store/tgtSegment/SegmentModel';
-import IxnModel, { IxnStatus } from '../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus, IxnStatus } from '../store/ixn/IxnModel';
 
 const moment = require('moment');
 
@@ -402,10 +402,11 @@ describe('reducer', () => {
       new SegmentModel(2, 1, 1, 1, moment(567), moment(678)),
     ];
     let ixns = [
-      new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(124), 'People have done a thing', '123-234', '',
-                   IxnStatus.NOT_STARTED, '', '', '', ''),
-      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(568), 'People have done another thing', '123-456', '',
-                   IxnStatus.NOT_STARTED, '', '', '', ''),
+      new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(
+        124), 'People have done a thing', '123-234', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED),
+      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(
+        568), 'People have done another thing', '123-456', '', IxnStatus.NOT_STARTED, '', '', '',
+                   IxnApprovalStatus.NOT_REVIEWED),
     ];
 
     let navToIxnPage = {
@@ -439,12 +440,14 @@ describe('reducer', () => {
     ];
 
     let newIxns = [
-      new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(124), 'People have done a thing', '123-234', '',
-                   IxnStatus.NOT_STARTED, '', '', '', ''),
-      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(568), 'People have done another thing', '123-456', '',
-                   IxnStatus.NOT_STARTED, '', '', '', ''),
-      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(569), 'People have done a different thing', '123-456', '',
-                   IxnStatus.NOT_STARTED, '', '', '', ''),
+      new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(
+        124), 'People have done a thing', '123-234', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED),
+      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(
+        568), 'People have done another thing', '123-456', '', IxnStatus.NOT_STARTED, '', '', '',
+                   IxnApprovalStatus.NOT_REVIEWED),
+      new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(
+        569), 'People have done a different thing', '123-456', '', IxnStatus.NOT_STARTED, '', '', '',
+                   IxnApprovalStatus.NOT_REVIEWED),
     ];
 
     let reloadIxnPage = {

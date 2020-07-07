@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import theme, { longInputStyles } from '../../resources/theme';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
-import IxnModel, { IxnStatus } from '../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledMiniSegmentRegion } from './rollup/MiniSegmentRegion';
 import { StyledImportRollupsButton } from '../../resources/icons/ImportRollupsButton';
 import { convertTimeStringToMoment } from '../../utils';
@@ -146,8 +146,8 @@ export const RollupView: React.FC<MyProps> = (props) => {
       for (let match of matches) {
         let timeString = match.substr(0, 8);
         let activityString = match.substring(12, match.length - 1);
-        allIxns.push(new IxnModel(0, 0, 0, 0, 0, '', convertTimeStringToMoment(timeString), activityString, '', '',
-                                  IxnStatus.NOT_STARTED, '', '', '', ''));
+        allIxns.push(new IxnModel(0, 0, 0, 0, 0, '', convertTimeStringToMoment(
+          timeString), activityString, '', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED));
       }
     }
 

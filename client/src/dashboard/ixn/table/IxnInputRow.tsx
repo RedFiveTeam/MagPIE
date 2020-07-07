@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import IxnModel, { IxnStatus } from '../../../store/ixn/IxnModel';
+import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../../store/ixn/IxnModel';
 import { Box, TextField, ThemeProvider } from '@material-ui/core';
 import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
 import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
 import classNames from 'classnames';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
-import { convertTimeStringToMoment, RowAction } from '../../../utils';
+import { convertTimeStringToMoment, getLastName, RowAction } from '../../../utils';
 import { DeleteCancelButton } from './DeleteCancelButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
@@ -17,6 +17,7 @@ import CompletedButton from '../../components/statusButtons/CompletedButton';
 import TrackNarrativeButton from '../../../resources/icons/TrackNarrativeButton';
 import { CancelButtonLarge } from '../../../resources/icons/CancelButtonSmall';
 import CollapseNotesButton from '../../../resources/icons/CollapseNoteButton';
+import { ApprovedIcon, RejectedIcon } from '../../../resources/icons/CompletedIcon';
 
 interface MyProps {
   ixn: IxnModel|null;
@@ -63,8 +64,6 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   const [time, setTime] = React.useState(props.ixn ? props.ixn.time.format('HH:mm:ss') : '');
   const [activity, setActivity] = React.useState(props.ixn ? props.ixn.activity : '');
   const [trackAnalyst, setTrackAnalyst] = React.useState(props.ixn ? props.ixn.trackAnalyst : '');
-  const [leadChecker, setLeadChecker] = React.useState(props.ixn ? props.ixn.leadChecker : '');
-  const [finalChecker, setFinalChecker] = React.useState(props.ixn ? props.ixn.finalChecker : '');
 
   const [note, setNote] = useState(props.ixn ? props.ixn.note : '');
 
@@ -76,9 +75,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     exploitAnalyst !== props.ixn.exploitAnalyst ||
     time !== props.ixn.time.format('HH:mm:ss') ||
     activity !== props.ixn.activity ||
-    trackAnalyst !== props.ixn.trackAnalyst ||
-    leadChecker !== props.ixn.leadChecker ||
-    finalChecker !== props.ixn.finalChecker
+    trackAnalyst !== props.ixn.trackAnalyst
     :
     false);
 
@@ -104,8 +101,6 @@ export const IxnInputRow: React.FC<MyProps> = props => {
           setTime('');
           setActivity('');
           setTrackAnalyst('');
-          setLeadChecker('');
-          setFinalChecker('');
           setNote('');
           setTimeInvalidError(false);
           setTimeOutOfBoundsError(false);
@@ -181,16 +176,6 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     props.setAdding(!isBlank);
   };
 
-  const inputLeadChecker = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLeadChecker(event.target.value);
-    props.setAdding(!isBlank);
-  };
-
-  const inputFinalChecker = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFinalChecker(event.target.value);
-    props.setAdding(!isBlank);
-  };
-
   const inputNote = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newNote = event.target.value;
     if (newNote.charAt(newNote.length - 1) !== '\n') //Ignore new lines
@@ -232,11 +217,12 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     if (!timeInvalidErrorLocal && !timeOutOfBoundsErrorLocal) {
       props.setAdding(false);
       if (props.segment.id) {
-        props.postIxn(new IxnModel(props.ixn ? props.ixn.id : null, props.segment.rfiId, props.segment.exploitDateId,
-                                   props.segment.targetId, props.segment.id, exploitAnalyst.trim(),
-                                   convertTimeStringToMoment(time), activity.trim(), '', trackAnalyst.trim(),
-                                   props.ixn ? props.ixn.status : IxnStatus.NOT_STARTED, leadChecker.trim(),
-                                   finalChecker.trim(), props.ixn ? props.ixn.trackNarrative : '', note.trim()));
+        props.postIxn(new IxnModel(props.ixn ? props.ixn.id :
+                                     null, props.segment.rfiId, props.segment.exploitDateId, props.segment.targetId, props.segment.id,
+                                   exploitAnalyst.trim(), convertTimeStringToMoment(
+            time), activity.trim(), '', trackAnalyst.trim(), props.ixn ? props.ixn.status :
+                                     IxnStatus.NOT_STARTED, props.ixn ? props.ixn.checker : '', props.ixn ? props.ixn.trackNarrative :
+                                     '', note.trim(), props.ixn ? props.ixn.approvalStatus : IxnApprovalStatus.NOT_REVIEWED));
         if (props.ixn === null) {
           bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
         }
@@ -254,12 +240,10 @@ export const IxnInputRow: React.FC<MyProps> = props => {
     id: 'ixn-time-' + (props.ixn !== null ? props.ixn.id!.toString() : (props.segment.id) + '-new'),
   };
 
-  const isBlank = (exploitAnalyst === '' || exploitAnalyst === props.tgtAnalyst) &&
+  let isBlank = exploitAnalyst === '' &&
     (time === '' || time === '__:__:__') &&
     activity === '' &&
-    trackAnalyst === '' &&
-    leadChecker === '' &&
-    finalChecker === '';
+    trackAnalyst === '';
 
   const highlight = (props.ixn ? ixnChanged : !isBlank);
   const enterKey = 13;
@@ -319,6 +303,11 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                   value={trackAnalyst}
                   placeholder="Name"
                   onChange={inputTrackAnalyst}
+                  onKeyDown={(key) => {
+                    if (key.which === tabKey && !key.shiftKey) {
+                      setAction(RowAction.SUBMITTING);
+                    }
+                  }}
                 />
               </div>
               <div className={classNames('status', 'input-container')}>
@@ -340,26 +329,21 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                   '\xa0'
                 }
               </div>
-              <div className={'input-container'}>
-                <TextField
-                  className={classNames('lead-checker', 'name')}
-                  value={leadChecker}
-                  placeholder="Name"
-                  onChange={inputLeadChecker}
-                />
-              </div>
-              <div className={'input-container'}>
-                <TextField
-                  className={classNames('final-checker', 'name')}
-                  value={finalChecker}
-                  placeholder="Name"
-                  onChange={inputFinalChecker}
-                  onKeyDown={(key) => {
-                    if (key.which === tabKey && !key.shiftKey) {
-                      setAction(RowAction.SUBMITTING);
-                    }
-                  }}
-                />
+              <div className={classNames('ixn-data-cell', 'checker', props.ixn &&
+                                         props.ixn.approvalStatus !== IxnApprovalStatus.NOT_REVIEWED ?
+                                           'underline'
+                                           :
+                                           null)}>
+                {props.ixn && props.ixn.approvalStatus !== IxnApprovalStatus.NOT_REVIEWED ? getLastName(props.ixn.checker) : null}
+
+                {props.ixn && props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ?
+                    <ApprovedIcon/>
+                    : props.ixn && props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ?
+                    <RejectedIcon/>
+                    :
+                    '\xa0'
+                }
+
               </div>
             </div>
             <DeleteCancelButton
@@ -416,6 +400,12 @@ export const IxnInputRow: React.FC<MyProps> = props => {
 };
 
 export const StyledIxnInputRow = styled(IxnInputRow)`
+  .underline {
+    padding-bottom: 6px;
+    border-bottom: 1px solid #FFF;
+    margin: 8px 4px;
+  }
+
   .ixn-input-section {
     border: 2px solid #48788C;
     padding-left: 0 !important;
@@ -438,7 +428,7 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin: 0 8px !important;
+    margin: 0 8px 6px 8px !important;
   }
   
   .delete-disabled {

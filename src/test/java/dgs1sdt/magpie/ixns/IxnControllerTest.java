@@ -1,6 +1,7 @@
 package dgs1sdt.magpie.ixns;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
+import dgs1sdt.magpie.metrics.IxnApprovalStatus;
 import dgs1sdt.magpie.metrics.changeIxn.MetricChangeIxn;
 import dgs1sdt.magpie.metrics.changeIxn.MetricChangeIxnRepository;
 import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegment;
@@ -238,8 +239,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("Person entered building from right", ixn.getActivity());
     assertEquals("Billy Joe", ixn.getTrackAnalyst());
     assertEquals("NOT_STARTED", ixn.getStatus());
-    assertEquals("", ixn.getLeadChecker());
-    assertEquals("", ixn.getFinalChecker());
+    assertEquals("", ixn.getChecker());
 
 
     assertEquals(1, metricCreateIxnRepository.findAll().size());
@@ -294,8 +294,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
       "",
@@ -310,8 +309,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     given()
       .port(port)
@@ -370,8 +368,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
       "",
@@ -386,8 +383,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     long ixnId = ixnRepository.findAll().get(0).getId();
 
@@ -446,8 +442,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
       "",
@@ -462,8 +457,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     assertEquals(1, ixnController.getSegments(targetId).size());
     assertEquals(2, ixnRepository.findAll().size());
@@ -558,8 +552,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     ixnRepository.save(new Ixn(rfiId, exploitDateId, targetId, segmentId,
       "",
@@ -574,8 +567,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     String segmentJsonString = "{" +
       "\"id\":" + segmentId +
@@ -652,8 +644,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
       "",
       IxnStatus.NOT_STARTED,
       "",
-      ""
-    ));
+      IxnApprovalStatus.NOT_REVIEWED));
 
     long ixnId = ixnRepository.findAll().get(0).getId();
 
@@ -662,7 +653,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
         15 * 60 +
         55)
         * 1000
-    ), "Person entered building from right side", "William Joseph", IxnStatus.NOT_STARTED, "", "", "", "");
+    ), "Person entered building from right side", "William Joseph", IxnStatus.NOT_STARTED, "", "", "",
+      IxnApprovalStatus.NOT_REVIEWED);
 
     String json = objectMapper.writeValueAsString(ixnJson);
 
@@ -684,8 +676,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("Person entered building from right side", ixn.getActivity());
     assertEquals("William Joseph", ixn.getTrackAnalyst());
     assertEquals(IxnStatus.NOT_STARTED, ixn.getStatus());
-    assertEquals("", ixn.getLeadChecker());
-    assertEquals("", ixn.getFinalChecker());
+    assertEquals("", ixn.getChecker());
 
     ixnJson.setStatus(IxnStatus.IN_PROGRESS);
 
@@ -710,8 +701,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     assertEquals("123-001", ixn.getTrack());
     assertEquals("William Joseph", ixn.getTrackAnalyst());
     assertEquals("IN_PROGRESS", ixn.getStatus());
-    assertEquals("", ixn.getLeadChecker());
-    assertEquals("", ixn.getFinalChecker());
+    assertEquals("", ixn.getChecker());
 
     assertEquals(4, metricChangeIxnRepository.findAll().size());
 
@@ -833,7 +823,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     Ixn ixn = ixnRepository.findAll().get(0);
     IxnJson ixnJson = new IxnJson(ixn.getId(), ixn.getRfiId(), ixn.getExploitDateId(), ixn.getTargetId(),
       ixn.getSegmentId(), ixn.getExploitAnalyst(), ixn.getTime(), ixn.getActivity(), ixn.getTrackAnalyst(),
-      ixn.getStatus(), ixn.getLeadChecker(), ixn.getFinalChecker(), ixn.getTrackNarrative(), ixn.getNote());
+      ixn.getStatus(),ixn.getChecker(), ixn.getTrackNarrative(), ixn.getNote(), ixn.getApprovalStatus());
 
     long ixnId = ixn.getId();
 
@@ -899,25 +889,27 @@ public class IxnControllerTest extends BaseIntegrationTest {
     long segment2Id = segmentRepository.findAll().get(1).getId();
 
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-003
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS,"", IxnApprovalStatus.NOT_REVIEWED)); //123-003
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", "")); //123-004
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-004
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+      new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-005
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-005
 
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", ""));
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", ""));  //123-001
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED));  //123-001
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "", ""));
+      new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", "")); //123-002
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-002
   }
 }

@@ -1,6 +1,7 @@
 package dgs1sdt.magpie.metrics;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
+import dgs1sdt.magpie.ixns.Ixn;
 import dgs1sdt.magpie.ixns.IxnJson;
 import dgs1sdt.magpie.ixns.IxnStatus;
 import dgs1sdt.magpie.ixns.SegmentJson;
@@ -19,6 +20,7 @@ import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTargetRepository;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGets;
 import dgs1sdt.magpie.metrics.clickGets.MetricClickGetsRepository;
 import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
@@ -35,7 +37,6 @@ import dgs1sdt.magpie.metrics.login.MetricLogin;
 import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
-import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDelete;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDeleteRepository;
 import dgs1sdt.magpie.metrics.undoIxnDelete.MetricUndoIxnDelete;
@@ -241,6 +242,53 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     assertEquals(newTarget.getDescription(), description.getNewData());
   }
 
+  @Test
+  public void addsChangeIxnMetric() {
+    Ixn oldIxn = new Ixn(new IxnJson(1, 1, 1, 1,
+      "old exploit analyst",
+      new Timestamp(2345),
+      "old activity",
+      "old track analyst",
+      IxnStatus.IN_PROGRESS,
+      "old checker",
+      "old narrative",
+      "old note",
+      IxnApprovalStatus.NOT_REVIEWED
+    ));
+
+    IxnJson newIxn = new IxnJson(1, 1, 1, 1,
+      "new exploit analyst",
+      new Timestamp(3456),
+      "new activity",
+      "new track analyst",
+      IxnStatus.COMPLETED,
+      "new checker",
+      "new narrative",
+      "new note",
+      IxnApprovalStatus.APPROVED
+    );
+
+    metricsService.addChangeIxn(newIxn, oldIxn, "bbj");
+    assertEquals(9, metricChangeIxnRepository.findAll().size());
+
+    MetricChangeIxn checker = metricChangeIxnRepository.findAll()
+      .stream().filter((metric) -> metric.getField().equals("checker")).collect(Collectors.toList()).get(0);
+    MetricChangeIxn activity = metricChangeIxnRepository.findAll()
+      .stream().filter((metric) -> metric.getField().equals("activity")).collect(Collectors.toList()).get(0);
+    MetricChangeIxn status = metricChangeIxnRepository.findAll()
+      .stream().filter((metric) -> metric.getField().equals("status")).collect(Collectors.toList()).get(0);
+    MetricChangeIxn approval_status = metricChangeIxnRepository.findAll()
+      .stream().filter((metric) -> metric.getField().equals("approval_status")).collect(Collectors.toList()).get(0);
+
+    assertEquals(newIxn.getChecker(), checker.getNewData());
+
+    assertEquals(newIxn.getActivity(), activity.getNewData());
+
+    assertEquals(newIxn.getStatus(), status.getNewData());
+
+    assertEquals(newIxn.getApprovalStatus(), approval_status.getNewData());
+  }
+
   private long convertDaysToMS(int days) {
     return ((long) days) * 86400000L;
   }
@@ -345,7 +393,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
     IxnJson ixn =
-      new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+      new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "", IxnApprovalStatus.NOT_REVIEWED);
     MetricCreateIxn metric1 = new MetricCreateIxn(1, ixn, "guy");
     MetricCreateIxn metric2 = new MetricCreateIxn(1, ixn, "guy");
     MetricCreateIxn metric3 = new MetricCreateIxn(1, ixn, "guy");
@@ -609,11 +657,11 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
 
     IxnJson ixnJson1 =
-      new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+      new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", IxnApprovalStatus.NOT_REVIEWED);
     IxnJson ixnJson2 =
-      new IxnJson(2, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+      new IxnJson(2, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", IxnApprovalStatus.NOT_REVIEWED);
     IxnJson ixnJson3 =
-      new IxnJson(3, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", "");
+      new IxnJson(3, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", IxnApprovalStatus.NOT_REVIEWED);
     MetricChangeIxn metric8 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)),
       "guy");
     MetricChangeIxn metric9 = new MetricChangeIxn("activity", ixnJson1,
@@ -721,16 +769,20 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     rfi1.setReceiveDate(new Timestamp(convertDaysToMS(9)));
 
     MetricChangeRfi rfi1open = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(1)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi1close = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(3)), "status", "OPEN", "CLOSED");
+    MetricChangeRfi rfi1close =
+      new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(3)), "status", "OPEN", "CLOSED");
 
     MetricChangeRfi rfi2open = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(2)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi2close = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(5)), "status", "OPEN", "CLOSED");
+    MetricChangeRfi rfi2close =
+      new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(5)), "status", "OPEN", "CLOSED");
 
     MetricChangeRfi rfi3open = new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(4)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi3close = new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(8)), "status", "OPEN", "CLOSED");
+    MetricChangeRfi rfi3close =
+      new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(8)), "status", "OPEN", "CLOSED");
 
     MetricChangeRfi rfi4open = new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(10)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi4close = new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(12)), "status", "OPEN", "CLOSED");
+    MetricChangeRfi rfi4close =
+      new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(12)), "status", "OPEN", "CLOSED");
 
     rfiRepository.save(rfi1);
     metricChangeRfiRepository.saveAll(Arrays.asList(rfi1open, rfi1close));
@@ -746,19 +798,24 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   @Test
   public void returnsRfisCompletedWithinDateRange() {
     MetricChangeRfi rfi1open = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(1)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi1close = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(3)), "status", "OPEN", "CLOSED");
+    MetricChangeRfi rfi1close =
+      new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(3)), "status", "OPEN", "CLOSED");
 
     MetricChangeRfi rfi2open = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(2)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi2close = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(5)), "status", "OPEN", "CLOSED");
+    MetricChangeRfi rfi2close =
+      new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(5)), "status", "OPEN", "CLOSED");
 
     MetricChangeRfi rfi3open = new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(4)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi3close = new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(8)), "status", "OPEN", "CLOSED");
+    MetricChangeRfi rfi3close =
+      new MetricChangeRfi("SDT20-323", new Date(convertDaysToMS(8)), "status", "OPEN", "CLOSED");
 
     MetricChangeRfi rfi4open = new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(10)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi4close = new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(12)), "status", "OPEN", "CLOSED");
+    MetricChangeRfi rfi4close =
+      new MetricChangeRfi("SDT20-324", new Date(convertDaysToMS(12)), "status", "OPEN", "CLOSED");
 
-    metricChangeRfiRepository.saveAll(Arrays.asList(rfi1open, rfi1close, rfi2open, rfi2close, rfi3open, rfi3close, rfi4open,
-      rfi4close));
+    metricChangeRfiRepository
+      .saveAll(Arrays.asList(rfi1open, rfi1close, rfi2open, rfi2close, rfi3open, rfi3close, rfi4open,
+        rfi4close));
 
     assertEquals(2,
       metricsService.getRfisCompleted(new Date(4 * MetricsService.MILLISECONDS_IN_A_DAY),
