@@ -23,6 +23,7 @@ import { CancelButtonLarge } from '../../../resources/icons/CancelButtonSmall';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { getLastName } from '../../../utils';
 import { ApprovedIcon, RejectedIcon } from '../../../resources/icons/CompletedIcon';
+import { RejectModal } from './RejectModal';
 
 interface MyProps {
   ixn: IxnModel;
@@ -61,6 +62,7 @@ export const IxnRow: React.FC<MyProps> = props => {
   const [displayModal, setDisplayModal] = useState(false);
   const [highlighted, setHighlighted] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [displayRejectModal, setDisplayRejectModal] = useState(false);
 
   useEffect(() => {
     if (props.highlight === props.ixn.id) {
@@ -160,11 +162,13 @@ export const IxnRow: React.FC<MyProps> = props => {
     props.postIxn(ixn);
   };
 
-  const handleReject = () => {
+  const handleReject = (rejectReason: string) => {
     let ixn: IxnModel = {
       ...props.ixn, approvalStatus: IxnApprovalStatus.REJECTED, status: IxnStatus.IN_PROGRESS, checker: props.userName,
+      note: props.ixn.note === '' ? rejectReason : rejectReason === '' ? props.ixn.note : rejectReason + '\n\n' + props.ixn.note,
     };
     props.postIxn(ixn);
+    setDisplayRejectModal(false);
   };
 
   return (
@@ -249,12 +253,14 @@ export const IxnRow: React.FC<MyProps> = props => {
                 <div className={'approve-button approve-reject-button no-select'} onClick={handleApprove}>Approve
                 </div>
 
-                <div className={'reject-button approve-reject-button no-select'} onClick={handleReject}>Reject</div>
+                <div className={'reject-button approve-reject-button no-select'}
+                     onClick={() => setDisplayRejectModal(true)}>Reject
+                </div>
               </>
               :
               props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ?
                 <TextTooltip title={'Reject'}>
-                  <div className={'approved-button'} onClick={handleReject}>
+                  <div className={'approved-button'} onClick={() => setDisplayRejectModal(true)}>
                     <ApprovedIcon/>
                   </div>
                 </TextTooltip>
@@ -321,6 +327,14 @@ export const IxnRow: React.FC<MyProps> = props => {
             setDisplayModal(false);
             props.postIxn(ixnToPost);
           }}
+        />
+        :
+        null}
+      {displayRejectModal ?
+        <RejectModal
+          className={'reject-modal-container'}
+          handleConfirm={handleReject}
+          handleClose={() => setDisplayRejectModal(false)}
         />
         :
         null}

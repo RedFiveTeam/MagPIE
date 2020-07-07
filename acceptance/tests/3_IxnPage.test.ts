@@ -408,10 +408,22 @@ Scenario('Should be able to accept and reject tracks', (I) => {
 
   I.waitForElement('.approve-reject-button', 3);
   I.click('.reject-button');
-  I.waitForElement('.note-input', 3);
-  I.waitForElement('.reject-icon');
-  //last name of the user sdt.test
-  I.waitForText('Test');
+  I.waitForElement('.reject-modal', 3);
+  I.click('.cancel-button');
+  I.wait(1);
+  I.dontSee('.rejected-icon');
+
+  I.click('.reject-button');
+  I.waitForElement('.reject-modal', 3);
+  I.fillField('.reject-modal', 'This is a bad ixn');
+  I.click('.submit-button');
+
+  I.waitForText('Reason saved successfully');
+  I.see('Test');
+
+  I.click('.note-button');
+  I.waitForElement('.note-input');
+  I.seeInField('.note-input', 'This is a bad ixn');
   I.pressKey('Enter');
 
   I.moveCursorTo(locate('.status-wrapper').at(1));

@@ -126,14 +126,14 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
         <div className={classNames('button-section', classes.modalConfirmation)}>
           <CopyToClipboard onCopy={() => displaySnackbar('Copied to Clipboard')} text={trackNarrative}>
             <div
-              className={classNames('copy-to-clipboard', classes.copyToClipboard)}
+              className={classNames('copy-to-clipboard', 'no-select', classes.copyToClipboard)}
             >
               Copy to Clipboard
             </div>
           </CopyToClipboard>
           <div
             onClick={handleSave}
-            className={classNames('save', classes.saveSubmitButton, classes.modalButton,
+            className={classNames('save', 'no-select', classes.saveSubmitButton, classes.modalButton,
                                   props.readOnly ? 'disabled' : null)}
           >
             SAVE

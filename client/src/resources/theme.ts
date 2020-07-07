@@ -111,8 +111,8 @@ export const muiTheme = createMuiTheme(
     overrides: {
       MuiToolbar: {
         root: {
-          background: '#000000'
-        }
+          background: '#000000',
+        },
       },
     },
     palette: muiPalette,
@@ -202,7 +202,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       fontFamily: theme.font.familyHeader,
       fontWeight: theme.font.weightMedium,
       fontSize: theme.font.sizeRegion,
-      lineHeight: '21px'
+      lineHeight: '21px',
     },
     deleteModal: {
       marginLeft: -271,
@@ -212,6 +212,15 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       fontFamily: theme.font.familyHeader,
       fontWeight: theme.font.weightBold,
       fontSize: theme.font.sizeHeader,
+    },
+    rejectModal: {
+      marginLeft: -332,
+      marginTop: -204,
+      width: 662,
+      height: 408,
+      fontFamily: theme.font.familyHeader,
+      fontWeight: theme.font.weightMedium,
+      fontSize: theme.font.sizeRegion,
     },
     //@ts-ignore
     modalBody: {
@@ -241,7 +250,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       textAlign: 'center',
       outline: 'none',
       backgroundColor: theme.color.backgroundHighlighted,
-      borderRadius: 8
+      borderRadius: 8,
     },
     rollupModalBody: {
       height: '100%',
@@ -263,7 +272,8 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       alignItems: 'center',
       backgroundColor: theme.color.backgroundFocus,
       width: '100%',
-      height: '49px',
+      height: '52px',
+      flexShrink: 0,
       justifySelf: 'flex-end',
       padding: '0 115px',
       boxShadow: '0px -2px 4px rgba(0, 0, 0, 0.5)',
@@ -285,6 +295,13 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       padding: '0 4px',
       width: '100%',
     },
+    rejectTextfield: {
+      backgroundColor: theme.color.backgroundModal,
+      borderTopLeftRadius: '8px',
+      borderTopRightRadius: '8px',
+      padding: '0 4px',
+      width: '658px',
+    },
     modalTextfieldReadonlyContainer: {
       overflowWrap: 'break-word',
       overflowY: 'auto',
@@ -294,6 +311,12 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       height: 525,
       textAlign: 'left',
       whiteSpace: 'pre-wrap',
+    },
+    rejectHeader: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
     modalInputContainer: {
       display: 'flex',
@@ -332,8 +355,8 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       border: '1px solid' + theme.color.primaryButton,
       marginRight: '17px',
       '&:hover': {
-        boxShadow: '0 0 6px #FFF'
-      }
+        boxShadow: '0 0 6px #FFF',
+      },
     },
     spacer: {
       width: 128,
@@ -350,8 +373,8 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       cursor: 'pointer',
       background: theme.color.primaryButton,
       '&:hover': {
-        boxShadow: '0 0 6px #FFF'
-      }
+        boxShadow: '0 0 6px #FFF',
+      },
     },
 
   }));

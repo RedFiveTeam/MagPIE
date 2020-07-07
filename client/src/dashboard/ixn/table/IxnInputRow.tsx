@@ -60,15 +60,15 @@ function IxnTimeTextMask(props: TextMaskCustomProps) {
 export const IxnInputRow: React.FC<MyProps> = props => {
   const classes = rowStyles();
 
-  const [exploitAnalyst, setExploitAnalyst] = React.useState(props.ixn ? props.ixn.exploitAnalyst : props.tgtAnalyst);
-  const [time, setTime] = React.useState(props.ixn ? props.ixn.time.format('HH:mm:ss') : '');
-  const [activity, setActivity] = React.useState(props.ixn ? props.ixn.activity : '');
-  const [trackAnalyst, setTrackAnalyst] = React.useState(props.ixn ? props.ixn.trackAnalyst : '');
+  const [exploitAnalyst, setExploitAnalyst] = useState(props.ixn ? props.ixn.exploitAnalyst : props.tgtAnalyst);
+  const [time, setTime] = useState(props.ixn ? props.ixn.time.format('HH:mm:ss') : '');
+  const [activity, setActivity] = useState(props.ixn ? props.ixn.activity : '');
+  const [trackAnalyst, setTrackAnalyst] = useState(props.ixn ? props.ixn.trackAnalyst : '');
 
   const [note, setNote] = useState(props.ixn ? props.ixn.note : '');
 
-  const [timeInvalidError, setTimeInvalidError] = React.useState(false);
-  const [timeOutOfBoundsError, setTimeOutOfBoundsError] = React.useState(false);
+  const [timeInvalidError, setTimeInvalidError] = useState(false);
+  const [timeOutOfBoundsError, setTimeOutOfBoundsError] = useState(false);
   const [action, setAction] = useState(RowAction.NONE);
 
   const ixnChanged = (props.ixn ?

@@ -234,9 +234,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
           dispatch(updateIxn(ixn, cookie.userName, ixn.id === null));
           if (ixn.approvalStatus === IxnApprovalStatus.REJECTED && oldIxn && oldIxn.approvalStatus !==
             IxnApprovalStatus.REJECTED) {
-            setTimeout(() => {
-              handleAddNote(ixn.id!);
-            }, 500);
+            displaySnackbar('Reason saved successfully')
           }
         }
       }
