@@ -32,7 +32,7 @@ Scenario ('Should be able to collapse/expand mini RFI table', (I) => {
   I.waitForElement('.expand-button');
   I.click('.expand-button');
 
-  I.waitForElement('.mini-rfi-table');
+  I.waitForElement('.mini-rfi-table', 3);
 });
 
 Scenario('Should prompt user to save new targets retrieved from GETS', (I) => {
@@ -49,7 +49,7 @@ Scenario('Should prompt user to save new targets retrieved from GETS', (I) => {
   I.doubleClick(locate('.tgt-name').at(1));
   I.fillField(locate('.tgt-name').at(1), 'SDT20-001');
   I.pressKey('Enter');
-  I.waitForText('SDT20-001');
+  I.waitForText('SDT20-001', 3);
 
   I.doubleClick(locate('.tgt-name').at(2));
   I.fillField(locate('.tgt-name').at(2), 'SDT20-002');

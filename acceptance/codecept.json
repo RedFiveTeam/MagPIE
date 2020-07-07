@@ -13,13 +13,16 @@
       "waitForNavigation": "networkidle0",
       "switches": {
         "ignore-certificate-errors": true
-      }
+      },
+      "waitForTimeout": "3000"
     }
   },
   "include": {
     "I": "./steps_file.ts"
   },
   "bootstrap": false,
-  "mocha": { "bail": true },
+  "mocha": {
+    "bail": true
+  },
   "name": "pie"
 }
