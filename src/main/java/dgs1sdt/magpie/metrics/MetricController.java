@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @RestController
@@ -108,6 +109,14 @@ public class MetricController {
     @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
     ) {
     return metricsService.getRfisCompleted(startDate, endDate);
+  }
+
+  @GetMapping(path = "/hours-worked")
+  public long getHoursWorked(
+    @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
+    @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
+  ) {
+    return metricsService.getHoursWorkedBetween(startDate, endDate);
   }
 
   @PostMapping(path = "/site-visit")

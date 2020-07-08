@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
@@ -6,11 +7,10 @@ import theme from '../../resources/theme';
 import { MetricCardData, StyledMetricCard } from '../metric/MetricsCard';
 import { useDispatch } from 'react-redux';
 import { exitUserMetricsPage } from '../../store/rfi';
-import { useEffect, useState } from 'react';
 import DatePickerIcon from '../../resources/icons/DatePickerIcon';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { fetchMetric } from '../../store/metrics';
+import { fetchUserMetric } from '../../store/metrics';
 
 interface MyProps {
   className?: string;
@@ -22,9 +22,10 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
 
   const [startDate, setStartDate] = useState(magPieBeginning as Date|null);
   const [endDate, setEndDate] = useState(new Date() as Date|null);
+
   const [completedRfis, setCompletedRfis] = useState(-1);
-  //const [displayCalendar, setDisplayCalendar] = useState(props.exploitDate === undefined);
-  //const [highlighted, setHighlighted] = useState(true);
+  const [hoursWorked, setHoursWorked] = useState(-1);
+
   const [displayStartPicker, setDisplayStartPicker] = useState(false);
   const [displayEndPicker, setDisplayEndPicker] = useState(false);
 
@@ -35,13 +36,22 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
   };
 
   useEffect(() => {
-    fetchMetric('rfis-completed?startDate=' + moment(startDate).format('MM/DD/YYYY') + '&endDate=' +
-                  moment(endDate).format('MM/DD/YYYY'))
+    fetchUserMetric('rfis-completed', startDate, endDate)
       .then(response => response.json())
       .then(rfis => setCompletedRfis(rfis))
       .catch((reason) => {
         console.log('Failed to fetch RFIS completed: ' + reason);
       });
+  }, [startDate, endDate]);
+
+  useEffect(() => {
+    console.log('fetching');
+    fetchUserMetric('hours-worked', startDate, endDate)
+      .then(response => response.json())
+      .then(hoursWorked => setHoursWorked(hoursWorked))
+      .catch((reason) => {
+        console.log('Failed to fetch hours worked: ' + reason);
+      })
   }, [startDate, endDate]);
 
   return (
@@ -103,6 +113,14 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
           <StyledMetricCard
             data={new MetricCardData('RFIs Completed', completedRfis)}
             className={'rfis-completed'}
+          />
+          :
+          null
+        }
+        {hoursWorked >= 0 ?
+          <StyledMetricCard
+            data={new MetricCardData('Hours Worked', hoursWorked)}
+            className={'hours-worked'}
           />
           :
           null

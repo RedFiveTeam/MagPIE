@@ -821,4 +821,47 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       metricsService.getRfisCompleted(new Date(4 * MetricsService.MILLISECONDS_IN_A_DAY),
         new Date(9 * MetricsService.MILLISECONDS_IN_A_DAY)));
   }
+
+  @Test
+  public void returnsUniqueLoginsPerDayWithinDateRange() {
+    long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
+    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
+    long oneWeekAgo = new Date().getTime() - convertDaysToMS(7);
+
+    assertEquals(0, metricsService.getHoursWorkedBetween(new Timestamp(twoWeeksAgo), new Timestamp(oneWeekAgo)));
+
+    MetricLogin metric1 = new MetricLogin("billy");
+    MetricLogin metric2 = new MetricLogin("bob");
+    MetricLogin metric3 = new MetricLogin("joe");
+    MetricLogin metric4 = new MetricLogin("billy");
+    MetricLogin metric5 = new MetricLogin("billy");
+    MetricLogin metric6 = new MetricLogin("billy");
+    MetricLogin metric7 = new MetricLogin("bob");
+    MetricLogin metric8 = new MetricLogin("bob");
+    MetricLogin metric9 = new MetricLogin("rob");
+
+    //More than 2 weeks ago
+    metric1.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(0)));
+    metric2.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(2)));
+    metric3.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(5)));
+
+    //Between 1 and 3 weeks ago. 3 total days worked * 5 == 15 hours
+    metric4.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7))); //Billy
+    metric5.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7))); //Billy
+    metric6.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7))); //Bob
+
+    metric7.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(11))); //Bob
+
+    //Less than a week ago
+    metric8.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(15)));
+    metric9.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(17)));
+
+    List<MetricLogin> metrics = new ArrayList<>(Arrays.asList(
+      metric1, metric2, metric3, metric4, metric5, metric6, metric7, metric8, metric9
+    ));
+
+    metricLoginRepository.saveAll(metrics);
+
+    assertEquals(15, metricsService.getHoursWorkedBetween(new Timestamp(twoWeeksAgo), new Timestamp(oneWeekAgo)));
+  }
 }

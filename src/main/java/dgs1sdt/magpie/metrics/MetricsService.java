@@ -620,7 +620,7 @@ public class MetricsService {
     Timestamp weekEnd = new Timestamp(weekStart.getTime() + 7 * MILLISECONDS_IN_A_DAY);
 
     while (weekStart.getTime() < now) {
-      long uniqueLoginsThisWeek = metricLoginRepository.findAllUniqueLoginsDuringWeek(weekStart, weekEnd).size();
+      long uniqueLoginsThisWeek = metricLoginRepository.findAllUniqueLoginsBetween(weekStart, weekEnd).size();
       totalUniqueWeeklyLogins += uniqueLoginsThisWeek;
       weekStart = weekEnd;
       weekEnd = new Timestamp(weekStart.getTime() + 7 * MILLISECONDS_IN_A_DAY);
@@ -629,6 +629,24 @@ public class MetricsService {
       }
     }
     return Math.round((float) totalUniqueWeeklyLogins / (float) weeks);
+  }
+
+  public long getHoursWorkedBetween(Date startTime, Date endTime) {
+    if (metricLoginRepository.findAll().size() == 0) {
+      return 0;
+    }
+
+    long totalUniqueDailyLogins = 0;
+    Timestamp dayStart = new Timestamp(startTime.getTime());
+    Timestamp dayEnd = new Timestamp(dayStart.getTime() + MILLISECONDS_IN_A_DAY);
+
+    while (dayStart.getTime() < endTime.getTime()) {
+      long uniqueLoginsThisDay = metricLoginRepository.findAllUniqueLoginsBetween(dayStart, dayEnd).size();
+      totalUniqueDailyLogins += uniqueLoginsThisDay;
+      dayStart = dayEnd;
+      dayEnd = new Timestamp(dayStart.getTime() + MILLISECONDS_IN_A_DAY);
+    }
+    return totalUniqueDailyLogins * 5; //estimating 5 hours worked per day per user
   }
 
   public long getAveragePrioritizationsPerWeek() {

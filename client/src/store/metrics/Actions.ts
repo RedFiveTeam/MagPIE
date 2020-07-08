@@ -36,9 +36,9 @@ export const fetchSiteVisitsGraphWeekSuccess = (body: any) => {
 export const postSiteVisit = () => {
   return () => {
     return fetch('/api/metrics/site-visit',
-      {
-        method: 'post',
-      },
+                 {
+                   method: 'post',
+                 },
     ).catch((reason) => {
       console.log('Failed to post sort click metrics: ' + reason);
     });
@@ -48,14 +48,14 @@ export const postSiteVisit = () => {
 export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
   return () => {
     return fetch('/api/metrics/click-gets',
-      {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(getsClickRequestModel),
-      },
+                 {
+                   method: 'post',
+                   headers: {
+                     'Accept': 'application/json',
+                     'Content-Type': 'application/json',
+                   },
+                   body: JSON.stringify(getsClickRequestModel),
+                 },
     ).catch((reason) => {
       console.log('Failed to post GETS click metrics: ' + reason);
     });
@@ -64,14 +64,14 @@ export const postGetsClick = (getsClickRequestModel: GetsClickRequestModel) => {
 
 export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
   fetch('/api/metrics/click-sort',
-    {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(sortClickRequestModel),
-    },
+        {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sortClickRequestModel),
+        },
   ).catch((reason) => {
     console.log('Failed to post sort click metrics: ' + reason);
   });
@@ -80,9 +80,9 @@ export const postSortClick = (sortClickRequestModel: SortClickRequestModel) => {
 export const postRefreshClick = () => {
   return () => {
     return fetch('/api/metrics/click-refresh',
-      {
-        method: 'post',
-      },
+                 {
+                   method: 'post',
+                 },
     ).catch((reason) => {
       console.log('Failed to post refresh click metrics: ' + reason);
     });
@@ -136,8 +136,18 @@ export const postImportClick = (metric: ImportClickModel) => {
 
 export const fetchMetric = (uri: string) => {
   return fetch('/api/metrics/' + uri,
-    {
-      method: 'get'
-    }
+               {
+                 method: 'get',
+               },
+  );
+};
+
+export const fetchUserMetric = (uri: string, startDate: Date|null, endDate: Date|null) => {
+  const moment = require('moment');
+  return fetch('/api/metrics/' + uri + '?startDate=' + moment(startDate).format('MM/DD/YYYY') + '&endDate=' +
+                 moment(endDate).format('MM/DD/YYYY'),
+               {
+                 method: 'get',
+               },
   );
 };
