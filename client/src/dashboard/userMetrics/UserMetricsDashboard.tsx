@@ -25,6 +25,7 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
 
   const [completedRfis, setCompletedRfis] = useState(-1);
   const [hoursWorked, setHoursWorked] = useState(-1);
+  const [uniqueCustomers, setUniqueCustomers] = useState(-1);
 
   const [displayStartPicker, setDisplayStartPicker] = useState(false);
   const [displayEndPicker, setDisplayEndPicker] = useState(false);
@@ -45,13 +46,21 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
   }, [startDate, endDate]);
 
   useEffect(() => {
-    console.log('fetching');
     fetchUserMetric('hours-worked', startDate, endDate)
       .then(response => response.json())
       .then(hoursWorked => setHoursWorked(hoursWorked))
       .catch((reason) => {
         console.log('Failed to fetch hours worked: ' + reason);
-      })
+      });
+  }, [startDate, endDate]);
+
+  useEffect(() => {
+    fetchUserMetric('unique-customers', startDate, endDate)
+      .then(response => response.json())
+      .then(uniqueCustomers => setUniqueCustomers(uniqueCustomers))
+      .catch((reason) => {
+        console.log('Failed to fetch unique customers: ' + reason);
+      });
   }, [startDate, endDate]);
 
   return (
@@ -121,6 +130,14 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
           <StyledMetricCard
             data={new MetricCardData('Hours Worked', hoursWorked)}
             className={'hours-worked'}
+          />
+          :
+          null
+        }
+        {uniqueCustomers >= 0 ?
+          <StyledMetricCard
+            data={new MetricCardData('Requesting Customers', uniqueCustomers)}
+            className={'requesting-customers'}
           />
           :
           null

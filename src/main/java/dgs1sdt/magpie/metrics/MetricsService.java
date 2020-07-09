@@ -761,4 +761,25 @@ public class MetricsService {
     return metricChangeRfiRepository.findStatusChangeToClosedBetweenDateRange(
       startDate, endDate).size();
   }
+
+  public int getUniqueCustomersBetween(Date startDate, Date endDate) {
+    List<MetricChangeRfi> allClosedBetweenDateRange =
+      metricChangeRfiRepository.findStatusChangeToClosedBetweenDateRange(startDate, endDate);
+
+    List<String> uniqueCustomers = new ArrayList<>();
+
+    for (MetricChangeRfi closedMetric : allClosedBetweenDateRange) {
+      MetricChangeRfi openMetric = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(closedMetric.getRfiNum());
+      if (openMetric.getDatetime()
+        .before(new Date(closedMetric.getDatetime().getTime() - MetricsService.MILLISECONDS_IN_A_DAY))) {
+        String customer = rfiRepository.findByRfiNum(closedMetric.getRfiNum()).getCustomerUnit();
+
+        if (!uniqueCustomers.contains(customer)) {
+          uniqueCustomers.add(customer);
+        }
+      }
+    }
+
+    return uniqueCustomers.size();
+  }
 }

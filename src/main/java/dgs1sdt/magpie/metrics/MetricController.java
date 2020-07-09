@@ -119,6 +119,14 @@ public class MetricController {
     return metricsService.getHoursWorkedBetween(startDate, endDate);
   }
 
+  @GetMapping(path = "/unique-customers")
+  public long getUniqueCustomers(
+    @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
+    @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
+  ) {
+    return metricsService.getUniqueCustomersBetween(startDate, endDate);
+  }
+
   @PostMapping(path = "/site-visit")
   public void addSiteVisit() {
     metricsService.addSiteVisit();
