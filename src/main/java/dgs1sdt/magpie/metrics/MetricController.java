@@ -17,7 +17,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @RestController
@@ -116,21 +115,15 @@ public class MetricController {
     return metricsService.getRfisCompleted(startDate, endDate);
   }
 
-  @GetMapping(path = "/hours-worked")
-  public long getHoursWorked(
+  @GetMapping(path = "/targets-created")
+  public long getsTargetsCreated(
     @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
     @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
   ) {
-    return metricsService.getHoursWorkedBetween(startDate, endDate);
+    return metricsService.getTargetsCreatedWithinDateRange(startDate, endDate);
   }
 
-  @GetMapping(path = "/unique-customers")
-  public long getUniqueCustomers(
-    @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
-    @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
-  ) {
-    return metricsService.getUniqueCustomersBetween(startDate, endDate);
-  }
+  // END OF USER METRICS
 
   @PostMapping(path = "/site-visit")
   public void addSiteVisit() {

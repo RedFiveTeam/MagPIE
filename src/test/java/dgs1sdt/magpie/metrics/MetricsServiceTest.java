@@ -393,8 +393,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
     IxnJson ixn =
-      new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "",
-        IxnApprovalStatus.NOT_REVIEWED);
+      new IxnJson(1, 1, 1, 1, 1, "Billy", new Timestamp(23456), "", "", IxnStatus.IN_PROGRESS, "", "", "", IxnApprovalStatus.NOT_REVIEWED);
     MetricCreateIxn metric1 = new MetricCreateIxn(1, ixn, "guy");
     MetricCreateIxn metric2 = new MetricCreateIxn(1, ixn, "guy");
     MetricCreateIxn metric3 = new MetricCreateIxn(1, ixn, "guy");
@@ -658,14 +657,11 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metric7.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
 
     IxnJson ixnJson1 =
-      new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "",
-        IxnApprovalStatus.NOT_REVIEWED);
+      new IxnJson(1, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", IxnApprovalStatus.NOT_REVIEWED);
     IxnJson ixnJson2 =
-      new IxnJson(2, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "",
-        IxnApprovalStatus.NOT_REVIEWED);
+      new IxnJson(2, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", IxnApprovalStatus.NOT_REVIEWED);
     IxnJson ixnJson3 =
-      new IxnJson(3, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "",
-        IxnApprovalStatus.NOT_REVIEWED);
+      new IxnJson(3, 1, 1, 1, 1, "", new Timestamp(2345), "", "", IxnStatus.IN_PROGRESS, "", "", "", IxnApprovalStatus.NOT_REVIEWED);
     MetricChangeIxn metric8 = new MetricChangeIxn("time", ixnJson1, new Timestamp(twoWeeksAgo + convertDaysToMS(3)),
       "guy");
     MetricChangeIxn metric9 = new MetricChangeIxn("activity", ixnJson1,
@@ -827,118 +823,23 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void returnsUniqueLoginsPerDayWithinDateRange() {
+  public void returnsTargetsCreatedWithinDateRange() {
     long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
-    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
-    long oneWeekAgo = new Date().getTime() - convertDaysToMS(7);
+    TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "",
+      "");
+    MetricCreateTarget metric1 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric2 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric3 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric4 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
 
-    assertEquals(0, metricsService.getHoursWorkedBetween(new Timestamp(twoWeeksAgo), new Timestamp(oneWeekAgo)));
-
-    MetricLogin metric1 = new MetricLogin("billy");
-    MetricLogin metric2 = new MetricLogin("bob");
-    MetricLogin metric3 = new MetricLogin("joe");
-    MetricLogin metric4 = new MetricLogin("billy");
-    MetricLogin metric5 = new MetricLogin("billy");
-    MetricLogin metric6 = new MetricLogin("billy");
-    MetricLogin metric7 = new MetricLogin("bob");
-    MetricLogin metric8 = new MetricLogin("bob");
-    MetricLogin metric9 = new MetricLogin("rob");
-
-    //More than 2 weeks ago
-    metric1.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(0)));
+    metric1.setTimestamp(new Timestamp(threeWeeksAgo));
     metric2.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(2)));
     metric3.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(5)));
+    metric4.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7)));
 
-    //Between 1 and 3 weeks ago. 3 total days worked * 5 == 15 hours
-    metric4.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7))); //Billy
-    metric5.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7))); //Billy
-    metric6.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(7))); //Bob
+    metricCreateTargetRepository.saveAll(Arrays.asList(metric1,metric2,metric3,metric4));
 
-    metric7.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(11))); //Bob
-
-    //Less than a week ago
-    metric8.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(15)));
-    metric9.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(17)));
-
-    List<MetricLogin> metrics = new ArrayList<>(Arrays.asList(
-      metric1, metric2, metric3, metric4, metric5, metric6, metric7, metric8, metric9
-    ));
-
-    metricLoginRepository.saveAll(metrics);
-
-    assertEquals(15, metricsService.getHoursWorkedBetween(new Timestamp(twoWeeksAgo), new Timestamp(oneWeekAgo)));
-  }
-
-  @Test
-  public void retunsUniqeCustomersWithinDateRange() {
-    String rfiNum1 = "ABC20-00123";
-    String rfiNum2 = "ABC20-00124";
-    String rfiNum3 = "ABC20-00125";
-    String rfiNum4 = "ABC20-00126";
-    String rfiNum5 = "ABC20-00127";
-
-    //Outside of date range, don't count
-    Rfi rfi1 =
-      new Rfi(rfiNum1, "", "CLOSED", new Date(), "10 IS", null, "", "", "", "", "", "", "", "", "", "", "", "");
-
-    //Same customer, only count once
-    Rfi rfi2 =
-      new Rfi(rfiNum2, "", "CLOSED", new Date(), "30 IS", null, "", "", "", "", "", "", "", "", "", "", "", "");
-    Rfi rfi3 =
-      new Rfi(rfiNum3, "", "CLOSED", new Date(), "30 IS", null, "", "", "", "", "", "", "", "", "", "", "", "");
-
-    //Second customer
-    Rfi rfi4 =
-      new Rfi(rfiNum4, "", "CLOSED", new Date(), "45 IS", null, "", "", "", "", "", "", "", "", "", "", "", "");
-
-    //Open for less than a day, don't count
-    Rfi rfi5 =
-      new Rfi(rfiNum5, "", "CLOSED", new Date(), "497 ISRG", null, "", "", "", "", "", "", "", "", "", "", "", "");
-
-    rfiRepository.saveAll(Arrays.asList(rfi1, rfi2, rfi3, rfi4, rfi5));
-
-    long twoWeeksAgo = new Date().getTime() - 14 * MetricsService.MILLISECONDS_IN_A_DAY;
-    long oneWeekAgo = new Date().getTime() - 7 * MetricsService.MILLISECONDS_IN_A_DAY;
-
-    MetricChangeRfi rfi1open =
-      new MetricChangeRfi(rfiNum1, new Date(twoWeeksAgo - 3 * MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "NEW", "OPEN");
-    MetricChangeRfi rfi1close =
-      new MetricChangeRfi(rfiNum1, new Date(twoWeeksAgo - MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "OPEN", "CLOSED");
-
-    MetricChangeRfi rfi2open =
-      new MetricChangeRfi(rfiNum2, new Date(twoWeeksAgo + 3 * MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "NEW", "OPEN");
-    MetricChangeRfi rfi2close =
-      new MetricChangeRfi(rfiNum2, new Date(twoWeeksAgo + 5 * MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "OPEN", "CLOSED");
-
-    MetricChangeRfi rfi3open =
-      new MetricChangeRfi(rfiNum3, new Date(twoWeeksAgo + MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "NEW", "OPEN");
-    MetricChangeRfi rfi3close =
-      new MetricChangeRfi(rfiNum3, new Date(twoWeeksAgo + 4 * MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "OPEN", "CLOSED");
-
-    MetricChangeRfi rfi4open =
-      new MetricChangeRfi(rfiNum4, new Date(twoWeeksAgo + 2 * MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "NEW", "OPEN");
-    MetricChangeRfi rfi4close =
-      new MetricChangeRfi(rfiNum4, new Date(twoWeeksAgo + 6 * MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "OPEN", "CLOSED");
-
-    MetricChangeRfi rfi5open =
-      new MetricChangeRfi(rfiNum5, new Date(twoWeeksAgo + MetricsService.MILLISECONDS_IN_A_DAY),
-        "status", "NEW", "OPEN");
-    MetricChangeRfi rfi5close =
-      new MetricChangeRfi(rfiNum5, new Date(twoWeeksAgo + MetricsService.MILLISECONDS_IN_A_DAY + 10000),
-        "status", "OPEN", "CLOSED");
-
-    metricChangeRfiRepository.saveAll(Arrays
-      .asList(rfi1open, rfi1close, rfi2open, rfi2close, rfi3open, rfi3close, rfi4open, rfi4close, rfi5open, rfi5close));
-
-    assertEquals(2, metricsService.getUniqueCustomersBetween(new Date(twoWeeksAgo), new Date(oneWeekAgo)));
+    assertEquals(3, metricsService.getTargetsCreatedWithinDateRange(new Date(threeWeeksAgo), new Date(threeWeeksAgo + convertDaysToMS(6))));
   }
 
   @Test

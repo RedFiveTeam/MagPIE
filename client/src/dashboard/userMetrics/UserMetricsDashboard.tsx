@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
@@ -7,10 +6,11 @@ import theme from '../../resources/theme';
 import { MetricCardData, StyledMetricCard } from '../metric/MetricsCard';
 import { useDispatch } from 'react-redux';
 import { exitUserMetricsPage } from '../../store/rfi';
+import { useEffect, useState } from 'react';
 import DatePickerIcon from '../../resources/icons/DatePickerIcon';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { fetchUserMetric } from '../../store/metrics';
+import { fetchMetric } from '../../store/metrics';
 
 interface MyProps {
   className?: string;
@@ -22,11 +22,10 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
 
   const [startDate, setStartDate] = useState(magPieBeginning as Date|null);
   const [endDate, setEndDate] = useState(new Date() as Date|null);
-
   const [completedRfis, setCompletedRfis] = useState(-1);
-  const [hoursWorked, setHoursWorked] = useState(-1);
-  const [uniqueCustomers, setUniqueCustomers] = useState(-1);
-
+  const [targetsCreated, setTargetsCreated] = useState(-1);
+  //const [displayCalendar, setDisplayCalendar] = useState(props.exploitDate === undefined);
+  //const [highlighted, setHighlighted] = useState(true);
   const [displayStartPicker, setDisplayStartPicker] = useState(false);
   const [displayEndPicker, setDisplayEndPicker] = useState(false);
 
@@ -37,31 +36,23 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
   };
 
   useEffect(() => {
-    fetchUserMetric('rfis-completed', startDate, endDate)
+    fetchMetric('rfis-completed?startDate=' + moment(startDate).format('MM/DD/YYYY') + '&endDate=' +
+                  moment(endDate).add(1, 'days').format('MM/DD/YYYY'))
       .then(response => response.json())
       .then(rfis => setCompletedRfis(rfis))
       .catch((reason) => {
         console.log('Failed to fetch RFIS completed: ' + reason);
       });
-  }, [startDate, endDate]);
 
-  useEffect(() => {
-    fetchUserMetric('hours-worked', startDate, endDate)
+    fetchMetric('targets-created?startDate=' + moment(startDate).format('MM/DD/YYYY') + '&endDate=' +
+                  moment(endDate).add(1, 'days').format('MM/DD/YYYY'))
       .then(response => response.json())
-      .then(hoursWorked => setHoursWorked(hoursWorked))
+      .then(targets => setTargetsCreated(targets))
       .catch((reason) => {
-        console.log('Failed to fetch hours worked: ' + reason);
+        console.log('Failed to fetch targets created: ' + reason);
       });
   }, [startDate, endDate]);
 
-  useEffect(() => {
-    fetchUserMetric('unique-customers', startDate, endDate)
-      .then(response => response.json())
-      .then(uniqueCustomers => setUniqueCustomers(uniqueCustomers))
-      .catch((reason) => {
-        console.log('Failed to fetch unique customers: ' + reason);
-      });
-  }, [startDate, endDate]);
 
   return (
     <div className={classNames(props.className, 'metrics-dashboard')}>
@@ -126,18 +117,10 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
           :
           null
         }
-        {hoursWorked >= 0 ?
+        {targetsCreated >= 0 ?
           <StyledMetricCard
-            data={new MetricCardData('Hours Worked', hoursWorked)}
-            className={'hours-worked'}
-          />
-          :
-          null
-        }
-        {uniqueCustomers >= 0 ?
-          <StyledMetricCard
-            data={new MetricCardData('Requesting Customers', uniqueCustomers)}
-            className={'requesting-customers'}
+            data={new MetricCardData('Targets Created', targetsCreated)}
+            className={'targets-created'}
           />
           :
           null
@@ -182,11 +165,12 @@ export const StyledUserMetricsDashboard = styled(UserMetricsDashboard)`
   }
   
   .metrics-container {
+    margin-top: 11px;
     width: 100%;
     padding: 0 15px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
     align-items: flex-start;
     align-content: flex-start;
     flex-wrap: wrap;

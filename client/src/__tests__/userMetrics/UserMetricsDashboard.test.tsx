@@ -38,5 +38,4 @@ describe('UserMetricsDashboard', () => {
   it('should display the date range container', () => {
     expect(subject.find('.datepickers-container').exists()).toBeTruthy();
   });
-
 });

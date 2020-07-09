@@ -21,8 +21,6 @@ import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
-import dgs1sdt.magpie.metrics.login.MetricLogin;
-import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
@@ -31,20 +29,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 public class MetricControllerTest extends BaseIntegrationTest {
-  @Autowired
-  private MetricController metricController;
-
   @Autowired
   private MetricClickGetsRepository metricClickGetsRepository;
 
@@ -87,9 +78,6 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricClickCollapseRepository metricClickCollapseRepository;
 
-  @Autowired
-  private MetricLoginRepository metricLoginRepository;
-
   @Before
   public void setup() {
     metricClickGetsRepository.deleteAll();
@@ -105,7 +93,6 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricClickRollupRepository.deleteAll();
     metricClickImportRepository.deleteAll();
     metricClickCollapseRepository.deleteAll();
-    metricLoginRepository.deleteAll();
   }
 
   @Test

@@ -30,6 +30,9 @@ import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupRepository;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
@@ -55,9 +58,6 @@ import dgs1sdt.magpie.metrics.login.MetricLogin;
 import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
-import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
-import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
-import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriority;
 import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriorityRepository;
 import dgs1sdt.magpie.metrics.undoExploitDateDelete.MetricUndoExploitDateDelete;
@@ -762,6 +762,11 @@ public class MetricsService {
       startDate, endDate).size();
   }
 
+  public long getTargetsCreatedWithinDateRange(Date startDate, Date endDate) {
+    return metricCreateTargetRepository.findTargetsCreatedBetweenDateRange(
+      startDate, endDate).size();
+  }
+
   public int getUniqueCustomersBetween(Date startDate, Date endDate) {
     List<MetricChangeRfi> allClosedBetweenDateRange =
       metricChangeRfiRepository.findStatusChangeToClosedBetweenDateRange(startDate, endDate);
@@ -770,7 +775,7 @@ public class MetricsService {
 
     for (MetricChangeRfi closedMetric : allClosedBetweenDateRange) {
       MetricChangeRfi openMetric = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(closedMetric.getRfiNum());
-      if (openMetric != null && openMetric.getDatetime()
+      if (openMetric.getDatetime()
         .before(new Date(closedMetric.getDatetime().getTime() - MetricsService.MILLISECONDS_IN_A_DAY))) {
         String customer = rfiRepository.findByRfiNum(closedMetric.getRfiNum()).getCustomerUnit();
 

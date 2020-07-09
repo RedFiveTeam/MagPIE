@@ -28,11 +28,11 @@ Scenario('Should display RFIs completed card', (I) => {
   });
 });
 
-Scenario('Should display unique customer card', (I) => {
+Scenario('Should display targets created card', (I) => {
   I.waitForElement('.metrics-button');
   I.click('.metrics-button');
-  I.waitForText('Requesting Customers');
-  within('.requesting-customers', () => {
-    I.see('0');
+  I.waitForText('Targets Created');
+  within('.targets-created', () => {
+    I.see('11');
   });
 });
