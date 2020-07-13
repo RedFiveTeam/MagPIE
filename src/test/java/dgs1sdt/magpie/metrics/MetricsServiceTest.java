@@ -940,4 +940,37 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     assertEquals(2, metricsService.getUniqueCustomersBetween(new Date(twoWeeksAgo), new Date(oneWeekAgo)));
   }
+
+  @Test
+  public void returnsUnworkedRfisPercentage() {
+    assertEquals(0, metricsService.getUnworkedRfiPercentage());
+
+    // Cases: RFIs opened and worked, RFIs opened and not worked, RFIs not closed
+    long oneWeekAgo = new Date().getTime() - 7 * MetricsService.MILLISECONDS_IN_A_DAY;
+
+    String rfiNum1 = "ABC20-0001"; // not worked
+    String rfiNum2 = "ABC20-0002"; // worked
+    String rfiNum3 = "ABC20-0003"; // not closed
+    String rfiNum4 = "ABC20-0004"; // worked
+
+    MetricChangeRfi rfi1Open = new MetricChangeRfi(rfiNum1, new Date(oneWeekAgo), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi1Close = new MetricChangeRfi(rfiNum1, new Date(oneWeekAgo + 30000), "status", "OPEN", "CLOSED");
+
+    MetricChangeRfi rfi2Open = new MetricChangeRfi(rfiNum2, new Date(oneWeekAgo), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi2Close =
+      new MetricChangeRfi(rfiNum2, new Date(oneWeekAgo + 3 * MetricsService.MILLISECONDS_IN_A_DAY), "status", "OPEN",
+        "CLOSED");
+
+    MetricChangeRfi rfi3Open = new MetricChangeRfi(rfiNum3, new Date(oneWeekAgo), "status", "NEW", "OPEN");
+
+    MetricChangeRfi rfi4Open = new MetricChangeRfi(rfiNum4, new Date(oneWeekAgo), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi4Close =
+      new MetricChangeRfi(rfiNum4, new Date(oneWeekAgo + 2 * MetricsService.MILLISECONDS_IN_A_DAY), "status", "OPEN",
+        "CLOSED");
+
+    metricChangeRfiRepository
+      .saveAll(Arrays.asList(rfi1Open, rfi1Close, rfi2Open, rfi2Close, rfi3Open, rfi4Open, rfi4Close));
+
+    assertEquals(33, metricsService.getUnworkedRfiPercentage());
+  }
 }

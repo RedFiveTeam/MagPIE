@@ -21,6 +21,16 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [edits, setEdits] = useState([-1, -1, -1, -1]);
   const [prioritizations, setPrioritizations] = useState(-1);
   const [ltiovsMet, setLtiovsMet] = useState(-1);
+  const [unworkedRfis, setUnworkedRfis] = useState(-1);
+
+  useEffect(() => {
+    fetchMetric('percent-rfis-unworked')
+      .then(response => response.json())
+      .then(unworkedRfis => setUnworkedRfis(unworkedRfis))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
 
   useEffect(() => {
     fetchMetric('workflow-time')
@@ -115,10 +125,10 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   return (
     <div className={classNames(props.className, 'metrics-dashboard')}>
       <div className='metrics-header'>
-          <div className={'smallbord-container'}>
-            <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
-          </div>
+        <div className={'smallbord-container'}>
+          <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
         </div>
+      </div>
       <div className={'metrics-container'}>
         {workflowTime[0] > -1 ?
           <StyledMetricCard
@@ -222,6 +232,14 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
           <StyledMetricCard
             data={new MetricCardData('LTIOVs Met', ltiovsMet + '%')}
             className={'ltiovs-met'}
+          />
+          :
+          null
+        }
+        {unworkedRfis > -1 ?
+          <StyledMetricCard
+            data={new MetricCardData('Unworked RFIs', unworkedRfis + '%')}
+            className={'unworked-rfis'}
           />
           :
           null

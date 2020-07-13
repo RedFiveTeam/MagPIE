@@ -83,3 +83,9 @@ Scenario('Should display other metrics', (I) => {
   I.see('0%', '.ltiovs-met');
 });
 
+Scenario('Should display percent RFIs that are unworked', (I) => {
+  I.amOnPage('/metrics');
+
+  I.waitForText('Unworked RFIs');
+  I.see('0%', '.unworked-rfis');
+})

@@ -102,6 +102,11 @@ public class MetricController {
     return metricsService.getLtiovMetPercentage();
   }
 
+  @GetMapping(path = "/percent-rfis-unworked")
+  public int getUnworkedRfiPercentage() {
+    return metricsService.getUnworkedRfiPercentage();
+  }
+
   // USER METRICS
   @GetMapping(path = "/rfis-completed")
   public long getRfisCompleted(

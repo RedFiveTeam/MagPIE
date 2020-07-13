@@ -782,4 +782,31 @@ public class MetricsService {
 
     return uniqueCustomers.size();
   }
+
+  public int getUnworkedRfiPercentage() {
+    List<MetricChangeRfi> rfisOpened = metricChangeRfiRepository.findAllStatusChangeToOpen();
+    int totalOpenedClosedRfis = 0;
+    int unworkedRfis = 0;
+
+    for (MetricChangeRfi rfiOpened : rfisOpened) {
+      MetricChangeRfi rfiClosed = metricChangeRfiRepository.findStatusChangeToClosedByRfiNum(rfiOpened.getRfiNum());
+      if (rfiClosed != null) {
+        totalOpenedClosedRfis++;
+        if (rfiClosed.getDatetime()
+          .before(new Date(rfiOpened.getDatetime().getTime() + MetricsService.MILLISECONDS_IN_A_DAY))) {
+          unworkedRfis++;
+        }
+      }
+    }
+
+    if (unworkedRfis == 0) {
+      if (totalOpenedClosedRfis == 0) {
+        return 0;
+      } else {
+        return 100;
+      }
+    }
+
+    return Math.round(100 * (float) unworkedRfis / (float) totalOpenedClosedRfis);
+  }
 }
