@@ -770,7 +770,7 @@ public class MetricsService {
 
     for (MetricChangeRfi closedMetric : allClosedBetweenDateRange) {
       MetricChangeRfi openMetric = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(closedMetric.getRfiNum());
-      if (openMetric.getDatetime()
+      if (openMetric != null && openMetric.getDatetime()
         .before(new Date(closedMetric.getDatetime().getTime() - MetricsService.MILLISECONDS_IN_A_DAY))) {
         String customer = rfiRepository.findByRfiNum(closedMetric.getRfiNum()).getCustomerUnit();
 
