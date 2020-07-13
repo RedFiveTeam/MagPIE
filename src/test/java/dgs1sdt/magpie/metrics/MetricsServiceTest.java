@@ -54,6 +54,7 @@ import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Metric;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -994,5 +995,45 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       .saveAll(Arrays.asList(rfi1Open, rfi1Close, rfi2Open, rfi2Close, rfi3Open, rfi4Open, rfi4Close));
 
     assertEquals(33, metricsService.getUnworkedRfiPercentage());
+  }
+
+  @Test
+  public void returnsAverageTrackComp(){
+    // Cases: status changed to completed, other change
+    assertEquals(0, metricsService.getAverageTracksCompletedPerWeek());
+
+    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
+
+    MetricChangeIxn metric1 = new MetricChangeIxn();
+    MetricChangeIxn metric2 = new MetricChangeIxn();
+    MetricChangeIxn metric3 = new MetricChangeIxn();
+    MetricChangeIxn metric4 = new MetricChangeIxn();
+    MetricChangeIxn metric5 = new MetricChangeIxn();
+
+    metric1.setField("status");
+    metric2.setField("status");
+    metric3.setField("status");
+    metric4.setField("status");
+    metric5.setField("status");
+
+    metric1.setNewData(IxnStatus.COMPLETED);
+    metric2.setNewData(IxnStatus.COMPLETED);
+    metric3.setNewData(IxnStatus.COMPLETED);
+    metric4.setNewData(IxnStatus.IN_PROGRESS);
+    metric5.setNewData(IxnStatus.COMPLETED);
+
+    metric1.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(0)));
+    metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
+    metric3.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(5)));
+    metric4.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(7)));
+    metric5.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(8)));
+
+    List<MetricChangeIxn> metrics = new ArrayList<>(Arrays.asList(
+      metric1, metric2, metric3, metric4, metric5
+    ));
+
+    metricChangeIxnRepository.saveAll(metrics);
+
+    assertEquals(2, metricsService.getAverageTracksCompletedPerWeek());
   }
 }
