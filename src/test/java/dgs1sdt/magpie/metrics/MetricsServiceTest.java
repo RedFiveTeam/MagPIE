@@ -941,7 +941,6 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     assertEquals(2, metricsService.getUniqueCustomersBetween(new Date(twoWeeksAgo), new Date(oneWeekAgo)));
   }
 
-
   @Test
   public void returnsTargetsCreatedWithinDateRange() {
     long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
@@ -994,6 +993,121 @@ public class MetricsServiceTest extends BaseIntegrationTest {
       .saveAll(Arrays.asList(rfi1Open, rfi1Close, rfi2Open, rfi2Close, rfi3Open, rfi4Open, rfi4Close));
 
     assertEquals(33, metricsService.getUnworkedRfiPercentage());
+  }
+
+  @Test
+  public void returnsTrackAcceptanceRatiosByUser() {
+    //Cases: track is completed but no corresponding accept/reject is found
+
+    long twoWeeksAgo = new Date().getTime() - (14 * MetricsService.MILLISECONDS_IN_A_DAY);
+
+    String user1 = "billy";
+    String user2 = "bob";
+    String checker = "Joseph";
+
+    long ixn1id = 1234; // user 1, rejected then accepted
+    long ixn2id = 2345; // user 2, accepted
+    long ixn3id = 3456; // user 1, accepted
+    long ixn4id = 5678; // user 2, rejected but not accepted
+    long ixn5id = 6789; // user 1, completed but not accepted or rejected
+
+    //Ixn 1
+
+    MetricChangeIxn track1Complete = new MetricChangeIxn();
+    track1Complete.setIxnId(ixn1id);
+    track1Complete.setField("status");
+    track1Complete.setNewData(IxnStatus.COMPLETED);
+    track1Complete.setUserName(user1);
+    track1Complete.setTimestamp(new Timestamp(twoWeeksAgo));
+
+    MetricChangeIxn track1Reject = new MetricChangeIxn();
+    track1Reject.setIxnId(ixn1id);
+    track1Reject.setField("approval_status");
+    track1Reject.setNewData(IxnApprovalStatus.REJECTED);
+    track1Reject.setUserName(checker);
+    track1Reject.setTimestamp(new Timestamp(twoWeeksAgo + MetricsService.MILLISECONDS_IN_A_DAY));
+
+    MetricChangeIxn track1Complete2 = new MetricChangeIxn();
+    track1Complete2.setIxnId(ixn1id);
+    track1Complete2.setField("status");
+    track1Complete2.setNewData(IxnStatus.COMPLETED);
+    track1Complete2.setUserName(user1);
+    track1Complete2.setTimestamp(new Timestamp(twoWeeksAgo + 2 * MetricsService.MILLISECONDS_IN_A_DAY));
+
+    MetricChangeIxn track1Accept = new MetricChangeIxn();
+    track1Accept.setIxnId(ixn1id);
+    track1Accept.setField("approval_status");
+    track1Accept.setNewData(IxnApprovalStatus.APPROVED);
+    track1Accept.setUserName(checker);
+    track1Accept.setTimestamp(new Timestamp(twoWeeksAgo + 3 * MetricsService.MILLISECONDS_IN_A_DAY));
+
+    //Ixn 2
+
+    MetricChangeIxn track2Complete2 = new MetricChangeIxn();
+    track2Complete2.setIxnId(ixn2id);
+    track2Complete2.setField("status");
+    track2Complete2.setNewData(IxnStatus.COMPLETED);
+    track2Complete2.setUserName(user2);
+    track2Complete2.setTimestamp(new Timestamp(twoWeeksAgo));
+
+    MetricChangeIxn track2Accept = new MetricChangeIxn();
+    track2Accept.setIxnId(ixn2id);
+    track2Accept.setField("approval_status");
+    track2Accept.setNewData(IxnApprovalStatus.APPROVED);
+    track2Accept.setUserName(checker);
+    track2Accept.setTimestamp(new Timestamp(twoWeeksAgo + 2 * MetricsService.MILLISECONDS_IN_A_DAY));
+
+    // Ixn 3
+
+    MetricChangeIxn track3Complete2 = new MetricChangeIxn();
+    track3Complete2.setIxnId(ixn3id);
+    track3Complete2.setField("status");
+    track3Complete2.setNewData(IxnStatus.COMPLETED);
+    track3Complete2.setUserName(user1);
+    track3Complete2.setTimestamp(new Timestamp(twoWeeksAgo + 6 * MetricsService.MILLISECONDS_IN_A_DAY));
+
+    MetricChangeIxn track3Accept = new MetricChangeIxn();
+    track3Accept.setIxnId(ixn3id);
+    track3Accept.setField("approval_status");
+    track3Accept.setNewData(IxnApprovalStatus.APPROVED);
+    track3Accept.setUserName(checker);
+    track3Accept.setTimestamp(new Timestamp(twoWeeksAgo + 12 * MetricsService.MILLISECONDS_IN_A_DAY));
+
+    //Ixn 4
+
+    MetricChangeIxn track4Complete = new MetricChangeIxn();
+    track4Complete.setIxnId(ixn4id);
+    track4Complete.setField("status");
+    track4Complete.setNewData(IxnStatus.COMPLETED);
+    track4Complete.setUserName(user2);
+    track4Complete.setTimestamp(new Timestamp(twoWeeksAgo));
+
+    MetricChangeIxn track4Reject = new MetricChangeIxn();
+    track4Reject.setIxnId(ixn4id);
+    track4Reject.setField("approval_status");
+    track4Reject.setNewData(IxnApprovalStatus.REJECTED);
+    track4Reject.setUserName(checker);
+    track4Reject.setTimestamp(new Timestamp(twoWeeksAgo + MetricsService.MILLISECONDS_IN_A_DAY));
+
+    // Ixn 5
+
+    MetricChangeIxn track5Complete = new MetricChangeIxn();
+    track5Complete.setIxnId(ixn5id);
+    track5Complete.setField("status");
+    track5Complete.setNewData(IxnStatus.COMPLETED);
+    track5Complete.setUserName(user1);
+    track5Complete.setTimestamp(new Timestamp(twoWeeksAgo + 8 * MetricsService.MILLISECONDS_IN_A_DAY));
+
+    metricChangeIxnRepository.saveAll(Arrays
+      .asList(track1Complete, track1Reject, track1Complete2, track1Accept, track2Complete2, track2Accept,
+        track3Complete2, track3Accept, track4Complete, track4Reject, track5Complete));
+
+    List<UserPerformanceMetric> metrics = metricsService.getUserPerformanceMetrics();
+
+    assertEquals("billy", metrics.get(0).getUserName());
+    assertEquals(67, metrics.get(0).getApprovalRating());
+    assertEquals("bob", metrics.get(1).getUserName());
+    assertEquals(50, metrics.get(1).getApprovalRating());
   }
 
   @Test

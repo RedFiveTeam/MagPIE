@@ -816,6 +816,54 @@ public class MetricsService {
     return Math.round(100 * (float) unworkedRfis / (float) totalOpenedClosedRfis);
   }
 
+  public List<UserPerformanceMetric> getUserPerformanceMetrics() {
+    List<MetricChangeIxn> trackCompletions = metricChangeIxnRepository.findAllStatusChangeToComplete();
+    List<AcceptRejectTally> tallies = new ArrayList<>();
+
+    for (MetricChangeIxn trackCompletion : trackCompletions) {
+      try {
+        //Get the first approval status change to approved or rejected after the track completion
+        MetricChangeIxn firstTrackApproveReject = metricChangeIxnRepository
+          .findRejectionOrAcceptanceByIxnIdAfterTime(trackCompletion.getIxnId(), trackCompletion.getTimestamp()).get(0);
+
+        //Try to find the username within the existing list
+        AcceptRejectTally tallyToIncrement = null;
+        for (AcceptRejectTally tally : tallies) {
+          if (tally.getUserName().equals(trackCompletion.getUserName())) {
+            tallyToIncrement = tally;
+            break;
+          }
+        }
+
+        //username not found, add to list
+        if (tallyToIncrement == null) {
+          tallyToIncrement = new AcceptRejectTally(trackCompletion.getUserName());
+          tallies.add(tallyToIncrement);
+        }
+
+        //increment accepted & total accordingly
+        if (firstTrackApproveReject.getNewData().equals(IxnApprovalStatus.APPROVED)) {
+          tallyToIncrement.incrementAccepted();
+        }
+
+        tallyToIncrement.incrementTotal();
+
+//        System.out.println(tallyToIncrement);
+
+      } catch (IndexOutOfBoundsException e) {
+        // No approve or reject found, ignore
+      }
+    }
+
+    List<UserPerformanceMetric> metrics = new ArrayList<>();
+    for (AcceptRejectTally tally : tallies) {
+      metrics.add(new UserPerformanceMetric(tally.getUserName(),
+        Math.round(((float) tally.getAccepted() / tally.getTotal()) * 100)));
+    }
+
+    return metrics;
+  }
+
   public long getAverageTracksCompletedPerWeek() {
     return getAveragePerWeek(metricChangeIxnRepository.findByNewDataEquals(IxnStatus.COMPLETED));
   }

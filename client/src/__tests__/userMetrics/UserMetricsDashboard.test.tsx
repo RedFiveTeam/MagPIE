@@ -6,10 +6,12 @@ import { Provider } from 'react-redux';
 import { initStore } from '../../../setupTests';
 import configureStore from '../../configureStore';
 
+import {StyledScoreBoardContainer} from "../../dashboard/userMetrics/view/ScoreBoardContainer";
+import {RangeMetricsContainer} from "../../dashboard/userMetrics/view/RangeMetricsContainer";
+
 const initState = {
   ...initStore,
 };
-
 //@ts-ignore
 const mockStore = configureStore(history, initState);
 
@@ -25,17 +27,14 @@ describe('UserMetricsDashboard', () => {
     );
   });
 
-  it('should display the header and header buttons', () => {
+  it('should display the header and nav buttons', () => {
     expect(subject.find('.metrics-header').exists()).toBeTruthy();
     expect(subject.find('.smallbord-container').exists()).toBeTruthy();
     expect(subject.find(StyledBackButtonVector).exists()).toBeTruthy();
+    expect(subject.find('.scoreboard-button').exists()).toBeTruthy();
   });
 
-  it('should display the metrics container', () => {
-    expect(subject.find('.metrics-container').exists()).toBeTruthy();
-  });
-
-  it('should display the date range container', () => {
-    expect(subject.find('.datepickers-container').exists()).toBeTruthy();
+  it('should display the metrics view container by default', () => {
+    expect(subject.find(RangeMetricsContainer).exists()).toBeTruthy();
   });
 });

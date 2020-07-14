@@ -142,6 +142,14 @@ export const fetchMetric = (uri: string) => {
   );
 };
 
+export const fetchScoreBoardMetric = (uri: string) => {
+    return fetch('/api/metrics/' + uri,
+        {
+            method: 'get',
+        },
+    );
+};
+
 export const fetchUserMetric = (uri: string, startDate: Date|null, endDate: Date|null) => {
   const moment = require('moment');
   return fetch('/api/metrics/' + uri + '?startDate=' + moment(startDate).format('MM/DD/YYYY') + '&endDate=' +

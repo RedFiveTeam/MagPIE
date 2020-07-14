@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(MetricController.URI)
@@ -147,6 +148,11 @@ public class MetricController {
   ) {
     return metricsService
       .getTargetsCreatedWithinDateRange(startDate, new Date(endDate.getTime() + MetricsService.MILLISECONDS_IN_A_DAY));
+  }
+
+  @GetMapping(path  = "/approval-ratings")
+  public List<UserPerformanceMetric> getsApprovalRatings() {
+    return metricsService.getUserPerformanceMetrics();
   }
 
   // END OF USER METRICS

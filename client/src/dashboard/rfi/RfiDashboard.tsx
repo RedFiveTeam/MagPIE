@@ -1,4 +1,4 @@
-import * as React from 'react';
+ import * as React from 'react';
 import { useState } from 'react';
 import { StyledRfiTable } from './RfiTable';
 import styled from 'styled-components';
@@ -314,5 +314,8 @@ export const StyledRfiDashboard = styled(RfiDashboard)`
     width: 4px;
     height: 100%;
     margin: 0 25px;
+  }
+  .metrics-button {
+  cursor: pointer;
   }
 `;

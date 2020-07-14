@@ -40,4 +40,5 @@ export const fetchRefreshClicksMetrics = () => {
       .then(body => dispatch(fetchRefreshClicksSuccess(body)))
       .catch((reason => {console.log("Failed to fetch refresh clicks: " + reason)}));
   }
+
 };

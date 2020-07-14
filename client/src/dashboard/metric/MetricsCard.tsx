@@ -58,6 +58,7 @@ export const MetricCard: React.FC<MyProps> = (props) => {
 
 export const StyledMetricCard = styled(MetricCard)`
     width: 294px;
+    display: block;
     height: 201px;
     margin: 15px;
     background-color: ${theme.color.backgroundMetricsCard};
@@ -92,11 +93,11 @@ export const StyledMetricCard = styled(MetricCard)`
     padding: 13px 34px 13px 34px;
     width: 100%;
     font-weight: normal;
-      font-size: ${theme.font.sizeHeader};
+    font-size: ${theme.font.sizeHeader};
   }
   
   .small {
     font-size: ${theme.font.sizeRegion};
-        padding: 8px 34px 8px 34px;
+    padding: 8px 34px 8px 34px;
   }
 `;

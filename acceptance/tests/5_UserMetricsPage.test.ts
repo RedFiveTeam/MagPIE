@@ -44,4 +44,18 @@ Scenario('Should display targets created card', (I) => {
   within('.targets-created', () => {
     I.see('11');
   });
+
+  Scenario('Should be able to navigate to and see the user scoreboard page and nav back', (I) => {
+    I.waitForElement('.metrics-button');
+    I.click('.metrics-button');
+    I.waitForText('RFIs Completed');
+    I.waitForElement('.metrics-header--back-button');
+    I.click('.scoreboard-button');
+    I.waitForElement('.metrics-header--back-button');
+    I.waitForText('Approval Rating');
+    I.waitForElement('.scoreboard');
+    I.click('.metrics-header--back-button');
+    I.waitForText('RFIs Completed');
+    I.waitForElement('.datepickers');
+  });
 });
