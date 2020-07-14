@@ -67,11 +67,14 @@ Scenario('Should display edit metrics', (I) => {
 Scenario('Should display other metrics', (I) => {
   I.amOnPage('/metrics');
 
-  I.waitForText('Avg Targets Created', 10);
+  I.waitForText('Avg Targets Created', 3);
   I.see('11', '.tgts-created');
 
-  I.waitForText('Avg Interactions Created', 10);
+  I.waitForText('Avg Interactions Created', 3);
   I.see('4', '.ixns-created');
+
+  I.waitForText('Avg Tracks Completed', 3);
+  I.see('2', '.ixns-completed')
 
   I.waitForText('Avg Logins');
   I.see('2', '.logins');

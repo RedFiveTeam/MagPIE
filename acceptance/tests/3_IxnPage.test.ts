@@ -78,7 +78,7 @@ Scenario('Should be able to add, undo adding, and cancel adding segments', (I) =
   I.click('.modal-no');
   I.seeElement('.segment-input-container');
 
-  I.wait(1);
+  I.waitForElement('.cancel-add-segment', 3);
   I.click('.cancel-add-segment');
 
   I.waitForElement('.navigate-modal');

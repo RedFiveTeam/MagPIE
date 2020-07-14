@@ -71,6 +71,11 @@ public class MetricController {
     return metricsService.getAverageIxnCreationsPerWeek();
   }
 
+  @GetMapping(path = "/ixns-completed-per-week")
+  public long getIxnsCompletedPerWeek() {
+    return metricsService.getAverageTracksCompletedPerWeek();
+  }
+
   @GetMapping(path = "/deletions-per-week")
   public long[] getDeletionsPerWeek() {
     return metricsService.getAverageDeletionsPerWeek();
@@ -112,8 +117,6 @@ public class MetricController {
     @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
     @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
   ) {
-    System.out.println(startDate);
-    System.out.println(endDate);
     // Add a day to make the selection inclusive, i.e. include metrics from the end date
     return metricsService
       .getRfisCompleted(startDate, new Date(endDate.getTime() + MetricsService.MILLISECONDS_IN_A_DAY));

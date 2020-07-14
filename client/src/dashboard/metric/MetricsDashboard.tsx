@@ -14,6 +14,7 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
   const [workflowTime, setWorkflowTime] = useState([-1, -1]);
   const [tgtsPerWeek, setTgtsPerWeek] = useState(-1);
   const [ixnsPerWeek, setIxnsPerWeek] = useState(-1);
+  const [ixnsCompletedPerWeek, setIxnsCompletedPerWeek] = useState(-1);
   const [getsClicks, setGetsClicks] = useState([-1, -1]);
   const [deletions, setDeletions] = useState([-1, -1, -1, -1]);
   const [logins, setLogins] = useState(-1);
@@ -54,6 +55,15 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
     fetchMetric('ixns-created-per-week')
       .then(response => response.json())
       .then(ixnsPerWeek => setIxnsPerWeek(ixnsPerWeek))
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchMetric('ixns-completed-per-week')
+      .then(response => response.json())
+      .then(ixnsCompletedPerWeek => setIxnsCompletedPerWeek(ixnsCompletedPerWeek))
       .catch((reason) => {
         console.log(reason);
       });
@@ -240,6 +250,14 @@ export const MetricsDashboard: React.FC<MyProps> = (props) => {
           <StyledMetricCard
             data={new MetricCardData('Unworked RFIs', unworkedRfis + '%')}
             className={'unworked-rfis'}
+          />
+          :
+          null
+        }
+        {ixnsCompletedPerWeek > -1 ?
+          <StyledMetricCard
+            data={new MetricCardData('Avg Tracks Completed', ixnsCompletedPerWeek)}
+            className={'ixns-completed'}
           />
           :
           null

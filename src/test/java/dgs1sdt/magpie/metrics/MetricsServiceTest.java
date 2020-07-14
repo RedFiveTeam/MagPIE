@@ -54,7 +54,6 @@ import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Metric;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

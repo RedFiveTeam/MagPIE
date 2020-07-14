@@ -152,6 +152,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
     metricDeleteTargetRepository.deleteAll();
     metricChangeTargetRepository.deleteAll();
     metricDeleteExploitDateRepository.deleteAll();
+    metricChangeRfiRepository.deleteAll();
     segmentRepository.deleteAll();
     ixnRepository.deleteAll();
   }

@@ -2,6 +2,7 @@ package dgs1sdt.magpie.metrics;
 
 import dgs1sdt.magpie.ixns.Ixn;
 import dgs1sdt.magpie.ixns.IxnJson;
+import dgs1sdt.magpie.ixns.IxnStatus;
 import dgs1sdt.magpie.ixns.SegmentJson;
 import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegment;
 import dgs1sdt.magpie.metrics.cancelAddSegment.MetricCancelAddSegmentRepository;
@@ -775,7 +776,7 @@ public class MetricsService {
 
     for (MetricChangeRfi closedMetric : allClosedBetweenDateRange) {
       MetricChangeRfi openMetric = metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(closedMetric.getRfiNum());
-    if (openMetric != null && openMetric.getDatetime()
+      if (openMetric != null && openMetric.getDatetime()
         .before(new Date(closedMetric.getDatetime().getTime() - MetricsService.MILLISECONDS_IN_A_DAY))) {
         String customer = rfiRepository.findByRfiNum(closedMetric.getRfiNum()).getCustomerUnit();
 
@@ -813,5 +814,9 @@ public class MetricsService {
     }
 
     return Math.round(100 * (float) unworkedRfis / (float) totalOpenedClosedRfis);
+  }
+
+  public long getAverageTracksCompletedPerWeek() {
+    return getAveragePerWeek(metricChangeIxnRepository.findByNewDataEquals(IxnStatus.COMPLETED));
   }
 }
