@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
@@ -6,11 +7,10 @@ import theme from '../../resources/theme';
 import { MetricCardData, StyledMetricCard } from '../metric/MetricsCard';
 import { useDispatch } from 'react-redux';
 import { exitUserMetricsPage } from '../../store/rfi';
-import { useEffect, useState } from 'react';
 import DatePickerIcon from '../../resources/icons/DatePickerIcon';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { fetchMetric } from '../../store/metrics';
+import { fetchUserMetric } from '../../store/metrics';
 
 interface MyProps {
   className?: string;
@@ -24,8 +24,9 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
   const [endDate, setEndDate] = useState(new Date() as Date|null);
   const [completedRfis, setCompletedRfis] = useState(-1);
   const [targetsCreated, setTargetsCreated] = useState(-1);
-  //const [displayCalendar, setDisplayCalendar] = useState(props.exploitDate === undefined);
-  //const [highlighted, setHighlighted] = useState(true);
+  const [hoursWorked, setHoursWorked] = useState(-1);
+  const [uniqueCustomers, setUniqueCustomers] = useState(-1);
+
   const [displayStartPicker, setDisplayStartPicker] = useState(false);
   const [displayEndPicker, setDisplayEndPicker] = useState(false);
 
@@ -36,16 +37,19 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
   };
 
   useEffect(() => {
-    fetchMetric('rfis-completed?startDate=' + moment(startDate).format('MM/DD/YYYY') + '&endDate=' +
-                  moment(endDate).add(1, 'days').format('MM/DD/YYYY'))
+    console.log(startDate);
+    console.log(endDate);
+    fetchUserMetric('rfis-completed', startDate, endDate)
       .then(response => response.json())
       .then(rfis => setCompletedRfis(rfis))
       .catch((reason) => {
         console.log('Failed to fetch RFIS completed: ' + reason);
       });
+  }, [startDate, endDate]);
 
-    fetchMetric('targets-created?startDate=' + moment(startDate).format('MM/DD/YYYY') + '&endDate=' +
-                  moment(endDate).add(1, 'days').format('MM/DD/YYYY'))
+
+  useEffect(() => {
+    fetchUserMetric('targets-created', startDate, endDate)
       .then(response => response.json())
       .then(targets => setTargetsCreated(targets))
       .catch((reason) => {
@@ -53,6 +57,23 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
       });
   }, [startDate, endDate]);
 
+  useEffect(() => {
+    fetchUserMetric('hours-worked', startDate, endDate)
+      .then(response => response.json())
+      .then(hoursWorked => setHoursWorked(hoursWorked))
+      .catch((reason) => {
+        console.log('Failed to fetch hours worked: ' + reason);
+      });
+  }, [startDate, endDate]);
+
+  useEffect(() => {
+    fetchUserMetric('unique-customers', startDate, endDate)
+      .then(response => response.json())
+      .then(uniqueCustomers => setUniqueCustomers(uniqueCustomers))
+      .catch((reason) => {
+        console.log('Failed to fetch unique customers: ' + reason);
+      });
+  }, [startDate, endDate]);
 
   return (
     <div className={classNames(props.className, 'metrics-dashboard')}>
@@ -121,6 +142,22 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
           <StyledMetricCard
             data={new MetricCardData('Targets Created', targetsCreated)}
             className={'targets-created'}
+          />
+          :
+          null
+        }
+        {hoursWorked >= 0 ?
+          <StyledMetricCard
+            data={new MetricCardData('Hours Worked', hoursWorked)}
+            className={'hours-worked'}
+          />
+          :
+          null
+        }
+        {uniqueCustomers >= 0 ?
+          <StyledMetricCard
+            data={new MetricCardData('Requesting Customers', uniqueCustomers)}
+            className={'requesting-customers'}
           />
           :
           null

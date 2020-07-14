@@ -111,8 +111,30 @@ public class MetricController {
   public long getRfisCompleted(
     @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
     @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
-    ) {
-    return metricsService.getRfisCompleted(startDate, endDate);
+  ) {
+    System.out.println(startDate);
+    System.out.println(endDate);
+    // Add a day to make the selection inclusive, i.e. include metrics from the end date
+    return metricsService
+      .getRfisCompleted(startDate, new Date(endDate.getTime() + MetricsService.MILLISECONDS_IN_A_DAY));
+  }
+
+  @GetMapping(path = "/hours-worked")
+  public long getHoursWorked(
+    @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
+    @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
+  ) {
+    return metricsService
+      .getHoursWorkedBetween(startDate, new Date(endDate.getTime() + MetricsService.MILLISECONDS_IN_A_DAY));
+  }
+
+  @GetMapping(path = "/unique-customers")
+  public long getUniqueCustomers(
+    @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
+    @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
+  ) {
+    return metricsService
+      .getUniqueCustomersBetween(startDate, new Date(endDate.getTime() + MetricsService.MILLISECONDS_IN_A_DAY));
   }
 
   @GetMapping(path = "/targets-created")
@@ -120,7 +142,8 @@ public class MetricController {
     @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date startDate,
     @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "MM/dd/yyyy") Date endDate
   ) {
-    return metricsService.getTargetsCreatedWithinDateRange(startDate, endDate);
+    return metricsService
+      .getTargetsCreatedWithinDateRange(startDate, new Date(endDate.getTime() + MetricsService.MILLISECONDS_IN_A_DAY));
   }
 
   // END OF USER METRICS
@@ -156,7 +179,8 @@ public class MetricController {
   }
 
   @PostMapping(path = "/click-track-narrative")
-  public MetricClickTrackNarrative createClickTrackNarrative(@Valid @RequestBody MetricClickTrackNarrativeJson metricClickTrackNarrativeJson) {
+  public MetricClickTrackNarrative createClickTrackNarrative(
+    @Valid @RequestBody MetricClickTrackNarrativeJson metricClickTrackNarrativeJson) {
     return metricsService.createClickTrackNarrative(metricClickTrackNarrativeJson);
   }
 
