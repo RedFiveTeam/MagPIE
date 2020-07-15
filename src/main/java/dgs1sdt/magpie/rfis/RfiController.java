@@ -71,7 +71,7 @@ public class RfiController {
 
     long estimatedCompletionTimeInMS = metricsService.getEstimatedCompletionTime();
 
-    for(Rfi rfi : rfis) {
+    for (Rfi rfi : rfis) {
       long tgtCount = targetService.findNumByRfiId(rfi.getId());
       long ixnCount = ixnService.findNumByRfiId(rfi.getId());
       Date startDate = metricsService.getRfiStartDate(rfi.getRfiNum());
@@ -93,8 +93,15 @@ public class RfiController {
   //  Return value: whether the passed priority change results in a valid priority list
   @PostMapping(path = "/update-priority")
   public boolean updatePriority(@Valid @RequestBody RfiPriorityJson[] rfiPriorityJsons,
-                                @RequestParam(value="undo", defaultValue="") String undo,
-                                @RequestParam(value="userName", defaultValue="") String userName) {
+                                @RequestParam(value = "undo", defaultValue = "") String undo,
+                                @RequestParam(value = "userName", defaultValue = "") String userName) {
+    // Check to see if any of the RFIs are NEW, if so, update repo from GETS before continuing
+    for (RfiPriorityJson rfiPriorityJson : rfiPriorityJsons) {
+      if (rfiRepository.findByRfiNum(rfiPriorityJson.getRfiNum()).getStatus().equals("NEW")) {
+        rfiService.fetchRfisFromGets();
+        break;
+      }
+    }
 
     List<Rfi> rfis = new ArrayList<>();
     List<MetricChangeRfiPriority> metrics = new ArrayList<>();
@@ -135,15 +142,21 @@ public class RfiController {
     boolean[] priorityExists = new boolean[length];
 
     for (int i = 0; i < length; i++) //initialize
+    {
       priorityExists[i] = false;
+    }
 
     for (Rfi rfi : repoRfis) { // mark used
       priorityExists[rfi.getPriority() - 1] = true;
     }
 
     for (int i = 0; i < length; i++) // Check all priorities
+    {
       if (!priorityExists[i]) // A priority is missing, so tell front end that reprioritization failed
+      {
         return false;
+      }
+    }
 
 //    Add metrics and save pri updates
     Rfi undoRfi = rfiRepository.findByRfiNum(undo);

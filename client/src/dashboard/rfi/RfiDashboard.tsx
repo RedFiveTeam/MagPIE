@@ -20,6 +20,8 @@ import { PriorityUndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { Cookie, formatRfiNum } from '../../utils';
 import { useCookies } from 'react-cookie';
 import MetricsButtonIcon from '../../resources/icons/MetricsButtonIcon';
+import { ConfirmationModal } from '../components/ConfirmationModal';
+import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 
 interface MyProps {
   className?: string;
@@ -40,6 +42,10 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
   let cookie: Cookie = cookies.magpie;
 
   let [refreshing, setRefreshing] = useState(false);
+  let [displayOpenRfiConfirmationModal, setDisplayOpenRfiConfirmationModal] = useState(false);
+  let [rfiToOpen, setRfiToOpen] = useState('');
+  let [openRfiList, setOpenRfiList] = useState([] as RfiModel[]);
+  let [newIndex, setNewIndex] = useState(-1);
 
   const [selectedRfiId, setSelectedRfiId] = useState(
     openRfis.length > 0 ? openRfis[0].id :
@@ -71,21 +77,70 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
       });
   };
 
-  const handleReorderRfis = (rfiList: RfiModel[], rfiNum: string, newIndex: number) => {
-    let rfi = rfiList.find((rfi) => rfi.rfiNum === rfiNum);
+  const handleReorderRfis = (openRfis: RfiModel[], newRfis: RfiModel[], rfiNum: string, newIndex: number) => {
+    let rfi = openRfis.find((rfi) => rfi.rfiNum === rfiNum);
     if (rfi) {
-      let oldIndex = rfiList.indexOf(rfi);
+      let oldIndex = openRfis.indexOf(rfi);
       if (oldIndex !== newIndex) {
-        let originalPriority: RfiModel[] = copyRfis(rfiList)
+        let originalPriority: RfiModel[] = copyRfis(openRfis)
           .filter((rfi) => rfi.status === RfiStatus.OPEN);
-        dispatch(reorderRfis(rfiList, rfiNum, newIndex, cookie.userName));
+        dispatch(reorderRfis(openRfis, rfiNum, newIndex, cookie.userName));
         enqueueSnackbar('RFI ' + formatRfiNum(rfiNum) + ' Prioritized', {
           action: (key) => PriorityUndoSnackbarAction(key, originalPriority, handleReorderUndo,
                                                       closeSnackbar, classes.snackbarButton, rfiNum),
           variant: 'info',
         });
       }
+    } else {
+      rfi = newRfis.find((rfi) => rfi.rfiNum === rfiNum);
+      // Trying to open a new RFI by dragging it into the open section
+      if (rfi) {
+        let newOpenRfis = openRfis;
+        newOpenRfis.push(rfi);
+        setDisplayOpenRfiConfirmationModal(true);
+        setRfiToOpen(rfiNum);
+        setOpenRfiList(newOpenRfis);
+        setNewIndex(newIndex)
+      } else {
+        console.log('RFI not found');
+      }
     }
+  };
+
+  const handleOpenRfiSuccess = (json: any) => {
+    if (json.result === 'success') {
+      //reprioritize
+      handleReorderRfis(openRfiList, [], rfiToOpen, newIndex);
+    } else {
+      enqueueSnackbar('Prioritization failed', {
+        action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-error'),
+        variant: 'error',
+      });
+    }
+    console.log(rfiToOpen);
+  };
+
+  const openInGets = (rfiNum: string) => {
+    return fetch('https://www.gets.agi.nga.smil.mil/action/REST/RFIAction/update_rfi_response/json/',
+                 {
+                   method: 'post',
+                   headers: {
+                     'Accept': 'application/json',
+                     'Content-Type': 'application/json',
+                   },
+                   body: '{\"rfi\":' + '\"' + rfiNum + '\",\"responseStatus\":\"OPEN\"}',
+                 },
+    );
+  };
+
+  const handleOpenRfi = (rfiNum: string) => {
+    console.log('open rfi');
+    openInGets(rfiNum)
+      .then(response => response.json())
+      .then(json => handleOpenRfiSuccess(json))
+      .catch(() => {
+        handleOpenRfiSuccess({result: 'fail'});
+      });
   };
 
   const handleSortRfis = (field: Field) => {
@@ -187,6 +242,16 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
           postGetsClick={handlePostGetsClick}
         />
       </div>
+      <ConfirmationModal
+        display={displayOpenRfiConfirmationModal}
+        message={'Prioritizing this RFI will change the'}
+        message2={'status in GETS from NEW to OPEN'}
+        message3={'Do you want to continue?'}
+        setDisplay={setDisplayOpenRfiConfirmationModal}
+        handleYes={() => {
+          handleOpenRfi(rfiToOpen);
+        }}
+      />
     </div>
   );
 };

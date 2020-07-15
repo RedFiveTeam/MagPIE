@@ -74,3 +74,11 @@ code {
 .dismiss-snackbar:hover {
   background: rgba(30, 152, 229, 0.1) !important;
 }
+
+.dismiss-error {
+  background: #7D0B19 !important;
+}
+
+.dismiss-error:hover {
+  background: rgba(30, 152, 229, 0.1) !important;
+}

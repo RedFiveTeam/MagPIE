@@ -14,7 +14,7 @@ interface Props {
   pendingRfis: RfiModel[];
   openRfis: RfiModel[];
   closedRfis: RfiModel[];
-  reorderRfis: (rfiList: RfiModel[], rfiNum: string, newIndex: number) => void;
+  reorderRfis: (openRfis: RfiModel[], newRfis: RfiModel[], rfiNum: string, newIndex: number) => void;
   sortKey: SortKeyModel;
   selectRfi: (rfiId: number) => void;
   selectedRfiId: number;
@@ -22,48 +22,74 @@ interface Props {
   className?: string;
 }
 
-function pendingRfis(rfis: RfiModel[], scrollRegionRef: any, selectedRfiId: number, selectRfi: (rfiId: number) => void) {
-  return rfis.map((rfi: RfiModel, index: number) =>
-    <PendingRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}
-                   selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>
-  );
+function pendingRfis(rfis: RfiModel[], scrollRegionRef: any, prioritizing: boolean, selectedRfiId: number,
+                     selectRfi: (rfiId: number) => void) {
+  if (prioritizing) {
+    return rfis.map((rfi: RfiModel, index: number) =>
+                      <Draggable draggableId={rfi.rfiNum} index={index} key={rfi.rfiNum}>
+                        {(provided, snapshot) => {
+                          return (
+                            // @ts-ignore
+                            <div
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              key={rfi.rfiNum}
+                              ref={provided.innerRef}
+                            >
+                              <PendingRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}
+                                             prioritizing={true}
+                                             selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>
+                            </div>
+                          );
+                        }}
+                      </Draggable>,
+    );
+  } else {
+    return rfis.map((rfi: RfiModel, index: number) =>
+                      <PendingRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}
+                                     prioritizing={false}
+                                     selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>,
+    );
+  }
 }
 
-function openRfis(rfis: RfiModel[], scrollRegionRef: any, sortKey: SortKeyModel, prioritizing: boolean,
+function openRfis(rfis: RfiModel[], scrollRegionRef: any, prioritizing: boolean,
                   selectedRfiId: number, selectRfi: (rfiId: number) => void) {
 
 
-  if (sortKey.field === Field.PRIORITY && sortKey.defaultOrder) {
+  if (prioritizing) {
     return rfis.map((rfi: RfiModel, index: number) =>
-      <Draggable draggableId={rfi.rfiNum} index={index} key={rfi.rfiNum}>
-        {(provided, snapshot) => {
-          return (
-          // @ts-ignore
-            <div
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              key={rfi.rfiNum}
-              ref={provided.innerRef}
-            >
-              <OpenRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index} prioritizing={prioritizing}
-                          selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>
-            </div>
-          )
-        }}
-      </Draggable>
-    )
+                      <Draggable draggableId={rfi.rfiNum} index={index} key={rfi.rfiNum}>
+                        {(provided, snapshot) => {
+                          return (
+                            // @ts-ignore
+                            <div
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              key={rfi.rfiNum}
+                              ref={provided.innerRef}
+                            >
+                              <OpenRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}
+                                          prioritizing={true}
+                                          selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>
+                            </div>
+                          );
+                        }}
+                      </Draggable>,
+    );
   } else {
     return rfis.map((rfi: RfiModel, index: number) =>
-      <OpenRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index} prioritizing={prioritizing}
-                  selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>
+                      <OpenRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}
+                                  prioritizing={false}
+                                  selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>,
     );
   }
 }
 
 function closedRfis(rfis: RfiModel[], scrollRegionRef: any, selectedRfiId: number, selectRfi: (rfiId: number) => void) {
   return rfis.map((rfi: RfiModel, index: number) =>
-    <ClosedRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}
-                  selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>
+                    <ClosedRfiRow rfi={rfi} key={index} scrollRegionRef={scrollRegionRef} index={index}
+                                  selected={selectedRfiId === rfi.id} selectRfi={selectRfi}/>,
   );
 }
 
@@ -72,9 +98,10 @@ export const RfiTable: React.FC<Props> = props => {
   let prioritizing = props.sortKey.field === Field.PRIORITY && props.sortKey.defaultOrder;
 
   function reorder(dropResult: DropResult) {
-    if (dropResult.destination && dropResult.destination.droppableId === "region--droppable--open"
-     && props.sortKey.field === Field.PRIORITY && props.sortKey.defaultOrder)
-      props.reorderRfis(props.openRfis, dropResult.draggableId, dropResult.destination!.index);
+    if (dropResult.destination && dropResult.destination.droppableId === 'region--droppable--open'
+      && props.sortKey.field === Field.PRIORITY && props.sortKey.defaultOrder) {
+      props.reorderRfis(props.openRfis, props.pendingRfis, dropResult.draggableId, dropResult.destination!.index);
+    }
   }
 
   return (
@@ -89,11 +116,11 @@ export const RfiTable: React.FC<Props> = props => {
             scrollRef={scrollRegionRef}
             bottomShadowColors={{
               active: 'linear-gradient(to top, #000000 0%, #00000000 100%);',
-              inactive: theme.color.backgroundBase
+              inactive: theme.color.backgroundBase,
             }}
             topShadowColors={{
               active: 'linear-gradient(to bottom, #000000 0%, #00000000 100%);',
-              inactive: theme.color.backgroundBase
+              inactive: theme.color.backgroundBase,
             }}
             shadowSize={10}
           >
@@ -105,24 +132,26 @@ export const RfiTable: React.FC<Props> = props => {
                     emptyMessage={'No Open found'}
                     provided={provided}
                   >
-                    {openRfis(props.openRfis, scrollRegionRef, props.sortKey, prioritizing, props.selectedRfiId, props.selectRfi)}
+                    {openRfis(props.openRfis, scrollRegionRef, prioritizing, props.selectedRfiId,
+                              props.selectRfi)}
                   </StyledRfiRegion>
-                )
+                );
               }}
             </Droppable>
             <Droppable droppableId={`region--droppable--pending`}>
-            {(provided, snapshot) => {
-              return (
-                <StyledRfiRegion
-                  title={'new'}
-                  emptyMessage={'Congratulations! Your team opened all the new RFIs in GETS.'}
-                  provided={provided}
-                >
-                  {pendingRfis(props.pendingRfis, scrollRegionRef, props.selectedRfiId, props.selectRfi)}
-                </StyledRfiRegion>
-              )
-            }}
-          </Droppable>
+              {(provided, snapshot) => {
+                return (
+                  <StyledRfiRegion
+                    title={'new'}
+                    emptyMessage={'Congratulations! Your team opened all the new RFIs in GETS.'}
+                    provided={provided}
+                  >
+                    {pendingRfis(props.pendingRfis, scrollRegionRef, prioritizing, props.selectedRfiId,
+                                 props.selectRfi)}
+                  </StyledRfiRegion>
+                );
+              }}
+            </Droppable>
             <Droppable droppableId={`region--droppable--closed`}>
               {(provided, snapshot) => {
                 return (
@@ -133,7 +162,7 @@ export const RfiTable: React.FC<Props> = props => {
                   >
                     {closedRfis(props.closedRfis, scrollRegionRef, props.selectedRfiId, props.selectRfi)}
                   </StyledRfiRegion>
-                )
+                );
               }}
             </Droppable>
           </ScrollShadow>

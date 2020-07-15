@@ -321,28 +321,36 @@ public class RfiControllerTest extends BaseIntegrationTest {
     long segment2Id = segmentRepository.findAll().get(1).getId();
 
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-003
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-003
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-004
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-004
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
       new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
       IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-005
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-005
 
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED));  //123-001
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.NOT_REVIEWED));  //123-001
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
       new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
       IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-002
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-002
 
     //Another RFI
     rfiRepository.save(
@@ -372,28 +380,36 @@ public class RfiControllerTest extends BaseIntegrationTest {
     segment2Id = segmentRepository.findAll().get(1).getId();
 
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-003
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-003
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-004
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-004
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
       new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
       IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-005
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-005
 
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED));  //123-001
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.NOT_REVIEWED));  //123-001
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
       new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
       IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-002
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-002
 
     RfiGet rfi = rfiController.getAllRfis().get(0);
 
@@ -517,5 +533,50 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals(new Date(convertDaysToMS(3)), rfi1get.getCompletionDate());
     assertEquals(new Date(convertDaysToMS(12)), rfi2get.getCompletionDate());
+  }
+
+  @Test
+  public void refreshedFromGetsAndPrioritizesWhenOpeningAnRfi() {
+    //Assume front end opens RFI in GETS and posts a priority change with the newly opened RFI which will still be NEW
+    //in the local database
+    Date rfiltiov = new Date();
+
+    Rfi openRfi1 =
+      new Rfi("SDT-0320", "url", "OPEN", new Date(), "1 FW", rfiltiov, "USA", "a description", "This is a justifiction",
+        "", "", "", "", "", "", "", "", "");
+
+    Rfi openRfi2 =
+      new Rfi("SDT-0329", "url", "OPEN", new Date(), "1 FW", rfiltiov, "USA", "a description", "This is a justifiction",
+        "", "", "", "", "", "", "", "", "");
+
+    openRfi1.setPriority(1);
+    openRfi2.setPriority(2);
+
+    Rfi newRfiToOpen =
+      new Rfi("SDT-0321", "url", "NEW", new Date(), "1 FW", rfiltiov, "USA", "a description", "This is a justifiction",
+        "", "", "", "", "", "", "", "", "");
+
+    rfiRepository.saveAll(Arrays.asList(openRfi1, openRfi2, newRfiToOpen));
+
+    rfiService.getsUriOpenPending = "UpdatedRfis.xml";
+    rfiService.getsUriClosed = "RfisClosed.xml";
+
+    RfiPriorityJson[] newPriorities = {
+      new RfiPriorityJson("SDT-0321", 2), new RfiPriorityJson("SDT-0329", 3)
+    };
+
+    //post with priority update for newRfiToOpen
+    assertTrue(rfiController.updatePriority(newPriorities, "", ""));
+
+    //assert that SDT-0321 is now open and priority 2
+    Rfi newlyOpenedRfi = rfiRepository.findByRfiNum("SDT-0321");
+    assertEquals(2, newlyOpenedRfi.getPriority());
+    assertEquals("OPEN", newlyOpenedRfi.getStatus());
+
+    //assert other open RFIs have proper priority
+    openRfi1 = rfiRepository.findByRfiNum("SDT-0320");
+    assertEquals(1, openRfi1.getPriority());
+    openRfi2 = rfiRepository.findByRfiNum("SDT-0329");
+    assertEquals(3, openRfi2.getPriority());
   }
 }

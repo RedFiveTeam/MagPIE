@@ -22,10 +22,17 @@ interface AppProps {
   className?: string;
 }
 
-const snackbarStyle = makeStyles((localTheme) =>
-  createStyles({
+const snackbarStyle = makeStyles((localTheme) => createStyles(
+  {
     snackbar: {
       backgroundColor: theme.color.backgroundSnackbar,
+      color: theme.color.fontActive,
+      fontSize: theme.font.sizeRow,
+      fontFamily: theme.font.familyRow,
+      fontWeight: theme.font.weightRow,
+    },
+    snackbarError: {
+      backgroundColor: theme.color.backgroundSnackbarError,
       color: theme.color.fontActive,
       fontSize: theme.font.sizeRow,
       fontFamily: theme.font.familyRow,
@@ -40,7 +47,7 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
   const classes = snackbarStyle();
 
   const [userCookie] = useCookies(['magpie']);
-  let cookie: Cookie | undefined = userCookie.magpie;
+  let cookie: Cookie|undefined = userCookie.magpie;
 
   return (
     <SnackbarProvider
@@ -48,6 +55,7 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
       autoHideDuration={15000}
       classes={{
         variantInfo: classes.snackbar,
+        variantError: classes.snackbarError,
       }}
       hideIconVariant
     >

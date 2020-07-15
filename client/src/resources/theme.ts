@@ -65,6 +65,7 @@ const theme = {
     dateDividerBox: crayonBox.mediumBrightBrightBlue,//
     subduedOutline: crayonBox.anotherGray,//
     rejectIcon: crayonBox.subduedTomatoRed,//
+    backgroundSnackbarError: crayonBox.darkTomatoRed,//
   },
 
   font: {

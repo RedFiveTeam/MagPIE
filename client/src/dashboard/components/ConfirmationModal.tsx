@@ -9,6 +9,7 @@ interface MyProps {
   setDisplay: (display: boolean) => void;
   handleYes: () => void;
   message2?: string;
+  message3?: string;
   focusedElement?: Element|null;
 }
 
@@ -32,6 +33,11 @@ export const ConfirmationModal: React.FC<MyProps> = (props) => {
       <div className={classes.modalBody}>
         <div className={'modal-text'}>{props.message}</div>
         <div className={'modal-text'}>{props.message2 ? props.message2 : 'Do you want to leave without saving?'}</div>
+        {props.message3 ?
+          <div className={'modal-text'}>{props.message3}</div>
+          :
+          null
+        }
         <div className={classes.modalConfirmation}>
           <span className={classNames('modal-yes', classes.modalButton)} onClick={() => {
             props.handleYes();

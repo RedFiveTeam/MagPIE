@@ -23,6 +23,7 @@ export const crayonBox = {
   eggWhite: '#FDFFFC',
   notEggWhite: '#FEFEFE',
   straightWhite: '#FFFFFF',
+  darkTomatoRed: '#7D0B19',
   tomatoRed: '#971625',//
   darkRed: '#BC0000',
   bloodRed: '#C10101',
