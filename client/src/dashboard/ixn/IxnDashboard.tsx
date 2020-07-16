@@ -177,7 +177,6 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     if (!addingOrEditing) {
       dispatch(setAddSegment(true));
     } else if (isSegmentChanged) {
-      console.log('segment changed');
       setNavigating(true);
       isNavigating = true;
       setNavigate(Navigate.CANCEL_ADD_SEGMENT);
@@ -222,25 +221,25 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     }
   };
 
-    const handlePostIxn = (ixn: IxnModel) => {
-      if (!navigating) {
-        let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
-        if (!readOnly) {
-          if (addNote > 0 && oldIxn !== undefined) {
-            enqueueSnackbar('Analyst Note Saved.', {
-              action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
-                                                  classes.snackbarButton),
-              variant: 'info',
-            });
-          }
-          dispatch(updateIxn(ixn, cookie.userName, ixn.id === null));
-          if (ixn.approvalStatus === IxnApprovalStatus.REJECTED && oldIxn && oldIxn.approvalStatus !==
-            IxnApprovalStatus.REJECTED) {
-            displaySnackbar('Reason saved successfully')
-          }
+  const handlePostIxn = (ixn: IxnModel) => {
+    if (!navigating) {
+      let oldIxn: IxnModel|undefined = ixns.find(findIxn => findIxn.id === ixn.id);
+      if (!readOnly) {
+        if (addNote > 0 && oldIxn !== undefined) {
+          enqueueSnackbar('Analyst Note Saved.', {
+            action: (key) => UndoSnackbarAction(key, oldIxn!, handlePostIxnSkipSnackbar, closeSnackbar,
+                                                classes.snackbarButton),
+            variant: 'info',
+          });
+        }
+        dispatch(updateIxn(ixn, cookie.userName, ixn.id === null));
+        if (ixn.approvalStatus === IxnApprovalStatus.REJECTED && oldIxn && oldIxn.approvalStatus !==
+          IxnApprovalStatus.REJECTED) {
+          displaySnackbar('Reason saved successfully');
         }
       }
-    };
+    }
+  };
 
   const handlePostSegment = (segment: SegmentModel) => {
     if (!isNavigating && !navigating && !readOnly) {

@@ -32,18 +32,6 @@ public class Target {
   private String allCallouts;
   private Timestamp deleted;
 
-  public Target(long rfiId, long exploitDateId, TargetJson targetJson) {
-    this.rfiId = rfiId;
-    this.exploitDateId = exploitDateId;
-    this.name = targetJson.getName();
-    this.mgrs = targetJson.getMgrs();
-    this.notes = targetJson.getNotes();
-    this.description = targetJson.getDescription();
-    this.status = TargetStatus.NOT_STARTED;
-    this.hourlyRollup = "";
-    this.allCallouts = "";
-  }
-
   public Target(long rfiId, String mgrs) {
     this.rfiId = rfiId;
     this.exploitDateId = -1;
@@ -57,25 +45,23 @@ public class Target {
     this.deleted = null;
   }
 
-  public Target(TargetJson editTarget) {
-    this.id = editTarget.getTargetId();
-    this.rfiId = editTarget.getRfiId();
-    this.exploitDateId = editTarget.getExploitDateId();
-    this.name = editTarget.getName();
-    this.mgrs = editTarget.getMgrs();
-    this.notes = editTarget.getNotes();
-    this.description = editTarget.getDescription();
-    this.status = editTarget.getStatus();
-    this.hourlyRollup = editTarget.getHourlyRollup();
-    this.allCallouts = editTarget.getAllCallouts();
+  public Target(TargetJson targetJson, String name) {
+    if (targetJson.getTargetId() > 0) {
+      this.id = targetJson.getTargetId();
+    }
+    this.rfiId = targetJson.getRfiId();
+    this.exploitDateId = targetJson.getExploitDateId();
+    this.name = name;
+    this.mgrs = targetJson.getMgrs();
+    this.notes = targetJson.getNotes();
+    this.description = targetJson.getDescription();
+    this.status = targetJson.getStatus();
+    this.hourlyRollup = targetJson.getHourlyRollup();
+    this.allCallouts = targetJson.getAllCallouts();
   }
 
   public List<String> compare(TargetJson other) {
     ArrayList<String> diff = new ArrayList<>();
-
-    if (!this.name.equals(other.getName())) {
-      diff.add("name");
-    }
 
     if (!this.mgrs.equals(other.getMgrs())) {
       diff.add("mgrs");

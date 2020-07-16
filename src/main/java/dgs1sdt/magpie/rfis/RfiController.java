@@ -93,7 +93,6 @@ public class RfiController {
         rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate, containsRejectedTracks));
       }
     }
-
     return rfiGetList;
   }
 

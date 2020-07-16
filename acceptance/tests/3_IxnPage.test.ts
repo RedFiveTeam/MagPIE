@@ -19,11 +19,9 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
 
   I.fillField('input', '02012020');
 
-  I.waitForText('TGT Name', 3);
+  I.waitForText('TGT ID', 3);
 
   I.click('.add-tgt-button');
-  I.fillField('.tgt-name-input-new', 'SDT20-123');
-  I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
 
@@ -81,7 +79,7 @@ Scenario('Should be able to add, undo adding, and cancel adding segments', (I) =
   I.waitForElement('.cancel-add-segment', 3);
   I.click('.cancel-add-segment');
 
-  I.waitForElement('.navigate-modal');
+  I.waitForElement('.navigate-modal', 3);
   I.click('.modal-yes');
 
   I.click('.ixn-dash--header--back-button');
@@ -186,7 +184,7 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.click('.exploitation');
 
   I.waitForText('In Progress', 3);
-  I.waitForText('123-001');
+  I.waitForText('-001');
 
   I.moveCursorTo(locate('.status-wrapper').at(1));
   I.waitForElement('.completed-button');
@@ -214,12 +212,12 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
 
   within(locate('.ixn-row').at(1), () => {
     I.see('Complete', '.status-wrapper');
-    I.see('123-001', '.track');
+    I.see('-001', '.track');
   });
 
   within(locate('.ixn-row').at(2), () => {
     I.see('In Progress', '.status-wrapper');
-    I.see('123-002', '.track');
+    I.see('-002', '.track');
   });
 
   I.click('.ixn-dash--header--back-button');
@@ -227,8 +225,8 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   I.click('.exploitation');
 
   I.waitForText('Complete', 3);
-  I.waitForText('123-001');
-  I.waitForText('123-002');
+  I.waitForText('-001');
+  I.waitForText('-002');
 
   I.moveCursorTo(locate('.status-wrapper').at(2));
   I.waitForElement('.does-not-meet-eei-button');
@@ -242,7 +240,7 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
   within(locate('.ixn-row').at(2), () => {
     I.dontSee('Complete');
   });
-  I.dontSee('123-002');
+  I.dontSee('-002');
 });
 
 Scenario('Should be able to write and view track narratives', (I) => {
@@ -326,7 +324,7 @@ Scenario('Should be able to write and view rollups', (I) => {
 
   I.waitForText('Copy to Clipboard');
   I.waitForElement('.rollup-input');
-  I.see('Activity Rollup (SDT20-123)');
+  I.see('Activity Rollup');
   I.see('01FEB20');
   I.seeInField('.rollup-input', 'Note:');
   I.see('12:00:00Z');
@@ -364,7 +362,7 @@ Scenario('Should be able to write and view rollups', (I) => {
   I.click('.rollup-mode-toggle-button');
   I.waitForElement('.rollup-input');
 
-  I.see('Activity Rollup (SDT20-123)');
+  I.see('Activity Rollup');
   I.see('01FEB20');
   I.seeInField('.rollup-input', '1200Z - 1230Z:');
   I.seeInField('.rollup-input', 'Note:');
@@ -439,8 +437,6 @@ Scenario('Should be able to accept and reject tracks', (I) => {
 
 Scenario('Should indicate whether RFIs and targets have rejected tracks', (I) => {
   I.click('.add-tgt-button');
-  I.fillField('.tgt-name-input-new', 'SDT20-124');
-  I.pressKey('Tab');
   I.fillField('.mgrs', '12QWE1231231232');
   I.pressKey('Enter');
 
@@ -655,7 +651,7 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.click(locate('.rfi-row').at(2));
   I.click('.navigate-to-tgt-button');
 
-  I.waitForText('SDT20-123');
+  I.waitForText('12QWE1231231231', 3);
 
   I.moveCursorTo('.tgt-form-box', 10, 3);
   I.waitForElement('.delete-tgt-button');

@@ -102,7 +102,7 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
         setOpenRfiList(newOpenRfis);
         setNewIndex(newIndex)
       } else {
-        console.log('RFI not found');
+        console.log(`RFI ${rfiNum} not found`);
       }
     }
   };
@@ -117,7 +117,7 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
         variant: 'error',
       });
     }
-    console.log(rfiToOpen);
+    console.log(`opened ${rfiToOpen}`);
   };
 
   const openInGets = (rfiNum: string) => {
@@ -128,13 +128,12 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
                      'Accept': 'application/json',
                      'Content-Type': 'application/json',
                    },
-                   body: '{\"rfi\":' + '\"' + rfiNum + '\",\"responseStatus\":\"OPEN\"}',
+                   body: `{"rfi":"${rfiNum}","responseStatus":"OPEN"}`,
                  },
     );
   };
 
   const handleOpenRfi = (rfiNum: string) => {
-    console.log('open rfi');
     openInGets(rfiNum)
       .then(response => response.json())
       .then(json => handleOpenRfiSuccess(json))
@@ -192,9 +191,7 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
       if (rfiId) {
         setTimeout(() => {
           let element = document.getElementById('rfi-row-' + rfiId);
-          console.log(element);
           if (element) {
-            console.log('scrolling');
             element.scrollIntoView({behavior: 'smooth', block: 'nearest'});
           }
         }, 50);

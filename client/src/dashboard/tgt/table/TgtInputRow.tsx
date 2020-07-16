@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { TargetModel, TargetStatus } from '../../../store/tgt/TargetModel';
 import { ExploitDateModel } from '../../../store/tgt/ExploitDateModel';
-import { TargetPostModel } from '../../../store/tgt/TargetPostModel';
+import { convertToPostModel, TargetPostModel } from '../../../store/tgt/TargetPostModel';
 import { Box, MuiThemeProvider, TextField } from '@material-ui/core';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
 import styled from 'styled-components';
@@ -32,13 +32,9 @@ interface MyProps {
 export const TgtInputRow: React.FC<MyProps> = props => {
   const classes = rowStyles();
 
-  const [nameError, setNameError] = useState(false);
   const [mgrsError, setMgrsError] = useState(false);
-  const [nameConflictError, setNameConflictError] = useState(false);
-  //If the user enters a name or MGRS incorrectly once, always check for exact match
-  const [strongValidateName, setStrongValidateName] = useState(false);
+  //If the user enters a MGRS incorrectly once, always check for exact match
   const [strongValidateMgrs, setStrongValidateMgrs] = useState(false);
-  const [name, setName] = useState(props.target ? props.target.name : '');
   const [mgrs, setMgrs] = useState(props.target ? props.target.mgrs : '');
   const [notes, setNotes] = useState(props.target ? props.target.notes : '');
   const [description, setDescription] = useState(props.target ? props.target.description : '');
@@ -60,14 +56,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
     [action],
   );
 
-  function weakMatchNameError(name: string): boolean {
-    return name.length > 9 || (name.length === 9 && name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null);
-  }
-
-  function strongMatchNameError(name: string): boolean {
-    return name.length !== 9 || name.match(/[A-Z]{3}[0-9]{2}-[0-9]{3}/) === null;
-  }
-
   function weakMatchMgrsError(mgrs: string): boolean {
     return mgrs.length > 15 || (mgrs.length === 15 && mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null);
   }
@@ -76,21 +64,11 @@ export const TgtInputRow: React.FC<MyProps> = props => {
     return mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null;
   }
 
-  const inputName = (event: any) => {
-    setNameConflictError(false);
-    let newName = event.target.value;
-    setName(newName);
-    if (strongValidateName) {
-      setNameError(strongMatchNameError(newName));
-    } else {
-      setNameError(weakMatchNameError(newName));
-      setStrongValidateName(weakMatchNameError(newName));
-    }
-  };
-
   const inputMgrs = (event: any) => {
     let newMgrs = event.target.value;
-    setMgrs(newMgrs);
+    if (newMgrs.charAt(newMgrs.length - 1) !== '\n') {
+      setMgrs(newMgrs);
+    }
     if (strongValidateMgrs) {
       setMgrsError(strongMatchMgrsError(newMgrs));
     } else {
@@ -113,50 +91,26 @@ export const TgtInputRow: React.FC<MyProps> = props => {
     }
   };
 
-  const checkTgts = (tgts: TargetModel[]) => {
-    if (props.exploitDate !== null) {
-      if (tgts.filter((tgt) => tgt.exploitDateId === props.exploitDate!.id && tgt.name === name).length > 0
-        && !(props.target && props.target.name === name)) {
-        setNameConflictError(true);
-      } else {
-        props.postTarget(
-          new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, props.exploitDate.id, name, mgrs,
-                              notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED, '',
-                              ''),
-        );
-      }
-    } else {
-      props.postTarget(
-        new TargetPostModel((props.target ? props.target.id : null), props.rfi.id, -1, name, mgrs,
-                            notes, description, props.target ? props.target.status : TargetStatus.NOT_STARTED, '',
-                            ''),
-      );
-    }
-  };
-
   const validateAllAndSubmit = () => {
-    let nameErrorLocal = strongMatchNameError(name);
-    let mgrsErrorLocal = strongMatchMgrsError(mgrs);
-    setNameError(nameErrorLocal);
-    setMgrsError(mgrsErrorLocal);
+      let mgrsErrorLocal = strongMatchMgrsError(mgrs);
+      setMgrsError(mgrsErrorLocal);
 
-    if (!strongValidateName) {
-      setStrongValidateName(nameErrorLocal);
+      if (!strongValidateMgrs) {
+        setStrongValidateMgrs(mgrsErrorLocal);
+      }
+      if (!mgrsErrorLocal) {
+        if (props.target) {
+          props.postTarget({...convertToPostModel(props.target), mgrs: mgrs, notes: notes, description: description});
+        } else {
+          props.postTarget(
+            new TargetPostModel(null, props.rfi.id, props.exploitDate ? props.exploitDate.id : -1, mgrs, notes,
+                                description, TargetStatus.NOT_STARTED, '', ''),
+          );
+        }
+      }
+      setAction(RowAction.NONE);
     }
-    if (!strongValidateMgrs) {
-      setStrongValidateMgrs(mgrsErrorLocal);
-    }
-    if (!(nameErrorLocal || mgrsErrorLocal)) {
-      fetch('/api/targets?rfiId=' + props.rfi.id)
-        .then(response => response.json())
-        .then(tgts => checkTgts(tgts))
-        .catch((reason) => {
-          console.log('Failed to delete: ' + reason);
-        });
-    }
-
-    setAction(RowAction.NONE);
-  };
+  ;
 
   function onBlur(event: any) {
     let currentTarget: any = event.currentTarget;
@@ -169,10 +123,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
       }
     }, 300);
   }
-
-  const tgtNameInputProps = {
-    id: 'tgt-name-input',
-  };
 
   const mgrsInputProps = {
     id: 'mgrs-input',
@@ -204,27 +154,12 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                   }
                 }}
           >
-            <div className={classes.margin}>
-              <TextField
-                autoFocus={true}
-                className={classNames(
-                  'tgt-name',
-                  'tgt-name-input-' + (props.target ? props.target.id : 'new'),
-                )}
-                value={name}
-                required
-                placeholder="OPRYY-###"
-                label={props.target ? '' : (nameError ? 'Error' : 'Required')}
-                error={nameError}
-                onChange={inputName}
-                inputProps={tgtNameInputProps}
-                InputLabelProps={{
-                  className: classes.inputLabel,
-                }}
-              />
+            <div className={classNames(classes.margin, 'tgt-name', 'data-cell', 'bottom-space')}>
+              {props.target ? props.target.name : '\xa0'}
             </div>
             <div className={classes.margin}>
               <TextField
+                autoFocus={true}
                 className={'mgrs'}
                 value={mgrs}
                 required
@@ -290,14 +225,6 @@ export const TgtInputRow: React.FC<MyProps> = props => {
           <CancelButton/>
         </DeleteCancelButton>
       </Box>
-      {nameError ?
-        <div className={'input-error-msg'}>Please use the format "OPNYY-###" for TGT name</div>
-        : null
-      }
-      {nameConflictError ?
-        <div className={'input-error-msg'}>Duplicate TGTs under the same date are not allowed.</div>
-        : null
-      }
       {mgrsError ?
         <div className={'input-error-msg'}>Please use the format "##XXX##########" for MGRS</div>
         : null
@@ -315,7 +242,12 @@ export const StyledTgtInputRow = styled(TgtInputRow)`
   width: 1212px;
   
   .tgt-name {
-    width: 115px;
+    width: 67px;
+    margin: 10px 4px 0 12px !important;
+  }
+  
+  .bottom-space {
+    margin-bottom: 12px !important;
   }
   
   .mgrs {
@@ -323,7 +255,7 @@ export const StyledTgtInputRow = styled(TgtInputRow)`
   }
   
   .notes {
-    width: 389px;
+    width: 437px;
   }
   
   .description {

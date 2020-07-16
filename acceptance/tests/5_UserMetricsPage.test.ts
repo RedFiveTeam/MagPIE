@@ -42,7 +42,7 @@ Scenario('Should display targets created card', (I) => {
   I.click('.metrics-button');
   I.waitForText('Targets Created');
   within('.targets-created', () => {
-    I.see('12');
+    I.see('11');
   });
 
   Scenario('Should be able to navigate to and see the user scoreboard page and nav back', (I) => {

@@ -93,10 +93,10 @@ public class RoombaServiceTest extends BaseIntegrationTest {
     long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
     long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "12WQE1231231231", "", ""), "20-0001"));
     long target1Id = targetRepository.findAll().get(0).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "12WQE1231231231", "", ""), "20-0001"));
     long target2Id = targetRepository.findAll().get(1).getId();
 
 

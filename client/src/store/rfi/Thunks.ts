@@ -10,8 +10,10 @@ export const fetchRfis = () => {
       .then(dispatch(fetchRfiPending()))
       .then(response => response.json())
       .then(rfis => dispatch(fetchRfiSuccess(rfis)))
-      .catch((reason => {console.log("Failed to fetch RFIs: " + reason)}));
-  }
+      .catch((reason => {
+        console.log('Failed to fetch RFIs: ' + reason);
+      }));
+  };
 };
 
 export const fetchLocalUpdate = () => {
@@ -19,8 +21,10 @@ export const fetchLocalUpdate = () => {
     return fetch('/api/rfi')
       .then(response => response.json())
       .then(rfis => dispatch(fetchRfiUpdating(rfis)))
-      .catch((reason => {console.log("Failed to fetch RFIs: " + reason)}));
-  }
+      .catch((reason => {
+        console.log('Failed to fetch RFIs: ' + reason);
+      }));
+  };
 };
 
 export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number, userName: string) => {
@@ -60,11 +64,12 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
     dispatch(reprioritizeRfis(reprioritizedList));
     postRfiPriorityUpdate(postRfis, `?userName=${userName}`)
       .then(response => response.json()).catch((reason) => {
-      console.log(reason)
+      console.log(reason);
     })
       .then(success => {
-        if (!success)
+        if (!success) {
           dispatch(fetchLocalUpdate());
+        }
       });
   };
 };

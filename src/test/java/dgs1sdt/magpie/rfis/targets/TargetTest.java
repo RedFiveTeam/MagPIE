@@ -25,7 +25,6 @@ public class TargetTest {
 
     TargetJson target2 = new TargetJson(
       1, 1,
-      "SDT20-123",
       "12QWE1231231231",
       "Notes",
       "Description"
@@ -37,7 +36,6 @@ public class TargetTest {
 
     target2 = new TargetJson(
       1, 1,
-      "SDT20-123",
       "12QWE1231231231",
       "New Notes",
       "New Description"
@@ -48,13 +46,12 @@ public class TargetTest {
 
     target2 = new TargetJson(
       1, 1,
-      "SDT21-123",
       "12QWE1231231232",
       "",
       ""
     );
 
-    expected = new String[]{"name", "mgrs", "notes", "description"};
+    expected = new String[]{"mgrs", "notes", "description"};
     assertArrayEquals(expected, target1.compare(target2).toArray());
   }
 }

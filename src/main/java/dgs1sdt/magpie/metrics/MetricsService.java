@@ -402,8 +402,8 @@ public class MetricsService {
     return this.metricChangeExploitDateRepository.save(new MetricChangeExploitDate(exploitDate));
   }
 
-  public MetricCreateTarget addCreateTarget(long targetId, TargetJson target, String userName, Boolean isCopy) {
-    return this.metricCreateTargetRepository.save(new MetricCreateTarget(targetId, target, userName, isCopy));
+  public MetricCreateTarget addCreateTarget(long targetId, TargetJson target, String name, String userName, Boolean isCopy) {
+    return this.metricCreateTargetRepository.save(new MetricCreateTarget(targetId, target, name, userName, isCopy));
   }
 
   public MetricDeleteExploitDate addDeleteExploitDate(long exploitDateId) {

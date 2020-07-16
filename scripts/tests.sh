@@ -15,7 +15,6 @@ function main {
             acceptanceTests ${@}
         ;;
         unit)
-            yarnBuild
             unitTests
         ;;
         *)
@@ -30,9 +29,6 @@ function main {
 # Tests
 function acceptanceTests {
     showBanner "Acceptance Tests"
-
-    export GETS_URI_OPEN_PENDING="RfisNewOpen.xml"
-    export GETS_URI_CLOSED="RfisClosed.xml"
 
     SPECIFIC_TESTS=""
 
@@ -72,6 +68,11 @@ function unitTests {
             exit 1
         fi
     popd
+
+#    showBanner "Backend"
+#    pushd ${BASE_DIR}
+#        mvn test | grep -E "\[ERROR\]"
+#    popd
 
     showBanner "Frontend"
     pushd ${BASE_DIR}/client

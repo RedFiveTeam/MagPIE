@@ -43,7 +43,6 @@ public class TargetController {
     if (isCopyString.equals("true")) {
       isCopy = true;
     }
-
     targetService.postTarget(targetJsons, userName, isCopy);
   }
 

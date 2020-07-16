@@ -36,9 +36,6 @@ public class MetricChangeTarget implements TimestampMetric {
     this.userName = userName.toLowerCase();
 
     switch (field) {
-      case "name":
-        newData = newTarget.getName();
-        break;
       case "mgrs":
         newData = newTarget.getMgrs();
         break;

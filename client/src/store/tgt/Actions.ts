@@ -36,7 +36,7 @@ export const updateTgtsLocal = (targets: TargetModel[], isCopy: boolean) => {
   };
 };
 
-export const addTgt = (exploitDateId: number) => {
+export const  addTgt = (exploitDateId: number) => {
   return {
     type: TgtActionTypes.ADD_TGT,
     addTgt: exploitDateId,

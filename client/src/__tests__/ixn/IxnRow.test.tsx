@@ -9,6 +9,7 @@ import { Cookies } from 'react-cookie';
 describe('IxnRow', () => {
   const moment = require('moment');
   console.log = jest.fn();
+  console.error = jest.fn();
   const cookies = new Cookies();
   cookies.set('magpie', {username: 'Billy.B.Bob', segments: []});
   let subject: ReactWrapper;

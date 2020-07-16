@@ -211,7 +211,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   public void addsChangeTargetMetric() {
     Target oldTarget = new Target(
       1, 1, 1,
-      "SDT20-123",
+      "20-0001",
       "12ABC1234567890",
       "These are old notes",
       "This is an old description",
@@ -223,25 +223,20 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     TargetJson newTarget = new TargetJson(
       oldTarget.getRfiId(),
       oldTarget.getExploitDateId(),
-      "ABC11-999",
       "99BBB9999999999",
       "These are new notes",
       "And an improved description"
     );
 
     metricsService.addChangeTarget(oldTarget, newTarget, "bbj");
-    assertEquals(4, metricChangeTargetRepository.findAll().size());
+    assertEquals(3, metricChangeTargetRepository.findAll().size());
 
-    MetricChangeTarget name = metricChangeTargetRepository.findAll()
-      .stream().filter((metric) -> metric.getField().equals("name")).collect(Collectors.toList()).get(0);
     MetricChangeTarget mgrs = metricChangeTargetRepository.findAll()
       .stream().filter((metric) -> metric.getField().equals("mgrs")).collect(Collectors.toList()).get(0);
     MetricChangeTarget notes = metricChangeTargetRepository.findAll()
       .stream().filter((metric) -> metric.getField().equals("notes")).collect(Collectors.toList()).get(0);
     MetricChangeTarget description = metricChangeTargetRepository.findAll()
       .stream().filter((metric) -> metric.getField().equals("description")).collect(Collectors.toList()).get(0);
-
-    assertEquals(newTarget.getName(), name.getNewData());
 
     assertEquals(newTarget.getMgrs(), mgrs.getNewData());
 
@@ -364,17 +359,16 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
 
-    TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "",
-      "");
-    MetricCreateTarget metric1 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric2 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric3 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric4 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric5 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric6 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric7 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric8 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric9 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    TargetJson target = new TargetJson(1, 1, 1, "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "", "");
+    MetricCreateTarget metric1 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric2 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric3 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric4 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric5 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric6 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric7 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric8 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric9 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
     metric1.setTimestamp(new Timestamp(threeWeeksAgo));
     metric2.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(2)));
     metric3.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(5)));
@@ -646,16 +640,14 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metric1.setTimestamp(new Timestamp(twoWeeksAgo));
     metric2.setTimestamp(new Timestamp(twoWeeksAgo + convertDaysToMS(2)));
 
-    TargetJson targetJson1 = new TargetJson(1, 1, 1, "SDT12-123", "12ASD1231231231", "notes", "description",
+    TargetJson targetJson1 = new TargetJson(1, 1, 1, "12ASD1231231231", "notes", "description",
       TargetStatus.NOT_STARTED, "", "");
-    TargetJson targetJson2 = new TargetJson(2, 1, 1, "SDT12-123", "12ASD1231231231", "notes", "description",
+    TargetJson targetJson2 = new TargetJson(2, 1, 1, "12ASD1231231231", "notes", "description",
       TargetStatus.NOT_STARTED, "", "");
     MetricChangeTarget metric3 = new MetricChangeTarget("mgrs", targetJson1,
       new Timestamp(twoWeeksAgo + convertDaysToMS(3)), "billy.bob.joe");
     MetricChangeTarget metric4 = new MetricChangeTarget("description", targetJson1,
       new Timestamp(twoWeeksAgo + convertDaysToMS(3)), "billy.bob.joe");
-    MetricChangeTarget metric5 = new MetricChangeTarget("name", targetJson1,
-      new Timestamp(twoWeeksAgo + convertDaysToMS(12)), "billy.bob.joe");
     MetricChangeTarget metric6 = new MetricChangeTarget("notes", targetJson2,
       new Timestamp(twoWeeksAgo + convertDaysToMS(12)), "billy.bob.joe");
     MetricChangeTarget metric60 = new MetricChangeTarget("notes", targetJson2,
@@ -694,7 +686,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     ));
 
     List<MetricChangeTarget> targetChanges = new ArrayList<>(Arrays.asList(
-      metric3, metric4, metric5, metric6, metric60
+      metric3, metric4, metric6, metric60
     ));
 
     List<MetricChangeIxn> ixnChanges = new ArrayList<>(Arrays.asList(
@@ -952,12 +944,11 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   @Test
   public void returnsTargetsCreatedWithinDateRange() {
     long threeWeeksAgo = new Date().getTime() - convertDaysToMS(21);
-    TargetJson target = new TargetJson(1, 1, 1, "ASD12-123", "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "",
-      "");
-    MetricCreateTarget metric1 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric2 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric3 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
-    MetricCreateTarget metric4 = new MetricCreateTarget(1, target, "billy.bob.joe", Boolean.FALSE);
+    TargetJson target = new TargetJson(1, 1, 1, "12QWE1231231231", "", "", TargetStatus.NOT_STARTED, "", "");
+    MetricCreateTarget metric1 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric2 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric3 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
+    MetricCreateTarget metric4 = new MetricCreateTarget(1, target, "20-0001", "billy.bob.joe", Boolean.FALSE);
 
     metric1.setTimestamp(new Timestamp(threeWeeksAgo));
     metric2.setTimestamp(new Timestamp(threeWeeksAgo + convertDaysToMS(2)));
@@ -1181,12 +1172,12 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
     long openRfiExploitDateId = exploitDateRepository.findAllByRfiId(openRfiId).get(0).getId();
 
-    Target openRfiTarget1 = new Target(openRfiId, openRfiExploitDateId,
-      new TargetJson(openRfiId, openRfiExploitDateId, "20-0001", "12QWE1231231231", "", ""));
-    Target openRfiTarget2 = new Target(openRfiId, openRfiExploitDateId,
-      new TargetJson(openRfiId, openRfiExploitDateId, "20-0002", "12QWE1231231232", "", ""));
-    Target openRfiTarget3 = new Target(openRfiId, openRfiExploitDateId,
-      new TargetJson(openRfiId, openRfiExploitDateId, "20-0003", "12QWE1231231233", "", ""));
+    Target openRfiTarget1 =
+      new Target(new TargetJson(openRfiId, openRfiExploitDateId, "12QWE1231231231", "", ""), "20-0003");
+    Target openRfiTarget2 =
+      new Target(new TargetJson(openRfiId, openRfiExploitDateId, "12QWE1231231232", "", ""), "20-0003");
+    Target openRfiTarget3 =
+      new Target(new TargetJson(openRfiId, openRfiExploitDateId, "12QWE1231231233", "", ""), "20-0003");
 
     targetRepository.saveAll(Arrays.asList(openRfiTarget1, openRfiTarget2, openRfiTarget3));
 
@@ -1233,27 +1224,27 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     long goodRfi1ExploitDateId = exploitDateRepository.findAllByRfiId(goodRfi1Id).get(0).getId();
     long goodRfi2ExploitDateId = exploitDateRepository.findAllByRfiId(goodRfi2Id).get(0).getId();
 
-    Target oldRfiTarget = new Target(oldRfiId, oldRfiExploitDateId,
-      new TargetJson(oldRfiId, oldRfiExploitDateId, "20-0001", "12QWE1231231231", "", ""));
+    Target oldRfiTarget =
+      new Target(new TargetJson(oldRfiId, oldRfiExploitDateId, "12QWE1231231231", "", ""), "20-0003");
 
-    Target goodRfi1Target1 = new Target(goodRfi1Id, goodRfi1ExploitDateId,
-      new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "20-0001", "12QWE1231231231", "", ""));
+    Target goodRfi1Target1 =
+      new Target(new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "12QWE1231231231", "", ""), "20-0003");
 
-    Target goodRfi1Target2 = new Target(goodRfi1Id, goodRfi1ExploitDateId,
-      new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "20-0002", "12QWE1231231232", "", ""));
+    Target goodRfi1Target2 =
+      new Target(new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "12QWE1231231232", "", ""), "20-0003");
 
-    Target goodRfi1DeletedTarget = new Target(goodRfi1Id, goodRfi1ExploitDateId,
-      new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "20-0003", "12QWE1231231233", "", ""));
+    Target goodRfi1DeletedTarget =
+      new Target(new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "12QWE1231231233", "", ""), "20-0003");
     goodRfi1DeletedTarget.setDeleted(new Timestamp(new Date().getTime()));
 
-    Target goodRfi2Target1 = new Target(goodRfi2Id, goodRfi2ExploitDateId,
-      new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "20-0001", "12QWE1231231231", "", ""));
+    Target goodRfi2Target1 =
+      new Target(new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "12QWE1231231231", "", ""), "20-0003");
 
-    Target goodRfi2Target2 = new Target(goodRfi2Id, goodRfi2ExploitDateId,
-      new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "20-0002", "12QWE1231231232", "", ""));
+    Target goodRfi2Target2 =
+      new Target(new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "12QWE1231231232", "", ""), "20-0003");
 
-    Target goodRfi2Target3 = new Target(goodRfi2Id, goodRfi2ExploitDateId,
-      new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "20-0003", "12QWE1231231233", "", ""));
+    Target goodRfi2Target3 =
+      new Target(new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "12QWE1231231233", "", ""), "20-0003");
 
     targetRepository.saveAll(Arrays
       .asList(oldRfiTarget, goodRfi1Target1, goodRfi1Target2, goodRfi1DeletedTarget, goodRfi2Target1, goodRfi2Target2,

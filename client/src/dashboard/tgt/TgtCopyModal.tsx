@@ -191,7 +191,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
             className={'tgt-copy--row tgt-copy--row-new'}
             id={'tgt-' + index}
           >
-            <div className={'target-name'}>{target.name}</div>
+            {/*<div className={'target-name'}>{target.name}</div>*/}
             <div className={'target-mgrs'}>{target.mgrs}</div>
             <div className={'checkbox-spacer'}>&nbsp;</div>
           </div>,
@@ -206,7 +206,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
       });
     allTargets = allTargets.concat(copiedTgts.filter(
       (target) => {
-        return target.exploitDateId === copyToDateId && target.name === targetName;
+        return target.exploitDateId === copyToDateId; // fix this to be more specific for the target identified
       },
     ));
     return allTargets.length > 0;

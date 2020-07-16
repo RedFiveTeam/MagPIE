@@ -50,7 +50,7 @@ public class IxnServiceTest extends BaseIntegrationTest {
     long target2Id = targetRepository.findAll().get(1).getId();
     long segment2Id = segmentRepository.findAll().get(1).getId();
 
-    ixnService.assignTracks(rfiId, "SDT12-123");
+    ixnService.assignTracks(rfiId, "20-0001");
 
     Ixn ixn1 = ixnRepository.findAll().get(7);
     Ixn ixn2 = ixnRepository.findAll().get(9);
@@ -58,16 +58,16 @@ public class IxnServiceTest extends BaseIntegrationTest {
     Ixn ixn4 = ixnRepository.findAll().get(2);
     Ixn ixn5 = ixnRepository.findAll().get(4);
 
-    assertEquals("123-001", ixn1.getTrack());
-    assertEquals("123-002", ixn2.getTrack());
-    assertEquals("123-003", ixn3.getTrack());
-    assertEquals("123-004", ixn4.getTrack());
-    assertEquals("123-005", ixn5.getTrack());
+    assertEquals("0001-001", ixn1.getTrack());
+    assertEquals("0001-002", ixn2.getTrack());
+    assertEquals("0001-003", ixn3.getTrack());
+    assertEquals("0001-004", ixn4.getTrack());
+    assertEquals("0001-005", ixn5.getTrack());
 
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(678000)
-      .getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-003
+      .getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //0001-003
 
-    ixnService.assignTracks(rfiId, "SDT12-123");
+    ixnService.assignTracks(rfiId, "20-0001");
 
     ixn1 = ixnRepository.findAll().get(7);
     ixn2 = ixnRepository.findAll().get(9);
@@ -76,30 +76,30 @@ public class IxnServiceTest extends BaseIntegrationTest {
     ixn5 = ixnRepository.findAll().get(2);
     Ixn ixn6 = ixnRepository.findAll().get(4);
 
-    assertEquals("123-001", ixn1.getTrack());
-    assertEquals("123-002", ixn2.getTrack());
-    assertEquals("123-003", ixn3.getTrack());
-    assertEquals("123-004", ixn4.getTrack());
-    assertEquals("123-005", ixn5.getTrack());
-    assertEquals("123-006", ixn6.getTrack());
+    assertEquals("0001-001", ixn1.getTrack());
+    assertEquals("0001-002", ixn2.getTrack());
+    assertEquals("0001-003", ixn3.getTrack());
+    assertEquals("0001-004", ixn4.getTrack());
+    assertEquals("0001-005", ixn5.getTrack());
+    assertEquals("0001-006", ixn6.getTrack());
   }
 
   @Test
   public void updatesTrackNumbersInTrackNarratives() throws Exception {
     setupIxns();
     long rfiId = rfiRepository.findAll().get(0).getId();
-    ixnService.assignTracks(rfiId, "SDT12-123");
+    ixnService.assignTracks(rfiId, "20-0001");
 
-    Ixn ixn1 = ixnRepository.findAll().get(0); //123-003
+    Ixn ixn1 = ixnRepository.findAll().get(0); //0001-003
     Ixn ixn2 = ixnRepository.findAll().get(1); //Not Started
-    Ixn ixn3 = ixnRepository.findAll().get(2); //123-004
+    Ixn ixn3 = ixnRepository.findAll().get(2); //0001-004
 
     ixn1.setTrackNarrative(
       "11NOV20\n" +
         "\n" +
         "START\n" +
         "\n" +
-        "Things happened also track #123-003 and 123-004\n" +
+        "Things happened also track #0001-003 and 0001-004\n" +
         "\n" +
         "STOP"
     );
@@ -111,7 +111,7 @@ public class IxnServiceTest extends BaseIntegrationTest {
         "\n" +
         "START\n" +
         "\n" +
-        "Things happened also track #123-002, 123-004 and 123-005\n" +
+        "Things happened also track #0001-002, 0001-004 and 0001-005\n" +
         "\n" +
         "STOP"
     );
@@ -121,17 +121,17 @@ public class IxnServiceTest extends BaseIntegrationTest {
     ixn2.setStatus(IxnStatus.IN_PROGRESS);
 
     ixnRepository.save(ixn2);
-    ixnService.assignTracks(rfiId, "SDT12-123");  //ixn2 -> 123-004, ixn3 -> 123-005
+    ixnService.assignTracks(rfiId, "20-0001");  //ixn2 -> 0001-004, ixn3 -> 0001-005
 
-    ixn1 = ixnRepository.findAll().get(0); //123-003
-    ixn3 = ixnRepository.findAll().get(2); //123-005
+    ixn1 = ixnRepository.findAll().get(0); //0001-003
+    ixn3 = ixnRepository.findAll().get(2); //0001-005
 
     assertEquals(
       "11NOV20\n" +
         "\n" +
         "START\n" +
         "\n" +
-        "Things happened also track #123-003 and 123-005\n" +
+        "Things happened also track #0001-003 and 0001-005\n" +
         "\n" +
         "STOP"
       ,
@@ -143,7 +143,7 @@ public class IxnServiceTest extends BaseIntegrationTest {
         "\n" +
         "START\n" +
         "\n" +
-        "Things happened also track #123-002, 123-005 and 123-006\n" +
+        "Things happened also track #0001-002, 0001-005 and 0001-006\n" +
         "\n" +
         "STOP"
       ,
@@ -154,17 +154,17 @@ public class IxnServiceTest extends BaseIntegrationTest {
     ixn2.setStatus(IxnStatus.DOES_NOT_MEET_EEI);
 
     ixnRepository.save(ixn2);
-    ixnService.assignTracks(rfiId, "SDT12-123");  //ixn2 -> none, ixn3 -> 123-004
+    ixnService.assignTracks(rfiId, "20-0001");  //ixn2 -> none, ixn3 -> 0001-004
 
-    ixn1 = ixnRepository.findAll().get(0); //123-003
-    ixn3 = ixnRepository.findAll().get(2); //123-004
+    ixn1 = ixnRepository.findAll().get(0); //0001-003
+    ixn3 = ixnRepository.findAll().get(2); //0001-004
 
     assertEquals(
       "11NOV20\n" +
         "\n" +
         "START\n" +
         "\n" +
-        "Things happened also track #123-003 and 123-004\n" +
+        "Things happened also track #0001-003 and 0001-004\n" +
         "\n" +
         "STOP"
       ,
@@ -176,7 +176,7 @@ public class IxnServiceTest extends BaseIntegrationTest {
         "\n" +
         "START\n" +
         "\n" +
-        "Things happened also track #123-002, 123-004 and 123-005\n" +
+        "Things happened also track #0001-002, 0001-004 and 0001-005\n" +
         "\n" +
         "STOP"
       ,
@@ -189,7 +189,7 @@ public class IxnServiceTest extends BaseIntegrationTest {
   public void determinesIfAStatusChangeWouldCauseATrackRenumbering() throws Exception {
     setupIxns();
     long rfiId = rfiRepository.findAll().get(0).getId();
-    ixnService.assignTracks(rfiId, "SDT12-123");
+    ixnService.assignTracks(rfiId, "20-0001");
 
     long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
     long target1Id = targetRepository.findAll().get(0).getId();
@@ -254,10 +254,10 @@ public class IxnServiceTest extends BaseIntegrationTest {
     long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
     long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "12WQE1231231231", "", ""), "20-0001"));
     long target1Id = targetRepository.findAll().get(0).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "12WQE1231231231", "", ""), "20-0001"));
     long target2Id = targetRepository.findAll().get(1).getId();
 
 
@@ -273,19 +273,19 @@ public class IxnServiceTest extends BaseIntegrationTest {
 
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(123000).getTime()), "", "", "",
-        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-003
+        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //0001-003
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(234000).getTime()), "", "", "",
         IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(345000).getTime()), "", "", "",
-        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-004
+        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //0001-004
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(456000).getTime()), "", "", "",
         IxnStatus.DOES_NOT_MEET_EEI, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(new Date(567000).getTime()), "", "", "",
-        IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-005
+        IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //0001-005
 
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(123000).getTime()), "", "", "",
@@ -295,12 +295,12 @@ public class IxnServiceTest extends BaseIntegrationTest {
         IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(345000).getTime()), "", "", "",
-        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED));  //123-001
+        IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED));  //0001-001
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(456000).getTime()), "", "", "",
         IxnStatus.DOES_NOT_MEET_EEI, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(
       new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(new Date(567000).getTime()), "", "", "",
-        IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-002
+        IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //0001-002
   }
 }

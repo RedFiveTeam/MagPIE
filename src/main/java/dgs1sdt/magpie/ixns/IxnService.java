@@ -177,7 +177,7 @@ public class IxnService {
   }
 
   public void assignTracks(long rfiId, String targetName) {
-    List<Target> targets = targetRepository.findAllByRfiIdAndName(rfiId, targetName);
+    List<Target> targets = targetRepository.findAllByRfiIdAndNameWithExploitDate(rfiId, targetName);
     List<Ixn> ixns = new ArrayList<>();
 
     sortTargetsByExploitDate(targets);
@@ -194,7 +194,7 @@ public class IxnService {
 
     int trackNum = 1;
     for (Ixn ixnWithTrackIdToUpdate : ixns) {
-      String newTrackId = targetName.substring(6) + "-" + StringUtils.leftPad(String.valueOf(trackNum), 3, '0');
+      String newTrackId = targetName.substring(3) + "-" + StringUtils.leftPad(String.valueOf(trackNum), 3, '0');
       String oldTrackId = ixnWithTrackIdToUpdate.getTrack();
       ixnWithTrackIdToUpdate.setTrack(newTrackId);
       if (!oldTrackId.equals(newTrackId) && !oldTrackId.isEmpty()) {
@@ -226,11 +226,10 @@ public class IxnService {
         !ixnWithNarrativeToUpdate.getTrackNarrative().equals("")) {
 
         for (int i = renamings.size() - 2; i >= 0; i -= 2) {
-          System.out.println(renamings.get(i) + " -> " + renamings.get(i + 1));
+          log.info(renamings.get(i) + " -> " + renamings.get(i + 1));
           newNarrative = newNarrative.replaceAll(Pattern.quote(renamings.get(i)), renamings.get(i + 1));
         }
       } else {
-
         for (int i = 0; i < renamings.size(); i += 2) {
           newNarrative = newNarrative.replaceAll(Pattern.quote(renamings.get(i)), renamings.get(i + 1));
         }
@@ -254,7 +253,7 @@ public class IxnService {
 
   public boolean checkRenumber(Ixn newIxn) {
     String targetName = targetRepository.findById(newIxn.getTargetId()).get().getName();
-    List<Target> targets = targetRepository.findAllByRfiIdAndName(newIxn.getRfiId(), targetName);
+    List<Target> targets = targetRepository.findAllByRfiIdAndNameWithExploitDate(newIxn.getRfiId(), targetName);
     List<Ixn> ixns = new ArrayList<>();
 
     sortTargetsByExploitDate(targets);

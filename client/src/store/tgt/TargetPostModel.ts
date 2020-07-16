@@ -5,7 +5,6 @@ export class TargetPostModel {
     public targetId: number|null,
     public rfiId: number,
     public exploitDateId: number,
-    public name: string,
     public mgrs: string,
     public notes: string|null,
     public description: string|null,
@@ -17,6 +16,6 @@ export class TargetPostModel {
 }
 
 export const convertToPostModel = (target: TargetModel): TargetPostModel => {
-  return new TargetPostModel(target.id, target.rfiId, target.exploitDateId, target.name, target.mgrs, target.notes,
+  return new TargetPostModel(target.id, target.rfiId, target.exploitDateId, target.mgrs, target.notes,
                              target.description, target.status, target.hourlyRollup, target.allCallouts);
 };

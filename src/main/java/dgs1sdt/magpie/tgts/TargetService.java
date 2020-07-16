@@ -1,5 +1,6 @@
 package dgs1sdt.magpie.tgts;
 
+import dgs1sdt.magpie.TargetNameRepository;
 import dgs1sdt.magpie.ixns.*;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.rfis.Rfi;
@@ -8,10 +9,13 @@ import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -28,6 +32,7 @@ public class TargetService {
   private SegmentRepository segmentRepository;
   private IxnRepository ixnRepository;
   private IxnService ixnService;
+  private TargetNameRepository targetNameRepository;
 
   @Autowired
   public TargetService(RfiRepository rfiRepository,
@@ -35,13 +40,16 @@ public class TargetService {
                        TargetRepository targetRepository,
                        SegmentRepository segmentRepository,
                        IxnRepository ixnRepository,
-                       IxnService ixnService) {
+                       IxnService ixnService,
+                       TargetNameRepository targetNameRepository
+  ) {
     this.rfiRepository = rfiRepository;
     this.exploitDateRepository = exploitDateRepository;
     this.targetRepository = targetRepository;
     this.segmentRepository = segmentRepository;
     this.ixnRepository = ixnRepository;
     this.ixnService = ixnService;
+    this.targetNameRepository = targetNameRepository;
   }
 
   @Autowired
@@ -77,6 +85,11 @@ public class TargetService {
   @Autowired
   public void setIxnService(IxnService ixnService) {
     this.ixnService = ixnService;
+  }
+
+  @Autowired
+  public void setTargetNameRepository(TargetNameRepository targetNameRepository) {
+    this.targetNameRepository = targetNameRepository;
   }
 
   public List<TargetGet> getTargets(long rfiId) {
@@ -179,15 +192,15 @@ public class TargetService {
     Timestamp now = new Timestamp(new Date().getTime());
     for (TargetJson target : targets) {
       Target toDelete = targetRepository
-        .findByRfiIdAndExploitDateIdAndName(target.getRfiId(), target.getExploitDateId(), target.getName());
+        .findByRfiIdAndExploitDateIdAndMgrs(target.getRfiId(), target.getExploitDateId(), target.getMgrs());
       if (toDelete != null) {
         toDelete.setDeleted(now);
         targetRepository.save(toDelete);
         this.metricsService.addUndoTargetCreate(toDelete.getId(), userName);
-        ixnService.assignTracks(target.getRfiId(), target.getName());
+        ixnService.assignTracks(target.getRfiId(), toDelete.getName());
       } else {
         log.error(
-          "Error deleting target: could not find target with name " + target.getName() + " and exploit date id " +
+          "Error deleting target: could not find target with MGRS " + target.getMgrs() + " and exploit date id " +
             target.getExploitDateId());
       }
     }
@@ -246,17 +259,19 @@ public class TargetService {
   private void addTarget(TargetJson targetJson, String userName, Boolean isCopy) {
     long exploitDateId = targetJson.getExploitDateId();
 
-    Target target = new Target(targetJson.getRfiId(), exploitDateId, targetJson);
-    Target duplicate = targetRepository.findByRfiIdAndExploitDateIdAndName(targetJson.getRfiId(), exploitDateId,
-      targetJson.getName());
+    Target duplicate = targetRepository.findByRfiIdAndExploitDateIdAndMgrs(targetJson.getRfiId(), exploitDateId,
+      targetJson.getMgrs());
     if (duplicate == null) {
+      Target target = this.assignOrGenerateName(targetJson);
+
       targetRepository.save(target);
 
+      //Metrics
       if (rfiRepository.findById(targetJson.getRfiId()).isPresent()) {
         if (exploitDateRepository.findById(exploitDateId).isPresent()) {
           long lastTargetId = targetRepository.findAll().get(targetRepository.findAll().size() - 1).getId();
 
-          metricsService.addCreateTarget(lastTargetId, targetJson, userName, isCopy);
+          metricsService.addCreateTarget(lastTargetId, targetJson, target.getName(), userName, isCopy);
         } else {
           log.error("Error finding exploit date by id: " + exploitDateId);
         }
@@ -270,16 +285,16 @@ public class TargetService {
     if (targetRepository.findById(targetJson.getTargetId()).isPresent()) {
       long exploitDateId = targetRepository.findById(targetJson.getTargetId()).get().getExploitDateId();
       if (exploitDateRepository.findById(exploitDateId).isPresent()) {
-        Target targetWithSameNameAsJson = targetRepository.findByRfiIdAndExploitDateIdAndName(targetJson.getRfiId(),
-          targetJson.getExploitDateId(), targetJson.getName());
+        Target targetWithSameMgrsAsJson = targetRepository.findByRfiIdAndExploitDateIdAndMgrs(targetJson.getRfiId(),
+          targetJson.getExploitDateId(), targetJson.getMgrs());
 
-        if (targetWithSameNameAsJson != null && targetWithSameNameAsJson.getId() != targetJson.getTargetId()) {
-          return; //name conflict, do nothing
+        if (targetWithSameMgrsAsJson != null && targetWithSameMgrsAsJson.getId() != targetJson.getTargetId()) {
+          return; //mgrs conflict, do nothing
         }
 
         Target oldTarget = targetRepository.findById(targetJson.getTargetId()).get();
         String oldName = oldTarget.getName();
-        Target newTarget = new Target(targetJson);
+        Target newTarget = this.assignOrGenerateName(targetJson);
 
         if (oldTarget.getDeleted() != null) {
           this.metricsService.addUndoTargetDelete(oldTarget.getId());
@@ -302,6 +317,31 @@ public class TargetService {
     } else {
       log.error("Error updating target: Could not find target by id " + targetJson.getTargetId());
     }
+  }
+
+  private Target assignOrGenerateName(TargetJson targetJson) {
+    String newTargetNameString;
+
+    TargetName targetName = targetNameRepository.findByMgrs(targetJson.getMgrs());
+    if (targetName == null) {
+      DateFormat twoDigitYear = new SimpleDateFormat("yy");
+      String currentYear = twoDigitYear.format(new Date());
+
+      if (targetNameRepository.findAll().size() == 0) {
+        newTargetNameString = currentYear + "-0001";
+      } else {
+        String lastNameFromDatabase =
+          targetNameRepository.findAll().get(targetNameRepository.findAll().size() - 1).getName();
+        int lastNameNumber = Integer.parseInt(lastNameFromDatabase.substring(3));
+
+        newTargetNameString = currentYear + "-" + StringUtils.leftPad(String.valueOf(lastNameNumber + 1), 4, '0');
+      }
+
+      targetNameRepository.save(new TargetName(targetJson.getMgrs(), newTargetNameString));
+    } else {
+      newTargetNameString = targetName.getName();
+    }
+    return new Target(targetJson, newTargetNameString);
   }
 
   public List<Target> getDeletedTargets() {

@@ -123,7 +123,7 @@ export const TgtRow: React.FC<MyProps> = (props) => {
               <div className={classNames('data-cell', 'tgt-name')}>
                 {props.target.name === '' ? '\xa0' : props.target.name}
               </div>
-              <div className={'data-bottom'}>&nbsp;</div>
+              <div className={'data-bottom-no-underline'}>&nbsp;</div>
             </div>
             <div className={'data-cell-container'}>
               <div className={classNames('data-cell', 'mgrs')}>
@@ -216,7 +216,8 @@ export const StyledTgtRow = styled(TgtRow)`
   }
   
   .tgt-name {
-    width: 115px;
+    width: 67px;
+    margin: 10px 4px 0 12px !important;
   }
   
   .mgrs {
@@ -224,7 +225,7 @@ export const StyledTgtRow = styled(TgtRow)`
   }
   
   .notes {
-    width: 389px;
+    width: 437px;
   }
   
   .description {
@@ -257,6 +258,13 @@ export const StyledTgtRow = styled(TgtRow)`
     margin-bottom: 4px;
     width: calc(100% - 16px);
     border-bottom: 1px solid #FFFFFF;
+  }
+  
+  .data-bottom-no-underline {
+    height: 7px;
+    margin-bottom: 4px;
+    width: calc(100% - 16px);
+    border-bottom: 1px solid ${theme.color.backgroundInformation};
   }
   
   .exploitation {

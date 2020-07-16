@@ -1,6 +1,7 @@
 package dgs1sdt.magpie.tgts;
 
 import dgs1sdt.magpie.BaseIntegrationTest;
+import dgs1sdt.magpie.TargetNameRepository;
 import dgs1sdt.magpie.ixns.*;
 import dgs1sdt.magpie.metrics.IxnApprovalStatus;
 import dgs1sdt.magpie.metrics.changeExploitDate.MetricChangeExploitDate;
@@ -45,6 +46,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
   RfiRepository rfiRepository;
   ExploitDateRepository exploitDateRepository;
   TargetRepository targetRepository;
+  TargetNameRepository targetNameRepository;
   SegmentRepository segmentRepository;
   IxnRepository ixnRepository;
   MetricCreateExploitDateRepository metricCreateExploitDateRepository;
@@ -90,6 +92,11 @@ public class TargetControllerTest extends BaseIntegrationTest {
   @Autowired
   public void setTargetRepository(TargetRepository targetRepository) {
     this.targetRepository = targetRepository;
+  }
+
+  @Autowired
+  public void setTargetNameRepository(TargetNameRepository targetNameRepository) {
+    this.targetNameRepository = targetNameRepository;
   }
 
   @Autowired
@@ -157,6 +164,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
+    targetNameRepository.deleteAll();
     segmentRepository.deleteAll();
     ixnRepository.deleteAll();
     metricCreateExploitDateRepository.deleteAll();
@@ -166,6 +174,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     metricChangeTargetRepository.deleteAll();
     metricDeleteTargetRepository.deleteAll();
     metricUndoTargetDeleteRepository.deleteAll();
+    metricUndoExploitDateDeleteRepository.deleteAll();
     metricUndoTargetCreateRepository.deleteAll();
   }
 
@@ -256,7 +265,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some EEI notes",
       "This is a description"
@@ -277,7 +285,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertEquals(rfiRepository.findByRfiNum("SDT-123").getId(), target.getRfiId());
     assertEquals(exploitDateRepository.findAllByRfiId(rfiId).get(0).getId(), target.getExploitDateId());
-    assertEquals("SDT20-123", target.getName());
+    assertEquals("20-0001", target.getName());
     assertEquals("12ABC1234567890", target.getMgrs());
     assertEquals("These are some EEI notes", target.getNotes());
     assertEquals("This is a description", target.getDescription());
@@ -285,8 +293,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     targetJson = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-123",
-      "12ABC1234567899",
+      "12ABC1234567890",
       "These are some different EEI notes",
       "This is a unique description"
     );
@@ -384,7 +391,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson1 = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some EEI notes",
       "This is a description"
@@ -392,7 +398,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson2 = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT19-123",
       "12ABC1234567890",
       "These are some EEI notes",
       "This is a description"
@@ -426,7 +431,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some EEI notes",
       "This is a description"
@@ -477,7 +481,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson1 = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some EEI notes",
       "This is a description"
@@ -486,17 +489,14 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson2 = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-124",
       "12ABC1234567980",
       "These are some EEI notes",
       "This is a description"
     );
 
-    targetController.postTarget(new ArrayList<>(Arrays.asList(targetJson1, targetJson2)), "billy.bob.joe", "false");
+    targetController.postTarget(Arrays.asList(targetJson1, targetJson2), "billy.bob.joe", "false");
 
     String jsonString = objectMapper.writeValueAsString(new TargetJson[]{targetJson1, targetJson2});
-
-    System.out.println(jsonString);
 
     given()
       .port(port)
@@ -529,20 +529,19 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some EEI notes",
       "This is a description"
     );
 
     targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
-    long targetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, "SDT20-123").getId();
+    long targetId =
+      targetRepository.findByRfiIdAndExploitDateIdAndMgrs(rfiId, exploitDateId, "12ABC1234567890").getId();
 
     TargetJson targetEditJson = new TargetJson(
       targetId,
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some RAD supercool EEI notes",
       "This is a different description",
@@ -566,7 +565,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertEquals(rfiId, target.getRfiId());
     assertEquals(exploitDateId, target.getExploitDateId());
-    assertEquals("SDT20-123", target.getName());
     assertEquals("12ABC1234567890", target.getMgrs());
     assertEquals("These are some RAD supercool EEI notes", target.getNotes());
     assertEquals("This is a different description", target.getDescription());
@@ -589,7 +587,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
       targetId,
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some RAD supercool EEI notes",
       "This is a different description",
@@ -625,7 +622,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
       targetId,
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some RAD supercool EEI notes",
       "This is a different description",
@@ -674,7 +670,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some EEI notes",
       "This is a description"
@@ -683,8 +678,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJsonConflict = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-124",
-      "12ABC1234567890",
+      "12ABC1234567899",
       "These are some EEI notes",
       "This is a description"
     );
@@ -692,14 +686,14 @@ public class TargetControllerTest extends BaseIntegrationTest {
     targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
     targetController.postTarget(Collections.singletonList(targetJsonConflict), "billy.bob.joe", "false");
 
-    long targetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, "SDT20-123").getId();
+    long targetId =
+      targetRepository.findByRfiIdAndExploitDateIdAndMgrs(rfiId, exploitDateId, "12ABC1234567890").getId();
 
     TargetJson updatedTargetJson = new TargetJson(
       targetId,
       rfiId,
       exploitDateId,
-      "SDT20-124",
-      "12ABC1234567890",
+      "12ABC1234567899",
       "These are some different notes for the EEI",
       "This is a description that's also different",
       TargetStatus.NOT_STARTED,
@@ -707,8 +701,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "");
 
     targetController.postTarget(Collections.singletonList(updatedTargetJson), "billy.bob.joe", "false");
-
-    assertEquals("SDT20-123", targetRepository.findById(targetId).get().getName());
 
     assertEquals(0, metricChangeTargetRepository.findAll().size());
   }
@@ -729,7 +721,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
     TargetJson targetJson = new TargetJson(
       rfiId,
       exploitDateId,
-      "SDT20-123",
       "12ABC1234567890",
       "These are some EEI notes",
       "This is a description"
@@ -746,7 +737,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "\"targetId\":" + targetId +
       ",\"rfiId\":" + rfiId +
       ",\"exploitDateId\":" + exploitDateId +
-      ",\"name\":" + "\"" + targetJson.getName() + "\"" +
       ",\"mgrs\":" + "\"" + targetJson.getMgrs() + "\"" +
       ",\"notes\":" + "\"" + targetJson.getNotes() + "\"" +
       ",\"description\":" + "\"" + targetJson.getDescription() + "\"" +
@@ -772,7 +762,6 @@ public class TargetControllerTest extends BaseIntegrationTest {
       "\"targetId\":" + targetId +
       ",\"rfiId\":" + rfiId +
       ",\"exploitDateId\":" + exploitDateId +
-      ",\"name\":" + "\"" + targetJson.getName() + "\"" +
       ",\"mgrs\":" + "\"" + targetJson.getMgrs() + "\"" +
       ",\"notes\":" + "\"" + targetJson.getNotes() + "\"" +
       ",\"description\":" + "\"" + targetJson.getDescription() + "\"" +
@@ -811,9 +800,9 @@ public class TargetControllerTest extends BaseIntegrationTest {
   public void undoesTargetDeleteAndLogsMetrics() throws Exception {
     setupIxns();
     Target target = targetRepository.findAll().get(0);
-    TargetJson targetJson = new TargetJson(target.getId(), target.getRfiId(), target.getExploitDateId(),
-      target.getName(), target.getMgrs(), target.getNotes(), target.getDescription(), target.getStatus(),
-      target.getHourlyRollup(), target.getAllCallouts());
+    TargetJson targetJson =
+      new TargetJson(target.getId(), target.getRfiId(), target.getExploitDateId(), target.getMgrs(), target.getNotes(),
+        target.getDescription(), target.getStatus(), target.getHourlyRollup(), target.getAllCallouts());
 
     long targetId = target.getId();
 
@@ -835,15 +824,15 @@ public class TargetControllerTest extends BaseIntegrationTest {
     long rfiId = target.getRfiId();
     long exploitDateId = target.getExploitDateId();
     long targetId = target.getId();
-    String targetName = target.getName();
+    String targetMgrs = target.getMgrs();
 
     targetController.deleteTarget(targetId);
 
-    TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
+    TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetMgrs, "", "");
 
     targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
 
-    long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetName).getId();
+    long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndMgrs(rfiId, exploitDateId, targetMgrs).getId();
 
     assertEquals(2, targetController.getTargets(rfiId).size());
     assertEquals(0, ixnController.getIxns(newTargetId).size());
@@ -894,15 +883,15 @@ public class TargetControllerTest extends BaseIntegrationTest {
     Target target = targetRepository.findAll().get(0);
     long rfiId = target.getRfiId();
     long exploitDateId = target.getExploitDateId();
-    String targetName = target.getName();
+    String targetMgrs = target.getMgrs();
 
     targetController.deleteExploitDate(exploitDateId);
 
-    TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetName, "12QWE1231231231", "", "");
+    TargetJson targetJson = new TargetJson(rfiId, exploitDateId, targetMgrs, "", "");
 
     targetController.postTarget(Collections.singletonList(targetJson), "billy.bob.joe", "false");
 
-    long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndName(rfiId, exploitDateId, targetName).getId();
+    long newTargetId = targetRepository.findByRfiIdAndExploitDateIdAndMgrs(rfiId, exploitDateId, targetMgrs).getId();
 
     assertEquals(2, targetController.getTargets(rfiId).size());
     assertEquals(0, ixnController.getIxns(newTargetId).size());
@@ -927,13 +916,13 @@ public class TargetControllerTest extends BaseIntegrationTest {
     long exploitDateId2 = exploitDateRepository.findByRfiIdAndExploitDate(rfiId,
       new Timestamp(new SimpleDateFormat("dd/MM/yyyy").parse("12/11/2020").getTime())).getId();
 
-    TargetJson targetJson1 = new TargetJson(rfiId, exploitDateId1, "ASD12-123", "12ASD1231231231", "These are notes",
+    TargetJson targetJson1 = new TargetJson(rfiId, exploitDateId1, "12ASD1231231231", "These are notes",
       "This is a description");
     TargetJson targetJson2 =
-      new TargetJson(rfiId, exploitDateId1, "ASD12-234", "13ASD1231231231", "These are different notes",
+      new TargetJson(rfiId, exploitDateId1, "13ASD1231231231", "These are different notes",
         "This is another description");
     TargetJson targetJson3 =
-      new TargetJson(rfiId, exploitDateId1, "ASD12-345", "14ASD1231231231", "These are some notes",
+      new TargetJson(rfiId, exploitDateId1, "14ASD1231231231", "These are some notes",
         "This is some sort of description");
 
     targetController.postTarget(Arrays.asList(targetJson1, targetJson2, targetJson3), "billy.bob.joe", "false");
@@ -941,21 +930,9 @@ public class TargetControllerTest extends BaseIntegrationTest {
     targetJson1.setExploitDateId(exploitDateId2);
     targetJson3.setExploitDateId(exploitDateId2);
 
-    List<TargetJson> targetCopies = Arrays.asList(targetJson1, targetJson3);
-
-    String copyJsonString = objectMapper.writeValueAsString(targetCopies);
-
-    given()
-      .port(port)
-      .contentType("application/json")
-      .body(copyJsonString)
-      .when()
-      .post(TargetController.URI + "/post?userName=billy.bob.joe&isCopy=true")
-      .then()
-      .statusCode(200);
+    targetController.postTarget(Arrays.asList(targetJson1, targetJson3), "billy.bob.joe", "true");
 
     assertEquals(5, targetRepository.findAll().size());
-    assertEquals("ASD12-123", targetRepository.findAll().get(3).getName());
     assertEquals("14ASD1231231231", targetRepository.findAll().get(4).getMgrs());
 
     assertEquals(5, metricCreateTargetRepository.findAll().size());
@@ -996,16 +973,17 @@ public class TargetControllerTest extends BaseIntegrationTest {
     Date exploitDate2 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/10/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate2, rfiId));
 
-
     long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
     long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
+    TargetJson target = new TargetJson(rfiId, exploitDate1Id, "12WQE1231231231", "", "");
+
+    targetController.postTarget(Collections.singletonList(target), "Billy.Bob", "false");
     long target1Id = targetRepository.findAll().get(0).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
+    target.setExploitDateId(exploitDate2Id);
+    targetController.postTarget(Collections.singletonList(target), "Billy.Bob", "false");
     long target2Id = targetRepository.findAll().get(1).getId();
-
 
     segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id,
       new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
@@ -1016,27 +994,35 @@ public class TargetControllerTest extends BaseIntegrationTest {
     long segment2Id = segmentRepository.findAll().get(1).getId();
 
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-003
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-003
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED)); //123-004
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-004
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
       new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
       IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate1Id, target1Id, segment1Id, "",
-      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-005
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-005
 
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(123000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
+      new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "",
+      IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.REJECTED));  //123-001
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "",
+      IxnApprovalStatus.REJECTED));  //123-001
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
       new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
       IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "", IxnApprovalStatus.NOT_REVIEWED)); //123-002
+      new Timestamp(new Date(567000).getTime()), "", "", "", IxnStatus.COMPLETED, "",
+      IxnApprovalStatus.NOT_REVIEWED)); //123-002
   }
 }

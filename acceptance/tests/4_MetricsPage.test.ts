@@ -30,7 +30,7 @@ Scenario('Should display deletion metrics', (I) => {
     I.see('Segments');
     I.see('Interactions');
     I.see('6', locate('.card-row').at(1));
-    I.see('5', locate('.card-row').at(2));
+    I.see('4', locate('.card-row').at(2));
     I.see('4', locate('.card-row').at(3));
     I.see('3', locate('.card-row').at(4));
   });
@@ -58,7 +58,7 @@ Scenario('Should display edit metrics', (I) => {
     I.see('Segments');
     I.see('Interactions');
     I.see('1', locate('.card-row').at(1));
-    I.see('6', locate('.card-row').at(2));
+    I.see('3', locate('.card-row').at(2));
     I.see('1', locate('.card-row').at(3));
     I.see('12', locate('.card-row').at(4));
   });
@@ -68,7 +68,7 @@ Scenario('Should display other metrics', (I) => {
   I.amOnPage('/metrics');
 
   I.waitForText('Avg Targets Created', 3);
-  I.see('12', '.tgts-created');
+  I.see('11', '.tgts-created');
 
   I.waitForText('Avg Interactions Created', 3);
   I.see('4', '.ixns-created');

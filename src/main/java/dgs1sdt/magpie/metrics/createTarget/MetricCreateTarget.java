@@ -30,11 +30,11 @@ public class MetricCreateTarget implements TimestampMetric {
   private String userName;
   private Boolean isCopy;
 
-  public MetricCreateTarget(long targetId, TargetJson target, String userName, Boolean isCopy) {
+  public MetricCreateTarget(long targetId, TargetJson target, String name, String userName, Boolean isCopy) {
     this.rfiId = target.getRfiId();
     this.exploitDateId = target.getExploitDateId();
     this.targetId = targetId;
-    this.name = target.getName();
+    this.name = name;
     this.mgrs = target.getMgrs();
     this.notes = target.getNotes();
     this.description = target.getDescription();

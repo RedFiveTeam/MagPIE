@@ -47,10 +47,15 @@ import static org.junit.Assert.*;
   })
 public class RfiControllerTest extends BaseIntegrationTest {
 
+  IxnController ixnController;
   RfiController rfiController;
+  TargetController targetController;
+  MetricsService metricsService;
   RfiService rfiService;
   RfiRepository rfiRepository;
   ExploitDateRepository exploitDateRepository;
+  IxnRepository ixnRepository;
+  SegmentRepository segmentRepository;
   TargetRepository targetRepository;
   MetricChangeExploitDateRepository metricChangeExploitDateRepository;
   MetricCreateTargetRepository metricCreateTargetRepository;
@@ -62,15 +67,29 @@ public class RfiControllerTest extends BaseIntegrationTest {
   MetricChangeRfiRepository metricChangeRfiRepository;
 
   @Autowired
-  SegmentRepository segmentRepository;
+  public void setSegmentRepository(SegmentRepository segmentRepository) {
+    this.segmentRepository = segmentRepository;
+  }
+
   @Autowired
-  IxnRepository ixnRepository;
+  public void setIxnRepository(IxnRepository ixnRepository) {
+    this.ixnRepository = ixnRepository;
+  }
+
   @Autowired
-  IxnController ixnController;
+  public void setIxnController(IxnController ixnController) {
+    this.ixnController = ixnController;
+  }
+
   @Autowired
-  TargetController targetController;
+  public void setTargetController(TargetController targetController) {
+    this.targetController = targetController;
+  }
+
   @Autowired
-  MetricsService metricsService;
+  public void setMetricsService(MetricsService metricsService) {
+    this.metricsService = metricsService;
+  }
 
   @Autowired
   public void setRfiController(RfiController rfiController) {
@@ -146,15 +165,17 @@ public class RfiControllerTest extends BaseIntegrationTest {
   public void clean() {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
+    ixnRepository.deleteAll();
+    segmentRepository.deleteAll();
     targetRepository.deleteAll();
     metricChangeExploitDateRepository.deleteAll();
     metricCreateTargetRepository.deleteAll();
+    metricDeleteExploitDateRepository.deleteAll();
     metricDeleteTargetRepository.deleteAll();
     metricChangeTargetRepository.deleteAll();
-    metricDeleteExploitDateRepository.deleteAll();
+    metricChangeRfiPriorityRepository.deleteAll();
+    metricUndoChangeRfiPriorityRepository.deleteAll();
     metricChangeRfiRepository.deleteAll();
-    segmentRepository.deleteAll();
-    ixnRepository.deleteAll();
   }
 
   @Test
@@ -301,16 +322,23 @@ public class RfiControllerTest extends BaseIntegrationTest {
     Date exploitDate2 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/10/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate2, rfiId));
 
-
     long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
     long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
+//    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "12WQE1231231231", "", ""), "20-0001"));
+//    long target1Id = targetRepository.findAll().get(0).getId();
+//
+//    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "12WQE1231231231", "", ""), "20-0001"));
+//    long target2Id = targetRepository.findAll().get(1).getId();
+
+    List<TargetJson> targets = new ArrayList<>();
+
+    targets.add(new TargetJson(rfiId, exploitDate1Id, "12WQE1231231231", "", ""));
+    targets.add(new TargetJson(rfiId, exploitDate2Id, "12WQE1231231232", "", ""));
+    targetController.postTarget(targets, "billy.bob.thornton", "false");
+
     long target1Id = targetRepository.findAll().get(0).getId();
-
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
     long target2Id = targetRepository.findAll().get(1).getId();
-
 
     segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id,
       new Timestamp(new Date(0).getTime()), new Timestamp(new Date(56789).getTime()))));
@@ -365,10 +393,13 @@ public class RfiControllerTest extends BaseIntegrationTest {
     exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
     exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
-    target1Id = targetRepository.findAll().get(0).getId();
+    targets = new ArrayList<>();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targets.add(new TargetJson(rfiId, exploitDate1Id, "12WQE1231231231", "", ""));
+    targets.add(new TargetJson(rfiId, exploitDate2Id, "12WQE1231231232", "", ""));
+    targetController.postTarget(targets, "billy.bob.thornton", "false");
+
+    target1Id = targetRepository.findAll().get(0).getId();
     target2Id = targetRepository.findAll().get(1).getId();
 
     segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id,
@@ -418,12 +449,13 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     ixnController.deleteSegment(segment2Id);
     targetController.deleteTarget(target1Id);
+
     rfi = rfiController.getAllRfis().get(0);
 
     assertEquals(1, rfi.getTgtCount());
-    assertEquals(0, rfi.getIxnCount());
 
     targetController.deleteExploitDate(exploitDate2Id);
+
     rfi = rfiController.getAllRfis().get(0);
 
     assertEquals(0, rfi.getTgtCount());
@@ -557,19 +589,14 @@ public class RfiControllerTest extends BaseIntegrationTest {
     long openRfiEDId = exploitDateRepository.findAllByRfiId(openRfiId).get(0).getId();
 
     //2 targets, open 2 days = 1 target/day
-    Target closedRfiTarget1 = new Target(closedRfiId, closedRfiEDId,
-      new TargetJson(closedRfiId, closedRfiEDId, "20-0001", "12QWE1231231231", "", ""));
-    Target closedRfiTarget2 = new Target(closedRfiId, closedRfiEDId,
-      new TargetJson(closedRfiId, closedRfiEDId, "20-0002", "12QWE1231231232", "", ""));
+    Target closedRfiTarget1 = new Target(new TargetJson(closedRfiId, closedRfiEDId, "12QWE1231231231", "", ""), "20-0001");
+    Target closedRfiTarget2 = new Target(new TargetJson(closedRfiId, closedRfiEDId, "12QWE1231231232", "", ""), "20-0002");
 
 
     //3 targets => ECD 3 days from open date, ie day 13
-    Target openRfiTarget1 = new Target(openRfiId, openRfiEDId,
-      new TargetJson(openRfiId, openRfiEDId, "20-0001", "12QWE1231231231", "", ""));
-    Target openRfiTarget2 = new Target(openRfiId, openRfiEDId,
-      new TargetJson(openRfiId, openRfiEDId, "20-0002", "12QWE1231231232", "", ""));
-    Target openRfiTarget3 = new Target(openRfiId, openRfiEDId,
-      new TargetJson(openRfiId, openRfiEDId, "20-0003", "12QWE1231231233", "", ""));
+    Target openRfiTarget1 = new Target(new TargetJson(openRfiId, openRfiEDId, "12QWE1231231231", "", ""), "20-0001");
+    Target openRfiTarget2 = new Target(new TargetJson(openRfiId, openRfiEDId, "12QWE1231231232", "", ""), "20-0002");
+    Target openRfiTarget3 = new Target(new TargetJson(openRfiId, openRfiEDId, "12QWE1231231233", "", ""), "20-0003");
 
     targetRepository
       .saveAll(Arrays.asList(closedRfiTarget1, closedRfiTarget2, openRfiTarget1, openRfiTarget2, openRfiTarget3));
@@ -662,10 +689,10 @@ public class RfiControllerTest extends BaseIntegrationTest {
     long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
     long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "12WQE1231231231", "", ""), "20-0001"));
     long target1Id = targetRepository.findAll().get(0).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "12WQE1231231231", "", ""), "20-0002"));
     long target2Id = targetRepository.findAll().get(1).getId();
 
     segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id,
@@ -721,10 +748,10 @@ public class RfiControllerTest extends BaseIntegrationTest {
     exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
     exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate1Id, "12WQE1231231231", "", ""), "20-0001"));
     target1Id = targetRepository.findAll().get(0).getId();
 
-    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "SDT12-123", "12WQE1231231231", "", "")));
+    targetRepository.save(new Target(new TargetJson(rfiId, exploitDate2Id, "12WQE1231231231", "", ""), "20-0002"));
     target2Id = targetRepository.findAll().get(1).getId();
 
     segmentRepository.save(new Segment(new SegmentJson(rfiId, exploitDate1Id, target1Id,

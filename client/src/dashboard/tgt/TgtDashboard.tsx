@@ -90,21 +90,18 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
                                             closeSnackbar, classes.snackbarButton),
         variant: 'info',
       });
+
       let newTgts: TargetPostModel[] = [];
       if (props.targets.length > 0 && props.targets[0].exploitDateId === -1) {
         for (let tgt of props.targets) {
           let newTgt = {...convertToPostModel(tgt), exploitDateId: newExploitDate!.id};
-          if (newTgts.find(tgt => tgt.name === newTgt.name) === undefined) {
-            newTgts.push(newTgt);
-          }
+          newTgts.push(newTgt);
         }
         handlePostTargets(newTgts, false);
       } else if (props.targets.length > 0 && props.targets[0].exploitDateId > 0) {
         for (let tgt of props.targets) {
           let newTgt = {...convertToPostModel(tgt), targetId: null, exploitDateId: newExploitDate!.id};
-          if (newTgts.find(tgt => tgt.name === newTgt.name) === undefined) {
-            newTgts.push(newTgt);
-          }
+          newTgts.push(newTgt);
         }
         setCopyTgts(newTgts);
         setDisplayCopyAllTargets(true);
@@ -129,7 +126,6 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: undefined, tgtId: undefined}});
       dispatch(fetchLocalUpdate())
-      // dispatch(exitTgtPage());
     }
   };
 
@@ -138,9 +134,8 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
       if (props.rfi.status !== RfiStatus.CLOSED) {
         let tgts: TargetModel[] = [];
         for (let target of targets) {
-          let tgt = new TargetModel(target.targetId ? target.targetId :
-                                      -1, target.rfiId, target.exploitDateId, target.name, target.mgrs, target.notes, target.description, target.status, '',
-                                    '', false);
+          let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId,
+                                    '', target.mgrs, target.notes, target.description, target.status, '', '', false);
           tgts.push(tgt);
         }
         if (isCopy) {
@@ -150,7 +145,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
             variant: 'info',
           });
         } else if (targets[0].targetId === null) {
-          enqueueSnackbar(targets[0].name + ' Created', {
+          enqueueSnackbar('Target Created', {
             action: (key) => UndoSnackbarAction(key, targets, handleUndoPostTargets, closeSnackbar,
                                                 classes.snackbarButton),
             variant: 'info',
@@ -344,16 +339,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
     }
   ;
 
-  const checkNames = () => {
-    for (let tgt of props.targets) {
-      if (tgt.name === '') {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  let allNamesEntered = checkNames();
+  const headers = ['TGT ID', 'MGRS', 'EEI Notes', 'TGT Description', 'Status'];
 
   return (
     <div className={classNames(props.className)}>
@@ -362,9 +348,9 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
         rfi={props.rfi}
         editing={props.addTgt > 0 || props.editTgt > 0 || addDate}
         addDate={handleAddDate}
-        disabled={isDisabled || !allNamesEntered}
-        displayHelperText={props.exploitDates.length < 2 && props.rfi.status === RfiStatus.OPEN && allNamesEntered}
-        displayExploitDateHelper={props.targets.length > 0 && props.exploitDates.length === 0 && allNamesEntered}
+        disabled={isDisabled}
+        displayHelperText={props.exploitDates.length < 2 && props.rfi.status === RfiStatus.OPEN}
+        displayExploitDateHelper={props.targets.length > 0 && props.exploitDates.length === 0}
         displayCopyTargets={() => setDisplayCopyTargets(true)}
       />
       <div className={'tgt-dash-container'}>
@@ -377,11 +363,9 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
         <div className={'tgt-dash'}>
           {props.targets.length > 0 && props.targets[0].exploitDateId === -1 ?
             <div className={'tgt-dash-body'}>
-              {allNamesEntered ? null :
-                <span className={'name-input-helper'}>Input all target names to assign a coverage date</span>}
               <StyledTableHeader
                 className={'tgt-table-header'}
-                headers={['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Status']}
+                headers={headers}
               />
               <StyledTgtTable displayHelperText={false}>
                 {addDate ?
@@ -429,7 +413,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
               {props.exploitDates.length > 0 || props.showDatePlaceholder ?
                 <StyledTableHeader
                   className={'tgt-table-header'}
-                  headers={['TGT Name', 'MGRS', 'EEI Notes', 'TGT Description', 'Status']}
+                  headers={headers}
                 />
                 :
                 null
@@ -653,9 +637,9 @@ export const StyledTgtDashboard = styled(
     align-self: flex-start;
   }
   
-  .header-cell--name {
-    margin-left: 2px;
-    width: 123px;
+  .header-cell--id {
+    margin: 0 -5px 0 6px;
+    width: 75px;
   }
   
   .header-cell--mgrs {
@@ -663,7 +647,7 @@ export const StyledTgtDashboard = styled(
   }
   
   .header-cell--notes {
-    width: 397px;
+    width: 445px;
   }
   
   .header-cell--description {

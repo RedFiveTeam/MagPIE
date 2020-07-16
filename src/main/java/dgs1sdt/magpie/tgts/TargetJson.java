@@ -9,7 +9,6 @@ public class TargetJson {
   private long targetId;
   private long rfiId;
   private long exploitDateId;
-  private String name;
   private String mgrs;
   private String notes;
   private String description;
@@ -17,10 +16,9 @@ public class TargetJson {
   private String hourlyRollup;
   private String allCallouts;
 
-  public TargetJson(long rfiId, long exploitDateId, String name, String mgrs, String notes, String description) {
+  public TargetJson(long rfiId, long exploitDateId, String mgrs, String notes, String description) {
     this.rfiId = rfiId;
     this.exploitDateId = exploitDateId;
-    this.name = name;
     this.mgrs = mgrs;
     this.notes = notes;
     this.description = description;

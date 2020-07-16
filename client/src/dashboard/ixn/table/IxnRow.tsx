@@ -72,7 +72,7 @@ export const IxnRow: React.FC<MyProps> = props => {
         setHighlighted(false);
       }, 5000);
     }
-  }, [props.highlight]);
+  }, [props.highlight, props.ixn.id]);
 
   const handleDeleteClick = () => {
     props.deleteIxn(props.ixn);

@@ -13,7 +13,6 @@ public class MetricChangeTargetTest {
   public void createsMetricsBasedOnField() throws Exception {
     TargetJson target2 = new TargetJson(
       1, 1,
-      "SDT20-124",
       "12QWE1231231230",
       "New Notes",
       "New Description"
@@ -21,13 +20,9 @@ public class MetricChangeTargetTest {
 
     Timestamp now = new Timestamp(new Date().getTime());
 
-    MetricChangeTarget metric1 = new MetricChangeTarget("name", target2, now, "billy.bob.joe");
     MetricChangeTarget metric2 = new MetricChangeTarget("mgrs", target2, now, "billy.bob.joe");
     MetricChangeTarget metric3 = new MetricChangeTarget("notes", target2, now, "billy.bob.joe");
     MetricChangeTarget metric4 = new MetricChangeTarget("description", target2, now, "billy.bob.joe");
-
-    assertEquals("name", metric1.getField());
-    assertEquals("SDT20-124", metric1.getNewData());
 
     assertEquals("mgrs", metric2.getField());
     assertEquals("12QWE1231231230", metric2.getNewData());
