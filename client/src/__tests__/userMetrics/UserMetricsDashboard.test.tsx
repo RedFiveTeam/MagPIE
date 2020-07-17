@@ -5,8 +5,6 @@ import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import { Provider } from 'react-redux';
 import { initStore } from '../../../setupTests';
 import configureStore from '../../configureStore';
-
-import {StyledScoreBoardContainer} from "../../dashboard/userMetrics/view/ScoreBoardContainer";
 import {RangeMetricsContainer} from "../../dashboard/userMetrics/view/RangeMetricsContainer";
 
 const initState = {
