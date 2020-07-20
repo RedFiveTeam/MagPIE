@@ -15,9 +15,9 @@ describe('WorkflowContainer', () => {
   const moment = require('moment');
   let subject: ShallowWrapper;
   let rfi = new RfiModel(1, 'DGS1-SDT-2020-00321', 'google.com', undefined, RfiStatus.OPEN, '', '', '', '', '', '', '',
-                         '', '', undefined, 'USA', '', 'Just a fiction', 1, 1, 0, undefined);
+                         '', '', undefined, 'USA', '', 'Just a fiction', 1, 1, 0, undefined, false);
   let exploitDate = new ExploitDateModel(1, 1, moment(123456));
-  let tgt = new TargetModel(1, 1, 1, 'SDT12-123', '12ASD1231231231', '', '', TargetStatus.IN_PROGRESS, '', '');
+  let tgt = new TargetModel(1, 1, 1, 'SDT12-123', '12ASD1231231231', '', '', TargetStatus.IN_PROGRESS, '', '', false);
 
   it('should display a login page when not logged in', () => {
     subject = shallow(

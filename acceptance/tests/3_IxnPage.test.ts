@@ -437,6 +437,49 @@ Scenario('Should be able to accept and reject tracks', (I) => {
   I.waitForText('Test');
 });
 
+Scenario('Should indicate whether RFIs and targets have rejected tracks', (I) => {
+  I.click('.add-tgt-button');
+  I.fillField('.tgt-name-input-new', 'SDT20-124');
+  I.pressKey('Tab');
+  I.fillField('.mgrs', '12QWE1231231232');
+  I.pressKey('Enter');
+
+  I.click('.exploitation');
+  I.waitForText('MGRS: 12QWE1231231231', 3);
+
+  I.click('.approved-button');
+  I.waitForElement('.reject-modal', 3);
+  I.fillField('.reject-modal', 'This is a bad ixn');
+  I.click('.submit-button');
+
+  I.waitForText('Reason saved successfully');
+  I.see('Test');
+
+  I.click('.ixn-dash--header--back-button');
+  I.waitForText('RFI DESCRIPTION:', 3);
+  I.waitForElement('.red-border', 6);
+
+  within(locate('.tgt-row-left').at(1), () => {
+    I.seeElement('.reject-arrow');
+  });
+
+  within(locate('.tgt-row-left').at(2), () => {
+    I.dontSeeElement('.reject-arrow');
+  })
+
+  I.click('.tgt-dash--header--back-button');
+  I.waitForText('LTIOV', 10);
+  I.waitForElement('.red-border', 6);
+
+  within(locate('.rfi-row-container').at(1), () => {
+    I.dontSeeElement('.reject-arrow');
+  });
+
+  within(locate('.rfi-row-container').at(2), () => {
+    I.seeElement('.reject-arrow');
+  });
+})
+
 Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);

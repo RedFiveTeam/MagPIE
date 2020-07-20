@@ -400,6 +400,8 @@ export const IxnInputRow: React.FC<MyProps> = props => {
 };
 
 export const StyledIxnInputRow = styled(IxnInputRow)`
+  margin-left: 27px;
+
   .underline {
     padding-bottom: 6px;
     border-bottom: 1px solid #FFF;

@@ -24,6 +24,7 @@ import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { getLastName } from '../../../utils';
 import { ApprovedIcon, RejectedIcon } from '../../../resources/icons/CompletedIcon';
 import { RejectModal } from './RejectModal';
+import { RejectArrow } from '../../../resources/icons/RejectArrowIcon';
 
 interface MyProps {
   ixn: IxnModel;
@@ -165,7 +166,8 @@ export const IxnRow: React.FC<MyProps> = props => {
   const handleReject = (rejectReason: string) => {
     let ixn: IxnModel = {
       ...props.ixn, approvalStatus: IxnApprovalStatus.REJECTED, status: IxnStatus.IN_PROGRESS, checker: props.userName,
-      note: props.ixn.note === '' ? rejectReason : rejectReason === '' ? props.ixn.note : rejectReason + '\n\n' + props.ixn.note,
+      note: props.ixn.note === '' ? rejectReason :
+        rejectReason === '' ? props.ixn.note : rejectReason + '\n\n' + props.ixn.note,
     };
     props.postIxn(ixn);
     setDisplayRejectModal(false);
@@ -182,6 +184,11 @@ export const IxnRow: React.FC<MyProps> = props => {
         className={classNames('ixn-row-box', props.disabled ? 'disabled' : null)}
         onDoubleClick={handleDoubleClick}
       >
+        {props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ?
+          <RejectArrow/>
+          :
+          <div className={'no-arrow'}>&nbsp;</div>
+        }
         <div className={classNames('ixn-box-left', highlighted ? 'highlighted' : null,
                                    props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ? 'red-border'
                                      : props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ? 'green-border' : null)}
@@ -347,6 +354,16 @@ export const StyledIxnRow = styled(IxnRow)`
   overflow: hidden;
   flex-direction: column;
   padding-top: 3px;
+  
+  .reject-arrow {
+    width: 27px;
+    height: 32px;
+    z-index: 99999;
+  }
+  
+  .no-arrow {
+    width: 27px;
+  }
   
   .red-border {
     border: 2px solid ${theme.color.buttonDoesNotMeetEei};

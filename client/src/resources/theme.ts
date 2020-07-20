@@ -66,6 +66,7 @@ const theme = {
     subduedOutline: crayonBox.anotherGray,//
     rejectIcon: crayonBox.subduedTomatoRed,//
     backgroundSnackbarError: crayonBox.darkTomatoRed,//
+    rejectArrow: crayonBox.lessBrightRed,//
   },
 
   font: {

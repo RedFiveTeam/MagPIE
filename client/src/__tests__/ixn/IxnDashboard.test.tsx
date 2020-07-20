@@ -18,7 +18,7 @@ import { StyledMiniIxnRow } from '../../dashboard/ixn/rollup/MiniIxnRow';
 import { initStore } from '../../../setupTests';
 
 let target = new TargetModel(1, 1, 1, 'SDT20-123', '00ABC1234567890', 'These are some EEI Notes to be displayed.', '',
-                             TargetStatus.NOT_STARTED, '', '');
+                             TargetStatus.NOT_STARTED, '', '', false);
 
 const initState = {
   ...initStore,

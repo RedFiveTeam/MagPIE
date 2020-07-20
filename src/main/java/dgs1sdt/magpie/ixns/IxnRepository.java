@@ -7,10 +7,17 @@ import java.util.List;
 
 public interface IxnRepository extends JpaRepository<Ixn, Long> {
   List<Ixn> findAllByTargetId(long targetId);
+
   List<Ixn> findAllBySegmentId(long segmentId);
 
   @Query("SELECT ixn FROM Ixn ixn WHERE ixn.targetId = ?1 AND (ixn.status = 'IN_PROGRESS' OR ixn.status = 'COMPLETED')")
   List<Ixn> findAllInProgressOrCompleteByTargetId(long targetId);
 
   List<Ixn> findAllByRfiId(long rfiId);
+
+  @Query("SELECT ixn FROM Ixn ixn WHERE ixn.rfiId = ?1 AND ixn.approvalStatus = 'REJECTED'")
+  List<Ixn> findAllRejectedByRfiId(long rfiId);
+
+  @Query("SELECT ixn FROM Ixn ixn WHERE ixn.targetId = ?1 AND ixn.approvalStatus = 'REJECTED'")
+  List<Ixn> findAllRejectedByTargetId(long targetId);
 }

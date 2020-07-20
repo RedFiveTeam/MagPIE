@@ -18,6 +18,7 @@ import InProgressButton from '../../components/statusButtons/InProgressButton';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
 import { MiniTrashcanButton } from '../../../resources/icons/MiniTrashcanButton';
 import HtmlTooltip from '../../components/HtmlToolTip';
+import { RejectArrow } from '../../../resources/icons/RejectArrowIcon';
 
 interface MyProps {
   target: TargetModel;
@@ -109,64 +110,73 @@ export const TgtRow: React.FC<MyProps> = (props) => {
         borderRadius={8}
         className={classNames('tgt-form-box', highlighted && props.highlight ? 'highlighted' : null)}
       >
-        <div className={'tgt-form'}
-             onDoubleClick={handleDoubleClick}
-        >
-          <div className={'data-cell-container'}>
-            <div className={classNames('data-cell', 'tgt-name')}>
-              {props.target.name === '' ? '\xa0' : props.target.name}
-            </div>
-            <div className={'data-bottom'}>&nbsp;</div>
-          </div>
-          <div className={'data-cell-container'}>
-            <div className={classNames('data-cell', 'mgrs')}>
-              {props.target.mgrs}
-            </div>
-            <div className={'data-bottom'}>&nbsp;</div>
-          </div>
-          <div className={'data-cell-container'}>
-            <div className={classNames('data-cell', 'notes')}>
-              <div className={'data-notes'}>
-                {props.target.notes === '' ? '\xa0' : props.target.notes}
-              </div>
-            </div>
-            <div className={'data-bottom'}>&nbsp;</div>
-          </div>
-          <div className={'data-cell-container'}>
-            <div className={classNames('data-cell', 'description')}>
-              <div className={'data-description'}>
-                {props.target.description === '' ? '\xa0' : props.target.description}
-              </div>
-            </div>
-            <div className={'data-bottom'}>&nbsp;</div>
-          </div>
-        </div>
-        <HtmlTooltip
-          title={
-            <div className={'status-menu'}>
-              <StyledTgtStatusPickerOutline/>
-              <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable, classes.tgtClickable)}
-                                onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
-              <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, classes.tgtClickable)}
-                               onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
-            </div>
+        <div className={classNames('tgt-row-left', props.target.containsRejectedTracks ? 'red-border' : null)}>
+          {props.target.containsRejectedTracks ?
+            <RejectArrow message={'This TGT contains\nrejected callouts.'}/>
+            :
+            null
           }
-          interactive
-          disableHoverListener={props.addingOrEditing || props.exploitDate === null}
-        >
-          <div
-            className={'status-wrapper'}>
-            {props.target.status === TargetStatus.NOT_STARTED ?
-              <NotStartedButton buttonClass={classes.statusUnclickable}/>
-              : (props.target.status === TargetStatus.IN_PROGRESS ?
-                <InProgressButton buttonClass={classes.statusUnclickable}/>
-                :
-                <CompletedButton buttonClass={classes.statusUnclickable}/>)
-            }</div>
-        </HtmlTooltip>
-        <div className={classNames('exploitation', (props.addingOrEditing && !(props.rfi.status === RfiStatus.CLOSED))
-        || props.exploitDate === null ? 'delete-disabled' : null)} onClick={handleIxnClick}>
-          <StyledExploitationLogButtonVector/>
+          <div className={'tgt-form'}
+               onDoubleClick={handleDoubleClick}
+          >
+            <div className={'data-cell-container'}>
+              <div className={classNames('data-cell', 'tgt-name')}>
+                {props.target.name === '' ? '\xa0' : props.target.name}
+              </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
+            <div className={'data-cell-container'}>
+              <div className={classNames('data-cell', 'mgrs')}>
+                {props.target.mgrs}
+              </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
+            <div className={'data-cell-container'}>
+              <div className={classNames('data-cell', 'notes')}>
+                <div className={'data-notes'}>
+                  {props.target.notes === '' ? '\xa0' : props.target.notes}
+                </div>
+              </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
+            <div className={'data-cell-container'}>
+              <div className={classNames('data-cell', 'description')}>
+                <div className={'data-description'}>
+                  {props.target.description === '' ? '\xa0' : props.target.description}
+                </div>
+              </div>
+              <div className={'data-bottom'}>&nbsp;</div>
+            </div>
+          </div>
+          <HtmlTooltip
+            title={
+              <div className={'status-menu'}>
+                <StyledTgtStatusPickerOutline/>
+                <InProgressButton buttonClass={classNames(classes.inProgress, classes.clickable, classes.tgtClickable)}
+                                  onClick={() => submitStatusChange(TargetStatus.IN_PROGRESS)}/>
+                <CompletedButton buttonClass={classNames(classes.completed, classes.clickable, classes.tgtClickable)}
+                                 onClick={() => submitStatusChange(TargetStatus.COMPLETED)}/>
+              </div>
+            }
+            interactive
+            disableHoverListener={props.addingOrEditing || props.exploitDate === null}
+          >
+            <div
+              className={'status-wrapper'}>
+              {props.target.status === TargetStatus.NOT_STARTED ?
+                <NotStartedButton buttonClass={classes.statusUnclickable}/>
+                : (props.target.status === TargetStatus.IN_PROGRESS ?
+                  <InProgressButton buttonClass={classes.statusUnclickable}/>
+                  :
+                  <CompletedButton buttonClass={classes.statusUnclickable}/>)
+              }</div>
+          </HtmlTooltip>
+        </div>
+        <div className={classNames('tgt-row-right', props.target.containsRejectedTracks ? 'red-border' : null)}>
+          <div className={classNames('exploitation', (props.addingOrEditing && !(props.rfi.status === RfiStatus.CLOSED))
+          || props.exploitDate === null ? 'delete-disabled' : null)} onClick={handleIxnClick}>
+            <StyledExploitationLogButtonVector/>
+          </div>
         </div>
       </Box>
       {showDelete && props.rfi.status !== RfiStatus.CLOSED ?
@@ -192,6 +202,18 @@ export const StyledTgtRow = styled(TgtRow)`
   align-items: flex-start;
   margin-bottom: 4px;
   width: 1212px;
+  
+  .reject-arrow {
+    width: 26px;
+    height: 32px;
+    margin-left: -26px;
+    z-index: 999;
+  }
+  
+  .red-border {
+    border: 2px solid ${theme.color.buttonDoesNotMeetEei};
+    margin: -2px;
+  }
   
   .tgt-name {
     width: 115px;
@@ -242,23 +264,45 @@ export const StyledTgtRow = styled(TgtRow)`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 108px;
     cursor: pointer;
-    border-left: 9px solid ${theme.color.backgroundBase};
     align-self: stretch;
   }
   
   .tgt-form-box {
-    min-height: 62px;
     width: 100%;
     margin: 4px 0;
-    background-color: ${theme.color.backgroundInformation};
     display: flex;
     flex-direction: row;
     align-items: center;
     font-weight: normal;
     padding-right: 7px;
+  }
+  
+  .tgt-row-left {
+    background-color: ${theme.color.backgroundInformation};
     box-shadow: -2px 2px 4px #000000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: normal;
+    min-height: 62px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+  
+  .tgt-row-right {
+    background-color: ${theme.color.backgroundInformation};
+    box-shadow: -2px 2px 4px #000000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: normal;
+    justify-content: center;
+    min-height: 62px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-left: 9px;
+    width: 108px;
   }
   
   .tgt-form {

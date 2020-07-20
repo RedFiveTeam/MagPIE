@@ -50,7 +50,7 @@ export const StyledTgtTable = styled(TgtTable)`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 15px;
+    padding-left: 26px;
     padding-right: 20px;
   }
   

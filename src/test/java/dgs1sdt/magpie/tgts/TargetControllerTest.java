@@ -33,8 +33,7 @@ import java.util.*;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 
 public class TargetControllerTest extends BaseIntegrationTest {
@@ -964,6 +963,20 @@ public class TargetControllerTest extends BaseIntegrationTest {
     assertEquals(true, metricCreateTargetRepository.findAll().get(4).getIsCopy());
   }
 
+  @Test
+  public void returnsTargetsSpecifyingIfTheyContainRejectedTracks() throws Exception {
+    setupIxns();
+    long rfiId = rfiRepository.findAll().get(0).getId();
+
+    List<TargetGet> targets = targetController.getTargets(rfiId);
+
+    TargetGet target1 = targets.get(0);
+    TargetGet target2 = targets.get(1);
+
+    assertFalse(target1.isContainsRejectedTracks());
+    assertTrue(target2.isContainsRejectedTracks());
+  }
+
   private void setupIxns() throws Exception {
     rfiRepository.save(
       new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
@@ -1010,7 +1023,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
       new Timestamp(new Date(234000).getTime()), "", "", "", IxnStatus.NOT_STARTED, "", IxnApprovalStatus.NOT_REVIEWED));
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
-      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.NOT_REVIEWED));  //123-001
+      new Timestamp(new Date(345000).getTime()), "", "", "", IxnStatus.IN_PROGRESS, "", IxnApprovalStatus.REJECTED));  //123-001
     ixnRepository.save(new Ixn(rfiId, exploitDate2Id, target2Id, segment2Id, "",
       new Timestamp(new Date(456000).getTime()), "", "", "", IxnStatus.DOES_NOT_MEET_EEI, "",
       IxnApprovalStatus.NOT_REVIEWED));

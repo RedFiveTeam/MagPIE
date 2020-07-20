@@ -12,7 +12,7 @@ describe("Segment Region", () => {
   const moment = require('moment');
   let subject: ShallowWrapper;
   let target: TargetModel = new TargetModel(1, 1, 1, 'WER19-123', '19XCV1234567890', '', '', TargetStatus.NOT_STARTED,
-                                            '', '');
+                                            '', '', false);
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1, moment(0), moment(1));
   let interactions: IxnModel[] = [
     new IxnModel(1, 1, 1, 1, 1, 'Bob', moment(

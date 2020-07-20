@@ -8,7 +8,8 @@ describe('TgtDashboardHeader', () => {
   let exitSpy: jest.Mock = jest.fn();
   let rfiTest: RfiModel = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', undefined, RfiStatus.OPEN, '', '',
                                        '', 'space forse', '', '', '', '', '', moment(
-      '2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0, undefined);
+      '2019-11-20')
+                                         .utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0, undefined, false);
   let addDateSpy: jest.Mock;
   let subject: ShallowWrapper;
 

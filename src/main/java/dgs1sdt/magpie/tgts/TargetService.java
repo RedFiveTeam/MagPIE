@@ -79,8 +79,15 @@ public class TargetService {
     this.ixnService = ixnService;
   }
 
-  public List<Target> getTargets(long rfiId) {
-    return targetRepository.findAllByRfiId(rfiId);
+  public List<TargetGet> getTargets(long rfiId) {
+    List<Target> targets = targetRepository.findAllByRfiId(rfiId);
+    List<TargetGet> targetGets = new ArrayList<>();
+
+    for (Target target : targets) {
+      targetGets.add(new TargetGet(target, !ixnRepository.findAllRejectedByTargetId(target.getId()).isEmpty()));
+    }
+
+    return targetGets;
   }
 
   public List<ExploitDate> getExploitDates(long rfiId) {
@@ -149,7 +156,7 @@ public class TargetService {
     return exploitDateRepository.findAllByRfiId(rfi.getId());
   }
 
-  public List<Target> setDeletedTarget(long targetId) {
+  public List<TargetGet> setDeletedTarget(long targetId) {
     if (targetRepository.findById(targetId).isPresent()) {
       Target target = targetRepository.findById(targetId).get();
 
@@ -168,7 +175,7 @@ public class TargetService {
     }
   }
 
-  public List<Target> setDeletedTargets(List<TargetJson> targets, String userName) {
+  public List<TargetGet> setDeletedTargets(List<TargetJson> targets, String userName) {
     Timestamp now = new Timestamp(new Date().getTime());
     for (TargetJson target : targets) {
       Target toDelete = targetRepository

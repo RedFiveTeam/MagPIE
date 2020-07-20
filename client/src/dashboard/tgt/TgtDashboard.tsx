@@ -136,8 +136,9 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
       if (props.rfi.status !== RfiStatus.CLOSED) {
         let tgts: TargetModel[] = [];
         for (let target of targets) {
-          let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId,
-                                    target.name, target.mgrs, target.notes, target.description, target.status, '', '');
+          let tgt = new TargetModel(target.targetId ? target.targetId :
+                                      -1, target.rfiId, target.exploitDateId, target.name, target.mgrs, target.notes, target.description, target.status, '',
+                                    '', false);
           tgts.push(tgt);
         }
         if (isCopy) {

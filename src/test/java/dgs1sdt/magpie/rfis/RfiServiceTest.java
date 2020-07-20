@@ -6,7 +6,7 @@ import dgs1sdt.magpie.metrics.MetricController;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.magpie.metrics.createTargetFromGets.MetricCreateTargetFromGets;
 import dgs1sdt.magpie.metrics.createTargetFromGets.MetricCreateTargetFromGetsRepository;
-import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetGet;
 import dgs1sdt.magpie.tgts.TargetRepository;
 import dgs1sdt.magpie.tgts.TargetService;
 import org.junit.Before;
@@ -231,8 +231,8 @@ public class RfiServiceTest extends BaseIntegrationTest {
     assertEquals("34ABC1234567890,12GSD0987654321,67SDT1092837465,", rfi1.getMgrsList());
     assertEquals("35ABC1212787890,23GSD0987685321,68SDT1056737465,", rfi2.getMgrsList());
 
-    List<Target> targets1 = targetService.getTargets(rfi1.getId());
-    List<Target> targets2 = targetService.getTargets(rfi2.getId());
+    List<TargetGet> targets1 = targetService.getTargets(rfi1.getId());
+    List<TargetGet> targets2 = targetService.getTargets(rfi2.getId());
 
     assertEquals(3, targets1.size());
     assertEquals(3, targets2.size());

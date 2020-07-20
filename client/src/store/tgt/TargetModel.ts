@@ -16,6 +16,7 @@ export class TargetModel {
     public status: TargetStatus = TargetStatus.NOT_STARTED,
     public hourlyRollup: string,
     public allCallouts: string,
-    ) {
+    public containsRejectedTracks: boolean,
+  ) {
   }
 }

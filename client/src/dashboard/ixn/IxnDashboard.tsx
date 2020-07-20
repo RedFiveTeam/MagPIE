@@ -389,10 +389,11 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .ixn-dash-body {
-    height: 685px;
+    height: calc(100vh - 80px);
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-right: 27px;
   }
   
   .table-header {
@@ -400,6 +401,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     flex-direction: row;
     justify-content: flex-start;
     width: 1410px;
+    margin-left: 27px;
   }
 
   .header {
@@ -497,6 +499,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     flex-direction: column;
     align-items: center;
     margin-bottom: 10px;
+    margin-left: 27px;
   }
   
   .segment-divider-empty {

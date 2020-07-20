@@ -175,7 +175,6 @@ export const RfiTable: React.FC<Props> = props => {
 export const StyledRfiTable = styled(RfiTable)`
   display: flex;
   flex-direction: column;
-  margin-left: 30px;
   height: 100%;
   width: 628px;
   

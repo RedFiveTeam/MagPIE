@@ -14,7 +14,7 @@ describe('Tgt actions tests', () => {
   const moment = require('moment');
   let rfi: RfiModel = new RfiModel(1, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '',
                                    '', moment.utc(
-      '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 2, 0, 0, undefined);
+      '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 2, 0, 0, undefined, false);
   let exploitDate: ExploitDateModel = new ExploitDateModel(3, 1,
                                                            moment('Apr 4 19 00:00:00', 'MMM DD YY hh:mm:ss').utc());
   console.log = jest.fn();
@@ -65,7 +65,7 @@ describe('Tgt actions tests', () => {
   });
 
   it('should return a proper UPDATE_TGT_SUCCESS action object', () => {
-    let tgt = new TargetModel(1, 1, 1, 'SDT12-123', '12QWE1231231231', '', '', TargetStatus.NOT_STARTED, '', '');
+    let tgt = new TargetModel(1, 1, 1, 'SDT12-123', '12QWE1231231231', '', '', TargetStatus.NOT_STARTED, '', '', false);
     let action: any = updateTgtSuccess([tgt]);
     expect(action).toEqual({
                              type: TgtActionTypes.UPDATE_TGT_SUCCESS,

@@ -15,7 +15,7 @@ describe('Region', () => {
       <RfiRow
         rfi={new RfiModel(1, '19-001', 'url', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '',
                           moment('2019-12-01')
-                            .utc(), 'USA', 'hi', 'Just a fiction', -1, 0, 0, undefined)}
+                            .utc(), 'USA', 'hi', 'Just a fiction', -1, 0, 0, undefined, false)}
         key={'1'}
         scrollRegionRef={{}}
         index={0}
@@ -25,7 +25,7 @@ describe('Region', () => {
       <RfiRow
         rfi={new RfiModel(2, '19-004', 'url', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '',
                           moment('2019-12-02')
-                            .utc(), 'CAN', 'hi', 'Just a fiction', -1, 0, 0, undefined)}
+                            .utc(), 'CAN', 'hi', 'Just a fiction', -1, 0, 0, undefined, false)}
         key={'2'}
         scrollRegionRef={{}}
         index={1}
@@ -34,7 +34,7 @@ describe('Region', () => {
       />,
       <RfiRow
         rfi={new RfiModel(3, '19-003', 'url', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '',
-                          undefined, 'MEX', 'hi', 'Just a fiction', -1, 0, 0, undefined)}
+                          undefined, 'MEX', 'hi', 'Just a fiction', -1, 0, 0, undefined, false)}
         key={'3'}
         scrollRegionRef={{}}
         index={2}

@@ -13,13 +13,14 @@ describe('Target Date Region', () => {
   let subject: ShallowWrapper;
   let rfi = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', undefined, RfiStatus.OPEN, '', '', '',
                          'space forse', '', '', '', '', '', moment(
-      '2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0, undefined);
+      '2019-11-20')
+                           .utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0, undefined, false);
   let exploitDate = new ExploitDateModel(1, 1, moment(new Date));
   let targets: TargetModel[] =
     [
-      new TargetModel(1, 1, 1, 'ASD12-123', '12QWE1231231231', '', '', TargetStatus.NOT_STARTED, '', ''),
-      new TargetModel(1, 1, 1, 'ASD12-124', '12QWE1231231232', '', '', TargetStatus.NOT_STARTED, '', ''),
-      new TargetModel(1, 1, 1, 'ASD12-125', '12QWE1231231233', '', '', TargetStatus.NOT_STARTED, '', ''),
+      new TargetModel(1, 1, 1, 'ASD12-123', '12QWE1231231231', '', '', TargetStatus.NOT_STARTED, '', '', false),
+      new TargetModel(1, 1, 1, 'ASD12-124', '12QWE1231231232', '', '', TargetStatus.NOT_STARTED, '', '', false),
+      new TargetModel(1, 1, 1, 'ASD12-125', '12QWE1231231233', '', '', TargetStatus.NOT_STARTED, '', '', false),
     ];
   let addEditSpy: jest.Mock;
 

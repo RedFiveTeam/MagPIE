@@ -10,7 +10,7 @@ describe('RFI description container', () => {
   const moment = require('moment');
   let rfi = new RfiModel(1, 'id', 'url', undefined, RfiStatus.OPEN, 'LTJG', 'John', 'Kennedy', 'POTUS',
                          'john@whitehouse.gov', '(202) 456-1111', '', '', '555-1212', moment(), 'country', 'hi',
-                         'Just a fiction', -1, 12, 345, undefined);
+                         'Just a fiction', -1, 12, 345, undefined, false);
   let postGetsClickSpy: jest.Mock;
   let loadTgtPageSpy: jest.Mock;
   window.open = jest.fn();

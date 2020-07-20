@@ -289,4 +289,8 @@ public class IxnService {
       return newIxnDate < lastIxnDate;
     }
   }
+
+  public boolean containsRejectedTracks(long rfiId) {
+    return ixnRepository.findAllRejectedByRfiId(rfiId).size() > 0;
+  }
 }

@@ -10,7 +10,7 @@ describe('Segment Divider', () => {
   let subject: ReactWrapper;
   let submitSegmentSpy: jest.Mock = jest.fn();
   let target: TargetModel = new TargetModel(1, 1, 1, 'SDT12-123', '12QWE1231231231', 'These are the notes',
-                                            'This is a description', TargetStatus.NOT_STARTED, '', '');
+                                            'This is a description', TargetStatus.NOT_STARTED, '', '', false);
   let segment: SegmentModel = new SegmentModel(1, 1, 1, 1,
                                                moment.unix(
                                                  12 * 3600 + //HH

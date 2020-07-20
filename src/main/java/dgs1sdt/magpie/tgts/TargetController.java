@@ -26,7 +26,7 @@ public class TargetController {
   }
 
   @GetMapping
-  public List<Target> getTargets(@RequestParam(value = "rfiId") long rfiId) {
+  public List<TargetGet> getTargets(@RequestParam(value = "rfiId") long rfiId) {
     return targetService.getTargets(rfiId);
   }
 
@@ -60,12 +60,12 @@ public class TargetController {
   }
 
   @DeleteMapping(path = "/delete")
-  public List<Target> deleteTarget(@RequestParam("targetId") long targetId) {
+  public List<TargetGet> deleteTarget(@RequestParam("targetId") long targetId) {
     return targetService.setDeletedTarget(targetId);
   }
 
   @DeleteMapping(path = "/delete-targets")
-  public List<Target> deleteTargets(@Valid @RequestBody List<TargetJson> targets,
+  public List<TargetGet> deleteTargets(@Valid @RequestBody List<TargetJson> targets,
                                     @RequestParam(name = "userName", defaultValue = "") String userName) {
     return targetService.setDeletedTargets(targets, userName);
   }

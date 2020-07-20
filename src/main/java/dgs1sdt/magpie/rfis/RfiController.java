@@ -75,14 +75,16 @@ public class RfiController {
       long tgtCount = targetService.findNumByRfiId(rfi.getId());
       long ixnCount = ixnService.findNumByRfiId(rfi.getId());
       Date startDate = metricsService.getRfiStartDate(rfi.getRfiNum());
+      boolean containsRejectedTracks = ixnService.containsRejectedTracks(rfi.getId());
 
       if (rfi.getStatus().equals("NEW")) {
-        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null));
+        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null, containsRejectedTracks));
       } else if (rfi.getStatus().equals("OPEN")) {
-        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, estimatedCompletionTimeInMS));
+        rfiGetList
+          .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, estimatedCompletionTimeInMS, containsRejectedTracks));
       } else {
         Date closeDate = metricsService.getRfiCloseDate(rfi.getRfiNum());
-        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate));
+        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate, containsRejectedTracks));
       }
 
     }

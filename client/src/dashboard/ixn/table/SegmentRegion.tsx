@@ -166,6 +166,7 @@ export const StyledSegmentRegion = styled(SegmentRegion)`
     justify-content: flex-start;
     padding-left: 8px;
     align-self: flex-start;
+    margin-left: 27px;
   }
   
   .expand-button {

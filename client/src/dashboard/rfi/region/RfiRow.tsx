@@ -7,6 +7,7 @@ import IconDnDBurger from '../../../resources/icons/DnDBurgerVector';
 import { formatRfiNum } from '../../../utils';
 import ExceedsLTIOVIcon from '../../../resources/icons/ExceedsLTIOVIcon';
 import TextTooltip from '../../components/TextTooltip';
+import { RejectArrow } from '../../../resources/icons/RejectArrowIcon';
 
 interface Props {
   rfi: RfiModel;
@@ -21,9 +22,15 @@ interface Props {
 export const RfiRow: React.FC<Props> = props => {
 
   return (
-    <div className={props.className} id={'rfi-row-' + props.rfi.id}>
+    <div className={classNames('rfi-row-container', props.className)} id={'rfi-row-' + props.rfi.id}>
+      {props.rfi.containsRejectedTracks ?
+        <RejectArrow message={'This RFI contains\nrejected callouts.'}/>
+        :
+        null
+      }
       <div
-        className={classNames('rfi-row', props.selected ? 'selected' : null)}
+        className={classNames('rfi-row', props.selected ? 'selected' : null,
+                              props.rfi.containsRejectedTracks ? 'red-border' : null)}
         key={props.rfi.rfiNum}
         onClick={() => props.selectRfi(props.rfi.id)}
       >
@@ -75,6 +82,25 @@ export const RfiRow: React.FC<Props> = props => {
 };
 
 export const StyledRfiRow = styled(RfiRow)`
+  margin-left: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+    
+  .reject-arrow {
+    width: 21px;
+    height: 32px;
+    margin-left: -21px;
+    margin-bottom: 8px;
+    cursor: default;
+  }
+
+  .red-border {
+    border: 2px solid ${theme.color.buttonDoesNotMeetEei};
+    margin: -2px;
+  }
+  
   .rfi-row {
     display: flex;
     flex-direction: row;

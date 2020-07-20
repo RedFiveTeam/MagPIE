@@ -28,6 +28,7 @@ describe('RFIDeserializer', () => {
         tgtCount: 50,
         ixnCount: 5462789,
         completionDate: '2020-11-19T00:00:00.000+0000',
+        containsRejectedTracks: false,
       },
       {
         rfiNum: 'id',
@@ -52,6 +53,7 @@ describe('RFIDeserializer', () => {
         tgtCount: 2,
         ixnCount: 0,
         completionDate: null,
+        containsRejectedTracks: true,
       }];
 
     let rfis = RfiDeserializer.deserialize(json);
@@ -76,10 +78,12 @@ describe('RFIDeserializer', () => {
     expect(rfis[0].ixnCount).toBe(5462789);
     expect(rfis[0].startDate).toBe(undefined);
     expect(rfis[0].completionDate!.isSame(moment.utc('2020-11-19'), 'second')).toBeTruthy();
+    expect(rfis[0].containsRejectedTracks).toBeFalsy()
 
     expect(rfis[1].ltiov).toBe(undefined);
     expect(rfis[1].priority).toBe(7);
     expect(rfis[1].startDate!.isSame(moment.utc('2020-12-13'), 'day')).toBeTruthy();
     expect(rfis[1].completionDate).toBe(undefined);
+    expect(rfis[1].containsRejectedTracks).toBeTruthy()
   });
 });
