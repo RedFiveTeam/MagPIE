@@ -591,6 +591,15 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertTrue(rfi1.isContainsRejectedTracks());
     assertFalse(rfi2.isContainsRejectedTracks());
+
+    long target2Id = targetRepository.findAll().get(1).getId();
+
+    targetController.deleteTarget(target2Id);
+
+    rfis = rfiController.getAllRfis();
+    rfi1 = rfis.get(0);
+
+    assertFalse(rfi1.isContainsRejectedTracks());
   }
 
   private void setupRfis() throws Exception {

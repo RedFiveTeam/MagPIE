@@ -290,7 +290,29 @@ public class IxnService {
     }
   }
 
-  public boolean containsRejectedTracks(long rfiId) {
-    return ixnRepository.findAllRejectedByRfiId(rfiId).size() > 0;
+  public boolean rfiContainsRejectedTracks(long rfiId) {
+    List<Ixn> rejectedIxns = ixnRepository.findAllRejectedByRfiId(rfiId);
+    for (Ixn ixn : rejectedIxns) {
+      if (segmentRepository.findById(ixn.getSegmentId()).get().getDeleted() == null
+        && targetRepository.findById(ixn.getTargetId()).get().getDeleted() == null
+        && exploitDateRepository.findById(ixn.getExploitDateId()).get().getDeleted() == null
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
+
+  public boolean targetContainsRejectedTracks(long targetId) {
+    List<Ixn> rejectedIxns = ixnRepository.findAllRejectedByTargetId(targetId);
+    for (Ixn ixn : rejectedIxns) {
+      if (segmentRepository.findById(ixn.getSegmentId()).get().getDeleted() == null
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
 }

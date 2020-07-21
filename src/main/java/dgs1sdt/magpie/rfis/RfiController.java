@@ -75,7 +75,7 @@ public class RfiController {
       long tgtCount = targetService.findNumByRfiId(rfi.getId());
       long ixnCount = ixnService.findNumByRfiId(rfi.getId());
       Date startDate = metricsService.getRfiStartDate(rfi.getRfiNum());
-      boolean containsRejectedTracks = ixnService.containsRejectedTracks(rfi.getId());
+      boolean containsRejectedTracks = ixnService.rfiContainsRejectedTracks(rfi.getId());
 
       if (rfi.getStatus().equals("NEW")) {
         rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null, containsRejectedTracks));

@@ -84,7 +84,7 @@ public class TargetService {
     List<TargetGet> targetGets = new ArrayList<>();
 
     for (Target target : targets) {
-      targetGets.add(new TargetGet(target, !ixnRepository.findAllRejectedByTargetId(target.getId()).isEmpty()));
+      targetGets.add(new TargetGet(target, ixnService.targetContainsRejectedTracks(target.getId())));
     }
 
     return targetGets;

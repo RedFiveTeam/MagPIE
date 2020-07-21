@@ -975,6 +975,15 @@ public class TargetControllerTest extends BaseIntegrationTest {
 
     assertFalse(target1.isContainsRejectedTracks());
     assertTrue(target2.isContainsRejectedTracks());
+
+    long segment2Id = segmentRepository.findAll().get(1).getId();
+
+    ixnController.deleteSegment(segment2Id);
+
+    targets = targetController.getTargets(rfiId);
+    target2 = targets.get(1);
+
+    assertFalse(target2.isContainsRejectedTracks());
   }
 
   private void setupIxns() throws Exception {
