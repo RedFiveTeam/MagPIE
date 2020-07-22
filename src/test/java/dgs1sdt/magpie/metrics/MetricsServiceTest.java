@@ -49,8 +49,11 @@ import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
+import dgs1sdt.magpie.tgts.TargetRepository;
 import dgs1sdt.magpie.tgts.TargetStatus;
+import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
+import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +65,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class MetricsServiceTest extends BaseIntegrationTest {
 
@@ -71,6 +73,10 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   private MetricsService metricsService;
   @Autowired
   private RfiRepository rfiRepository;
+  @Autowired
+  private ExploitDateRepository exploitDateRepository;
+  @Autowired
+  private TargetRepository targetRepository;
   @Autowired
   private MetricClickGetsRepository metricClickGetsRepository;
   @Autowired
@@ -117,6 +123,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   @Before
   public void setup() {
     rfiRepository.deleteAll();
+    exploitDateRepository.deleteAll();
+    targetRepository.deleteAll();
     metricClickGetsRepository.deleteAll();
     metricSiteVisitRepository.deleteAll();
     metricClickSortRepository.deleteAll();
@@ -755,7 +763,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
 
   @Test
   public void returnsEstimatedCompletionTime() {
-    assertEquals(-1, metricsService.getEstimatedCompletionTime());
+    assertEquals(-1, metricsService.getAverageCompletionTimeLast3Rfis());
 
     Rfi rfi1 =
       new Rfi("SDT20-321", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(30)), "", "", "This is a ", "", "",
@@ -791,12 +799,12 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     rfiRepository.save(rfi1);
     metricChangeRfiRepository.saveAll(Arrays.asList(rfi1open, rfi1close));
 
-    assertEquals(convertDaysToMS(2), metricsService.getEstimatedCompletionTime());
+    assertEquals(convertDaysToMS(2), metricsService.getAverageCompletionTimeLast3Rfis());
 
     rfiRepository.saveAll(Arrays.asList(rfi2, rfi3, rfi4));
     metricChangeRfiRepository.saveAll(Arrays.asList(rfi2open, rfi2close, rfi3open, rfi3close, rfi4open, rfi4close));
 
-    assertEquals(convertDaysToMS(3), metricsService.getEstimatedCompletionTime());
+    assertEquals(convertDaysToMS(3), metricsService.getAverageCompletionTimeLast3Rfis());
   }
 
   @Test
@@ -1111,7 +1119,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void returnsAverageTrackComp(){
+  public void returnsAverageTrackComp() {
     // Cases: status changed to completed, other change
     assertEquals(0, metricsService.getAverageTracksCompletedPerWeek());
 
@@ -1148,5 +1156,130 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     metricChangeIxnRepository.saveAll(metrics);
 
     assertEquals(2, metricsService.getAverageTracksCompletedPerWeek());
+  }
+
+  private long now;
+
+  private Date daysAgo(int daysAgo) {
+    return new Date(now - daysAgo * MetricsService.MILLISECONDS_IN_A_DAY);
+  }
+
+  @Test
+  public void returnsEstimatedCompletionTimeBasedOnTargets() {
+    now = new Date().getTime();
+
+    String openRfiNum = "SDT20-0009";
+    Rfi openRfi = new Rfi(openRfiNum, "", "OPEN", new Date(), "", null, "", "", "", "", "", "", "", "", "", "", "", "");
+
+    rfiRepository.save(openRfi);
+
+    long openRfiId = rfiRepository.findByRfiNum(openRfiNum).getId();
+
+    ExploitDate openRfiExploitDate = new ExploitDate(new Date(), openRfiId);
+
+    exploitDateRepository.save(openRfiExploitDate);
+
+    long openRfiExploitDateId = exploitDateRepository.findAllByRfiId(openRfiId).get(0).getId();
+
+    Target openRfiTarget1 = new Target(openRfiId, openRfiExploitDateId,
+      new TargetJson(openRfiId, openRfiExploitDateId, "20-0001", "12QWE1231231231", "", ""));
+    Target openRfiTarget2 = new Target(openRfiId, openRfiExploitDateId,
+      new TargetJson(openRfiId, openRfiExploitDateId, "20-0002", "12QWE1231231232", "", ""));
+    Target openRfiTarget3 = new Target(openRfiId, openRfiExploitDateId,
+      new TargetJson(openRfiId, openRfiExploitDateId, "20-0003", "12QWE1231231233", "", ""));
+
+    targetRepository.saveAll(Arrays.asList(openRfiTarget1, openRfiTarget2, openRfiTarget3));
+
+    // 3 target / 0.5 tgts/day = 6 days to complete open RFI
+
+    MetricChangeRfi openRfiOpen = new MetricChangeRfi(openRfiNum, daysAgo(2), "status", "NEW", "OPEN");
+
+    metricChangeRfiRepository.save(openRfiOpen);
+
+    assertEquals(-1, metricsService.getEstimatedCompletionTimeByNumberOfTargets(openRfi.getId()));
+
+    // Add some completed RFIs with targets
+    // 3 cases: completed RFI older than 6 months (ignore), completed RFI with no targets (ignore), completed rfi with
+    // targets within last 6 months (PAY ATTENTION).
+    String oldRfiNum = "SDT20-0001";
+    Rfi oldRfi =
+      new Rfi(oldRfiNum, "", "CLOSED", new Date(), "", null, "", "", "", "", "", "", "", "", "", "", "", "");
+
+    String targetlessRfiNum = "SDT20-0002";
+    Rfi targetlessRfi =
+      new Rfi(targetlessRfiNum, "", "CLOSED", new Date(), "", null, "", "", "", "", "", "", "", "", "", "", "", "");
+
+    String goodRfi1Num = "SDT20-0003";
+    Rfi goodRfi1 =
+      new Rfi(goodRfi1Num, "", "CLOSED", new Date(), "", null, "", "", "", "", "", "", "", "", "", "", "", "");
+
+    String goodRfi2Num = "SDT20-0004";
+    Rfi goodRfi2 =
+      new Rfi(goodRfi2Num, "", "CLOSED", new Date(), "", null, "", "", "", "", "", "", "", "", "", "", "", "");
+
+    rfiRepository.saveAll(Arrays.asList(oldRfi, targetlessRfi, goodRfi1, goodRfi2));
+
+    long oldRfiId = rfiRepository.findByRfiNum(oldRfiNum).getId();
+    long goodRfi1Id = rfiRepository.findByRfiNum(goodRfi1Num).getId();
+    long goodRfi2Id = rfiRepository.findByRfiNum(goodRfi2Num).getId();
+
+    ExploitDate oldRfiExploitDate = new ExploitDate(new Date(), oldRfiId);
+    ExploitDate goodRfi1ExploitDate = new ExploitDate(new Date(), goodRfi1Id);
+    ExploitDate goodRfi2ExploitDate = new ExploitDate(new Date(), goodRfi2Id);
+
+    exploitDateRepository.saveAll(Arrays.asList(oldRfiExploitDate, goodRfi1ExploitDate, goodRfi2ExploitDate));
+
+    long oldRfiExploitDateId = exploitDateRepository.findAllByRfiId(oldRfiId).get(0).getId();
+    long goodRfi1ExploitDateId = exploitDateRepository.findAllByRfiId(goodRfi1Id).get(0).getId();
+    long goodRfi2ExploitDateId = exploitDateRepository.findAllByRfiId(goodRfi2Id).get(0).getId();
+
+    Target oldRfiTarget = new Target(oldRfiId, oldRfiExploitDateId,
+      new TargetJson(oldRfiId, oldRfiExploitDateId, "20-0001", "12QWE1231231231", "", ""));
+
+    Target goodRfi1Target1 = new Target(goodRfi1Id, goodRfi1ExploitDateId,
+      new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "20-0001", "12QWE1231231231", "", ""));
+
+    Target goodRfi1Target2 = new Target(goodRfi1Id, goodRfi1ExploitDateId,
+      new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "20-0002", "12QWE1231231232", "", ""));
+
+    Target goodRfi1DeletedTarget = new Target(goodRfi1Id, goodRfi1ExploitDateId,
+      new TargetJson(goodRfi1Id, goodRfi1ExploitDateId, "20-0003", "12QWE1231231233", "", ""));
+    goodRfi1DeletedTarget.setDeleted(new Timestamp(new Date().getTime()));
+
+    Target goodRfi2Target1 = new Target(goodRfi2Id, goodRfi2ExploitDateId,
+      new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "20-0001", "12QWE1231231231", "", ""));
+
+    Target goodRfi2Target2 = new Target(goodRfi2Id, goodRfi2ExploitDateId,
+      new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "20-0002", "12QWE1231231232", "", ""));
+
+    Target goodRfi2Target3 = new Target(goodRfi2Id, goodRfi2ExploitDateId,
+      new TargetJson(goodRfi2Id, goodRfi2ExploitDateId, "20-0003", "12QWE1231231233", "", ""));
+
+    targetRepository.saveAll(Arrays
+      .asList(oldRfiTarget, goodRfi1Target1, goodRfi1Target2, goodRfi1DeletedTarget, goodRfi2Target1, goodRfi2Target2,
+        goodRfi2Target3));
+
+    MetricChangeRfi oldRfiOpen = new MetricChangeRfi(oldRfiNum, daysAgo(200), "status", "NEW", "OPEN");
+    MetricChangeRfi oldRfiClose = new MetricChangeRfi(oldRfiNum, daysAgo(190), "status", "OPEN", "CLOSED");
+
+    MetricChangeRfi targetlessRfiOpen = new MetricChangeRfi(targetlessRfiNum, daysAgo(60), "status", "NEW", "OPEN");
+    MetricChangeRfi targetlessRfiClose = new MetricChangeRfi(targetlessRfiNum, daysAgo(50), "status", "OPEN", "CLOSED");
+
+    //Open for 3 days, has 2 targets
+    MetricChangeRfi goodRfi1Open = new MetricChangeRfi(goodRfi1Num, daysAgo(43), "status", "NEW", "OPEN");
+    MetricChangeRfi goodRfi1Close = new MetricChangeRfi(goodRfi1Num, daysAgo(40), "status", "OPEN", "CLOSED");
+
+    //Open for 7 days, has 3 targets
+    MetricChangeRfi goodRfi2Open = new MetricChangeRfi(goodRfi2Num, daysAgo(37), "status", "NEW", "OPEN");
+    MetricChangeRfi goodRfi2Close = new MetricChangeRfi(goodRfi2Num, daysAgo(30), "status", "OPEN", "CLOSED");
+
+    metricChangeRfiRepository.saveAll(Arrays
+      .asList(oldRfiOpen, oldRfiClose, targetlessRfiOpen, targetlessRfiClose, goodRfi1Open, goodRfi1Close, goodRfi2Open,
+        goodRfi2Close));
+
+    // 0.5 targets / day
+
+    assertEquals(6 * MetricsService.MILLISECONDS_IN_A_DAY,
+      metricsService.getEstimatedCompletionTimeByNumberOfTargets(openRfi.getId()));
   }
 }

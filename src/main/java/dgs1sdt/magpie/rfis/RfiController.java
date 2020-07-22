@@ -69,7 +69,7 @@ public class RfiController {
     List<Rfi> rfis = this.rfiService.fetchRfisFromRepo();
     List<RfiGet> rfiGetList = new ArrayList<>();
 
-    long estimatedCompletionTimeInMS = metricsService.getEstimatedCompletionTime();
+    long last3RfisCompletionTimeInMS = metricsService.getAverageCompletionTimeLast3Rfis();
 
     for (Rfi rfi : rfis) {
       long tgtCount = targetService.findNumByRfiId(rfi.getId());
@@ -80,13 +80,18 @@ public class RfiController {
       if (rfi.getStatus().equals("NEW")) {
         rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null, containsRejectedTracks));
       } else if (rfi.getStatus().equals("OPEN")) {
-        rfiGetList
-          .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, estimatedCompletionTimeInMS, containsRejectedTracks));
+        long estimatedCompetionTimeByTargets = metricsService.getEstimatedCompletionTimeByNumberOfTargets(rfi.getId());
+        if (estimatedCompetionTimeByTargets > 0) {
+          rfiGetList
+            .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, estimatedCompetionTimeByTargets, containsRejectedTracks));
+        } else {
+          rfiGetList
+            .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, last3RfisCompletionTimeInMS, containsRejectedTracks));
+        }
       } else {
         Date closeDate = metricsService.getRfiCloseDate(rfi.getRfiNum());
         rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate, containsRejectedTracks));
       }
-
     }
 
     return rfiGetList;

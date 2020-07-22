@@ -75,6 +75,7 @@ import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
+import dgs1sdt.magpie.tgts.TargetRepository;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateJson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,7 @@ public class MetricsService {
   static final long MILLISECONDS_IN_A_DAY = 86400000L;
 
   private RfiRepository rfiRepository;
+  private TargetRepository targetRepository;
   private MetricClickGetsRepository metricClickGetsRepository;
   private MetricSiteVisitRepository metricSiteVisitRepository;
   private MetricClickSortRepository metricClickSortRepository;
@@ -127,6 +129,11 @@ public class MetricsService {
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
     this.rfiRepository = rfiRepository;
+  }
+
+  @Autowired
+  public void setTargetRepository(TargetRepository targetRepository) {
+    this.targetRepository = targetRepository;
   }
 
   @Autowired
@@ -521,7 +528,7 @@ public class MetricsService {
     return new long[]{0, 0};
   }
 
-  public long getEstimatedCompletionTime() {
+  public long getAverageCompletionTimeLast3Rfis() {
     int totalTimeOpen = 0;
     int numberRfis = 0;
 
@@ -866,5 +873,52 @@ public class MetricsService {
 
   public long getAverageTracksCompletedPerWeek() {
     return getAveragePerWeek(metricChangeIxnRepository.findByNewDataEquals(IxnStatus.COMPLETED));
+  }
+
+  private Date daysAgo(int daysAgo) {
+    return new Date(new Date().getTime() - daysAgo * MetricsService.MILLISECONDS_IN_A_DAY);
+  }
+
+  public long getEstimatedCompletionTimeByNumberOfTargets(long rfiId) {
+    // Get rfis closed within last 6 months
+    List<MetricChangeRfi> allClosedRfis =
+      metricChangeRfiRepository.findStatusChangeToClosedBetweenDateRange(daysAgo(180), new Date());
+
+    long totalOpenTime = 0;
+    int totalNumTargets = 0;
+
+    // filter out rfis without an open metric or targets associated
+    // get number of targets (not deleted) for all of those rfis, exclude rfis with no targets
+    // calculate total time the rfis were open
+    for (MetricChangeRfi rfiClose : allClosedRfis) {
+      long rfiCloseId = rfiRepository.findByRfiNum(rfiClose.getRfiNum()).getId();
+      if (
+        metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(rfiClose.getRfiNum()) != null
+          &&
+          !targetRepository.findAllByRfiId(rfiCloseId).isEmpty()
+      ) {
+        long openTime = rfiClose.getDatetime().getTime() -
+          metricChangeRfiRepository.findStatusChangeToOpenByRfiNum(rfiClose.getRfiNum()).getDatetime().getTime();
+        int numTargets = targetRepository.findAllByRfiId(rfiCloseId).size();
+        totalOpenTime += openTime;
+        totalNumTargets += numTargets;
+      }
+    }
+
+    try {
+      // Get total number of targets for requested rfiId
+      // divide total targets  by total rfis open time to get average tgt/day over past 6 months
+      // return that number / tgts per day
+      long numTargetsForRequestedRfi = targetRepository.findAllByRfiId(rfiId).size();
+
+      //If tgts/day is 0 or undefined, or num targets for requested rfi is 0 return null
+      if (totalOpenTime == 0 || totalNumTargets == 0 || numTargetsForRequestedRfi == 0)
+        return -1;
+
+      return (long) ((float) numTargetsForRequestedRfi / ((float) totalNumTargets / (float) totalOpenTime));
+    } catch (Exception e) {
+      log.trace("Could not get completion time by targets:", e);
+      return -1;
+    }
   }
 }

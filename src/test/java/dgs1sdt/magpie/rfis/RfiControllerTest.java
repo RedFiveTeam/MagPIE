@@ -507,32 +507,78 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void returnsRfisWithEstimatedAndActualCompletionDates() {
-    Rfi rfi1 =
-      new Rfi("SDT20-321", "", "CLOSED", new Date(), "", new Date(convertDaysToMS(30)), "", "", "This is a ", "", "",
-        "", "", "", "", "", "justifiction", "");
-    rfi1.setReceiveDate(new Timestamp(convertDaysToMS(0)));
-    MetricChangeRfi rfi1open = new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(1)), "status", "NEW", "OPEN");
-    MetricChangeRfi rfi1close =
-      new MetricChangeRfi("SDT20-321", new Date(convertDaysToMS(3)), "status", "OPEN", "CLOSED");
+    long twoWeeksAgo = new Date().getTime() - convertDaysToMS(14);
 
-    rfiRepository.save(rfi1);
+    // No target data, used last 3 rfi open time
+    String closedRfiNum = "SDT20-321";
+    Rfi closedRfi =
+      new Rfi(closedRfiNum, "", "CLOSED", new Date(), "", new Date(twoWeeksAgo + convertDaysToMS(30)), "", "",
+        "This is a ", "", "",
+        "", "", "", "", "", "justifiction", "");
+    closedRfi.setReceiveDate(new Timestamp(twoWeeksAgo));
+    MetricChangeRfi rfi1open =
+      new MetricChangeRfi(closedRfiNum, new Date(twoWeeksAgo + convertDaysToMS(1)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi1close =
+      new MetricChangeRfi(closedRfiNum, new Date(twoWeeksAgo + convertDaysToMS(3)), "status", "OPEN", "CLOSED");
+
+    rfiRepository.save(closedRfi);
     metricChangeRfiRepository.saveAll(Arrays.asList(rfi1open, rfi1close));
 
-    assertEquals(convertDaysToMS(2), metricsService.getEstimatedCompletionTime());
+    assertEquals(convertDaysToMS(2), metricsService.getAverageCompletionTimeLast3Rfis());
 
-    Rfi rfi2 =
-      new Rfi("SDT20-322", "", "OPEN", new Date(), "", new Date(convertDaysToMS(30)), "", "", "This is a ", "", "",
+    String openRfiNum = "SDT20-322";
+    Rfi openRfi =
+      new Rfi(openRfiNum, "", "OPEN", new Date(), "", new Date(twoWeeksAgo + convertDaysToMS(30)), "", "", "This is a ",
+        "", "",
         "", "", "", "", "", "justifiction", "");
-    MetricChangeRfi rfi2open = new MetricChangeRfi("SDT20-322", new Date(convertDaysToMS(10)), "status", "NEW", "OPEN");
+    MetricChangeRfi rfi2open =
+      new MetricChangeRfi(openRfiNum, new Date(twoWeeksAgo + convertDaysToMS(10)), "status", "NEW", "OPEN");
 
-    rfiRepository.save(rfi2);
+    rfiRepository.save(openRfi);
     metricChangeRfiRepository.save(rfi2open);
 
-    RfiGet rfi1get = rfiController.getAllRfis().get(0);
-    RfiGet rfi2get = rfiController.getAllRfis().get(1);
+    RfiGet closedRfiGet = rfiController.getAllRfis().get(0);
+    RfiGet openRfiGet = rfiController.getAllRfis().get(1);
 
-    assertEquals(new Date(convertDaysToMS(3)), rfi1get.getCompletionDate());
-    assertEquals(new Date(convertDaysToMS(12)), rfi2get.getCompletionDate());
+    assertEquals(new Date(twoWeeksAgo + convertDaysToMS(3)), closedRfiGet.getCompletionDate());
+    assertEquals(new Date(twoWeeksAgo + convertDaysToMS(12)), openRfiGet.getCompletionDate());
+
+    //Target data exists, use avg. target completion time
+
+    long closedRfiId = rfiRepository.findByRfiNum(closedRfiNum).getId();
+    long openRfiId = rfiRepository.findByRfiNum(openRfiNum).getId();
+
+    ExploitDate closedRfiExploitDate = new ExploitDate(new Date(), closedRfiId);
+    ExploitDate openRfiExploitDate = new ExploitDate(new Date(), openRfiId);
+
+    exploitDateRepository.saveAll(Arrays.asList(closedRfiExploitDate, openRfiExploitDate));
+
+    long closedRfiEDId = exploitDateRepository.findAllByRfiId(closedRfiId).get(0).getId();
+    long openRfiEDId = exploitDateRepository.findAllByRfiId(openRfiId).get(0).getId();
+
+    //2 targets, open 2 days = 1 target/day
+    Target closedRfiTarget1 = new Target(closedRfiId, closedRfiEDId,
+      new TargetJson(closedRfiId, closedRfiEDId, "20-0001", "12QWE1231231231", "", ""));
+    Target closedRfiTarget2 = new Target(closedRfiId, closedRfiEDId,
+      new TargetJson(closedRfiId, closedRfiEDId, "20-0002", "12QWE1231231232", "", ""));
+
+
+    //3 targets => ECD 3 days from open date, ie day 13
+    Target openRfiTarget1 = new Target(openRfiId, openRfiEDId,
+      new TargetJson(openRfiId, openRfiEDId, "20-0001", "12QWE1231231231", "", ""));
+    Target openRfiTarget2 = new Target(openRfiId, openRfiEDId,
+      new TargetJson(openRfiId, openRfiEDId, "20-0002", "12QWE1231231232", "", ""));
+    Target openRfiTarget3 = new Target(openRfiId, openRfiEDId,
+      new TargetJson(openRfiId, openRfiEDId, "20-0003", "12QWE1231231233", "", ""));
+
+    targetRepository
+      .saveAll(Arrays.asList(closedRfiTarget1, closedRfiTarget2, openRfiTarget1, openRfiTarget2, openRfiTarget3));
+
+    closedRfiGet = rfiController.getAllRfis().get(0);
+    openRfiGet = rfiController.getAllRfis().get(1);
+
+    assertEquals(new Date(twoWeeksAgo + convertDaysToMS(3)), closedRfiGet.getCompletionDate());
+    assertEquals(new Date(twoWeeksAgo + convertDaysToMS(13)), openRfiGet.getCompletionDate());
   }
 
   @Test
@@ -605,8 +651,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
   private void setupRfis() throws Exception {
     //Setup and RFI with 2 targets and 10 interactions
     rfiRepository.save(
-      new Rfi("DGS-1-SDT-2020-00338", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
-        "", "", "", "", "", ""));
+      new Rfi("DGS-1-SDT-2020-00338", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", "", "",
+        "", "", "", "", "", "", ""));
     long rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00338").getId();
     Date exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));
@@ -664,8 +710,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     //Another RFI
     rfiRepository.save(
-      new Rfi("DGS-1-SDT-2020-00339", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
-        "", "", "", "", "", ""));
+      new Rfi("DGS-1-SDT-2020-00339", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", "", "",
+        "", "", "", "", "", "", ""));
     rfiId = rfiRepository.findByRfiNum("DGS-1-SDT-2020-00339").getId();
     exploitDate1 = new Date(new SimpleDateFormat("MM/dd/yyyy").parse("11/11/2020").getTime());
     exploitDateRepository.save(new ExploitDate(exploitDate1, rfiId));
