@@ -31,6 +31,7 @@ export const loadIxnPage = (target: TargetModel|null, dateString: string|null, s
 };
 
 export const exitIxnPage = () => {
+
   return {
     type: IxnActionTypes.EXIT_IXN_PAGE,
   };

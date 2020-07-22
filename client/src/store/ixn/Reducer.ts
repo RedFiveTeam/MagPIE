@@ -1,6 +1,7 @@
 import { TargetModel } from '../tgt/TargetModel';
 import { Reducer } from 'redux';
 import { IxnActionTypes, IxnState } from './Types';
+import { TgtActionTypes } from '../tgt';
 
 
 const initState: IxnState = {
@@ -70,7 +71,7 @@ const reducer: Reducer<IxnState> = (state = initState, action: any) => {
           autofocus: action.autofocus,
         };
       }
-    case IxnActionTypes.EXIT_IXN_PAGE:
+    case TgtActionTypes.NAVIGATE_TO_TGT_PAGE:
       return {
         ...state,
         viewIxnPage: false,

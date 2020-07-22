@@ -4,6 +4,7 @@ import { ExploitDateSorter } from './ExploitDateSorter';
 import { Reducer } from 'redux';
 import { TgtState } from './Types';
 import { ExploitDateModel } from './ExploitDateModel';
+import { RfiActionTypes } from '../rfi';
 
 const initState: TgtState = {
   rfi: {} as RfiModel,
@@ -44,7 +45,7 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
         targets: action.targets,
         newExploitDate: newExploitDate,
       };
-    case TgtActionTypes.EXIT_TGT_PAGE:
+    case RfiActionTypes.FETCH_RFI_UPDATE:
       return {
         ...state,
         addTgt: -1,

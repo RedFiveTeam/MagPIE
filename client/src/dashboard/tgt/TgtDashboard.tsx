@@ -43,6 +43,7 @@ import { StyledTgtCopyModal } from './TgtCopyModal';
 import { StyledTgtInputRow } from './table/TgtInputRow';
 import { StyledTgtRow } from './table/TgtRow';
 import { Modal } from '@material-ui/core';
+import { fetchLocalUpdate } from '../../store/rfi/Thunks';
 
 interface MyProps {
   rfi: RfiModel;
@@ -127,7 +128,8 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
       setNavigate(null);
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: undefined, tgtId: undefined}});
-      dispatch(exitTgtPage());
+      dispatch(fetchLocalUpdate())
+      // dispatch(exitTgtPage());
     }
   };
 
@@ -237,7 +239,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   const handleNavigate = () => {
     if (navigate === null) {
       setCookies('magpie', {...cookie, viewState: {rfiId: undefined, tgtId: undefined}});
-      dispatch(exitTgtPage());
+      dispatch(fetchLocalUpdate());
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: navigate.id}});
       dispatch(loadTgtPage(navigate, true));

@@ -22,9 +22,10 @@ import { RollupClickModel } from '../../store/metrics/RollupClickModel';
 import { RollupMode, StyledRollupView } from './RollupView';
 import { IxnTableView } from './IxnTableView';
 import { Cookie } from '../../utils';
-import { RfiStatus } from '../../store/rfi/RfiModel';
+import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { ConfirmationModal } from '../components/ConfirmationModal';
+import { loadTgtPage } from '../../store/tgt/Thunks';
 
 interface MyProps {
   className?: string
@@ -33,6 +34,7 @@ interface MyProps {
 export const IxnDashboard: React.FC<MyProps> = (props) => {
   const moment = require('moment');
 
+  const rfi: RfiModel = useSelector(({tgtState}: ApplicationState) => tgtState.rfi);
   const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
   const dateString: string = useSelector(({ixnState}: ApplicationState) => ixnState.dateString);
   const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
@@ -111,7 +113,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
       setNavigate(Navigate.BACK);
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
-      dispatch(exitIxnPage());
+      dispatch(loadTgtPage(rfi, true))
     }
   };
 

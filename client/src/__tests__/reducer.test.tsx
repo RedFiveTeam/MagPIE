@@ -489,7 +489,7 @@ describe('reducer', () => {
 
     let state = ixnReducer(undefined, navToIxnPage);
     let exitIxnPage = {
-      type: IxnActionTypes.EXIT_IXN_PAGE,
+      type: TgtActionTypes.NAVIGATE_TO_TGT_PAGE,
     };
 
     state = ixnReducer(state, exitIxnPage);
