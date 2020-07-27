@@ -1,19 +1,23 @@
-# pie
+# MagPIE
+![MagPIE Logo](./client/public/smallbord.png)
 ## Overview
-Marion Berry... or choose your own flavor! Because we do not really know what solution we are building yet. We are currently in the Discovery & Framing phase of a project to help our Post-Ingest Exploitation cell.
+Marion Berry... or choose your own flavor! A project to help our Post-Ingest Exploitation (PIE) cell magnify their capabilities.
 
 ##Setup
 ### Dependencies
-* `mysql stable 5.7.20+`
+* `mysql stable 5.7.20` (or later)
 * `java 1.8`
-* `maven 4.0.0`
-* `node 10.16.0`
-    *`yarn 1.17.3`
+* `maven 3.5.4` (or later)
+* `node 10.16.0` (or later)
+* `yarn 1.17.3` (or later)
 
 ##Environment Variables
 These variables are required:
-- `PIE_DB_URL`
-- `PIE_DB_USERNAME`
+- `PIE_DB_URL` (string)
+- `PIE_DB_USERNAME` (string)
+- `GETS_REQUEST_TIME_FRAME_IN_DAYS` (int)
+- `GETS_URI_CLOSED` (string)
+- `GETS_URI_OPEN_PENDING` (string)
 
 You can setup all required environment variables by running
  
@@ -24,33 +28,41 @@ You can setup all required environment variables by running
 
 ## Build
 ### Client
-* Be sure dependencies are up to date with `cd client && yarn install`. 
+* Be sure dependencies are up to date with `cd client && yarn`
 * `cd client && yarn build`
 
 ### Backend
-* `./mvnw install`
+* `mvn install`
 
 ## Develop
-### Seed the Development Database
-* `./scripts/seed_db.sh`
-
 ### Client Development Server
 * `cd client && yarn start`
 
 ### Backend Development Server
-* `./mvnw spring-boot:run`
+* `mvn spring-boot:run`
+    * alternatively use IntelliJ `Application` run configuration
 
 ## Test
-#### Client Tests
+#### Frontend Tests
 * `cd client && yarn test`
+    * alternatively use IntelliJ `All Frontend` run configuration
 
 #### Backend Tests
-* `./mvnw test`
+* `mvn test`
+    * alternatively use IntelliJ `All Backend` run configuration
+    
+#### All Unit Tests (Frontend and Backend)
+* `./scripts/tests.sh unit`
 
 #### Acceptance Tests
-* Ensure that the client has been built and that the app server is running locally.
-* `cd acceptance && yarn install`
-* `cd acceptance &&  npx codeceptjs run`
+* `./scripts/tests.sh acc` or `./scripts/tests.sh acceptance`
+
+#### Acceptance Tests without rebuilding the JAR
+* `./scripts/tests.sh anj`
+
+#### Specific Acceptance Tests
+* `./scripts/tests.sh acc #` or `./scripts/tests.sh anj #` or `./scripts/tests.sh acceptance #` 
+    * replace # with the acceptance test number you want to run
 
 #### All tests
 * `./scripts/tests.sh`
@@ -61,6 +73,7 @@ Traditionally, it will push at the end of its pipeline cycle (in Jenkins via NGA
 * `cf push`
 
 ## Resources
-- Tracker: https://www.pivotaltracker.com/n/projects/2399049
+- Tracker: https://www.pivotaltracker.com/n/projects/2407835
 - Continuous Integration and Deployment: https://jenkins.devops.geointservices.io/job/DGS-1%20Software%20Development%20Team/job/PIE/job/PIE_Multibranch/job/acceptance/
-- Acceptance: https://pie.dev.dev.east.paas.geointservices.io/
+- Acceptance: https://magpie.dev.geointservices.io/
+
