@@ -3,7 +3,7 @@
 ## Overview
 Marion Berry... or choose your own flavor! A project to help our Post-Ingest Exploitation (PIE) cell magnify their capabilities.
 
-##Setup
+## Setup
 ### Dependencies
 * `mysql stable 5.7.20` (or later)
 * `java 1.8`
@@ -11,7 +11,7 @@ Marion Berry... or choose your own flavor! A project to help our Post-Ingest Exp
 * `node 10.16.0` (or later)
 * `yarn 1.17.3` (or later)
 
-##Environment Variables
+## Environment Variables
 These variables are required:
 - `PIE_DB_URL` (string)
 - `PIE_DB_USERNAME` (string)
