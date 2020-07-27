@@ -476,6 +476,6 @@ export const StyledIxnRow = styled(IxnRow)`
   .delete-container {
     height: 20px;
     width: 20px;
-    margin: -80px 0 55px 1410px
+    margin: -80px 0 55px 1435px
   }
 `;

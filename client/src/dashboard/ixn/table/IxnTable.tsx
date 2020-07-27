@@ -21,5 +21,4 @@ export const StyledIxnTable = styled(IxnTable)`
   flex-direction: column;
   overflow-y: auto;
   padding-right: 20px;
-  padding-left: 12px;
 `;

@@ -139,7 +139,7 @@ export const SegmentRegion: React.FC<MyProps> = (props) => {
                                    'expand-collapse')} onClick={props.collapsed ? handleCollapseClick : () => {
         }}>
           <ExpandCollapseArrowButton className={'expand-collapse-arrow'} collapsed={props.collapsed}
-                                     onClick={handleCollapseClick}/>
+                                     onClick={props.collapsed ? () => {} : handleCollapseClick}/>
         </div>
         :
         null
@@ -156,7 +156,7 @@ export const StyledSegmentRegion = styled(SegmentRegion)`
   padding-bottom: 20px;
   
   .expand-collapse {
-    width: 1400px;
+    width: 1410px;
     margin-top: -28px;
     height: 28px;
     z-index: 1;

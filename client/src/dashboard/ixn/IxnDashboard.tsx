@@ -401,7 +401,7 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    width: 1410px;
+    width: 1435px;
     margin-left: 27px;
   }
 
