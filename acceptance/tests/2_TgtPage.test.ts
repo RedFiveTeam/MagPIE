@@ -47,6 +47,7 @@ Scenario('Should prompt user to save new targets retrieved from GETS', (I) => {
   I.waitForText('Add Coverage Date to Exploit TGTs', 3);
 
   I.click('.add-tgt-button');
+  I.waitForElement('.mgrs', 3);
   I.fillField('.mgrs', '20QWE3213213213');
   I.pressKey('Tab');
   I.fillField('.notes', 'notes');
@@ -143,6 +144,7 @@ Scenario('Should be able to add tgts', (I) => {
 
   I.waitForElement('.add-tgt-button', 5);
   I.click('.add-tgt-button');
+  I.waitForElement('.mgrs', 3);
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Tab');
   I.fillField('.notes', 'notes');
@@ -159,6 +161,7 @@ Scenario('Should be able to add tgts', (I) => {
 
   I.waitForElement('.add-tgt-button');
   I.click('.add-tgt-button');
+  I.waitForElement('.mgrs', 3);
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Tab');
   I.fillField('.notes', 'notes');
@@ -180,6 +183,7 @@ Scenario('Should be able to edit tgts', (I) => {
   I.doubleClick('.mgrs');
   for (let i = 0; i < 3; i++)
     I.pressKey('Backspace');
+  I.waitForElement('.mgrs', 3);
   I.fillField('.mgrs', '999');
   I.pressKey('Tab');
   I.fillField('.notes', 'new notes');
@@ -195,6 +199,7 @@ Scenario('Should be able to edit tgts', (I) => {
 
   //Cancel edit
   I.doubleClick('.mgrs');
+  I.waitForElement('.mgrs', 3);
   I.fillField('.mgrs', '12QWE0987654321');
   I.click('.cancel-edit-tgt-button');
 
@@ -261,6 +266,7 @@ Scenario('Should be able to copy targets', (I) => {
 
   I.waitForElement('.add-tgt-button', 5);
   I.click('.add-tgt-button');
+  I.waitForElement('.mgrs', 3);
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
   I.waitForElement('.dismiss-snackbar');
