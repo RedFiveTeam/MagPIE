@@ -258,6 +258,7 @@ Scenario('Should be able to copy targets', (I) => {
   I.waitForElement('.dismiss-snackbar');
   I.click('.dismiss-snackbar');
 
+  I.waitForElement('.add-tgt-button', 5);
   I.click('.add-tgt-button');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
