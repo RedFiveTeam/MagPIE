@@ -141,6 +141,7 @@ Scenario('Should be able to add tgts', (I) => {
   I.fillField('input', '02012020');
   I.click('.dismiss-snackbar');
 
+  I.waitForElement('.add-tgt-button', 5);
   I.click('.add-tgt-button');
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Tab');
