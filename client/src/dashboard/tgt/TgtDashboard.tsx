@@ -632,7 +632,7 @@ export const StyledTgtDashboard = styled(
   
   .tgt-table-header {
     flex: 0 0 27px;
-    padding-left: 11px;
+    padding-left: 17px;
     padding-right: 15px;
     align-self: flex-start;
   }

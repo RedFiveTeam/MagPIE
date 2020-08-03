@@ -378,7 +378,8 @@ export const StyledRollupView = styled(RollupView)`
     display: flex;
     align-self: flex-end;
     flex-direction: row;
-    justify-content: space-between;       
+    justify-content: space-between;
+    z-index: 2;       
   }
   
   .rollup-close-button {

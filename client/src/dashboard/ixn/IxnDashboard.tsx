@@ -492,7 +492,6 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     justify-content: flex-start;
     min-height: 62px;
     width: 1348px;
-    padding-left: 2px;
   }
   
   .segment-divider-placeholder {
@@ -545,6 +544,11 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 10px;
+  }
+  
+  .status-wrapper {
+    margin-top: 2px;
   }
   
   .ixn-body-spacer {

@@ -30,7 +30,7 @@ export const RfiRow: React.FC<Props> = props => {
       }
       <div
         className={classNames('rfi-row', props.selected ? 'selected' : null,
-                              props.rfi.containsRejectedTracks ? 'red-border' : null)}
+                              props.rfi.containsRejectedTracks ? 'red-border' : 'no-border')}
         key={props.rfi.rfiNum}
         onClick={() => props.selectRfi(props.rfi.id)}
       >
@@ -98,7 +98,10 @@ export const StyledRfiRow = styled(RfiRow)`
 
   .red-border {
     border: 2px solid ${theme.color.buttonDoesNotMeetEei};
-    margin: -2px;
+  }
+  
+  .no-border {
+    border: 2px solid rgba(0,0,0,0);
   }
   
   .rfi-row {

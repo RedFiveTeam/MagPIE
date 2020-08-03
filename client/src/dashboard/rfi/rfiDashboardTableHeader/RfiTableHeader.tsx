@@ -108,12 +108,13 @@ export const StyledRfiTableHeader = styled(RfiTableHeader)`
   }
   
   .header-cell--pri {
-    padding-left: 30px !important;
-    width: 75px;
+    padding-left: 68px !important;
+    width: 105px;
   }
   
   .header-cell--rfi-num {
     width: 60px;
+    padding-left: 13px;
   }
   
   .header-cell--country {

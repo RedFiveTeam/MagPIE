@@ -28,10 +28,11 @@ export const StyledRfiRegionDivider = styled(RfiRegionDivider)`
   justify-content: center;
   align-items: center;
   margin-bottom: 4px;
+  margin-left: 35px;
   
   .region-divider--bar {
     margin-bottom: -4px;
-    width: 509px;
+    width: 574px;
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;

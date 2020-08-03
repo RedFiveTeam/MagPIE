@@ -191,7 +191,8 @@ export const IxnRow: React.FC<MyProps> = props => {
         }
         <div className={classNames('ixn-box-left', highlighted ? 'highlighted' : null,
                                    props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ? 'red-border'
-                                     : props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ? 'green-border' : null)}
+                                     : props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ? 'green-border'
+                                     : 'no-border')}
         >
           <div className={classNames('ixn-data-cell', 'exploit-analyst', 'name')}>
             {props.ixn.exploitAnalyst ? props.ixn.exploitAnalyst : '\xa0'}
@@ -284,7 +285,8 @@ export const IxnRow: React.FC<MyProps> = props => {
           className={classNames('ixn-box-right', highlighted ? 'highlighted' : null,
                                 displayNote ? 'note-button-extended' : null,
                                 props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ? 'red-border'
-                                  : props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ? 'green-border' : null)}
+                                  : props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ? 'green-border'
+                                  : 'no-border')}
           buttonClassName={'note-button'}
           title={!displayNote ? 'Analyst Notes' : 'Hide Notes'}
         >
@@ -372,6 +374,11 @@ export const StyledIxnRow = styled(IxnRow)`
   .green-border {
     border: 2px solid ${theme.color.complete};
   }
+  
+  .no-border {
+    border: 2px solid rgba(0,0,0,0);
+  }
+  
   .ixn-data-cell {
     margin: 8px 4px 8px 4px;
     padding-bottom: 6px;
