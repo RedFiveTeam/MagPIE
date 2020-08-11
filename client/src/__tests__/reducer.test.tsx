@@ -37,19 +37,19 @@ describe('reducer', () => {
   beforeEach(() => {
     pendingRfi1 =
       new RfiModel(1, '19-003', '', undefined, RfiStatus.PENDING, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                   'MEX', 'hi', 'Just a fiction', -1, 0, 0, undefined, false);
+                   'MEX', 'hi', 'Just a fiction', -1, 0, 0, undefined, false, false);
     pendingRfi2 = new RfiModel(2, '19-004', '', undefined, RfiStatus.PENDING, '', '', '', '633 ABW', '', '', '', '', '',
-                               moment.utc(
-                                 '2019-12-02'), 'ALB', 'hi', 'Just a fiction', -1, 0, 0, undefined, false);
+                               moment.utc('2019-12-02'), 'ALB', 'hi', 'Just a fiction', -1, 0, 0, undefined, false,
+                               false);
     openRfi1 =
       new RfiModel(3, '19-001', '', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '', moment.utc(
-        '2019-12-01'), 'USA', 'hi', 'Just a fiction', -1, 0, 0, undefined, false);
+        '2019-12-01'), 'USA', 'hi', 'Just a fiction', -1, 0, 0, undefined, false, false);
     openRfi2 =
       new RfiModel(4, '19-002', '', undefined, RfiStatus.OPEN, '', '', '', '2 FW', '', '', '', '', '', moment.utc(
-        '2019-12-03'), 'JAP', 'hi', 'Just a fiction', -1, 0, 0, undefined, false);
+        '2019-12-03'), 'JAP', 'hi', 'Just a fiction', -1, 0, 0, undefined, false, false);
     closedRfi1 = new RfiModel(5, '19-005', '', undefined, RfiStatus.CLOSED, '', '', '', '733 ABW', '', '', '', '', '',
-                              moment.utc(
-                                '2019-12-04'), 'CAN', 'hi', 'Just a fiction', -1, 0, 0, undefined, false);
+                              moment.utc('2019-12-04'), 'CAN', 'hi', 'Just a fiction', -1, 0, 0, undefined, false,
+                              false);
 
     sortedById = [openRfi1, openRfi2, pendingRfi1, pendingRfi2, closedRfi1];
     reverseById = [openRfi2, openRfi1, pendingRfi2, pendingRfi1, closedRfi1];
@@ -62,11 +62,11 @@ describe('reducer', () => {
 
     singleStatusRfiList = [
       new RfiModel(1, '19-001', '', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '', moment.utc(
-        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false),
+        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false, false),
       new RfiModel(2, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false),
+        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false, false),
       new RfiModel(3, '19-003', '', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false),
+                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false, false),
     ];
     multiStatusRfiList = [openRfi2, openRfi1, pendingRfi2, closedRfi1, pendingRfi1];
   });
@@ -105,11 +105,11 @@ describe('reducer', () => {
 
     let sortedRfis = [
       new RfiModel(2, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false),
+        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false, false),
       new RfiModel(1, '19-001', '', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '', moment.utc(
-        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false),
+        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false, false),
       new RfiModel(3, '19-003', '', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false),
+                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false, false),
     ];
 
     expect(
@@ -127,8 +127,8 @@ describe('reducer', () => {
 
   it('should handle NAVIGATE_TO_TGT_PAGE', () => {
     let rfi: RfiModel = new RfiModel(1, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '',
-                                     '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false);
+                                     '', moment.utc('2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined,
+                                     false, false);
     let mockAction = {
       type: TgtActionTypes.NAVIGATE_TO_TGT_PAGE,
       rfi: rfi,
@@ -246,20 +246,20 @@ describe('reducer', () => {
 
     let sortedRfis = [
       new RfiModel(2, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false),
+        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false, false),
       new RfiModel(1, '19-001', '', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '', moment.utc(
-        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false),
+        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false, false),
       new RfiModel(3, '19-003', '', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false),
+                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false, false),
     ];
 
     let reverseRfis = [
       new RfiModel(3, '19-003', '', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false),
+                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false, false),
       new RfiModel(1, '19-001', '', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '', moment.utc(
-        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false),
+        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false, false),
       new RfiModel(2, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false),
+        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false, false),
     ];
 
     let state = rfiReducer(undefined, setupRfis);
@@ -323,11 +323,11 @@ describe('reducer', () => {
     //Priority update
     let newSingleStatusRfis = [
       new RfiModel(1, '19-001', '', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '', moment.utc(
-        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false),
+        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false, false),
       new RfiModel(2, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 3, 0, 0, undefined, false),
+        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 3, 0, 0, undefined, false, false),
       new RfiModel(3, '19-003', '', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                   'MEX', 'hi', 'Just a fiction', 1, 0, 0, undefined, false),
+                   'MEX', 'hi', 'Just a fiction', 1, 0, 0, undefined, false, false),
     ];
 
     //Sort bt LTIOV; should stay sorted after update
@@ -341,11 +341,11 @@ describe('reducer', () => {
 
     let sortedRfis = [
       new RfiModel(1, '19-001', '', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '', moment.utc(
-        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false),
+        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false, false),
       new RfiModel(2, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 3, 0, 0, undefined, false),
+        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 3, 0, 0, undefined, false, false),
       new RfiModel(3, '19-003', '', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                   'MEX', 'hi', 'Just a fiction', 1, 0, 0, undefined, false),
+                   'MEX', 'hi', 'Just a fiction', 1, 0, 0, undefined, false, false),
     ];
 
     expect(
@@ -368,11 +368,11 @@ describe('reducer', () => {
 
     let sortedRfis = [
       new RfiModel(2, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '', '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false),
+        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false, false),
       new RfiModel(1, '19-001', '', undefined, RfiStatus.OPEN, '', '', '', '1 FW', '', '', '', '', '', moment.utc(
-        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false),
+        '2019-12-01'), 'USA', 'hi', 'Just a fiction', 2, 0, 0, undefined, false, false),
       new RfiModel(3, '19-003', '', undefined, RfiStatus.OPEN, '', '', '', 'HQ ACC', '', '', '', '', '', undefined,
-                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false),
+                   'MEX', 'hi', 'Just a fiction', 3, 0, 0, undefined, false, false),
     ];
 
     let state = rfiReducer(undefined, mockAction);
@@ -404,7 +404,8 @@ describe('reducer', () => {
     ];
     let ixns = [
       new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(
-        124), 'People have done a thing', '123-234', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED),
+        124), 'People have done a thing', '123-234', '', IxnStatus.NOT_STARTED, '', '', '',
+                   IxnApprovalStatus.NOT_REVIEWED),
       new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(
         568), 'People have done another thing', '123-456', '', IxnStatus.NOT_STARTED, '', '', '',
                    IxnApprovalStatus.NOT_REVIEWED),
@@ -442,7 +443,8 @@ describe('reducer', () => {
 
     let newIxns = [
       new IxnModel(1, 1, 1, 1, 1, 'Billy Bob', moment(
-        124), 'People have done a thing', '123-234', '', IxnStatus.NOT_STARTED, '', '', '', IxnApprovalStatus.NOT_REVIEWED),
+        124), 'People have done a thing', '123-234', '', IxnStatus.NOT_STARTED, '', '', '',
+                   IxnApprovalStatus.NOT_REVIEWED),
       new IxnModel(1, 1, 1, 1, 2, 'Billy Bob', moment(
         568), 'People have done another thing', '123-456', '', IxnStatus.NOT_STARTED, '', '', '',
                    IxnApprovalStatus.NOT_REVIEWED),
@@ -513,8 +515,8 @@ describe('reducer', () => {
 
   it('should handle UPDATE_TGT_SUCCESS', () => {
     let rfi: RfiModel = new RfiModel(1, '19-004', '', undefined, RfiStatus.OPEN, '', '', '', '633 ABW', '', '', '', '',
-                                     '', moment.utc(
-        '2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined, false);
+                                     '', moment.utc('2019-12-02'), 'CAN', 'hi', 'Just a fiction', 1, 0, 0, undefined,
+                                     false, false);
     let exploitDate: ExploitDateModel = new ExploitDateModel(1, 1, moment.utc('2019-11-02'));
     let target = new TargetModel(1, 1, 1, 'TGT20-123', '00ABC1234567890', '', '', TargetStatus.NOT_STARTED, '', '',
                                  false);

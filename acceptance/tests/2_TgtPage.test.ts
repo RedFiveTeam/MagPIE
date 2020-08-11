@@ -21,6 +21,13 @@ Scenario ('Should be able to navigate to and exit the Tgt page', (I) => {
   I.waitForText('LTIOV', 10);
 });
 
+Scenario('Should have upload file buttons that allow file upload', (I) => {
+  I.waitForElement('.upload-file-button');
+  I.click('.upload-file-button');
+  I.waitForText('Drag and drop KML file here');
+  I.waitForText('Browse');
+});
+
 Scenario ('Should be able to collapse/expand mini RFI table', (I) => {
   I.waitForText('RFI DESCRIPTION: Lorem ipsum', 10);
   I.moveCursorTo('.mini-rfi-table');

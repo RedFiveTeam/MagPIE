@@ -76,21 +76,25 @@ public class RfiController {
       long ixnCount = ixnService.findNumByRfiId(rfi.getId());
       Date startDate = metricsService.getRfiStartDate(rfi.getRfiNum());
       boolean containsRejectedTracks = ixnService.rfiContainsRejectedTracks(rfi.getId());
+      boolean areAllTracksComplete = ixnService.allTracksAreComplete(rfi.getId());
 
       if (rfi.getStatus().equals("NEW")) {
-        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null, containsRejectedTracks));
+        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null, containsRejectedTracks, false));
       } else if (rfi.getStatus().equals("OPEN")) {
         long estimatedCompetionTimeByTargets = metricsService.getEstimatedCompletionTimeByNumberOfTargets(rfi.getId());
         if (estimatedCompetionTimeByTargets > 0) {
           rfiGetList
-            .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, estimatedCompetionTimeByTargets, containsRejectedTracks));
+            .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, estimatedCompetionTimeByTargets, containsRejectedTracks,
+              areAllTracksComplete));
         } else {
           rfiGetList
-            .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, last3RfisCompletionTimeInMS, containsRejectedTracks));
+            .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, last3RfisCompletionTimeInMS, containsRejectedTracks,
+              areAllTracksComplete));
         }
       } else {
         Date closeDate = metricsService.getRfiCloseDate(rfi.getRfiNum());
-        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate, containsRejectedTracks));
+        rfiGetList
+          .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate, containsRejectedTracks, areAllTracksComplete));
       }
     }
     return rfiGetList;

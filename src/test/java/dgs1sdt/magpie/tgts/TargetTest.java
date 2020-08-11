@@ -1,11 +1,8 @@
-package dgs1sdt.magpie.rfis.targets;
+package dgs1sdt.magpie.tgts;
 
-import dgs1sdt.magpie.tgts.Target;
-import dgs1sdt.magpie.tgts.TargetJson;
-import dgs1sdt.magpie.tgts.TargetStatus;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 public class TargetTest {
 

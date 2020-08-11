@@ -7,6 +7,7 @@ import AddTgtDateVector from '../../resources/icons/AddTgtDateVector';
 import classNames from 'classnames';
 import TextTooltip from '../components/TextTooltip';
 import CopyTargetsButton from '../../resources/icons/CopyTargetsButton';
+import UploadFileIcon from '../../resources/icons/UploadFileIcon';
 
 interface OwnProps {
   exitTgtPage: () => void;
@@ -17,6 +18,7 @@ interface OwnProps {
   displayHelperText: boolean;
   displayExploitDateHelper: boolean;
   displayCopyTargets: () => void;
+  setShowUploadFileModal: (show: boolean) => void;
   className?: string;
 }
 
@@ -37,6 +39,10 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
     if (!props.displayHelperText) {
       props.displayCopyTargets();
     }
+  };
+
+  const handleShowUploadModal = () => {
+    props.setShowUploadFileModal(true);
   };
 
   return (
@@ -73,6 +79,16 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
                  onClick={handleDateClick}
             >
               <AddTgtDateVector/>
+            </div>
+          </TextTooltip>
+          <TextTooltip title={'Upload Product'}
+                       PopperProps={{
+                         className: 'header-tooltip',
+                       }}>
+            <div className={classNames('upload-file-button header-button')}
+                 onClick={handleShowUploadModal}
+            >
+              <UploadFileIcon/>
             </div>
           </TextTooltip>
           <TextTooltip
@@ -143,7 +159,7 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
   }
   
   .tgt-dash--header--right-section {
-    width: 84px;
+    width: 138px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

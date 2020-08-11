@@ -44,6 +44,9 @@ import { StyledTgtInputRow } from './table/TgtInputRow';
 import { StyledTgtRow } from './table/TgtRow';
 import { Modal } from '@material-ui/core';
 import { fetchLocalUpdate } from '../../store/rfi/Thunks';
+import { postProductUpload } from '../../store/rfi';
+import { DismissSnackbarAction } from '../components/InformationalSnackbar';
+import { StyledFileUploadModal } from '../components/FileUploadModal';
 
 interface MyProps {
   rfi: RfiModel;
@@ -77,6 +80,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   const [displayCopyAllTargets, setDisplayCopyAllTargets] = useState(false);
   const [editingElement, setEditingElement] = useState(null as Element|null);
   const [copyTgts, setCopyTgts] = useState([] as TargetPostModel[]);
+  const [showUploadFileModal, setShowUploadFileModal] = useState(false);
 
   const isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0 || props.rfi.status === RfiStatus.CLOSED
     || displayCopyAllTargets || displayCopyTargets;
@@ -125,7 +129,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
       setNavigate(null);
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: undefined, tgtId: undefined}});
-      dispatch(fetchLocalUpdate())
+      dispatch(fetchLocalUpdate());
     }
   };
 
@@ -339,6 +343,21 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
     }
   ;
 
+  const handleFileUpload = (file: File) => {
+    if (props.rfi && file) {
+      let data = new FormData();
+      data.append('file', file);
+      data.append('name', file.name);
+
+      postProductUpload(data, props.rfi.id, cookie.userName);
+      setShowUploadFileModal(false);
+      enqueueSnackbar('Product Submitted', {
+        action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
+        variant: 'info',
+      });
+    }
+  };
+
   const headers = ['TGT ID', 'MGRS', 'EEI Notes', 'TGT Description', 'Status'];
 
   return (
@@ -352,6 +371,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
         displayHelperText={props.exploitDates.length < 2 && props.rfi.status === RfiStatus.OPEN}
         displayExploitDateHelper={props.targets.length > 0 && props.exploitDates.length === 0}
         displayCopyTargets={() => setDisplayCopyTargets(true)}
+        setShowUploadFileModal={setShowUploadFileModal}
       />
       <div className={'tgt-dash-container'}>
         <div className={'rfi-sidebar'}>
@@ -472,6 +492,11 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
         <CopyTargetsModal/>
         :
         null}
+      {showUploadFileModal ?
+        <StyledFileUploadModal hideModal={() => setShowUploadFileModal(false)} handleFileUpload={handleFileUpload}/>
+        :
+        null
+      }
     </div>
   );
 };

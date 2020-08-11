@@ -215,6 +215,15 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       fontWeight: theme.font.weightBold,
       fontSize: theme.font.sizeHeader,
     },
+    uploadModal: {
+      marginLeft: -231,
+      marginTop: -156,
+      width: 462,
+      height: 312,
+      fontFamily: theme.font.familyHeader,
+      fontWeight: theme.font.weightBold,
+      fontSize: theme.font.sizeHeader,
+    },
     rejectModal: {
       marginLeft: -332,
       marginTop: -204,
@@ -283,12 +292,52 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       borderBottomLeftRadius: '6px',
       zIndex: 2,
     },
+    modalUploadButtons: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingTop: '3px',
+      backgroundColor: theme.color.backgroundFocus,
+      width: '456px',
+      height: '38px',
+      flexShrink: 0,
+      justifySelf: 'flex-end',
+      borderBottomRightRadius: '5px',
+      borderBottomLeftRadius: '5px',
+      zIndex: 2,
+    },
     modalButton: {
       cursor: 'pointer',
       fontSize: theme.font.sizeHeader,
       '&:hover': {
         textShadow: '0px 0px 4px #FFFFFF',
       },
+    },
+    uploadModalButton: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '86px',
+      height: '26px',
+      borderRadius: '13px',
+      backgroundColor: theme.color.primaryButton,
+      cursor: 'pointer',
+      fontSize: theme.font.sizeHeaderSmall,
+      '&:hover': {
+        textShadow: '0px 0px 4px #FFFFFF',
+      },
+    },
+    uploadModalText: {
+      fontSize: theme.font.sizeHeader,
+      color: theme.color.fontHeader,
+      fontWeight: theme.font.weightBold,
+      marginTop: '-25px',
+},
+    uploadDropArea: {
+      width: '140px',
+      height: '177px',
+      border: '2px dotted' + theme.color.fontHeader,
     },
     modalTextfield: {
       backgroundColor: theme.color.backgroundModal,
@@ -362,6 +411,10 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
     },
     spacer: {
       width: 128,
+    },
+    uploadSpacer: {
+      width: 124,
+      marginLeft: 4,
     },
     saveSubmitButton: {
       width: 208,

@@ -26,6 +26,8 @@ import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { ConfirmationModal } from '../components/ConfirmationModal';
 import { loadTgtPage } from '../../store/tgt/Thunks';
+import { StyledFileUploadModal } from '../components/FileUploadModal';
+import { postProductUpload } from '../../store/rfi';
 
 interface MyProps {
   className?: string
@@ -77,6 +79,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
   const [editingElement, setEditingElement] = useState(null as Element|null);
   const [isSegmentChanged, setIsSegmentChanged] = useState(false);
   const [isIxnChanged, setIsIxnChanged] = useState(false);
+  const [showUploadFileModal, setShowUploadFileModal] = useState(false);
 
   let isNavigating = false;
 
@@ -284,6 +287,21 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     setDisplayEeiNotes(!displayEeiNotes);
   };
 
+  const handleFileUpload = (file: File) => {
+    if (rfi && file) {
+      let data = new FormData();
+      data.append('file', file);
+      data.append('name', file.name);
+
+      postProductUpload(data, rfi.id, cookie.userName);
+      setShowUploadFileModal(false);
+      enqueueSnackbar('Product Submitted', {
+        action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
+        variant: 'info',
+      });
+    }
+  };
+
   const isAddSegmentDisabled = segments.length < 1 || addingOrEditing || rollupMode;
   const element = editIxn > 0 ? 'callout' : 'segment';
 
@@ -304,6 +322,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
         displaySegmentHelperText={segments.length === 1}
         setAddSegment={handleSetAddSegment}
         exitRollupMode={handleExitRollupMode}
+        setShowUploadFileModal={setShowUploadFileModal}
       />
       {
         rollupMode ?
@@ -364,6 +383,11 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
         />
         :
         null}
+      {showUploadFileModal ?
+        <StyledFileUploadModal hideModal={() => setShowUploadFileModal(false)} handleFileUpload={handleFileUpload}/>
+        :
+        null
+      }
     </div>
   );
 };

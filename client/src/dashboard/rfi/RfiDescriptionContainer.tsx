@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import styled from 'styled-components';
 import { useCookies } from 'react-cookie';
@@ -7,6 +8,11 @@ import theme from '../../resources/theme';
 import TgtPageButtonVector from '../../resources/icons/TgtPageButtonVector';
 import ExternalLinkVector from '../../resources/icons/ExternalLinkVector';
 import classNames from 'classnames';
+import { UploadFileButtonVector } from '../../resources/icons/UploadFileButton';
+import { StyledFileUploadModal } from '../components/FileUploadModal';
+import { postProductUpload } from '../../store/rfi';
+import { useSnackbar } from 'notistack';
+import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 
 interface MyProps {
   rfi: RfiModel|undefined;
@@ -17,8 +23,12 @@ interface MyProps {
 
 export const RfiDescriptionContainer: React.FC<MyProps> = (
   {rfi, loadTgtPage, postGetsClick, className}) => {
+  const [showUploadFileModal, setShowUploadFileModal] = useState(false);
+
   const [cookies, setCookies] = useCookies(['magpie']);
   let cookie: Cookie = cookies.magpie;
+
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   const handleTgtClick = () => {
     if (rfi && rfi.status !== RfiStatus.PENDING) {
@@ -34,21 +44,45 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
     }
   };
 
+  const handleFileUpload = (file: File) => {
+    if (rfi && file) {
+      let data = new FormData();
+      data.append('file', file);
+      data.append('name', file.name);
+
+      postProductUpload(data, rfi.id, cookie.userName);
+      setShowUploadFileModal(false);
+      enqueueSnackbar('Product Submitted', {
+        action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
+        variant: 'info',
+      });
+    }
+  }
+
   return (
     <div className={className}>
       <div className={'button-section'}>
-        <div className={classNames('navigate-to-tgt-button', 'button', 'no-select',
-                                   rfi && rfi.status === RfiStatus.PENDING ? 'disabled' : null)}
-             onClick={handleTgtClick}
-        >
-          <span>TGTs</span>
-          <TgtPageButtonVector/>
+        <div className={'spacer'}>&nbsp;</div>
+        <div className={'button-wrapper'}>
+          <div className={classNames('navigate-to-tgt-button', 'button', 'no-select',
+                                     rfi && rfi.status === RfiStatus.PENDING ? 'disabled' : null)}
+               onClick={handleTgtClick}
+          >
+            <span> TGTs</span>
+            <TgtPageButtonVector/>
+          </div>
+          <div className={classNames('gets-button', 'button', 'no-select')}
+               onClick={handleGetsClick}
+          >
+            <span>GETS</span>
+            <ExternalLinkVector/>
+          </div>
         </div>
-        <div className={classNames('gets-button', 'button', 'no-select')}
-             onClick={handleGetsClick}
+        <div className={classNames('upload-button button', rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+             onClick={() => setShowUploadFileModal(true)}
         >
-          <span>GETS</span>
-          <ExternalLinkVector/>
+          {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
+          <UploadFileButtonVector/>
         </div>
       </div>
       <div className={'body'}>
@@ -79,6 +113,11 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
           <span>{rfi ? rfi.customerEmail : null}</span>
         </span>
       </div>
+      { showUploadFileModal ?
+        <StyledFileUploadModal hideModal={() => setShowUploadFileModal(false)} handleFileUpload={handleFileUpload}/>
+        :
+        null
+      }
     </div>
   );
 };
@@ -99,9 +138,29 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
  
   .button-section {
     display: flex;
+    width: 815px;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+  }
+  
+  .spacer {
+    display: flex;
+    width: 200px;
+  }
+  
+  .upload-button {
+    display: flex;
+    width: 200px;
+    justify-content: flex-end !important;
+    
+    span {
+      margin-right: 8px;
+    }
+  }
+  
+  .button-wrapper {
+    display: flex;
   }
   
   .button {
@@ -109,8 +168,6 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    height: 49px;
-    margin: 8px;
     cursor: pointer;
     
     span {
@@ -126,12 +183,16 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
   }
   
   .navigate-to-tgt-button {
+    margin-right: 8px;
+    
     span {
       margin-right: 4px;
     }
   }
     
   .gets-button {
+    margin-left: 8px;
+    
     span {
       margin-right: 8px;
     }

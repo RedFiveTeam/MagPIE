@@ -666,3 +666,10 @@ Scenario('Should display a modal when deleting targets with ixns', (I) => {
   I.waitForText('RFI DESCRIPTION:', 3);
   I.dontSee('12QWE1231231231');
 });
+
+Scenario('Should have upload file buttons that allow file upload', (I) => {
+  I.waitForElement('.upload-file-button');
+  I.click('.upload-file-button');
+  I.waitForText('Drag and drop KML file here');
+  I.waitForText('Browse');
+});

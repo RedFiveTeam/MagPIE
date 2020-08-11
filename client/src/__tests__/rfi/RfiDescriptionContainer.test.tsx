@@ -1,30 +1,35 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import TgtPageButtonVector from '../../resources/icons/TgtPageButtonVector';
 import { RfiDescriptionContainer } from '../../dashboard/rfi/RfiDescriptionContainer';
 import ExternalLinkVector from '../../resources/icons/ExternalLinkVector';
+import { UploadFileButtonVector } from '../../resources/icons/UploadFileButton';
+import { SnackbarProvider } from 'notistack';
 
 describe('RFI description container', () => {
-  let subject: ShallowWrapper;
+  let subject: ReactWrapper;
   const moment = require('moment');
   let rfi = new RfiModel(1, 'id', 'url', undefined, RfiStatus.OPEN, 'LTJG', 'John', 'Kennedy', 'POTUS',
                          'john@whitehouse.gov', '(202) 456-1111', '', '', '555-1212', moment(), 'country', 'hi',
-                         'Just a fiction', -1, 12, 345, undefined, false);
+                         'Just a fiction', -1, 12, 345, undefined, false, false);
   let postGetsClickSpy: jest.Mock;
   let loadTgtPageSpy: jest.Mock;
+
   window.open = jest.fn();
 
   beforeEach(() => {
     postGetsClickSpy = jest.fn();
     loadTgtPageSpy = jest.fn();
 
-    subject = shallow(
-      <RfiDescriptionContainer
-        rfi={rfi}
-        loadTgtPage={loadTgtPageSpy}
-        postGetsClick={postGetsClickSpy}
-      />,
+    subject = mount(
+      <SnackbarProvider>
+        <RfiDescriptionContainer
+          rfi={rfi}
+          loadTgtPage={loadTgtPageSpy}
+          postGetsClick={postGetsClickSpy}
+        />
+      </SnackbarProvider>,
     );
   });
 
@@ -41,12 +46,14 @@ describe('RFI description container', () => {
     subject.find('.navigate-to-tgt-button').simulate('click');
 
     let newRfi = {...rfi, status: RfiStatus.CLOSED};
-    subject = shallow(
-      <RfiDescriptionContainer
-        rfi={newRfi}
-        postGetsClick={postGetsClickSpy}
-        loadTgtPage={loadTgtPageSpy}
-      />,
+    subject = mount(
+      <SnackbarProvider>
+        <RfiDescriptionContainer
+          rfi={newRfi}
+          postGetsClick={postGetsClickSpy}
+          loadTgtPage={loadTgtPageSpy}
+        />
+      </SnackbarProvider>,
     );
     subject.find('.navigate-to-tgt-button').simulate('click');
 
@@ -57,12 +64,14 @@ describe('RFI description container', () => {
 
   it('navigate to tgt button should be disabled on pending rfis', () => {
     let newRfi = {...rfi, status: RfiStatus.PENDING};
-    subject = shallow(
-      <RfiDescriptionContainer
-        rfi={newRfi}
-        postGetsClick={postGetsClickSpy}
-        loadTgtPage={loadTgtPageSpy}
-      />,
+    subject = mount(
+      <SnackbarProvider>
+        <RfiDescriptionContainer
+          rfi={newRfi}
+          postGetsClick={postGetsClickSpy}
+          loadTgtPage={loadTgtPageSpy}
+        />
+      </SnackbarProvider>,
     );
     subject.find('.navigate-to-tgt-button').simulate('click');
 
@@ -79,6 +88,27 @@ describe('RFI description container', () => {
     expect(postGetsClickSpy).toHaveBeenCalled();
   });
 
+  it('should display the Upload File button, disabled by default', () => {
+    expect(subject.find(UploadFileButtonVector).exists()).toBeTruthy();
+    expect(subject.find('.upload-button').text()).toContain('Upload Product');
+
+    // This is functionality to test the 'areAllTracksComplete' enabling/disabling the upload button
+    // rfi = {...rfi, areAllTracksComplete: true}
+    //
+    // subject = mount(
+    // <SnackbarProvider>
+    //   <RfiDescriptionContainer
+    //     rfi={rfi}
+    //     loadTgtPage={loadTgtPageSpy}
+    //     postGetsClick={postGetsClickSpy}
+    //   />
+    //   </SnackbarProvider>,
+    // );
+    //
+    // expect(subject.find(UploadFileButtonVector).exists()).toBeTruthy();
+    // expect(subject.find('.upload-button').text()).toContain('Upload Product');
+  });
+
   it('should should display customer information', () => {
     expect(subject.find('.header').at(2).text()).toContain('Customer Information');
     expect(subject.find('.text-body').at(2).text()).toContain('LTJG Kennedy, John');
@@ -91,12 +121,14 @@ describe('RFI description container', () => {
 
     rfi.completionDate = moment('11/12/2020', 'MM/DD/YYYY');
 
-    subject = shallow(
-      <RfiDescriptionContainer
-        rfi={rfi}
-        loadTgtPage={loadTgtPageSpy}
-        postGetsClick={postGetsClickSpy}
-      />,
+    subject = mount(
+      <SnackbarProvider>
+        <RfiDescriptionContainer
+          rfi={rfi}
+          loadTgtPage={loadTgtPageSpy}
+          postGetsClick={postGetsClickSpy}
+        />
+      </SnackbarProvider>,
     );
 
     expect(subject.find('.header').at(0).text()).toContain('Projected Completion Date');
@@ -104,12 +136,14 @@ describe('RFI description container', () => {
 
     rfi.status = RfiStatus.CLOSED;
 
-    subject = shallow(
-      <RfiDescriptionContainer
-        rfi={rfi}
-        loadTgtPage={loadTgtPageSpy}
-        postGetsClick={postGetsClickSpy}
-      />,
+    subject = mount(
+      <SnackbarProvider>
+        <RfiDescriptionContainer
+          rfi={rfi}
+          loadTgtPage={loadTgtPageSpy}
+          postGetsClick={postGetsClickSpy}
+        />
+      </SnackbarProvider>,
     );
 
     expect(subject.find('.header').at(0).text()).not.toContain('Projected Completion Date');

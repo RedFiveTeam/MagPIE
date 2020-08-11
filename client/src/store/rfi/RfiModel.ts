@@ -31,6 +31,7 @@ export default class RfiModel {
     public ixnCount: number,
     public completionDate: Moment|undefined,
     public containsRejectedTracks: boolean,
+    public areAllTracksComplete: boolean,
   ) {
   }
 }

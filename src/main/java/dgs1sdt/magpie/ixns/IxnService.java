@@ -313,5 +313,16 @@ public class IxnService {
     return false;
   }
 
+  public boolean allTracksAreComplete(long rfiId) {
+    List<Ixn> allIxnsForRfi = ixnRepository.findAllByRfiId(rfiId);
+
+    for (Ixn ixn : allIxnsForRfi) {
+      if (!ixn.getStatus().equals(IxnStatus.COMPLETED)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
 }

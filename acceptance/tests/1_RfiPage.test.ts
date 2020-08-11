@@ -47,6 +47,15 @@ Scenario('Should be able to select RFIs and see descriptions', (I) => {
   I.see('Customer Information');
   I.see('Fireman Apprentice Boonty, Thomas');
   I.click(locate('.rfi-row').at(2));
-  I.waitForText('in culpa qui officia deserunt mollit anim id es laborum.')
+  I.waitForText('in culpa qui officia deserunt mollit anim id es laborum.');
+});
+
+Scenario('Should have upload file buttons that allow file upload', (I) => {
+  I.waitForText('RFI', 10);
+  I.waitForElement('.upload-button');
+  I.waitForText('Upload Product');
+  I.click('.upload-button');
+  I.waitForText('Drag and drop KML file here');
+  I.waitForText('Browse');
 });
 

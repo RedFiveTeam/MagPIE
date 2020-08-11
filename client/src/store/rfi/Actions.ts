@@ -32,6 +32,16 @@ export const postRfiPriorityUpdate = (rfis: RfiPriorityPostModel[], pathVars: st
   );
 };
 
+export const postProductUpload = (data: FormData, rfiId: number, userName: string) => {
+  fetch(`api/uploadProduct?rfiId=${rfiId}&userName=${userName}`,
+        {
+          method: 'post',
+          body: data,
+        })
+    .then(response => {})
+    .catch(reason => console.log(`Upload failed: ${reason}`))
+};
+
 export const fetchRfiPending = () => {
   return {
     type: RfiActionTypes.FETCH_RFI_PENDING,

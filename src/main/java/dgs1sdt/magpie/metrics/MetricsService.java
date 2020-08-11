@@ -71,6 +71,8 @@ import dgs1sdt.magpie.metrics.undoTargetCreate.MetricUndoTargetCreate;
 import dgs1sdt.magpie.metrics.undoTargetCreate.MetricUndoTargetCreateRepository;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDelete;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
+import dgs1sdt.magpie.metrics.uploadFile.MetricUploadFile;
+import dgs1sdt.magpie.metrics.uploadFile.MetricUploadFileRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
@@ -86,6 +88,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static java.lang.Short.parseShort;
 
 @Service
 @Slf4j
@@ -125,6 +129,7 @@ public class MetricsService {
   private MetricClickCollapseRepository metricClickCollapseRepository;
   private MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository;
   private MetricUndoTargetCreateRepository metricUndoTargetCreateRepository;
+  private MetricUploadFileRepository metricUploadFileRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -299,6 +304,12 @@ public class MetricsService {
   public void setMetricUndoTargetCreateRepository(
     MetricUndoTargetCreateRepository metricUndoTargetCreateRepository) {
     this.metricUndoTargetCreateRepository = metricUndoTargetCreateRepository;
+  }
+
+  @Autowired
+  public void setMetricUploadFileRepository(
+    MetricUploadFileRepository metricUploadFileRepository) {
+    this.metricUploadFileRepository = metricUploadFileRepository;
   }
 
   public long getSiteVisitCount() {
@@ -496,6 +507,10 @@ public class MetricsService {
 
   public MetricLogin addLoginMetric(String userName) {
     return metricLoginRepository.save(new MetricLogin(userName));
+  }
+
+  public MetricUploadFile addUploadFileMetric(String rfiId, int uploadId, String userName) {
+    return metricUploadFileRepository.save(new MetricUploadFile(parseShort(rfiId), uploadId, userName));
   }
 
   public long[] getAverageWorkflowTime() {

@@ -8,6 +8,7 @@ import EeiNotesIcon from '../../resources/icons/EeiNotesIcon';
 import AddSegmentIcon from '../../resources/icons/AddSegmentIcon';
 import ExportRollupsIcon from '../../resources/icons/ExportRollupsIcon';
 import TextTooltip, { EeiTooltip } from '../components/TextTooltip';
+import UploadFileIcon from '../../resources/icons/UploadFileIcon';
 
 interface MyProps {
   exitIxnPage: () => void;
@@ -24,6 +25,7 @@ interface MyProps {
   toggleDisplayEeiNotes: () => void;
   setAddSegment: () => void;
   displaySegmentHelperText: boolean;
+  setShowUploadFileModal: (show: boolean) => void;
   className?: string;
 }
 
@@ -33,6 +35,10 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
     if (!props.disableButtons) {
       props.showRollup();
     }
+  };
+
+  const handleShowUploadModal = () => {
+    props.setShowUploadFileModal(true);
   };
 
   return (
@@ -88,6 +94,13 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
               </div>
             </TextTooltip>
           </EeiTooltip>
+          <TextTooltip title={'Upload Product'}>
+            <div className={classNames('upload-file-button header-button')}
+                 onClick={handleShowUploadModal}
+            >
+              <UploadFileIcon/>
+            </div>
+          </TextTooltip>
           <TextTooltip title={'Export Rollups'}>
             <div
               className={classNames('ixn-dash--header--button', 'rollup-button',
@@ -166,7 +179,7 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   .ixn-dash--header--buttons {
     display: flex;
     flex-direction: row;
-    flex: 0 0 148px;
+    flex: 0 0 192px;
     justify-content: space-between;
     align-items: center;
     overflow-y: auto;

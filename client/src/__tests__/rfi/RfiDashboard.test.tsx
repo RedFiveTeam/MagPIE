@@ -14,7 +14,6 @@ const mockStore = configureStore(history, initStore);
 describe('RFI table', () => {
   let subject: ReactWrapper;
 
-
   beforeEach(() => {
     subject = mount(
       <Provider store={mockStore}>
