@@ -67,6 +67,8 @@ const theme = {
     rejectIcon: crayonBox.subduedTomatoRed,//
     backgroundSnackbarError: crayonBox.darkTomatoRed,//
     rejectArrow: crayonBox.lessBrightRed,//
+    backgroundScoiTag: crayonBox.aquaGreen,//
+    backgroundScoiContainer: crayonBox.anotherDarkGreenBlue,//
   },
 
   font: {
