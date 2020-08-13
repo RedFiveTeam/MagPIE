@@ -325,7 +325,7 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     font-weight: normal;
     font-size: 16px;
     line-height: 19px;
-    padding-top: 6px;
+    padding-top: 6px !important;
     height: 526px;
     margin-bottom: -526px;
   }
