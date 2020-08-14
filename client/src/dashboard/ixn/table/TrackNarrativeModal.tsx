@@ -232,6 +232,8 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
 };
 
 export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
+  margin-top: -350px !important;
+
   .track-narrative-header {
     display: flex;
     height: 30px;
