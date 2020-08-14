@@ -75,6 +75,8 @@ import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDelete;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
 import dgs1sdt.magpie.metrics.uploadProduct.MetricUploadProduct;
 import dgs1sdt.magpie.metrics.uploadProduct.MetricUploadProductRepository;
+import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPage;
+import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPageRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
@@ -133,6 +135,7 @@ public class MetricsService {
   private MetricUndoTargetCreateRepository metricUndoTargetCreateRepository;
   private MetricUploadProductRepository metricUploadProductRepository;
   private MetricDownloadProductRepository metricDownloadProductRepository;
+  private MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -307,6 +310,12 @@ public class MetricsService {
   public void setMetricUndoTargetCreateRepository(
     MetricUndoTargetCreateRepository metricUndoTargetCreateRepository) {
     this.metricUndoTargetCreateRepository = metricUndoTargetCreateRepository;
+  }
+
+  @Autowired
+  public void setMetricVisitFeedbackPageRepository(
+    MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository) {
+    this.metricVisitFeedbackPageRepository = metricVisitFeedbackPageRepository;
   }
 
   @Autowired
@@ -948,5 +957,9 @@ public class MetricsService {
       log.trace("Could not get completion time by targets:", e);
       return -1;
     }
+  }
+
+  public void createVisitFeedbackPage(String rfiNum) {
+    metricVisitFeedbackPageRepository.save(new MetricVisitFeedbackPage(rfiNum));
   }
 }

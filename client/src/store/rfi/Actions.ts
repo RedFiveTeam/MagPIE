@@ -5,6 +5,7 @@ import { Field } from '../sort/SortKeyModel';
 import RfiPriorityPostModel from './RfiPriorityPostModel';
 import { TgtActionTypes } from '../tgt';
 import { fetchLocalUpdate } from './Thunks';
+import RfiFeedbackModel from './RfiFeedbackModel';
 
 export const loadSuccess = () => {
   return {type: RfiActionTypes.LOAD_SUCCESS};
@@ -69,6 +70,22 @@ export const postProductUpload = (data: FormData, rfiId: number, userName: strin
       .then(response => dispatch(updateTgtRfi(rfiId)))
       .catch(reason => console.log(`Upload failed: ${reason}`));
   }
+};
+
+export const postRfiFeedback = (feedback: RfiFeedbackModel) => {
+  return fetch('/api/rfi/feedback',
+               {
+                 method: 'post',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(feedback),
+               },
+  )
+    .then(response => response.status)
+    .catch(reason => console.log(`Post feedback failed: ${reason}`))
+    ;
 };
 
 export const postProductUploadRfiPage = (data: FormData, rfiId: number, userName: string) => {

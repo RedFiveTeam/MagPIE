@@ -72,7 +72,7 @@ function unitTests {
 #   changed to show mvn test results regardless, so we get a little more troubleshooting help when Jenkins fails
     showBanner "Backend"
     pushd ${BASE_DIR}
-        mvn test
+        mvn -q test
     popd
 
     showBanner "Frontend"
@@ -93,7 +93,7 @@ trap cleanup EXIT
 function jarBuild {
     showBanner "Build JAR"
     pushd ${BASE_DIR}
-        mvn -Dmaven.test.skip=true -DskipTests -Dflyway.user=${PIE_DB_USERNAME} -Dflyway.password= -Dflyway.url=${PIE_DB_URL} clean flyway:migrate package
+        mvn -q -Dmaven.test.skip=true -DskipTests -Dflyway.user=${PIE_DB_USERNAME} -Dflyway.password= -Dflyway.url=${PIE_DB_URL} clean flyway:migrate package
     popd
 }
 

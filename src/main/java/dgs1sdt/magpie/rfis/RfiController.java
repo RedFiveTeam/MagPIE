@@ -198,4 +198,15 @@ public class RfiController {
   public void refreshFromGets() {
     rfiService.fetchRfisFromGets();
   }
+
+  @PostMapping(path="/feedback")
+  public void saveFeedback(@Valid @RequestBody RfiFeedbackJson feedbackJson) {
+    rfiService.saveFeedback(new RfiFeedback(feedbackJson));
+  }
+
+  @GetMapping(path="/rfi-description")
+  public String rfiDescriptionBaseOnRfiNum (@Valid @RequestParam(value = "rfiNum", defaultValue = "") String rfiNum) {
+    metricsService.createVisitFeedbackPage(rfiNum);
+    return rfiRepository.findByRfiNum(rfiNum).getDescription();
+  }
 }

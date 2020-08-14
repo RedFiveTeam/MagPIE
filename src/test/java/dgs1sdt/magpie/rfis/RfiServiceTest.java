@@ -111,6 +111,8 @@ public class RfiServiceTest extends BaseIntegrationTest {
 
     filePath[0] = "RfisNewOpenRefreshed.xml";
     rfiService.fetchRfisFromUris(filePath);
+    //Attempt to fix errors with prioritizer not finishing before the next tests run resulting in a -1 priority on 120
+    Thread.sleep(500);
 
     rfiFirst = rfiRepository.findById(rfiFirst.getId()).get();
     assertEquals(1, rfiFirst.getPriority());

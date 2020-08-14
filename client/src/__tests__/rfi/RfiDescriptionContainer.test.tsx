@@ -6,6 +6,7 @@ import { RfiDescriptionContainer } from '../../dashboard/rfi/RfiDescriptionConta
 import ExternalLinkVector from '../../resources/icons/ExternalLinkVector';
 import { UploadFileButtonVector } from '../../resources/icons/UploadFileButton';
 import { SnackbarProvider } from 'notistack';
+import { ProductLinkButton } from '../../resources/icons/ProductLinkButton';
 
 describe('RFI description container', () => {
   let subject: ReactWrapper;
@@ -28,6 +29,7 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
+          handlePostProductUpload={jest.fn}
         />
       </SnackbarProvider>,
     );
@@ -52,6 +54,7 @@ describe('RFI description container', () => {
           rfi={newRfi}
           postGetsClick={postGetsClickSpy}
           loadTgtPage={loadTgtPageSpy}
+          handlePostProductUpload={jest.fn}
         />
       </SnackbarProvider>,
     );
@@ -70,6 +73,7 @@ describe('RFI description container', () => {
           rfi={newRfi}
           postGetsClick={postGetsClickSpy}
           loadTgtPage={loadTgtPageSpy}
+          handlePostProductUpload={jest.fn}
         />
       </SnackbarProvider>,
     );
@@ -88,7 +92,7 @@ describe('RFI description container', () => {
     expect(postGetsClickSpy).toHaveBeenCalled();
   });
 
-  it('should display the Upload File button, disabled by default', () => {
+  it('should display the Upload File button', () => {
     expect(subject.find(UploadFileButtonVector).exists()).toBeTruthy();
     expect(subject.find('.upload-button').text()).toContain('Upload Product');
 
@@ -109,6 +113,10 @@ describe('RFI description container', () => {
     // expect(subject.find('.upload-button').text()).toContain('Upload Product');
   });
 
+  it('should display an icon to copy feedback link to clipboard', () => {
+    expect(subject.find(ProductLinkButton).exists()).toBeTruthy();
+  });
+
   it('should should display customer information', () => {
     expect(subject.find('.header').at(2).text()).toContain('Customer Information');
     expect(subject.find('.text-body').at(2).text()).toContain('LTJG Kennedy, John');
@@ -127,6 +135,7 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
+          handlePostProductUpload={jest.fn}
         />
       </SnackbarProvider>,
     );
@@ -142,6 +151,7 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
+          handlePostProductUpload={jest.fn}
         />
       </SnackbarProvider>,
     );

@@ -17,14 +17,15 @@ import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupRepository;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
-import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
-import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
   @Autowired
   private MetricClickCollapseRepository metricClickCollapseRepository;
+
+  @Autowired
+  private MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
 
   @Before
   public void setup() {

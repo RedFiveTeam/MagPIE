@@ -14,6 +14,7 @@ import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepositor
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriority;
 import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriorityRepository;
+import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPageRepository;
 import dgs1sdt.magpie.products.Product;
 import dgs1sdt.magpie.products.ProductRepository;
 import dgs1sdt.magpie.tgts.Target;
@@ -68,6 +69,8 @@ public class RfiControllerTest extends BaseIntegrationTest {
   MetricChangeRfiPriorityRepository metricChangeRfiPriorityRepository;
   MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository;
   MetricChangeRfiRepository metricChangeRfiRepository;
+  RfiFeedbackRepository rfiFeedbackRepository;
+  MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
 
   @Autowired
   public void setSegmentRepository(SegmentRepository segmentRepository) {
@@ -169,6 +172,17 @@ public class RfiControllerTest extends BaseIntegrationTest {
     this.metricChangeRfiRepository = metricChangeRfiRepository;
   }
 
+  @Autowired
+  public void setRfiFeedbackRepository(RfiFeedbackRepository rfiFeedbackRepository) {
+    this.rfiFeedbackRepository = rfiFeedbackRepository;
+  }
+
+  @Autowired
+  public void setMetricVisitFeedbackPageRepository(
+    MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository) {
+    this.metricVisitFeedbackPageRepository = metricVisitFeedbackPageRepository;
+  }
+
   @Before
   public void clean() {
     rfiRepository.deleteAll();
@@ -184,6 +198,9 @@ public class RfiControllerTest extends BaseIntegrationTest {
     metricChangeRfiPriorityRepository.deleteAll();
     metricUndoChangeRfiPriorityRepository.deleteAll();
     metricChangeRfiRepository.deleteAll();
+    rfiFeedbackRepository.deleteAll();
+    metricVisitFeedbackPageRepository.deleteAll();
+    productRepository.deleteAll();
   }
 
   @Test
@@ -597,8 +614,10 @@ public class RfiControllerTest extends BaseIntegrationTest {
     long openRfiEDId = exploitDateRepository.findAllByRfiId(openRfiId).get(0).getId();
 
     //2 targets, open 2 days = 1 target/day
-    Target closedRfiTarget1 = new Target(new TargetJson(closedRfiId, closedRfiEDId, "12QWE1231231231", "", ""), "20-0001");
-    Target closedRfiTarget2 = new Target(new TargetJson(closedRfiId, closedRfiEDId, "12QWE1231231232", "", ""), "20-0002");
+    Target closedRfiTarget1 =
+      new Target(new TargetJson(closedRfiId, closedRfiEDId, "12QWE1231231231", "", ""), "20-0001");
+    Target closedRfiTarget2 =
+      new Target(new TargetJson(closedRfiId, closedRfiEDId, "12QWE1231231232", "", ""), "20-0002");
 
 
     //3 targets => ECD 3 days from open date, ie day 13
@@ -705,6 +724,75 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals(rfiId2, rfi2.getId());
     assertNull(rfi2.getProductName());
+  }
+
+  @Test
+  public void savesStarFeedback() throws Exception {
+    assertEquals(0, rfiFeedbackRepository.findAll().size());
+
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
+        "", "", "", "", "", ""));
+
+    RfiFeedbackJson feedbackJson = new RfiFeedbackJson("DGS-1-SDT-2020-00338", 3);
+
+    String feedbackJsonString = objectMapper.writeValueAsString(feedbackJson);
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .body(feedbackJsonString)
+      .when()
+      .post(RfiController.URI + "/feedback")
+      .then()
+      .statusCode(200);
+
+    assertEquals(1, rfiFeedbackRepository.findAll().size());
+
+    RfiFeedback feedback = rfiFeedbackRepository.findAll().get(0);
+
+    assertEquals("DGS-1-SDT-2020-00338", feedback.getRfiNum());
+    assertEquals(3, feedback.getStars());
+
+    //Should overwrite previous ratings on the same RFI
+    feedbackJson = new RfiFeedbackJson("DGS-1-SDT-2020-00338", 5);
+    feedbackJsonString = objectMapper.writeValueAsString(feedbackJson);
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .body(feedbackJsonString)
+      .when()
+      .post(RfiController.URI + "/feedback")
+      .then()
+      .statusCode(200);
+
+    assertEquals(1, rfiFeedbackRepository.findAll().size());
+
+    feedback = rfiFeedbackRepository.findAll().get(0);
+
+    assertEquals("DGS-1-SDT-2020-00338", feedback.getRfiNum());
+    assertEquals(5, feedback.getStars());
+  }
+
+  @Test
+  public void returnsRfiDescriptionBasedOnRfiNum() throws Exception {
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "",
+        "This is the description we want to get back", "This is a justifiction", "", "", "", "", "", "", "", "", ""));
+
+    assertEquals(0, metricVisitFeedbackPageRepository.findAll().size());
+
+    given()
+      .port(port)
+      .header("Content-Type", "application/json")
+      .when()
+      .get(RfiController.URI + "/rfi-description?rfiNum=DGS-1-SDT-2020-00338")
+      .then()
+      .statusCode(200)
+      .body(equalTo("This is the description we want to get back"));
+
+    assertEquals(1, metricVisitFeedbackPageRepository.findAll().size());
   }
 
   private void setupRfis() throws Exception {

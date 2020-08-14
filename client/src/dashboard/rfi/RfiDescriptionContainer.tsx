@@ -12,8 +12,11 @@ import { UploadFileButtonVector } from '../../resources/icons/UploadFileButton';
 import { StyledFileUploadModal } from '../components/FileUploadModal';
 import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
-import { StyledFileDownloadModal } from '../components/FileDownloadModal';
+import TextTooltip from '../components/TextTooltip';
+import { StyledProductLinkButton } from '../../resources/icons/ProductLinkButton';
 import { FinishedProductIcon } from '../../resources/icons/FinishedProductIcon';
+import { StyledFileDownloadModal } from '../components/FileDownloadModal';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 interface MyProps {
   rfi: RfiModel|undefined;
@@ -81,24 +84,41 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
             <ExternalLinkVector/>
           </div>
         </div>
-        {rfi && rfi.productName === null ?
-          <div
-            className={classNames('upload-button product-button button', rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
-            onClick={() => setShowUploadFileModal(true)}
-          >
-            {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
-            <UploadFileButtonVector/>
-          </div>
-          :
-          <div
-            className={classNames('download-button product-button button',
-                                  rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
-            onClick={() => setShowDownloadFileModal(true)}
-          >
-            {rfi && rfi.status !== RfiStatus.PENDING ? <span>Finished Product</span> : null}
-            <FinishedProductIcon/>
-          </div>
-        }
+        <div className={'product-container'}>
+          {rfi && rfi.productName === null ?
+            <div
+              className={classNames('upload-button product-button button',
+                                    rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+              onClick={() => setShowUploadFileModal(true)}
+            >
+              {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
+              <UploadFileButtonVector/>
+            </div>
+            :
+            <div
+              className={classNames('download-button product-button button',
+                                    rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+              onClick={() => setShowDownloadFileModal(true)}
+            >
+              {rfi && rfi.status !== RfiStatus.PENDING ? <span>Finished Product</span> : null}
+              <FinishedProductIcon/>
+            </div>
+          }
+          <CopyToClipboard
+            onCopy={() => {
+              enqueueSnackbar('Feedback Link Copied to Clipboard', {
+                action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
+                variant: 'info',
+              });
+            }}
+            text={`${window.location.href}feedback/${rfi ? rfi.rfiNum : 'error'}`}>
+            <TextTooltip title={'Copy Link'}>
+              <div className={classNames('copy-link', rfi && rfi.productName === null ? 'disabled' : null)}>
+                <StyledProductLinkButton/>
+              </div>
+            </TextTooltip>
+          </CopyToClipboard>
+        </div>
       </div>
       <div className={'body'}>
         {rfi && rfi.completionDate ?
@@ -170,7 +190,7 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
   
   .spacer {
     display: flex;
-    width: 200px;
+    width: 225px;
   }
 
   .product-button {
@@ -263,4 +283,11 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     font-weight: ${theme.font.weightBolder};
   }
 
+  .product-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 225px;
+  }
 `;

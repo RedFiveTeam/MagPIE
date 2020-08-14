@@ -59,3 +59,11 @@ Scenario('Should have upload file buttons that allow file upload', (I) => {
   I.waitForText('Browse');
 });
 
+Scenario('Should have a button to copy feedback link to clipboard', (I) => {
+  I.waitForText('20-321', 10);
+  I.click(locate('.rfi-row').at(14));
+  I.waitForElement('.copy-link');
+  I.click('.copy-link');
+  I.waitForText('Feedback Link Copied to Clipboard');
+});
+

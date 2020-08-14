@@ -25,15 +25,18 @@ public class RfiService {
   @Value("${GETS_URI_CLOSED}")
   String getsUriClosed;
   private RfiRepository rfiRepository;
+  private RfiFeedbackRepository rfiFeedbackRepository;
   private GetsClient getsClient;
   private MetricsService metricsService;
   private TargetService targetService;
 
   @Autowired
   public RfiService(RfiRepository rfiRepository,
+                    RfiFeedbackRepository rfiFeedbackRepository,
                     GetsClient getsClient,
                     MetricsService metricsService) {
     this.rfiRepository = rfiRepository;
+    this.rfiFeedbackRepository = rfiFeedbackRepository;
     this.getsClient = getsClient;
     this.metricsService = metricsService;
   }
@@ -67,6 +70,11 @@ public class RfiService {
   @Autowired
   public void setTargetService(TargetService targetService) {
     this.targetService = targetService;
+  }
+
+  @Autowired
+  public void setRfiFeedbackRepository(RfiFeedbackRepository rfiFeedbackRepository) {
+    this.rfiFeedbackRepository = rfiFeedbackRepository;
   }
 
   @Scheduled(fixedDelay = 60000, initialDelay = 5000)
@@ -197,5 +205,15 @@ public class RfiService {
     NodeList nodeList = document.getElementsByTagName("getsrfi:RequestForInformation");
 
     return rfisFromElements(nodeList);
+  }
+
+  public void saveFeedback(RfiFeedback feedback) {
+    RfiFeedback oldFeedback = rfiFeedbackRepository.findByRfiNum(feedback.getRfiNum());
+
+    if (oldFeedback != null) {
+      feedback.setId(oldFeedback.getId());
+    }
+
+    rfiFeedbackRepository.save(feedback);
   }
 }

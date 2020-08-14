@@ -15,6 +15,7 @@ import { SnackbarProvider } from 'notistack';
 import { useCookies } from 'react-cookie';
 import { StyledMetricsDashboard } from './dashboard/metric/MetricsDashboard';
 import { Cookie } from './utils';
+import { StyledFeedbackDashboard } from './dashboard/feedback/FeedbackDashboard';
 
 interface AppProps {
   store: Store<ApplicationState>;
@@ -69,6 +70,7 @@ const App: React.FC<AppProps> = ({store, history, className}) => {
                          <StyledDashboardContainer {...props} cookie={cookie}/>}
                 />
                 <Route exact path={'/metrics'} component={StyledMetricsDashboard}/>
+                <Route exact path={'/feedback/:rfiNum?'} component={StyledFeedbackDashboard}/>
               </Switch>
             </div>
           </Router>
