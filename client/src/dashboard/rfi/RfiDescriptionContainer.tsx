@@ -10,20 +10,23 @@ import ExternalLinkVector from '../../resources/icons/ExternalLinkVector';
 import classNames from 'classnames';
 import { UploadFileButtonVector } from '../../resources/icons/UploadFileButton';
 import { StyledFileUploadModal } from '../components/FileUploadModal';
-import { postProductUpload } from '../../store/rfi';
 import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
+import { StyledFileDownloadModal } from '../components/FileDownloadModal';
+import { FinishedProductIcon } from '../../resources/icons/FinishedProductIcon';
 
 interface MyProps {
   rfi: RfiModel|undefined;
   loadTgtPage: (rfi: RfiModel) => void;
   postGetsClick: (rfi: RfiModel) => void;
+  handlePostProductUpload: (data: FormData, rfiId: number, userName: string) => void;
   className?: string
 }
 
 export const RfiDescriptionContainer: React.FC<MyProps> = (
-  {rfi, loadTgtPage, postGetsClick, className}) => {
+  {rfi, loadTgtPage, postGetsClick, className, handlePostProductUpload}) => {
   const [showUploadFileModal, setShowUploadFileModal] = useState(false);
+  const [showDownloadFileModal, setShowDownloadFileModal] = useState(false);
 
   const [cookies, setCookies] = useCookies(['magpie']);
   let cookie: Cookie = cookies.magpie;
@@ -50,14 +53,14 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
       data.append('file', file);
       data.append('name', file.name);
 
-      postProductUpload(data, rfi.id, cookie.userName);
+      handlePostProductUpload(data, rfi.id, cookie.userName);
       setShowUploadFileModal(false);
       enqueueSnackbar('Product Submitted', {
         action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
         variant: 'info',
       });
     }
-  }
+  };
 
   return (
     <div className={className}>
@@ -78,12 +81,24 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
             <ExternalLinkVector/>
           </div>
         </div>
-        <div className={classNames('upload-button button', rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
-             onClick={() => setShowUploadFileModal(true)}
-        >
-          {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
-          <UploadFileButtonVector/>
-        </div>
+        {rfi && rfi.productName === null ?
+          <div
+            className={classNames('upload-button product-button button', rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+            onClick={() => setShowUploadFileModal(true)}
+          >
+            {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
+            <UploadFileButtonVector/>
+          </div>
+          :
+          <div
+            className={classNames('download-button product-button button',
+                                  rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+            onClick={() => setShowDownloadFileModal(true)}
+          >
+            {rfi && rfi.status !== RfiStatus.PENDING ? <span>Finished Product</span> : null}
+            <FinishedProductIcon/>
+          </div>
+        }
       </div>
       <div className={'body'}>
         {rfi && rfi.completionDate ?
@@ -113,8 +128,17 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
           <span>{rfi ? rfi.customerEmail : null}</span>
         </span>
       </div>
-      { showUploadFileModal ?
+      {showUploadFileModal ?
         <StyledFileUploadModal hideModal={() => setShowUploadFileModal(false)} handleFileUpload={handleFileUpload}/>
+        :
+        null
+      }
+      {showDownloadFileModal && rfi ?
+        <StyledFileDownloadModal
+          hideModal={() => setShowDownloadFileModal(false)}
+          rfi={rfi}
+          userName={cookie.userName}
+        />
         :
         null
       }
@@ -148,14 +172,25 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     display: flex;
     width: 200px;
   }
-  
-  .upload-button {
+
+  .product-button {
     display: flex;
-    width: 200px;
+    flex-direction: row;
     justify-content: flex-end !important;
+    align-items: center;
+    width: 200px;
+    height: 37px;
     
     span {
+      margin-bottom: 0 !important;
       margin-right: 8px;
+    }
+  }
+  
+  .download-button {
+    svg {
+      margin-right: 4px;
+      margin-bottom: 4px;
     }
   }
   

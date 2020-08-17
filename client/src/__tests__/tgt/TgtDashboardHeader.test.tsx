@@ -9,8 +9,9 @@ describe('TgtDashboardHeader', () => {
   let exitSpy: jest.Mock = jest.fn();
   let rfiTest: RfiModel = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', undefined, RfiStatus.OPEN, '', '',
                                        '', 'space forse', '', '', '', '', '', moment(
-      '2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0,
-                                       undefined, false, false);
+      '2019-11-20')
+                                         .utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0, undefined, false, false,
+                                       null);
   let addDateSpy: jest.Mock;
   let subject: ReactWrapper;
 
@@ -28,7 +29,7 @@ describe('TgtDashboardHeader', () => {
           displayExploitDateHelper={false}
           displayCopyTargets={() => {
           }}
-          setShowUploadFileModal={jest.fn}
+          handleShowProductModal={jest.fn}
         />
       </SnackbarProvider>);
   });
@@ -52,7 +53,7 @@ describe('TgtDashboardHeader', () => {
           displayExploitDateHelper={false}
           displayCopyTargets={() => {
           }}
-          setShowUploadFileModal={jest.fn}
+          handleShowProductModal={jest.fn}
         />
       </SnackbarProvider>);
     subject.find('.add-date-button').simulate('click');
@@ -73,7 +74,7 @@ describe('TgtDashboardHeader', () => {
           displayExploitDateHelper={false}
           displayCopyTargets={() => {
           }}
-          setShowUploadFileModal={jest.fn}
+          handleShowProductModal={jest.fn}
         />
       </SnackbarProvider>);
     expect(subject.find('.header-helper-text').text()).toContain('Add additional coverage dates');

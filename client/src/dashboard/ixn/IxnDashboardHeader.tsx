@@ -25,7 +25,8 @@ interface MyProps {
   toggleDisplayEeiNotes: () => void;
   setAddSegment: () => void;
   displaySegmentHelperText: boolean;
-  setShowUploadFileModal: (show: boolean) => void;
+  handleShowProductModal: () => void;
+  hasProduct: boolean;
   className?: string;
 }
 
@@ -35,10 +36,6 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
     if (!props.disableButtons) {
       props.showRollup();
     }
-  };
-
-  const handleShowUploadModal = () => {
-    props.setShowUploadFileModal(true);
   };
 
   return (
@@ -94,11 +91,11 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
               </div>
             </TextTooltip>
           </EeiTooltip>
-          <TextTooltip title={'Upload Product'}>
-            <div className={classNames('upload-file-button header-button')}
-                 onClick={handleShowUploadModal}
+          <TextTooltip title={props.hasProduct ? 'Download Product' : 'Upload Product'}>
+            <div className={classNames('upload-file-button ixn-dash--header--button')}
+                 onClick={props.handleShowProductModal}
             >
-              <UploadFileIcon/>
+              <UploadFileIcon hasProduct={props.hasProduct}/>
             </div>
           </TextTooltip>
           <TextTooltip title={'Export Rollups'}>
@@ -191,6 +188,7 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   }
   
   .ixn-dash--header--button {
+    height: 34.5px;
     cursor: pointer;
   }
   

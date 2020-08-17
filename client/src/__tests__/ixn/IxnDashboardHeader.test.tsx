@@ -34,7 +34,8 @@ describe('Interactions Header', () => {
           disableAddSegment={false}
           setAddSegment={jest.fn()}
           displaySegmentHelperText={false}
-          setShowUploadFileModal={jest.fn}
+          handleShowProductModal={jest.fn}
+          hasProduct={false}
         />
       </SnackbarProvider>,
     );
@@ -67,7 +68,8 @@ describe('Interactions Header', () => {
           disableAddSegment={false}
           setAddSegment={jest.fn()}
           displaySegmentHelperText={false}
-          setShowUploadFileModal={jest.fn}
+          handleShowProductModal={jest.fn}
+          hasProduct={false}
         />
       </SnackbarProvider>,
     );

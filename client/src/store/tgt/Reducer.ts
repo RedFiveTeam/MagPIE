@@ -102,6 +102,11 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
         addTgt: -1,
         editTgt: -1,
       };
+    case TgtActionTypes.UPDATE_RFI:
+      return {
+        ...state,
+        rfi: action.rfi,
+      }
     default:
       return {...state};
   }

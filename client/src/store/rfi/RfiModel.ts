@@ -32,6 +32,7 @@ export default class RfiModel {
     public completionDate: Moment|undefined,
     public containsRejectedTracks: boolean,
     public areAllTracksComplete: boolean,
+    public productName: string|null,
   ) {
   }
 }

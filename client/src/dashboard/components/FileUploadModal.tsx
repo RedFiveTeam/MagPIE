@@ -86,12 +86,13 @@ export const FileUploadModal: React.FC<MyProps> = (props) => {
             <TextTooltip title={file.name.length > 10 ? file.name : ''}>
               <div className={'icon-container'}>
                 <img src={'fileIcon.png'} alt={'file icon'}/>
-                <span>{
-                  file.name.length > 10 ?
-                    file.name.substring(0, 9) + '...' :
-                    file.name
-                }
-            </span>
+                <span>
+                  {
+                    file.name.length > 10 ?
+                      file.name.substring(0, 9) + '...' :
+                      file.name
+                  }
+                </span>
               </div>
             </TextTooltip> :
             <div className={classes.uploadDropArea}>
@@ -115,49 +116,49 @@ export const FileUploadModal: React.FC<MyProps> = (props) => {
 ;
 
 export const StyledFileUploadModal = styled(FileUploadModal)`
-.modal-body {
-  padding-top: 2px !important;
-  border-width: 4px !important;
-  border-radius: 10px;
-}
-
-.close-wrapper {
-  display: flex;
-  height: 24px;
-  padding: 4px;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.browse-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  width: 124px;
-  font-size: 16px;
-  cursor: pointer;
+  .modal-body {
+    padding-top: 2px !important;
+    border-width: 4px !important;
+    border-radius: 10px;
+  }
   
-  :hover {
-    text-shadow: 0 0 4px #FFF;
+  .close-wrapper {
+    display: flex;
+    height: 24px;
+    padding: 4px;
+    width: 100%;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .browse-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 124px;
+    font-size: 16px;
+    cursor: pointer;
     
-    svg {
-      box-shadow: 0 0 6px #FFFFFF;
+    :hover {
+      text-shadow: 0 0 4px #FFF;
+      
+      svg {
+        box-shadow: 0 0 6px #FFFFFF;
+      }
     }
   }
-}
-
-.icon-container {
-  display: flex;
-  flex-direction: column;
-  font-size: ${(props) => props.theme.font.sizeHeaderSmall};
-  color: ${(props) => props.theme.color.buttonBackgroundActive};
   
-  span {
-    margin-top: -40px;
-    margin-bottom: 24px;
+  .icon-container {
+    display: flex;
+    flex-direction: column;
+    font-size: ${(props) => props.theme.font.sizeHeaderSmall};
+    color: ${(props) => props.theme.color.buttonBackgroundActive};
+    
+    span {
+      margin-top: -40px;
+      margin-bottom: 24px;
+    }
   }
-}
 `;

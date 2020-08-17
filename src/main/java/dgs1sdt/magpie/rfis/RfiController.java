@@ -3,6 +3,7 @@ package dgs1sdt.magpie.rfis;
 import dgs1sdt.magpie.ixns.IxnService;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
+import dgs1sdt.magpie.products.ProductController;
 import dgs1sdt.magpie.tgts.TargetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +26,22 @@ public class RfiController {
   private RfiRepository rfiRepository;
   private TargetService targetService;
   private IxnService ixnService;
+  private ProductController productController;
 
   @Autowired
   public RfiController(RfiService rfiService,
                        MetricsService metricsService,
                        RfiRepository rfiRepository,
                        TargetService targetService,
-                       IxnService ixnService) {
+                       IxnService ixnService,
+                       ProductController uploadController
+  ) {
     this.rfiService = rfiService;
     this.metricsService = metricsService;
     this.rfiRepository = rfiRepository;
     this.targetService = targetService;
     this.ixnService = ixnService;
+    this.productController = uploadController;
   }
 
   @Autowired
@@ -64,6 +69,11 @@ public class RfiController {
     this.ixnService = ixnService;
   }
 
+  @Autowired
+  public void setProductController(ProductController productController) {
+    this.productController = productController;
+  }
+
   @GetMapping
   public List<RfiGet> getAllRfis() {
     List<Rfi> rfis = this.rfiService.fetchRfisFromRepo();
@@ -77,24 +87,25 @@ public class RfiController {
       Date startDate = metricsService.getRfiStartDate(rfi.getRfiNum());
       boolean containsRejectedTracks = ixnService.rfiContainsRejectedTracks(rfi.getId());
       boolean areAllTracksComplete = ixnService.allTracksAreComplete(rfi.getId());
+      String productName = productController.getProductName(rfi.getId());
 
       if (rfi.getStatus().equals("NEW")) {
-        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null, containsRejectedTracks, false));
+        rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null, containsRejectedTracks, false, productName));
       } else if (rfi.getStatus().equals("OPEN")) {
         long estimatedCompetionTimeByTargets = metricsService.getEstimatedCompletionTimeByNumberOfTargets(rfi.getId());
         if (estimatedCompetionTimeByTargets > 0) {
           rfiGetList
             .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, estimatedCompetionTimeByTargets, containsRejectedTracks,
-              areAllTracksComplete));
+              areAllTracksComplete, productName));
         } else {
           rfiGetList
             .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, last3RfisCompletionTimeInMS, containsRejectedTracks,
-              areAllTracksComplete));
+              areAllTracksComplete, productName));
         }
       } else {
         Date closeDate = metricsService.getRfiCloseDate(rfi.getRfiNum());
         rfiGetList
-          .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate, containsRejectedTracks, areAllTracksComplete));
+          .add(new RfiGet(rfi, tgtCount, ixnCount, startDate, closeDate, containsRejectedTracks, areAllTracksComplete, productName));
       }
     }
     return rfiGetList;

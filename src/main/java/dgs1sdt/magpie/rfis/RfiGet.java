@@ -34,9 +34,10 @@ public class RfiGet {
   private Date completionDate;
   private boolean containsRejectedTracks;
   private boolean areAllTracksComplete;
+  private String productName;
 
   public RfiGet(Rfi rfi, long tgtCount, long ixnCount, Date startDate, long completionTimeInMS,
-                boolean containsRejectedTracks, boolean areAllTracksComplete) {
+                boolean containsRejectedTracks, boolean areAllTracksComplete, String productName) {
     this.id = rfi.getId();
     this.description = rfi.getDescription();
     this.justification = rfi.getJustification();
@@ -66,10 +67,11 @@ public class RfiGet {
     }
     this.containsRejectedTracks = containsRejectedTracks;
     this.areAllTracksComplete = areAllTracksComplete;
+    this.productName = productName;
   }
 
   public RfiGet(Rfi rfi, long tgtCount, long ixnCount, Date startDate, Date completionDate,
-                boolean containsRejectedTracks, boolean areAllTracksComplete) {
+                boolean containsRejectedTracks, boolean areAllTracksComplete, String productName) {
     this.id = rfi.getId();
     this.description = rfi.getDescription();
     this.justification = rfi.getJustification();
@@ -95,5 +97,6 @@ public class RfiGet {
     this.completionDate = completionDate;
     this.containsRejectedTracks = containsRejectedTracks;
     this.areAllTracksComplete = areAllTracksComplete;
+    this.productName = productName;
   }
 }

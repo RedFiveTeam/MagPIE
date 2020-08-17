@@ -3,6 +3,8 @@ import { RfiDeserializer } from './RfiDeserializer';
 import RfiModel from './RfiModel';
 import { Field } from '../sort/SortKeyModel';
 import RfiPriorityPostModel from './RfiPriorityPostModel';
+import { TgtActionTypes } from '../tgt';
+import { fetchLocalUpdate } from './Thunks';
 
 export const loadSuccess = () => {
   return {type: RfiActionTypes.LOAD_SUCCESS};
@@ -19,6 +21,20 @@ export const reprioritizeRfis = (reprioritizedList: RfiModel[]) => {
   };
 };
 
+export const updateTgtRfiSuccess = (rfis: any, rfiId: number) => {
+  let rfiList = RfiDeserializer.deserialize(rfis);
+  let rfi = rfiList.find((rfi) => rfi.id === rfiId);
+  if (rfi) {
+    return {
+      type: TgtActionTypes.UPDATE_RFI,
+      rfi: rfi
+    };
+  } else {
+    console.error(`Rfi with id ${rfiId} not found`);
+    return {}
+  }
+};
+
 export const postRfiPriorityUpdate = (rfis: RfiPriorityPostModel[], pathVars: string) => {
   return fetch('/api/rfi/update-priority' + pathVars,
                {
@@ -32,15 +48,41 @@ export const postRfiPriorityUpdate = (rfis: RfiPriorityPostModel[], pathVars: st
   );
 };
 
-export const postProductUpload = (data: FormData, rfiId: number, userName: string) => {
-  fetch(`api/uploadProduct?rfiId=${rfiId}&userName=${userName}`,
-        {
-          method: 'post',
-          body: data,
-        })
-    .then(response => {})
-    .catch(reason => console.log(`Upload failed: ${reason}`))
+export const updateTgtRfi = (rfiId: number) => {
+  return (dispatch: any) => {
+    return fetch('/api/rfi')
+      .then(response => response.json())
+      .then(rfis => dispatch(updateTgtRfiSuccess(rfis, rfiId)))
+      .catch((reason => {
+        console.log('Failed to fetch RFIs: ' + reason);
+      }));
+  };
 };
+
+export const postProductUpload = (data: FormData, rfiId: number, userName: string) => {
+  return (dispatch: any) => {
+    fetch(`api/product?rfiId=${rfiId}&userName=${userName}`,
+          {
+            method: 'post',
+            body: data,
+          })
+      .then(response => dispatch(updateTgtRfi(rfiId)))
+      .catch(reason => console.log(`Upload failed: ${reason}`));
+  }
+};
+
+export const postProductUploadRfiPage = (data: FormData, rfiId: number, userName: string) => {
+  return (dispatch: any) => {
+    fetch(`api/product?rfiId=${rfiId}&userName=${userName}`,
+          {
+            method: 'post',
+            body: data,
+          })
+      .then(response => dispatch(fetchLocalUpdate()))
+      .catch(reason => console.log(`Upload failed: ${reason}`));
+  }
+};
+
 
 export const fetchRfiPending = () => {
   return {

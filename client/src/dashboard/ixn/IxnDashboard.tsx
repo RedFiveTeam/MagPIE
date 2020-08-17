@@ -28,6 +28,7 @@ import { ConfirmationModal } from '../components/ConfirmationModal';
 import { loadTgtPage } from '../../store/tgt/Thunks';
 import { StyledFileUploadModal } from '../components/FileUploadModal';
 import { postProductUpload } from '../../store/rfi';
+import { StyledFileDownloadModal } from '../components/FileDownloadModal';
 
 interface MyProps {
   className?: string
@@ -80,6 +81,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
   const [isSegmentChanged, setIsSegmentChanged] = useState(false);
   const [isIxnChanged, setIsIxnChanged] = useState(false);
   const [showUploadFileModal, setShowUploadFileModal] = useState(false);
+  const [showDownloadFileModal, setShowDownloadFileModal] = useState(false);
 
   let isNavigating = false;
 
@@ -293,7 +295,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
       data.append('file', file);
       data.append('name', file.name);
 
-      postProductUpload(data, rfi.id, cookie.userName);
+      dispatch(postProductUpload(data, rfi.id, cookie.userName));
       setShowUploadFileModal(false);
       enqueueSnackbar('Product Submitted', {
         action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
@@ -301,6 +303,14 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
       });
     }
   };
+
+  const handleShowProductModal = () => {
+    if (rfi.productName) {
+      setShowDownloadFileModal(true);
+    } else {
+      setShowUploadFileModal(true);
+    }
+  }
 
   const isAddSegmentDisabled = segments.length < 1 || addingOrEditing || rollupMode;
   const element = editIxn > 0 ? 'callout' : 'segment';
@@ -322,7 +332,8 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
         displaySegmentHelperText={segments.length === 1}
         setAddSegment={handleSetAddSegment}
         exitRollupMode={handleExitRollupMode}
-        setShowUploadFileModal={setShowUploadFileModal}
+        handleShowProductModal={handleShowProductModal}
+        hasProduct={rfi.productName !== null}
       />
       {
         rollupMode ?
@@ -385,6 +396,15 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
         null}
       {showUploadFileModal ?
         <StyledFileUploadModal hideModal={() => setShowUploadFileModal(false)} handleFileUpload={handleFileUpload}/>
+        :
+        null
+      }
+      {showDownloadFileModal && rfi ?
+        <StyledFileDownloadModal
+          hideModal={() => setShowDownloadFileModal(false)}
+          rfi={rfi}
+          userName={cookie.userName}
+        />
         :
         null
       }

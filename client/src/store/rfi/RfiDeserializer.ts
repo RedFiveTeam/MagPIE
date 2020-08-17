@@ -45,7 +45,9 @@ export class RfiDeserializer {
                             item.completionDate === null ? undefined :
                               moment(item.completionDate, moment.ISO_8601).utc(),
                             item.containsRejectedTracks,
-                            item.areAllTracksComplete);
+                            item.areAllTracksComplete,
+                            item.productName,
+        );
       });
     }
     return [];

@@ -55,6 +55,8 @@ import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegment;
 import dgs1sdt.magpie.metrics.deleteSegment.MetricDeleteSegmentRepository;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTarget;
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
+import dgs1sdt.magpie.metrics.downloadProduct.MetricDownloadProduct;
+import dgs1sdt.magpie.metrics.downloadProduct.MetricDownloadProductRepository;
 import dgs1sdt.magpie.metrics.login.MetricLogin;
 import dgs1sdt.magpie.metrics.login.MetricLoginRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
@@ -71,8 +73,8 @@ import dgs1sdt.magpie.metrics.undoTargetCreate.MetricUndoTargetCreate;
 import dgs1sdt.magpie.metrics.undoTargetCreate.MetricUndoTargetCreateRepository;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDelete;
 import dgs1sdt.magpie.metrics.undoTargetDelete.MetricUndoTargetDeleteRepository;
-import dgs1sdt.magpie.metrics.uploadFile.MetricUploadFile;
-import dgs1sdt.magpie.metrics.uploadFile.MetricUploadFileRepository;
+import dgs1sdt.magpie.metrics.uploadProduct.MetricUploadProduct;
+import dgs1sdt.magpie.metrics.uploadProduct.MetricUploadProductRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
@@ -129,7 +131,8 @@ public class MetricsService {
   private MetricClickCollapseRepository metricClickCollapseRepository;
   private MetricUndoChangeRfiPriorityRepository metricUndoChangeRfiPriorityRepository;
   private MetricUndoTargetCreateRepository metricUndoTargetCreateRepository;
-  private MetricUploadFileRepository metricUploadFileRepository;
+  private MetricUploadProductRepository metricUploadProductRepository;
+  private MetricDownloadProductRepository metricDownloadProductRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -308,8 +311,14 @@ public class MetricsService {
 
   @Autowired
   public void setMetricUploadFileRepository(
-    MetricUploadFileRepository metricUploadFileRepository) {
-    this.metricUploadFileRepository = metricUploadFileRepository;
+    MetricUploadProductRepository metricUploadProductRepository) {
+    this.metricUploadProductRepository = metricUploadProductRepository;
+  }
+
+  @Autowired
+  public void setMetricDownloadProductRepository(
+    MetricDownloadProductRepository metricDownloadProductRepository) {
+    this.metricDownloadProductRepository = metricDownloadProductRepository;
   }
 
   public long getSiteVisitCount() {
@@ -509,8 +518,12 @@ public class MetricsService {
     return metricLoginRepository.save(new MetricLogin(userName));
   }
 
-  public MetricUploadFile addUploadFileMetric(String rfiId, int uploadId, String userName) {
-    return metricUploadFileRepository.save(new MetricUploadFile(parseShort(rfiId), uploadId, userName));
+  public MetricUploadProduct addUploadFileMetric(String rfiId, long uploadId, String userName) {
+    return metricUploadProductRepository.save(new MetricUploadProduct(parseShort(rfiId), uploadId, userName));
+  }
+
+  public MetricDownloadProduct addDownloadProduct(long rfiId, String userName) {
+    return metricDownloadProductRepository.save(new MetricDownloadProduct(rfiId, userName));
   }
 
   public long[] getAverageWorkflowTime() {

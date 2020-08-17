@@ -12,7 +12,8 @@ export enum TgtActionTypes {
   UPDATE_TGT_LOCAL = 'UPDATE_TGT_LOCAL',
   ADD_TGT = 'ADD_TGT',
   EDIT_TGT = 'EDIT_TGT',
-  RESET_ADD_EDIT_TGT = 'RESET_ADD_EDIT_TGT'
+  RESET_ADD_EDIT_TGT = 'RESET_ADD_EDIT_TGT',
+  UPDATE_RFI = 'UPDATE_TGT_RFI'
 }
 
 export interface TgtState {

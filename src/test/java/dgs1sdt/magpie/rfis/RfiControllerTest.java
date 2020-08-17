@@ -14,6 +14,8 @@ import dgs1sdt.magpie.metrics.deleteExploitDate.MetricDeleteExploitDateRepositor
 import dgs1sdt.magpie.metrics.deleteTarget.MetricDeleteTargetRepository;
 import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriority;
 import dgs1sdt.magpie.metrics.undoChangeRfiPriority.MetricUndoChangeRfiPriorityRepository;
+import dgs1sdt.magpie.products.Product;
+import dgs1sdt.magpie.products.ProductRepository;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetController;
 import dgs1sdt.magpie.tgts.TargetJson;
@@ -53,6 +55,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
   MetricsService metricsService;
   RfiService rfiService;
   RfiRepository rfiRepository;
+  ProductRepository productRepository;
   ExploitDateRepository exploitDateRepository;
   IxnRepository ixnRepository;
   SegmentRepository segmentRepository;
@@ -104,6 +107,11 @@ public class RfiControllerTest extends BaseIntegrationTest {
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
     this.rfiRepository = rfiRepository;
+  }
+
+  @Autowired
+  public void setUploadRepository(ProductRepository productRepository) {
+    this.productRepository = productRepository;
   }
 
   @Autowired
@@ -673,6 +681,30 @@ public class RfiControllerTest extends BaseIntegrationTest {
     rfi1 = rfis.get(0);
 
     assertFalse(rfi1.isContainsRejectedTracks());
+  }
+
+  @Test
+  public void returnsRfisWithProductNameOrNullIfNotFound() throws Exception {
+    //2 cases: RFI has product, RFI doesn't have product
+    setupRfis();
+
+    long rfiId1 = rfiRepository.findAll().get(0).getId(); //has product
+    long rfiId2 = rfiRepository.findAll().get(1).getId(); //no product
+
+    Product upload = new Product(rfiId1, "product.kml", "kml", "This is some data".getBytes());
+
+    productRepository.save(upload);
+
+    List<RfiGet> rfis = rfiController.getAllRfis();
+
+    RfiGet rfi1 = rfis.get(0);
+    RfiGet rfi2 = rfis.get(1);
+
+    assertEquals(rfiId1, rfi1.getId());
+    assertEquals("product.kml", rfi1.getProductName());
+
+    assertEquals(rfiId2, rfi2.getId());
+    assertNull(rfi2.getProductName());
   }
 
   private void setupRfis() throws Exception {

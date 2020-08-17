@@ -13,8 +13,9 @@ describe('Target Date Region', () => {
   let subject: ShallowWrapper;
   let rfi = new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', undefined, RfiStatus.OPEN, '', '', '',
                          'space forse', '', '', '', '', '', moment(
-      '2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0,
-                         undefined, false, false);
+      '2019-11-20')
+                           .utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0, undefined, false, false,
+                         null);
   let exploitDate = new ExploitDateModel(1, 1, moment(new Date));
   let targets: TargetModel[] =
     [

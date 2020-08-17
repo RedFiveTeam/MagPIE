@@ -24,7 +24,7 @@ const DeleteButtonX: React.FC<MyProps> = (props) => {
         <circle cx="8" cy="8" r="8" fill={theme.color.primaryButton}/>
         <path
           d={pathD}
-          fill="black"/>
+          fill={theme.color.backgroundInformation}/>
       </svg>
     </Wrapper>
   );

@@ -18,7 +18,7 @@ interface OwnProps {
   displayHelperText: boolean;
   displayExploitDateHelper: boolean;
   displayCopyTargets: () => void;
-  setShowUploadFileModal: (show: boolean) => void;
+  handleShowProductModal: () => void;
   className?: string;
 }
 
@@ -39,10 +39,6 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
     if (!props.displayHelperText) {
       props.displayCopyTargets();
     }
-  };
-
-  const handleShowUploadModal = () => {
-    props.setShowUploadFileModal(true);
   };
 
   return (
@@ -81,14 +77,14 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
               <AddTgtDateVector/>
             </div>
           </TextTooltip>
-          <TextTooltip title={'Upload Product'}
+          <TextTooltip title={props.rfi.productName === null ? 'Upload Product' : 'Download Product'}
                        PopperProps={{
                          className: 'header-tooltip',
                        }}>
             <div className={classNames('upload-file-button header-button')}
-                 onClick={handleShowUploadModal}
+                 onClick={() => props.handleShowProductModal()}
             >
-              <UploadFileIcon/>
+              <UploadFileIcon hasProduct={props.rfi.productName !== null}/>
             </div>
           </TextTooltip>
           <TextTooltip

@@ -8,7 +8,9 @@ import { ApplicationState } from '../../store';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { fetchLocalUpdate, reorderRfis } from '../../store/rfi/Thunks';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
-import { loadUserMetricsPage, postRfiPriorityUpdate, reprioritizeRfis, sortRfis } from '../../store/rfi';
+import {
+  loadUserMetricsPage, postProductUploadRfiPage, postRfiPriorityUpdate, reprioritizeRfis, sortRfis,
+} from '../../store/rfi';
 import { StyledRfiDescriptionContainer } from './RfiDescriptionContainer';
 import { loadTgtPage } from '../../store/tgt/Thunks';
 import GetsClickRequestModel from '../../store/metrics/GetsClickRequestModel';
@@ -166,6 +168,9 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
     }, 5050);
   };
 
+  const handlePostProductUpload = (data: FormData, rfiId: number, userName: string) => {
+    dispatch(postProductUploadRfiPage(data, rfiId, userName));
+  }
 
   document.onkeydown = checkKey;
 
@@ -237,6 +242,7 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
           rfi={selectedRfi}
           loadTgtPage={handleLoadTgtPage}
           postGetsClick={handlePostGetsClick}
+          handlePostProductUpload={handlePostProductUpload}
         />
       </div>
       <ConfirmationModal

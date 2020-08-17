@@ -1,4 +1,4 @@
-package dgs1sdt.magpie.metrics.uploadFile;
+package dgs1sdt.magpie.metrics.uploadProduct;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,20 +8,19 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 @Data
-@Table(name = "metric_upload_file")
 @Entity
 @NoArgsConstructor
-public class MetricUploadFile {
+public class MetricUploadProduct {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private int id;
+  private long id;
 
-  private int rfiId;
-  private int uploadId;
+  private long rfiId;
+  private long uploadId;
   private String userName;
   private Timestamp timestamp;
 
-  public MetricUploadFile(int rfiId, int uploadId, String userName) {
+  public MetricUploadProduct(long rfiId, long uploadId, String userName) {
     this.rfiId = rfiId;
     this.uploadId = uploadId;
     this.userName = userName;
