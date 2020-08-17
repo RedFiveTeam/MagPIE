@@ -293,6 +293,32 @@ Scenario('Should be able to write and view track narratives', (I) => {
   I.dontSeeInField('.track-narrative-input', 'DO NOT SAVE THIS');
 });
 
+Scenario('Should indicate SCOIs entered in the track narrative', (I) => {
+  I.click('.exploitation');
+  I.waitForText('Status', 3);
+
+  I.click('.track-narrative-button');
+  I.waitForText('Copy to Clipboard');
+
+  I.dontSeeElement('.scoi-queue');
+
+  I.fillField('.track-narrative',
+              '\nOPNS20-0001');
+  I.waitForElement('.scoi-queue');
+  within('.scoi-queue', () => {
+    I.see('OPNS20-0001');
+  })
+
+  I.click('.expand-collapse-scois');
+  I.wait(1);
+  within('.scoi-container', () => {
+    I.dontSeeElement('.scoi-queue')
+    I.dontSee('OPNS20-0001');
+  })
+  I.click('.expand-collapse-scois');
+  I.waitForElement('.scoi-chip');
+});
+
 Scenario('Should be able to add, undo add, and view analyst notes', (I) => {
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);

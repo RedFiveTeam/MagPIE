@@ -67,6 +67,8 @@ const theme = {
     rejectIcon: crayonBox.subduedTomatoRed,//
     backgroundSnackbarError: crayonBox.darkTomatoRed,//
     rejectArrow: crayonBox.lessBrightRed,//
+    backgroundScoiTag: crayonBox.aquaGreen,//
+    backgroundScoiContainer: crayonBox.anotherDarkGreenBlue,//
   },
 
   font: {
@@ -343,7 +345,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       backgroundColor: theme.color.backgroundModal,
       borderTopLeftRadius: '8px',
       borderTopRightRadius: '8px',
-      padding: '0 4px',
+      padding: '0 4px !important',
       width: '100%',
     },
     rejectTextfield: {

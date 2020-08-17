@@ -61,18 +61,19 @@ function acceptanceTests {
 function unitTests {
     showBanner "Unit Tests"
 
-    showBanner "Backend"
-    pushd ${BASE_DIR}
-        if [[ $(mvn test | grep -E "\[INFO\]|\[ERROR\]|Expected" | grep "\[ERROR\]" | wc -l) -gt 0 ]]; then
-            echo "Unit Tests Failed... Exiting"
-            exit 1
-        fi
-    popd
-
 #    showBanner "Backend"
 #    pushd ${BASE_DIR}
-#        mvn test | grep -E "\[ERROR\]"
+#        if [[ $(mvn test | grep -E "\[INFO\]|\[ERROR\]|Expected" | grep "\[ERROR\]" | wc -l) -gt 0 ]]; then
+#            echo "Unit Tests Failed... Exiting"
+#            exit 1
+#        fi
 #    popd
+
+#   changed to show mvn test results regardless, so we get a little more troubleshooting help when Jenkins fails
+    showBanner "Backend"
+    pushd ${BASE_DIR}
+        mvn test
+    popd
 
     showBanner "Frontend"
     pushd ${BASE_DIR}/client

@@ -1,7 +1,7 @@
 import { Modal, TextField } from '@material-ui/core';
 import classNames from 'classnames';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import theme, { longInputStyles, rowStyles } from '../../../resources/theme';
 import IxnModel from '../../../store/ixn/IxnModel';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -10,6 +10,8 @@ import { DismissSnackbarAction } from '../../components/InformationalSnackbar';
 import styled from 'styled-components';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
+import { StyledScoiChip } from './ScoiChip';
+import { StyledExpandCollapseArrow } from '../../../resources/icons/ExpandCollapse';
 
 interface MyProps {
   setDisplay: (display: boolean) => void;
@@ -31,12 +33,44 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
       :
       props.ixn.trackNarrative,
   );
-
+  const [scoiList, setScoiList] = useState([] as string[]);
+  const [collapseScoiChips, setCollapseScoiChips] = useState(false);
+  const [navigating, setNavigating] = useState(false);
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
-  const [navigating, setNavigating] = useState(false);
+  useEffect(() => {
+    checkForScois(trackNarrative);
+  }, []);
+
+  //Overlay spans with backgrounds on the MGRSes for highlight
+  let trackNarrativeDisplay = () => {
+    const parts = trackNarrative.split(/([A-Z]{3}S[0-9]{2}-[0-9]{0,4})/g);
+    return <span>{parts.map((part, i) =>
+                              <span key={i} style={part.match(/[A-Z]{3}S[0-9]{2}-[0-9]{0,4}/g) !== null ?
+                                {backgroundColor: '#42686A', borderRadius: '4px'} : {}}>
+            {part}
+        </span>)
+    }<br/><br/><br/></span>;
+  };
+
   const inputTrackNarrative = (event: any) => {
-    setTrackNarrative(event.target.value);
+    let newTrackNarrative: string = event.target.value;
+    //look for SCOIs to save
+    checkForScois(newTrackNarrative);
+    setTrackNarrative(newTrackNarrative);
+  };
+
+  const checkForScois = (trackNarrative: string) => {
+    let matches: RegExpMatchArray|null = trackNarrative.match(/[A-Z]{3}S[0-9]{2}-[0-9]{4}/g);
+    let newScoiList: string[] = [];
+    if (matches) {
+      matches.forEach((match: string) => {
+        if (!newScoiList.includes(match)) {
+          newScoiList.push(match);
+        }
+      });
+    }
+    setScoiList(newScoiList);
   };
 
   const displaySnackbar = (message: string) => {
@@ -53,6 +87,24 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
       displaySnackbar('Track Narrative Saved');
     }
   };
+
+  const mapScoisToChips = () => {
+    return scoiList.map((mgrs: string, index: number) =>
+                          <StyledScoiChip mgrs={mgrs} key={index}/>,
+    );
+  };
+
+  //Scrolls highlights with the input text
+  setTimeout(() => {
+    let trackNarrativeInput = document.getElementById('track-narrative-' + props.ixn.id)!;
+    let trackNarrativeDisplayDiv = document.getElementById(`track-narrative-display-${props.ixn.id}`)!;
+
+    if (trackNarrativeInput && trackNarrativeDisplayDiv) {
+      trackNarrativeInput.onscroll = function () {
+        trackNarrativeDisplayDiv.scrollTop = trackNarrativeInput.scrollTop;
+      };
+    }
+  }, 500);
 
   return (
     <Modal
@@ -91,21 +143,25 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
           </div>
           <div className={classNames('narrative-input', props.readOnly ? 'narrative-text-wrapper' : null)}>
             {!props.readOnly ?
-              <TextField
-                className={classNames('track-narrative', classes.modalTextfield)}
-                value={trackNarrative}
-                onChange={inputTrackNarrative}
-                autoFocus
-                multiline
-                rows={27}
-                InputProps={{
-                  disableUnderline: true,
-                }}
-                inputProps={{
-                  id: 'track-narrative-' + props.ixn.id,
-                  className: 'track-narrative-input',
-                }}
-              />
+              <>
+                <div id={`track-narrative-display-${props.ixn.id}`} className={classNames('track-narrative-display',
+                                                                                          classes.modalTextfield)}>{trackNarrativeDisplay()}</div>
+                <TextField
+                  className={classNames('track-narrative', classes.modalTextfield)}
+                  value={trackNarrative}
+                  onChange={inputTrackNarrative}
+                  autoFocus
+                  multiline
+                  rows={27}
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
+                  inputProps={{
+                    id: 'track-narrative-' + props.ixn.id,
+                    className: 'track-narrative-input',
+                  }}
+                />
+              </>
               :
               <TextField
                 className={classNames('track-narrative uneditable', classes.modalTextfield)}
@@ -120,6 +176,27 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
                   className: 'track-narrative-input',
                 }}
               />
+            }
+            {scoiList.length > 0 ?
+              <div className={'scoi-container'}>
+                <div className={'scoi-queue-header'}>
+                  <span>
+                    SCOI Queue:
+                  </span>
+                  <div className='expand-collapse-scois' onClick={() => setCollapseScoiChips(!collapseScoiChips)}>
+                    <StyledExpandCollapseArrow collapsed={collapseScoiChips}/>
+                  </div>
+                </div>
+                {collapseScoiChips ?
+                  null
+                  :
+                  <div className={'scoi-queue'}>
+                    {mapScoisToChips()}
+                  </div>
+                }
+              </div>
+              :
+              null
             }
           </div>
         </form>
@@ -151,11 +228,12 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
           null}
       </div>
     </Modal>
-  )
-    ;
+  );
 };
 
 export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
+  margin-top: -350px !important;
+
   .track-narrative-header {
     display: flex;
     height: 30px;
@@ -186,7 +264,6 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     flex-direction: column !important;
     align-items: center !important;
     justify-content: flex-start !important;
-    //padding: 4px !important;
     overflow-y: auto !important;
   }
   
@@ -205,5 +282,53 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
   
   .uneditable {
     pointer-events: none;
+  }
+  
+  .scoi-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 9px;
+    width: 942px;
+    background: ${theme.color.backgroundScoiContainer};
+    border-left: 2px solid ${theme.color.backgroundFocus};
+    border-right: 2px solid ${theme.color.backgroundFocus};
+    margin: 0 -2px;
+  }
+  
+  .scoi-queue-header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .scoi-queue {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    max-height: 56px;
+    overflow-y: auto; 
+  }
+  
+  .track-narrative {
+    background: none; //no background in order to let highligts show
+  }
+  
+  .track-narrative-display {
+    color: rgba(0, 0, 0, 0); //hide text
+    overflow-y: hidden;
+    white-space: pre-wrap;
+    text-align: left;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    padding-top: 6px !important;
+    height: 526px;
+    margin-bottom: -526px;
   }
 `;
