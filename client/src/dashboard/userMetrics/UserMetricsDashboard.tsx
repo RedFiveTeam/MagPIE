@@ -1,66 +1,65 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import {StyledBackButtonVector} from '../../resources/icons/BackButtonVector';
+import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import theme from '../../resources/theme';
-import {useDispatch} from 'react-redux';
-import {exitUserMetricsPage} from '../../store/rfi';
-import TrophyIcon from "../../resources/icons/TrophyIcon";
-import {StyledScoreBoardContainer} from "./view/ScoreBoardContainer";
-import {StyledRangeMetricsContainer} from "./view/RangeMetricsContainer";
-import {fetchScoreBoardMetric} from "../../store/metrics";
+import { useDispatch } from 'react-redux';
+import { exitUserMetricsPage } from '../../store/rfi';
+import TrophyIcon from '../../resources/icons/TrophyIcon';
+import { ScoreBoardContainer } from './view/ScoreBoardContainer';
+import { StyledRangeMetricsContainer } from './view/RangeMetricsContainer';
+import { useCookies } from 'react-cookie/cjs';
+import { Cookie } from '../../utils';
 
 interface MyProps {
-    className?: string;
+  className?: string;
 }
 
 export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
-    const dispatch = useDispatch();
-    const [displayUserScoreBoard, toggleUserScoreboard] = useState(false);
-    const [fetched, fetch] = useState(false);
-    const [ScoreBoardData, updateScoreBoard] = useState();
+  const dispatch = useDispatch();
+  const [displayUserScoreBoard, setDisplayUserScoreBoard] = useState(false);
+  const [cookies] = useCookies(['magpie']);
+  const cookie: Cookie = cookies.magpie;
 
-    const handleBack = () => {
-        displayUserScoreBoard ? toggleUserScoreboard(false) : dispatch(exitUserMetricsPage());
-    };
-    const buttonClick = () => {
-        fetch(prev => !prev);
-        toggleUserScoreboard(true);
-    }
+  const handleBack = () => {
+    displayUserScoreBoard ? setDisplayUserScoreBoard(false) : dispatch(exitUserMetricsPage());
+  };
 
-    useEffect(() => {
-        fetchScoreBoardMetric('approval-ratings')
-            .then(response => response.json())
-            .then(ratings => updateScoreBoard(ratings))
-            .catch((reason) => {
-                console.log('Failed to fetch approval Ratings: ' + reason);
-            });
-    }, [fetched]);
+  const buttonClick = () => {
+    fetch(
+      `/api/metrics/click-scoreboard?userName=${cookie.userName}`,
+      {
+        method: 'post',
+      },
+    ).catch((reason) => console.log(`Failed to post scoreboard click metric: ${reason}`));
 
-    return (
-        <div className={classNames(props.className, 'metrics-dashboard')}>
-            <header className='metrics-header'>
-                <div className={'metrics-header--back-button'} onClick={handleBack}>
-                    <StyledBackButtonVector/>
-                </div>
-                <div className={'smallbord-container'}>
-                    <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
-                </div>
-                <div className={'action-button-area'}>
-                    {displayUserScoreBoard ? "" : <button onClick={buttonClick} className={'scoreboard-button'}>
-                        <TrophyIcon/>
-                    </button>}
-                </div>
-            </header>
-            <section className={'metrics-view'}>
-                {displayUserScoreBoard ? <StyledScoreBoardContainer ratings={ScoreBoardData}/>
-                    :
-                    <StyledRangeMetricsContainer/>
-                }
-            </section>
+    setDisplayUserScoreBoard(true);
+  };
+
+  return (
+    <div className={classNames(props.className, 'metrics-dashboard')}>
+      <header className='metrics-header'>
+        <div className={'metrics-header--back-button'} onClick={handleBack}>
+          <StyledBackButtonVector/>
         </div>
-    );
+        <div className={'smallbord-container'}>
+          <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
+        </div>
+        <div className={'action-button-area'}>
+          {displayUserScoreBoard ? '' : <button onClick={buttonClick} className={'scoreboard-button'}>
+            <TrophyIcon/>
+          </button>}
+        </div>
+      </header>
+      <section className={'metrics-view'}>
+        {displayUserScoreBoard ? <ScoreBoardContainer/>
+          :
+          <StyledRangeMetricsContainer/>
+        }
+      </section>
+    </div>
+  );
 };
 
 export const StyledUserMetricsDashboard = styled(UserMetricsDashboard)`

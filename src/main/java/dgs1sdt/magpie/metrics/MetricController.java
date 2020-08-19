@@ -8,6 +8,7 @@ import dgs1sdt.magpie.metrics.clickImport.MetricClickImport;
 import dgs1sdt.magpie.metrics.clickImport.MetricClickImportJson;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
+import dgs1sdt.magpie.metrics.clickScoreboard.MetricClickScoreboard;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
@@ -201,5 +202,10 @@ public class MetricController {
   @PostMapping(path = "/click-collapse")
   public MetricClickCollapse createClickCollapse(@Valid @RequestBody String userName) {
     return metricsService.createClickCollapse(userName);
+  }
+
+  @PostMapping(path = "/click-scoreboard")
+  public MetricClickScoreboard createClickScoreboard(@Valid @RequestParam(name = "userName", defaultValue = "") String userName) {
+    return metricsService.addClickScoreboard(userName);
   }
 }

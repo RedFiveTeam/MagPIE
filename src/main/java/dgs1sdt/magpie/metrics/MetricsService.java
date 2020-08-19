@@ -31,6 +31,8 @@ import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupRepository;
+import dgs1sdt.magpie.metrics.clickScoreboard.MetricClickScoreboard;
+import dgs1sdt.magpie.metrics.clickScoreboard.MetricClickScoreboardRepository;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
@@ -135,6 +137,7 @@ public class MetricsService {
   private MetricUndoTargetCreateRepository metricUndoTargetCreateRepository;
   private MetricUploadProductRepository metricUploadProductRepository;
   private MetricDownloadProductRepository metricDownloadProductRepository;
+  private MetricClickScoreboardRepository metricClickScoreboardRepository;
   private MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
 
   @Autowired
@@ -319,7 +322,7 @@ public class MetricsService {
   }
 
   @Autowired
-  public void setMetricUploadFileRepository(
+  public void setMetricUploadProductRepository(
     MetricUploadProductRepository metricUploadProductRepository) {
     this.metricUploadProductRepository = metricUploadProductRepository;
   }
@@ -328,6 +331,12 @@ public class MetricsService {
   public void setMetricDownloadProductRepository(
     MetricDownloadProductRepository metricDownloadProductRepository) {
     this.metricDownloadProductRepository = metricDownloadProductRepository;
+  }
+
+  @Autowired
+  public void setMetricClickScoreboardRepository(
+    MetricClickScoreboardRepository metricClickScoreboardRepository) {
+    this.metricClickScoreboardRepository = metricClickScoreboardRepository;
   }
 
   public long getSiteVisitCount() {
@@ -957,6 +966,10 @@ public class MetricsService {
       log.trace("Could not get completion time by targets:", e);
       return -1;
     }
+  }
+
+  public MetricClickScoreboard addClickScoreboard(String userName) {
+    return metricClickScoreboardRepository.save(new MetricClickScoreboard(userName));
   }
 
   public void createVisitFeedbackPage(String rfiNum) {

@@ -29,7 +29,7 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
-          handlePostProductUpload={jest.fn}
+          handlePostProductUpload={jest.fn()}
         />
       </SnackbarProvider>,
     );
@@ -54,7 +54,7 @@ describe('RFI description container', () => {
           rfi={newRfi}
           postGetsClick={postGetsClickSpy}
           loadTgtPage={loadTgtPageSpy}
-          handlePostProductUpload={jest.fn}
+          handlePostProductUpload={jest.fn()}
         />
       </SnackbarProvider>,
     );
@@ -73,7 +73,7 @@ describe('RFI description container', () => {
           rfi={newRfi}
           postGetsClick={postGetsClickSpy}
           loadTgtPage={loadTgtPageSpy}
-          handlePostProductUpload={jest.fn}
+          handlePostProductUpload={jest.fn()}
         />
       </SnackbarProvider>,
     );
@@ -135,7 +135,7 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
-          handlePostProductUpload={jest.fn}
+          handlePostProductUpload={jest.fn()}
         />
       </SnackbarProvider>,
     );
@@ -151,7 +151,7 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
-          handlePostProductUpload={jest.fn}
+          handlePostProductUpload={jest.fn()}
         />
       </SnackbarProvider>,
     );
@@ -159,6 +159,5 @@ describe('RFI description container', () => {
     expect(subject.find('.header').at(0).text()).not.toContain('Projected Completion Date');
     expect(subject.find('.header').at(0).text()).toContain('Completion Date');
     expect(subject.find('.text-body').at(0).text()).toContain('12 November 2020');
-
   });
 });

@@ -1,33 +1,15 @@
 import * as React from 'react';
-import { mount, ReactWrapper } from 'enzyme';
-import { Provider } from 'react-redux';
-import { initStore } from '../../../setupTests';
-import configureStore from '../../configureStore';
-import { StyledScoreBoardContainer } from '../../dashboard/userMetrics/view/ScoreBoardContainer';
-import { ScoreBoardMetricModel } from '../../dashboard/userMetrics/ScoreBoardMetricModel';
-
-const initState = {
-  ...initStore,
-};
-//@ts-ignore
-const mockStore = configureStore(history, initState);
+import { shallow, ShallowWrapper } from 'enzyme';
+import { ScoreBoardContainer } from '../../dashboard/userMetrics/view/ScoreBoardContainer';
 
 describe('UserMetricsDashboard', () => {
-  let subject: ReactWrapper;
   console.log = jest.fn();
 
-  const ratings = [new ScoreBoardMetricModel('jacy.l.hoag', 50)];
-
-  beforeEach(() => {
-    subject = mount(
-      <Provider store={mockStore}>
-        <StyledScoreBoardContainer ratings={ratings}/>
-      </Provider>,
-    );
-  });
-
   it('should display user table', function () {
-    expect(subject.find('.user-name').text()).toContain('jacy.l.hoag');
-  });
+    let subject: ShallowWrapper = shallow(
+      <ScoreBoardContainer/>
+    );
 
+    expect(subject.find('.scoreboard-body').exists()).toBeTruthy();
+  });
 });

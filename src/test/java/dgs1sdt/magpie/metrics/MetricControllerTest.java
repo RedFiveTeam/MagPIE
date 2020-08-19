@@ -17,14 +17,16 @@ import dgs1sdt.magpie.metrics.clickRefresh.MetricClickRefreshRepository;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollup;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupJson;
 import dgs1sdt.magpie.metrics.clickRollup.MetricClickRollupRepository;
-import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
-import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
+import dgs1sdt.magpie.metrics.clickScoreboard.MetricClickScoreboard;
+import dgs1sdt.magpie.metrics.clickScoreboard.MetricClickScoreboardRepository;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTargetRepository;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisit;
 import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
+import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPageRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,7 +82,11 @@ public class MetricControllerTest extends BaseIntegrationTest {
   private MetricClickCollapseRepository metricClickCollapseRepository;
 
   @Autowired
+  private MetricClickScoreboardRepository metricClickScoreboardRepository;
+
+  @Autowired
   private MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
+
 
   @Before
   public void setup() {
@@ -268,5 +274,23 @@ public class MetricControllerTest extends BaseIntegrationTest {
     MetricClickCollapse metric = metricClickCollapseRepository.findAll().get(0);
 
     assertEquals("billy.bob.joe", metric.getUserName());
+  }
+
+  @Test
+  public void postCreatesNewScoreboardClickMetric() {
+    // Arrange
+    // Act
+    String userName = "Josh.Z";
+    given()
+      .port(port)
+      .when()
+      .post(MetricController.URI + "/click-scoreboard?userName=" + userName)
+
+    // Assert
+      .then()
+      .statusCode(200);
+
+    MetricClickScoreboard metric = metricClickScoreboardRepository.findAll().get(0);
+    assertEquals(userName, metric.getUserName());
   }
 }
