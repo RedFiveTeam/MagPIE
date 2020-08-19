@@ -9,6 +9,7 @@ Before((I) => {
   I.pressKey('Enter');
   I.waitForText('20-321', 10);
   I.click(locate('.rfi-row').at(2));
+  I.waitForElement('.navigate-to-tgt-button');
   I.click('.navigate-to-tgt-button');
   I.waitForText('RFI DESCRIPTION:', 3);
 });
@@ -38,6 +39,7 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
 });
 
 Scenario('Should be able to add, undo adding, and cancel adding segments', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -74,12 +76,12 @@ Scenario('Should be able to add, undo adding, and cancel adding segments', (I) =
 
   I.waitForElement('.navigate-modal');
   I.click('.modal-no');
-  I.seeElement('.segment-input-container');
+  I.waitForElement('.segment-input-container');
 
   I.waitForElement('.cancel-add-segment', 3);
   I.click('.cancel-add-segment');
 
-  I.waitForElement('.navigate-modal', 3);
+  I.waitForElement('.navigate-modal', 10);
   I.click('.modal-yes');
 
   I.click('.ixn-dash--header--back-button');
@@ -90,6 +92,7 @@ Scenario('Should be able to add, undo adding, and cancel adding segments', (I) =
 });
 
 Scenario('Should be able to add ixns', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -116,6 +119,7 @@ Scenario('Should be able to add ixns', (I) => {
 });
 
 Scenario('Should be able to see Tgt and Ixn counts on the RFI Description page', (I) => {
+  I.waitForElement('.tgt-dash--header--back-button');
   I.click('.tgt-dash--header--back-button');
 
   I.waitForText('TGTs', 3);
@@ -127,6 +131,7 @@ Scenario('Should be able to see Tgt and Ixn counts on the RFI Description page',
 });
 
 Scenario('Should be able to edit ixns', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -172,6 +177,7 @@ Scenario('Should be able to edit ixns', (I) => {
 });
 
 Scenario('Should be able to assign status, edit track narratives, and see tracks generate', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -244,6 +250,7 @@ Scenario('Should be able to assign status, edit track narratives, and see tracks
 });
 
 Scenario('Should be able to write and view track narratives', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('Status', 3);
 
@@ -294,6 +301,7 @@ Scenario('Should be able to write and view track narratives', (I) => {
 });
 
 Scenario('Should indicate SCOIs entered in the track narrative', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('Status', 3);
 
@@ -344,6 +352,7 @@ Scenario('Should be able to add, undo add, and view analyst notes', (I) => {
 });
 
 Scenario('Should be able to write and view rollups', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('Status', 3);
   I.click('.rollup-button');
@@ -423,6 +432,7 @@ Scenario('Should be able to write and view rollups', (I) => {
 });
 
 Scenario('Should be able to accept and reject tracks', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -462,6 +472,7 @@ Scenario('Should be able to accept and reject tracks', (I) => {
 });
 
 Scenario('Should indicate whether RFIs and targets have rejected tracks', (I) => {
+  I.waitForElement('.add-tgt-button');
   I.click('.add-tgt-button');
   I.fillField('.mgrs', '12QWE1231231232');
   I.pressKey('Enter');
@@ -503,6 +514,7 @@ Scenario('Should indicate whether RFIs and targets have rejected tracks', (I) =>
 })
 
 Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -561,6 +573,7 @@ Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
 });
 
 Scenario('Should be able to edit and cancel editing segments', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -597,6 +610,7 @@ Scenario('Should be able to edit and cancel editing segments', (I) => {
 });
 
 Scenario('Should be able to delete segments and undo segment delete', (I) => {
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
 
@@ -646,6 +660,7 @@ Scenario('Should be able to delete segments and undo segment delete', (I) => {
 
 Scenario('Should display a modal when deleting targets with ixns', (I) => {
   //Add segment
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
   I.fillField('.segment-start', '12');
