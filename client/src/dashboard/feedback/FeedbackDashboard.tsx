@@ -121,6 +121,7 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     font-size: ${theme.font.sizeBigMetric};
     color: #617886;
     line-height: 21px;
+    margin-top: 110px;
   }
   
   .feedback-dialogue {
@@ -143,6 +144,7 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     width: 733px;
     height: 280px;
     padding: 8px 36px 36px;
+    margin-bottom: 56px;
   }
   
   .description-title {
@@ -151,6 +153,7 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     font-weight: ${theme.font.weightBold};
     line-height: 19px;
     text-align: center;
+    padding-top: 8px;
     margin-bottom: 23px;
   }
   
@@ -161,7 +164,8 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     justify-content: flex-start;
     align-items: flex-start;
     word-wrap: normal;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: auto;
     font-size: ${theme.font.sizeHeaderSmall};
     padding-right: 8px;
   }
