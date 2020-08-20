@@ -55,8 +55,6 @@ public class ProductController {
     if (upload == null)
       return ResponseEntity.notFound().build();
 
-    System.out.println(MediaType.parseMediaType(upload.getContentType()));
-
     return ResponseEntity.ok()
       .contentType(MediaType.parseMediaType(upload.getContentType()))
       .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + upload.getFileName() + "\"")

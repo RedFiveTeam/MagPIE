@@ -72,7 +72,7 @@ function unitTests {
 #   changed to show mvn test results regardless, so we get a little more troubleshooting help when Jenkins fails
     showBanner "Backend"
     pushd ${BASE_DIR}
-        mvn -q test
+        mvn -q -Dspring.profiles.active=test test
     popd
 
     showBanner "Frontend"
