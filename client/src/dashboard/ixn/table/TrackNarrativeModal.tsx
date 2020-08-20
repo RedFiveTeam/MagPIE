@@ -319,6 +319,14 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     background: none; //no background in order to let highligts show
   }
   
+  .track-narrative-input {
+    text-align: left;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: normal;
+  }
+  
   .track-narrative-display {
     color: rgba(0, 0, 0, 0); //hide text
     overflow-y: hidden;
@@ -327,6 +335,7 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     font-weight: normal;
     font-size: 16px;
     line-height: 19px;
+    letter-spacing: normal;
     padding-top: 6px !important;
     height: 526px;
     margin-bottom: -526px;
