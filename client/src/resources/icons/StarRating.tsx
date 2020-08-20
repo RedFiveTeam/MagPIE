@@ -42,9 +42,9 @@ const StarRating: React.FC<MyProps> = (props) => {
 };
 
 export const StyledStarRating = styled(StarRating)`
-width: 125px;
-display: flex;
-flex-direction: row;
-justify-content: space-around;
-cursor: pointer;
+  width: 105px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  cursor: pointer;
 `;

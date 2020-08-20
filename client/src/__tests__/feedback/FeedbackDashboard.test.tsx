@@ -19,7 +19,7 @@ describe('FeedbackDashboard', () => {
   reaching the API, but tests successfully in Acceptance Tests, so maybe it is okay?
   */
 
-  it('should display the rfi information', () => {
+  it('should display the rfi star feedback information', () => {
     expect(subject.find('.rfi-title').text()).toContain('Error: Bad Link');
     expect(subject.find('.star-container').exists()).toBeTruthy();
     expect(subject.find('.star').children().length).toEqual(5);

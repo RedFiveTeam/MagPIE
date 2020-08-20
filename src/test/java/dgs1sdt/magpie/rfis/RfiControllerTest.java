@@ -727,14 +727,14 @@ public class RfiControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void savesStarFeedback() throws Exception {
+  public void savesRfiFeedback() throws Exception {
     assertEquals(0, rfiFeedbackRepository.findAll().size());
 
     rfiRepository.save(
       new Rfi("DGS-1-SDT-2020-00338", "", "", new Date(), "", new Date(), "", "", "This is a justifiction", "", "", "",
         "", "", "", "", "", ""));
 
-    RfiFeedbackJson feedbackJson = new RfiFeedbackJson("DGS-1-SDT-2020-00338", 3);
+    RfiFeedbackJson feedbackJson = new RfiFeedbackJson("DGS-1-SDT-2020-00338", 3, "", "", "", "");
 
     String feedbackJsonString = objectMapper.writeValueAsString(feedbackJson);
 
@@ -753,9 +753,14 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals("DGS-1-SDT-2020-00338", feedback.getRfiNum());
     assertEquals(3, feedback.getStars());
+    assertEquals("", feedback.getTimeliness());
+    assertEquals("", feedback.getQuality());
+    assertEquals("", feedback.getMissionImpact());
+    assertEquals("", feedback.getComments());
 
     //Should overwrite previous ratings on the same RFI
-    feedbackJson = new RfiFeedbackJson("DGS-1-SDT-2020-00338", 5);
+    feedbackJson = new RfiFeedbackJson("DGS-1-SDT-2020-00338", 5, "Delivered Early", "High Quality", "High Impact",
+      "These are some comments");
     feedbackJsonString = objectMapper.writeValueAsString(feedbackJson);
 
     given()
@@ -773,6 +778,10 @@ public class RfiControllerTest extends BaseIntegrationTest {
 
     assertEquals("DGS-1-SDT-2020-00338", feedback.getRfiNum());
     assertEquals(5, feedback.getStars());
+    assertEquals("Delivered Early", feedback.getTimeliness());
+    assertEquals("High Quality", feedback.getQuality());
+    assertEquals("High Impact", feedback.getMissionImpact());
+    assertEquals("These are some comments", feedback.getComments());
   }
 
   @Test

@@ -1,9 +1,11 @@
 export default class RfiFeedbackModel {
-  public rfiNum: string;
-  public stars: number;
-
-  constructor(rfiNum: string, stars: number) {
-    this.rfiNum = rfiNum;
-    this.stars = stars;
+  constructor(
+    public rfiNum: string,
+    public stars: number,
+    public timeliness: string,
+    public quality: string,
+    public missionImpact: string,
+    public comments: string,
+  ) {
   }
 }
