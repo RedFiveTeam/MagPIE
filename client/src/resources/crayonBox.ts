@@ -27,6 +27,7 @@ export const crayonBox = {
   tomatoRed: '#971625',//
   darkRed: '#BC0000',
   bloodRed: '#C10101',
+  lessLessBrightRed: '#D70921',//
   lessBrightRed: '#E40A30',
   brightRed: '#FF0000',
   safetyOrange: '#EC6F00',
@@ -49,6 +50,7 @@ export const crayonBox = {
   mediumBrightBlue: '#0872B3',//
   mediumBrightBrightBlue: '#0970AF',//
   brightBlue: '#1E98E5',//
+  skyBlueGreener: '#5A9EB8',//
   skyBlueGreen: '#6FB6CF',//
   skyBlue: '#82BFF9',
   lightBlueGray: '#8199A2',//

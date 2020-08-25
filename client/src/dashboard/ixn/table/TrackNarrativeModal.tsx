@@ -12,6 +12,8 @@ import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { StyledScoiChip } from './ScoiChip';
 import { StyledExpandCollapseArrow } from '../../../resources/icons/ExpandCollapse';
+import { ScoiModel } from '../../../store/ScoiModel';
+import { StyledMgrsModal } from './MgrsModal';
 
 interface MyProps {
   setDisplay: (display: boolean) => void;
@@ -33,9 +35,13 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
       :
       props.ixn.trackNarrative,
   );
-  const [scoiList, setScoiList] = useState([] as string[]);
+  const [scoiNameList, setScoiNameList] = useState([] as string[]);
+  const [scoiList, setScoiList] = useState([] as ScoiModel[]);
   const [collapseScoiChips, setCollapseScoiChips] = useState(false);
   const [navigating, setNavigating] = useState(false);
+  const [displayMgrsModal, setDisplayMgrsModal] = useState(false);
+  const [newName, setNewName] = useState('');
+
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   useEffect(() => {
@@ -60,17 +66,43 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
     setTrackNarrative(newTrackNarrative);
   };
 
+  const checkForMgrs = (scoiName: string) => {
+    //query backend
+    fetch('/api/scoi?name=' + scoiName, {
+      method: 'get',
+    })
+      .then(response => {
+        //if not exists, prompt for mgrs
+        if (response.status === 404) {
+          setNewName(scoiName);
+          setDisplayMgrsModal(true);
+          return;
+        } else {
+          return response.json();
+        }
+      })
+      .then(responseJson => {
+        //if exists, add new SCOI model to list
+        if (responseJson) {
+          setScoiList(scoiList => scoiList.concat(responseJson));
+        }
+      }).catch((reason) => console.log('Failed to fetch SCOI: ' + reason));
+  };
+
   const checkForScois = (trackNarrative: string) => {
     let matches: RegExpMatchArray|null = trackNarrative.match(/[A-Z]{3}S[0-9]{2}-[0-9]{4}/g);
-    let newScoiList: string[] = [];
+    let newScoiNameList: string[] = [];
     if (matches) {
       matches.forEach((match: string) => {
-        if (!newScoiList.includes(match)) {
-          newScoiList.push(match);
+        if (!newScoiNameList.includes(match)) {
+          newScoiNameList.push(match);
+        }
+        if (!scoiList.find((scoi) => scoi.name === match)) {
+          checkForMgrs(match);
         }
       });
     }
-    setScoiList(newScoiList);
+    setScoiNameList(newScoiNameList);
   };
 
   const displaySnackbar = (message: string) => {
@@ -89,9 +121,13 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
   };
 
   const mapScoisToChips = () => {
-    return scoiList.map((mgrs: string, index: number) =>
-                          <StyledScoiChip mgrs={mgrs} key={index}/>,
-    );
+    return scoiList
+      .filter(
+        (scoi) => scoiNameList.includes(scoi.name),
+      )
+      .map((scoi: ScoiModel, index: number) =>
+             <StyledScoiChip scoi={scoi} key={index}/>,
+      );
   };
 
   //Scrolls highlights with the input text
@@ -105,6 +141,36 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
       };
     }
   }, 500);
+
+  const cancelMgrsInput = () => {
+    let newScoiNameList = Array.from(scoiNameList);
+    newScoiNameList.splice(newScoiNameList.indexOf(newName), 1);
+
+    setTrackNarrative(trackNarrative => trackNarrative.replace(newName, ''));
+    setScoiNameList(newScoiNameList);
+    setDisplayMgrsModal(false);
+    setNewName('');
+  };
+
+  const handlePostScoi = (mgrs: string) => {
+    let scoi = new ScoiModel(undefined, newName, mgrs);
+    fetch('/api/scoi',
+          {
+            method: 'post',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(scoi),
+          },
+    ).then(response => response.json())
+      .then(scoi => {
+        setScoiList(scoiList => scoiList.concat(scoi));
+        displaySnackbar(`${scoi.name} created`);
+      })
+      .catch((reason) => console.log('Failed to receive SCOI: ' + reason));
+    setDisplayMgrsModal(false);
+  };
 
   return (
     <Modal
@@ -226,6 +292,14 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
           />
           :
           null}
+        {displayMgrsModal ?
+          <StyledMgrsModal
+            hideModal={cancelMgrsInput}
+            submitScoi={handlePostScoi}
+          />
+          :
+          null
+        }
       </div>
     </Modal>
   );

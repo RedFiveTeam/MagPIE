@@ -71,6 +71,8 @@ const theme = {
     backgroundScoiContainer: crayonBox.anotherDarkGreenBlue,//
     downloadButtonBorder: crayonBox.darkMediumBlueGray,//
     downloadButtonBackground: crayonBox.reallyDarkBlue,//
+    fontErrorAlternate: crayonBox.lessLessBrightRed,//
+    fontMgrsModal: crayonBox.skyBlueGreener,//
   },
 
   font: {

@@ -18,6 +18,21 @@ const TextTooltip = withStyles((localTheme: Theme) => ({
 }))(Tooltip);
 
 // @ts-ignore
+export const MgrsTooltip = withStyles((localTheme: Theme) => ({
+  tooltip: {
+    backgroundColor: theme.color.backgroundToolTip,
+    color: theme.color.fontPrimary,
+    width: 'inherit',
+    height: 26,
+    borderRadius: 13,
+    fontSize: '18px',
+    lineHeight: '18px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+}))(Tooltip);
+
+// @ts-ignore
 export const EeiTooltip = withStyles((localTheme: Theme) => ({
   tooltip: {
     backgroundColor: theme.color.backgroundFocus,

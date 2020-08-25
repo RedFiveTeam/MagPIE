@@ -2,19 +2,23 @@ import * as React from 'react';
 import styled from 'styled-components';
 import theme from '../../../resources/theme';
 import classNames from 'classnames';
+import { ScoiModel } from '../../../store/ScoiModel';
+import { MgrsTooltip } from '../../components/TextTooltip';
 
 interface MyProps {
-  mgrs: string;
+  scoi: ScoiModel;
   className?: string;
 }
 
 const ScoiChip: React.FC<MyProps> = (props) => {
-   return(
-     <div className={classNames('scoi-chip', props.className)}>
-       <span>{props.mgrs}</span>
-     </div>
-   )
-}
+  return (
+    <div className={classNames('scoi-chip', props.className)}>
+      <MgrsTooltip className={'mgrs-tooltip'}  title={'MGRS: ' + props.scoi.mgrs}>
+        <span>{props.scoi.name}</span>
+      </MgrsTooltip>
+    </div>
+  );
+};
 
 export const StyledScoiChip = styled(ScoiChip)`
   background: ${theme.color.backgroundScoiTag};

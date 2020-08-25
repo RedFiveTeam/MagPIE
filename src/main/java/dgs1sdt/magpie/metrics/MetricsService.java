@@ -43,6 +43,8 @@ import dgs1sdt.magpie.metrics.createExploitDate.MetricCreateExploitDate;
 import dgs1sdt.magpie.metrics.createExploitDate.MetricCreateExploitDateRepository;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxn;
 import dgs1sdt.magpie.metrics.createIxn.MetricCreateIxnRepository;
+import dgs1sdt.magpie.metrics.createScoi.MetricCreateScoi;
+import dgs1sdt.magpie.metrics.createScoi.MetricCreateScoiRepository;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegment;
 import dgs1sdt.magpie.metrics.createSegment.MetricCreateSegmentRepository;
 import dgs1sdt.magpie.metrics.createTarget.MetricCreateTarget;
@@ -139,6 +141,7 @@ public class MetricsService {
   private MetricDownloadProductRepository metricDownloadProductRepository;
   private MetricClickScoreboardRepository metricClickScoreboardRepository;
   private MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
+  private MetricCreateScoiRepository metricCreateScoiRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -337,6 +340,12 @@ public class MetricsService {
   public void setMetricClickScoreboardRepository(
     MetricClickScoreboardRepository metricClickScoreboardRepository) {
     this.metricClickScoreboardRepository = metricClickScoreboardRepository;
+  }
+
+  @Autowired
+  public void setMetricCreateScoiRepository(
+    MetricCreateScoiRepository metricCreateScoiRepository) {
+    this.metricCreateScoiRepository = metricCreateScoiRepository;
   }
 
   public long getSiteVisitCount() {
@@ -542,6 +551,18 @@ public class MetricsService {
 
   public MetricDownloadProduct addDownloadProduct(long rfiId, String userName) {
     return metricDownloadProductRepository.save(new MetricDownloadProduct(rfiId, userName));
+  }
+
+  public MetricClickScoreboard addClickScoreboard(String userName) {
+    return metricClickScoreboardRepository.save(new MetricClickScoreboard(userName));
+  }
+
+  public void createVisitFeedbackPage(String rfiNum) {
+    metricVisitFeedbackPageRepository.save(new MetricVisitFeedbackPage(rfiNum));
+  }
+
+  public void addCreateScoi(long scoiId, String userName) {
+    metricCreateScoiRepository.save(new MetricCreateScoi(scoiId, userName));
   }
 
   public long[] getAverageWorkflowTime() {
@@ -966,13 +987,5 @@ public class MetricsService {
       log.trace("Could not get completion time by targets:", e);
       return -1;
     }
-  }
-
-  public MetricClickScoreboard addClickScoreboard(String userName) {
-    return metricClickScoreboardRepository.save(new MetricClickScoreboard(userName));
-  }
-
-  public void createVisitFeedbackPage(String rfiNum) {
-    metricVisitFeedbackPageRepository.save(new MetricVisitFeedbackPage(rfiNum));
   }
 }

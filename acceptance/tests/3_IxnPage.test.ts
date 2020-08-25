@@ -310,21 +310,70 @@ Scenario('Should indicate SCOIs entered in the track narrative', (I) => {
 
   I.dontSeeElement('.scoi-queue');
 
-  I.fillField('.track-narrative',
-              '\nOPNS20-0001');
+  //Enter new SCOI with MGRS
+  I.clearField('.track-narrative-input');
+  I.fillField('.track-narrative-input',
+              'OPNS20-0001');
+  I.waitForElement('.mgrs-modal');
+  I.waitForText('Type MGRS coordinates below');
+
+  //cancel
+  I.click('.cancel-mgrs-input');
+  I.wait(1);
+  I.dontSee('OPNS20-0001');
+
+  //Add MGRS
+  I.clearField('.track-narrative-input');
+  I.fillField('.track-narrative-input',
+              'OPNS20-0001');
+  I.waitForElement('.mgrs-modal');
+  I.waitForText('Type MGRS coordinates below');
+  I.fillField('.mgrs-input', '12QWE123123123123');
+  I.waitForText('Please use the format “##XXX##########” for MGRS');
+  I.clearField('.mgrs-input');
+  I.fillField('.mgrs-input', '12QWE1234567890');
+  I.click('.submit-button');
+
   I.waitForElement('.scoi-queue');
   within('.scoi-queue', () => {
     I.see('OPNS20-0001');
-  })
+  });
+
+  I.moveCursorTo('.scoi-chip', 5, 5);
+  I.waitForText('12QWE1234567890');
 
   I.click('.expand-collapse-scois');
   I.wait(1);
   within('.scoi-container', () => {
-    I.dontSeeElement('.scoi-queue')
+    I.dontSeeElement('.scoi-queue');
     I.dontSee('OPNS20-0001');
-  })
+  });
   I.click('.expand-collapse-scois');
   I.waitForElement('.scoi-chip');
+
+  //Don't save
+  I.click('.cancel');
+  I.waitForElement('.navigate-modal');
+  I.click('.modal-yes');
+
+  I.dontSee('Copy to Clipboard');
+
+  //Enter the same SCOI again and see MGRS pull from backend
+  I.click('.track-narrative-button');
+  I.waitForText('Copy to Clipboard');
+
+  I.dontSeeElement('.scoi-queue');
+
+  I.clearField('.track-narrative-input');
+  I.fillField('.track-narrative-input',
+              'OPNS20-0001');
+  I.waitForElement('.scoi-chip');
+  within('.scoi-queue', () => {
+    I.see('OPNS20-0001');
+  });
+
+  I.moveCursorTo('.scoi-chip', 5, 5);
+  I.waitForText('12QWE1234567890');
 });
 
 Scenario('Should be able to add, undo add, and view analyst notes', (I) => {
@@ -498,7 +547,7 @@ Scenario('Should indicate whether RFIs and targets have rejected tracks', (I) =>
 
   within(locate('.tgt-row-left').at(2), () => {
     I.dontSeeElement('.reject-arrow');
-  })
+  });
 
   I.click('.tgt-dash--header--back-button');
   I.waitForText('LTIOV', 10);
@@ -511,7 +560,7 @@ Scenario('Should indicate whether RFIs and targets have rejected tracks', (I) =>
   within(locate('.rfi-row-container').at(2), () => {
     I.seeElement('.reject-arrow');
   });
-})
+});
 
 Scenario('Should be able to delete ixns and undo an ixn delete', (I) => {
   I.waitForElement('.exploitation');
