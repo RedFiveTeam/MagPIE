@@ -212,6 +212,13 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       fontSize: theme.font.sizeRegion,
       lineHeight: '21px',
     },
+    modalText: {
+      display: 'inline-block',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      maxWidth: '280px',
+    },
     deleteModal: {
       marginLeft: -271,
       marginTop: -94,
@@ -220,6 +227,18 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       fontFamily: theme.font.familyHeader,
       fontWeight: theme.font.weightBold,
       fontSize: theme.font.sizeHeader,
+    },
+    deleteProductModal: {
+      marginLeft: -158,
+      marginTop: -114,
+      width: 316,
+      height: 228,
+      fontFamily: theme.font.familyHeader,
+      fontWeight: theme.font.weightBold,
+      fontSize: theme.font.sizeHeader,
+    },
+    modalIcon: {
+      paddingLeft: '6px',
     },
     uploadModal: {
       marginLeft: -231,
@@ -255,6 +274,9 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       borderWidth: 2,
       borderStyle: 'solid',
       paddingTop: '12px',
+    },
+    deleteModalBody: {
+      borderWidth: '4px !important',
     },
     //@ts-ignore
     narrativeModalBody: {
@@ -297,6 +319,16 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       borderBottomRightRadius: '6px',
       borderBottomLeftRadius: '6px',
       zIndex: 2,
+    },
+    productDeleteConfirmation: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '180px',
+      height: '52px',
+      flexShrink: 0,
+      justifySelf: 'flex-end',
     },
     modalUploadButtons: {
       display: 'flex',

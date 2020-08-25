@@ -43,8 +43,8 @@ import { StyledTgtCopyModal } from './TgtCopyModal';
 import { StyledTgtInputRow } from './table/TgtInputRow';
 import { StyledTgtRow } from './table/TgtRow';
 import { Modal } from '@material-ui/core';
-import { fetchLocalUpdate } from '../../store/rfi/Thunks';
-import { postProductUpload } from '../../store/rfi';
+import { fetchLocalUpdate, fetchRfis } from '../../store/rfi/Thunks';
+import { postProductDelete, postProductUndoDelete, postProductUpload } from '../../store/rfi';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { StyledFileUploadModal } from '../components/FileUploadModal';
 import { StyledFileDownloadModal } from '../components/FileDownloadModal';
@@ -251,13 +251,13 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
     setAddDate(true);
   };
 
-  const handleShowProductModal =() => {
+  const handleShowProductModal = () => {
     if (props.rfi.productName) {
       setShowDownloadFileModal(true);
     } else {
       setShowUploadFileModal(true);
     }
-  }
+  };
 
   function printDates(dates: ExploitDateModel[]) {
     return dates.map(
@@ -366,6 +366,21 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
         variant: 'info',
       });
     }
+  };
+
+  const handleDeleteProduct = (rfiId: number, productName: string) => {
+    enqueueSnackbar(`${productName} Deleted`, {
+      action: (key) => UndoSnackbarAction(key, rfiId, () => handleUndoDeleteProduct(rfiId),
+                                          closeSnackbar, classes.snackbarButton),
+      variant: 'info',
+    });
+    postProductDelete(rfiId, cookie.userName);
+    dispatch(fetchRfis());
+  };
+
+  const handleUndoDeleteProduct = (rfiId: number) => {
+    postProductUndoDelete(rfiId, cookie.userName);
+    dispatch(fetchRfis());
   };
 
   const headers = ['TGT ID', 'MGRS', 'EEI Notes', 'TGT Description', 'Status'];
@@ -510,6 +525,9 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
       {showDownloadFileModal && props.rfi ?
         <StyledFileDownloadModal
           hideModal={() => setShowDownloadFileModal(false)}
+          handleDeleteProduct={() => handleDeleteProduct(props.rfi!.id,
+                                                         typeof props.rfi.productName === 'string' ?
+                                                           props.rfi.productName : '')}
           rfi={props.rfi}
           userName={cookie.userName}
         />

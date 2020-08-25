@@ -23,11 +23,13 @@ interface MyProps {
   loadTgtPage: (rfi: RfiModel) => void;
   postGetsClick: (rfi: RfiModel) => void;
   handlePostProductUpload: (data: FormData, rfiId: number, userName: string) => void;
+  handleDeleteProduct: (rfiId: number, productName: string) => void;
+  handleUndoDeleteProduct: (rfiId: number) => void;
   className?: string
 }
 
 export const RfiDescriptionContainer: React.FC<MyProps> = (
-  {rfi, loadTgtPage, postGetsClick, className, handlePostProductUpload}) => {
+  {rfi, loadTgtPage, postGetsClick, className, handlePostProductUpload, handleDeleteProduct, handleUndoDeleteProduct}) => {
   const [showUploadFileModal, setShowUploadFileModal] = useState(false);
   const [showDownloadFileModal, setShowDownloadFileModal] = useState(false);
 
@@ -156,6 +158,8 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
       {showDownloadFileModal && rfi ?
         <StyledFileDownloadModal
           hideModal={() => setShowDownloadFileModal(false)}
+          handleDeleteProduct={() => handleDeleteProduct(rfi!.id,
+                                                         typeof rfi.productName === 'string' ? rfi.productName : '')}
           rfi={rfi}
           userName={cookie.userName}
         />

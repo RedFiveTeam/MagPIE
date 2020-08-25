@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import RfiModel from '../../store/rfi/RfiModel';
 import styled from 'styled-components';
 import { Modal } from '@material-ui/core';
@@ -7,15 +8,20 @@ import theme from '../../resources/theme';
 import DeleteButtonX from '../../resources/icons/DeleteButtonX';
 import TextTooltip from './TextTooltip';
 import { DownloadIcon } from '../../resources/icons/DownloadIcon';
+import { MiniTrashcanButton } from '../../resources/icons/MiniTrashcanButton';
+import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 
 interface MyProps {
   rfi: RfiModel;
   userName: string;
   hideModal: () => void;
+  handleDeleteProduct: () => void;
   className?: string;
 }
 
-const FileDownloadModal: React.FC<MyProps> = (props) => {
+export const FileDownloadModal: React.FC<MyProps> = (props) => {
+  const [showDeletePrompt, setShowDeletePrompt] = useState(false);
+
   return (
     <Modal
       aria-labelledby="simple-modal-title"
@@ -37,34 +43,48 @@ const FileDownloadModal: React.FC<MyProps> = (props) => {
           </div>
         </div>
         <div className={'modal-body'}>
-          <div className={'file-icon'}>
-            {props.rfi.productName ?
-              <TextTooltip title={props.rfi.productName.length > 10 ? props.rfi.productName : ''}>
+          {props.rfi.productName ?
+            <>
+              <div className={'button-and-icon-container no-select'}>
                 <div className={'icon-container'}>
                   <img src={'fileIcon.png'} alt={'file icon'}/>
+                </div>
+                <div className={'button-container'}>
+                  <a
+                    href={`/api/product?rfiId=${props.rfi.id}&userName=${props.userName}`}
+                    download={props.rfi.productName}
+                  >
+                    <div className={'download-button button no-select'}>
+                      <DownloadIcon/>
+                      <span>Download</span>
+                    </div>
+                  </a>
+                  <div>
+                    <div className={'delete-button button no-select'} onClick={() => setShowDeletePrompt(true)}>
+                      <MiniTrashcanButton/>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <TextTooltip title={props.rfi.productName}>
+                <div className={'text-container'}>
                   <span>
-                  {
-                    props.rfi.productName.length > 10 ?
-                      props.rfi.productName.substring(0, 9) + '...' :
-                      props.rfi.productName
-                  }
-                </span>
+                    {props.rfi.productName}
+                  </span>
                 </div>
               </TextTooltip>
-              :
-              null
-            }
-          </div>
+            </>
+            :
+            null
+          }
           <div className={'spacer no-select'}>&nbsp;</div>
-          <a
-            href={`/api/product?rfiId=${props.rfi.id}&userName=${props.userName}`}
-            download={props.rfi.productName}
-          >
-            <div className={'download-button no-select'}>
-              <DownloadIcon/>
-              <span>Download</span>
-            </div>
-          </a>
+          {showDeletePrompt ?
+            <DeleteConfirmationModal display={true} setDisplay={setShowDeletePrompt}
+                                     deletingItem={props.rfi.productName!} handleYes={props.handleDeleteProduct}
+                                     productDelete={true}/>
+            :
+            null}
         </div>
       </div>
     </Modal>
@@ -75,8 +95,8 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
   .modal-container {
     width: 315px;
     height: 228px;
-    margin-top: -162.5px;
-    margin-left: -114px;
+    margin-top: -114px;
+    margin-left: -158px;
     background: ${theme.color.backgroundModal};
     border: 4px solid ${theme.color.backgroundFocus};
     border-radius: 10px;
@@ -84,6 +104,14 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
+    
+    :hover {
+      outline: none;
+    }
+    
+    :focus {
+      outline: none;
+    }
   }
   
   .modal-header {
@@ -100,7 +128,7 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
   
   .modal-body {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: available;
@@ -111,14 +139,17 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  
+  .text-container > span {
+    display: inline-block;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: ${theme.font.sizeHeaderSmall};
-    color: ${theme.color.buttonBackgroundActive};
+    color: ${theme.color.buttonOnBlack};
     font-weight: bold;
-    
-    span {
-      margin-top: -40px;
-      margin-bottom: 24px;
-    }
   }
   
   a {
@@ -130,7 +161,23 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
     width: 12px;
   }
   
-  .download-button {
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 104px;
+    margin-top: -18px;
+  }
+  
+  .button-and-icon-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .button {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -157,6 +204,16 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
       font-size: 16px;
       text-align: center;
       flex-grow: 1;
+    }
+  }
+  
+  .delete-button {
+    svg {
+      margin-left: 10px;
+      height: 30px;
+      width: 30px;
+      box-shadow: none;
+      pointer-events: none;
     }
   }
 `;

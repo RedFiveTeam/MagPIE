@@ -83,18 +83,18 @@ export const FileUploadModal: React.FC<MyProps> = (props) => {
             }
           </div>
           {file ?
-            <TextTooltip title={file.name.length > 10 ? file.name : ''}>
+            <>
               <div className={'icon-container'}>
                 <img src={'fileIcon.png'} alt={'file icon'}/>
-                <span>
-                  {
-                    file.name.length > 10 ?
-                      file.name.substring(0, 9) + '...' :
-                      file.name
-                  }
-                </span>
               </div>
-            </TextTooltip> :
+              <TextTooltip title={file.name}>
+                <div className={'text-container'}>
+                <span>
+                  {file.name}
+                </span>
+                </div>
+              </TextTooltip>
+            </> :
             <div className={classes.uploadDropArea}>
               &nbsp;
             </div>}
@@ -120,6 +120,14 @@ export const StyledFileUploadModal = styled(FileUploadModal)`
     padding-top: 2px !important;
     border-width: 4px !important;
     border-radius: 10px;
+    
+    :hover {
+      outline: none;
+    }
+    
+    :focus {
+      outline: none;
+    }
   }
   
   .close-wrapper {
@@ -154,11 +162,14 @@ export const StyledFileUploadModal = styled(FileUploadModal)`
     display: flex;
     flex-direction: column;
     font-size: ${(props) => props.theme.font.sizeHeaderSmall};
-    color: ${(props) => props.theme.color.buttonBackgroundActive};
-    
-    span {
-      margin-top: -40px;
-      margin-bottom: 24px;
-    }
+    color: ${(props) => props.theme.color.buttonOnBlack};
+  }
+  
+  .text-container > span {
+    display: inline-block;
+    max-width: 440px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;

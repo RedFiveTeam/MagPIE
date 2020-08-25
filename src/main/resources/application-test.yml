@@ -11,5 +11,5 @@ spring:
     enabled: false
 logging:
   level:
-    root: off
-    org.springframework: off
+    root: OFF
+    org.springframework: OFF

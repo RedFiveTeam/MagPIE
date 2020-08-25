@@ -100,6 +100,32 @@ export const postProductUploadRfiPage = (data: FormData, rfiId: number, userName
   }
 };
 
+export const postProductDelete = (rfiId: number, userName: string) => {
+  return fetch(
+    `/api/product/delete?rfiId=${rfiId}&userName=${userName}`,
+    {
+      method: 'delete',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+};
+
+export const postProductUndoDelete = (rfiId: number, userName: string) => {
+  return fetch(
+    `/api/product/undo-delete?rfiId=${rfiId}&userName=${userName}`,
+    {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+};
+
 
 export const fetchRfiPending = () => {
   return {

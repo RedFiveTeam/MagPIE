@@ -177,7 +177,7 @@ public class TargetService {
 
       targetRepository.save(target);
 
-      this.metricsService.addDeleteTarget(targetId);
+      metricsService.addDeleteTarget(targetId);
 
       ixnService.assignTracks(target.getRfiId(), target.getName());
 

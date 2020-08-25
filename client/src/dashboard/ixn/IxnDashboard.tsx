@@ -27,8 +27,9 @@ import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { ConfirmationModal } from '../components/ConfirmationModal';
 import { loadTgtPage } from '../../store/tgt/Thunks';
 import { StyledFileUploadModal } from '../components/FileUploadModal';
-import { postProductUpload } from '../../store/rfi';
+import { postProductDelete, postProductUndoDelete, postProductUpload } from '../../store/rfi';
 import { StyledFileDownloadModal } from '../components/FileDownloadModal';
+import { fetchRfis } from '../../store/rfi/Thunks';
 
 interface MyProps {
   className?: string
@@ -118,7 +119,7 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
       setNavigate(Navigate.BACK);
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: undefined}});
-      dispatch(loadTgtPage(rfi, true))
+      dispatch(loadTgtPage(rfi, true));
     }
   };
 
@@ -310,7 +311,22 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
     } else {
       setShowUploadFileModal(true);
     }
-  }
+  };
+
+  const handleDeleteProduct = (rfiId: number, productName: string) => {
+    enqueueSnackbar(`${productName} Deleted`, {
+      action: (key) => UndoSnackbarAction(key, rfiId, () => handleUndoDeleteProduct(rfiId),
+                                          closeSnackbar, classes.snackbarButton),
+      variant: 'info',
+    });
+    postProductDelete(rfiId, cookie.userName);
+    dispatch(fetchRfis());
+  };
+
+  const handleUndoDeleteProduct = (rfiId: number) => {
+    postProductUndoDelete(rfiId, cookie.userName);
+    dispatch(fetchRfis());
+  };
 
   const isAddSegmentDisabled = segments.length < 1 || addingOrEditing || rollupMode;
   const element = editIxn > 0 ? 'callout' : 'segment';
@@ -402,6 +418,8 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
       {showDownloadFileModal && rfi ?
         <StyledFileDownloadModal
           hideModal={() => setShowDownloadFileModal(false)}
+          handleDeleteProduct={() => handleDeleteProduct(rfi!.id,
+                                                         typeof rfi.productName === 'string' ? rfi.productName : '')}
           rfi={rfi}
           userName={cookie.userName}
         />

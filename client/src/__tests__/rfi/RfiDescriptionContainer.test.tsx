@@ -7,6 +7,7 @@ import ExternalLinkVector from '../../resources/icons/ExternalLinkVector';
 import { UploadFileButtonVector } from '../../resources/icons/UploadFileButton';
 import { SnackbarProvider } from 'notistack';
 import { ProductLinkButton } from '../../resources/icons/ProductLinkButton';
+import { FinishedProductIcon } from '../../resources/icons/FinishedProductIcon';
 
 describe('RFI description container', () => {
   let subject: ReactWrapper;
@@ -16,12 +17,18 @@ describe('RFI description container', () => {
                          'Just a fiction', -1, 12, 345, undefined, false, false, null);
   let postGetsClickSpy: jest.Mock;
   let loadTgtPageSpy: jest.Mock;
+  let handleFileUploadSpy: jest.Mock;
+  let handleDeleteProductSpy: jest.Mock;
+  let handleUndoDeleteProductSpy: jest.Mock;
 
   window.open = jest.fn();
 
   beforeEach(() => {
     postGetsClickSpy = jest.fn();
     loadTgtPageSpy = jest.fn();
+    handleFileUploadSpy = jest.fn();
+    handleDeleteProductSpy = jest.fn();
+    handleUndoDeleteProductSpy = jest.fn();
 
     subject = mount(
       <SnackbarProvider>
@@ -29,7 +36,9 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
-          handlePostProductUpload={jest.fn()}
+          handlePostProductUpload={handleFileUploadSpy}
+          handleDeleteProduct={handleDeleteProductSpy}
+          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );
@@ -54,7 +63,9 @@ describe('RFI description container', () => {
           rfi={newRfi}
           postGetsClick={postGetsClickSpy}
           loadTgtPage={loadTgtPageSpy}
-          handlePostProductUpload={jest.fn()}
+          handlePostProductUpload={handleFileUploadSpy}
+          handleDeleteProduct={handleDeleteProductSpy}
+          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );
@@ -73,7 +84,9 @@ describe('RFI description container', () => {
           rfi={newRfi}
           postGetsClick={postGetsClickSpy}
           loadTgtPage={loadTgtPageSpy}
-          handlePostProductUpload={jest.fn()}
+          handlePostProductUpload={handleFileUploadSpy}
+          handleDeleteProduct={handleDeleteProductSpy}
+          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );
@@ -92,25 +105,27 @@ describe('RFI description container', () => {
     expect(postGetsClickSpy).toHaveBeenCalled();
   });
 
-  it('should display the Upload File button', () => {
+  it('should display the Upload File button or Download link', () => {
     expect(subject.find(UploadFileButtonVector).exists()).toBeTruthy();
     expect(subject.find('.upload-button').text()).toContain('Upload Product');
 
-    // This is functionality to test the 'areAllTracksComplete' enabling/disabling the upload button
-    // rfi = {...rfi, areAllTracksComplete: true}
-    //
-    // subject = mount(
-    // <SnackbarProvider>
-    //   <RfiDescriptionContainer
-    //     rfi={rfi}
-    //     loadTgtPage={loadTgtPageSpy}
-    //     postGetsClick={postGetsClickSpy}
-    //   />
-    //   </SnackbarProvider>,
-    // );
-    //
-    // expect(subject.find(UploadFileButtonVector).exists()).toBeTruthy();
-    // expect(subject.find('.upload-button').text()).toContain('Upload Product');
+    rfi = {...rfi, productName: 'TestKmlPleaseIgnore.kml'}
+
+    subject = mount(
+    <SnackbarProvider>
+      <RfiDescriptionContainer
+        rfi={rfi}
+        loadTgtPage={loadTgtPageSpy}
+        postGetsClick={postGetsClickSpy}
+        handlePostProductUpload={handleFileUploadSpy}
+        handleDeleteProduct={handleDeleteProductSpy}
+        handleUndoDeleteProduct={handleUndoDeleteProductSpy}
+      />
+      </SnackbarProvider>,
+    );
+
+    expect(subject.find(FinishedProductIcon).exists()).toBeTruthy();
+    expect(subject.find('.download-button').text()).toContain('Finished Product');
   });
 
   it('should display an icon to copy feedback link to clipboard', () => {
@@ -135,7 +150,9 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
-          handlePostProductUpload={jest.fn()}
+          handlePostProductUpload={handleFileUploadSpy}
+          handleDeleteProduct={handleDeleteProductSpy}
+          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );
@@ -151,7 +168,9 @@ describe('RFI description container', () => {
           rfi={rfi}
           loadTgtPage={loadTgtPageSpy}
           postGetsClick={postGetsClickSpy}
-          handlePostProductUpload={jest.fn()}
+          handlePostProductUpload={handleFileUploadSpy}
+          handleDeleteProduct={handleDeleteProductSpy}
+          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );

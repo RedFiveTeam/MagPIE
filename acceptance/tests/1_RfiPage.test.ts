@@ -67,3 +67,29 @@ Scenario('Should have a button to copy feedback link to clipboard', (I) => {
   I.waitForText('Feedback Link Copied to Clipboard');
 });
 
+Scenario('Should display file options when file is associated with product', (I) => {
+  I.waitForText('20-321', 10);
+  I.click(locate('.rfi-row').at(14));
+  I.waitForElement('.download-button');
+  I.click('.download-button');
+  I.waitForText('Download');
+});
+
+Scenario('Should display confirmation modal for deletion and test both buttons', (I) => {
+  I.waitForText('20-321', 10);
+  I.click(locate('.rfi-row').at(14));
+  I.waitForElement('.download-button');
+  I.click('.download-button');
+  I.waitForElement('.delete-button');
+  I.click('.delete-button');
+  I.waitForText('Delete this file?', 10);
+
+  I.click('.modal-no');
+  I.waitForElement('.delete-button');
+  I.click('.delete-button');
+  I.waitForText('Delete this file?', 10);
+
+  I.click('.modal-yes');
+  I.waitForText('doc-1.kml Deleted');
+});
+

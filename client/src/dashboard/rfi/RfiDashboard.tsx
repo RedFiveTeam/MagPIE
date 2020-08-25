@@ -6,10 +6,12 @@ import theme, { rowStyles } from '../../resources/theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from '../../store';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
-import { fetchLocalUpdate, reorderRfis } from '../../store/rfi/Thunks';
+import { fetchLocalUpdate, fetchRfis, reorderRfis } from '../../store/rfi/Thunks';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
 import {
-  loadUserMetricsPage, postProductUploadRfiPage, postRfiPriorityUpdate, reprioritizeRfis, sortRfis,
+  loadUserMetricsPage, postProductDelete, postProductUndoDelete, postProductUploadRfiPage, postRfiPriorityUpdate,
+  reprioritizeRfis,
+  sortRfis,
 } from '../../store/rfi';
 import { StyledRfiDescriptionContainer } from './RfiDescriptionContainer';
 import { loadTgtPage } from '../../store/tgt/Thunks';
@@ -18,7 +20,7 @@ import { postGetsClick } from '../../store/metrics';
 import { StyledRefreshButtonVector } from '../../resources/icons/RefreshButtonVector';
 import TextTooltip from '../components/TextTooltip';
 import { useSnackbar } from 'notistack';
-import { PriorityUndoSnackbarAction } from '../components/UndoSnackbarAction';
+import { PriorityUndoSnackbarAction, UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { Cookie, formatRfiNum } from '../../utils';
 import { useCookies } from 'react-cookie';
 import MetricsButtonIcon from '../../resources/icons/MetricsButtonIcon';
@@ -172,6 +174,21 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
     dispatch(postProductUploadRfiPage(data, rfiId, userName));
   }
 
+  const handleDeleteProduct = (rfiId: number, productName: string) => {
+    enqueueSnackbar(`${productName} Deleted`, {
+      action: (key) => UndoSnackbarAction(key, rfiId, () => handleUndoDeleteProduct(rfiId),
+                                          closeSnackbar, classes.snackbarButton),
+      variant: 'info',
+    });
+    postProductDelete(rfiId, cookie.userName);
+    dispatch(fetchRfis());
+  };
+
+  const handleUndoDeleteProduct = (rfiId: number) => {
+    postProductUndoDelete(rfiId, cookie.userName);
+    dispatch(fetchRfis());
+  };
+
   document.onkeydown = checkKey;
 
   function checkKey(e: any) {
@@ -243,6 +260,8 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
           loadTgtPage={handleLoadTgtPage}
           postGetsClick={handlePostGetsClick}
           handlePostProductUpload={handlePostProductUpload}
+          handleDeleteProduct={handleDeleteProduct}
+          handleUndoDeleteProduct={handleUndoDeleteProduct}
         />
       </div>
       <ConfirmationModal
