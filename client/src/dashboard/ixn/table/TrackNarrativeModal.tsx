@@ -12,7 +12,7 @@ import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { StyledScoiChip } from './ScoiChip';
 import { StyledExpandCollapseArrow } from '../../../resources/icons/ExpandCollapse';
-import { ScoiModel } from '../../../store/ScoiModel';
+import { ScoiModel } from '../../../store/scoi/ScoiModel';
 import { StyledMgrsModal } from './MgrsModal';
 
 interface MyProps {

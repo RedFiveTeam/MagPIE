@@ -13,6 +13,7 @@ import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
+import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -151,7 +152,7 @@ public class MetricController {
       .getTargetsCreatedWithinDateRange(startDate, new Date(endDate.getTime() + MetricsService.MILLISECONDS_IN_A_DAY));
   }
 
-  @GetMapping(path  = "/approval-ratings")
+  @GetMapping(path = "/approval-ratings")
   public List<UserPerformanceMetric> getsApprovalRatings() {
     return metricsService.getUserPerformanceMetrics();
   }
@@ -205,7 +206,14 @@ public class MetricController {
   }
 
   @PostMapping(path = "/click-scoreboard")
-  public MetricClickScoreboard createClickScoreboard(@Valid @RequestParam(name = "userName", defaultValue = "") String userName) {
+  public MetricClickScoreboard createClickScoreboard(
+    @Valid @RequestParam(name = "userName", defaultValue = "") String userName) {
     return metricsService.addClickScoreboard(userName);
+  }
+
+  @PostMapping(path = "/visit-scoi-page")
+  public MetricVisitScoiPage createVisitScoiPage(
+    @Valid @RequestParam(name = "userName", defaultValue = "") String userName) {
+    return metricsService.addVisitScoiPage(userName);
   }
 }

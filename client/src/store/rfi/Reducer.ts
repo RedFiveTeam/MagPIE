@@ -15,13 +15,13 @@ const initState: RfiState = {
   openRfis: [] as RfiModel[],
   closedRfis: [] as RfiModel[],
   loading: true,
-  viewUserMetricsPage: false
+  viewUserMetricsPage: false,
 };
 
 function flipSortKey(sortKey: SortKeyModel, field: Field) {
   return new SortKeyModel(
     field,
-    sortKey.field === field ? !sortKey.defaultOrder : true
+    sortKey.field === field ? !sortKey.defaultOrder : true,
   );
 }
 
@@ -34,7 +34,7 @@ function filterRfis(sortedRfis: RfiModel[]) {
     openRfis: filterRfisByStatus(sortedRfis, RfiStatus.OPEN),
     pendingRfis: filterRfisByStatus(sortedRfis, RfiStatus.PENDING),
     closedRfis: filterRfisByStatus(sortedRfis, RfiStatus.CLOSED),
-  }
+  };
 }
 
 const reducer: Reducer<RfiState> = (state = initState, action: any) => {
@@ -94,5 +94,5 @@ const reducer: Reducer<RfiState> = (state = initState, action: any) => {
   }
 };
 
-export {reducer as rfiReducer};
+export { reducer as rfiReducer };
 export { initState as rfiInitState };

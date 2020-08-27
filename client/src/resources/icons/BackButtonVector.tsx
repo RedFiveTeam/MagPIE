@@ -43,8 +43,8 @@ const BackButtonVector = (props: Props) => {
 
 export const StyledBackButtonVector = styled(BackButtonVector)`
   svg {
-  padding-top: 3px;
-  filter: drop-shadow(1px 4px 5px #000);
+    padding-top: 3px;
+    filter: drop-shadow(1px 4px 5px #000);
   
     :hover {
       filter: drop-shadow(0 0px 6px #FFFFFF);

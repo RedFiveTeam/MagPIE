@@ -28,6 +28,8 @@ import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPageRepository;
+import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPage;
+import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +89,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
 
+  @Autowired
+  private MetricVisitScoiPageRepository metricVisitScoiPageRepository;
+
 
   @Before
   public void setup() {
@@ -103,6 +108,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricClickRollupRepository.deleteAll();
     metricClickImportRepository.deleteAll();
     metricClickCollapseRepository.deleteAll();
+    metricVisitScoiPageRepository.deleteAll();
   }
 
   @Test
@@ -292,5 +298,19 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
     MetricClickScoreboard metric = metricClickScoreboardRepository.findAll().get(0);
     assertEquals(userName, metric.getUserName());
+  }
+
+  @Test
+  public void postCreatesNewVisitScoiPageMetric() {
+    given()
+      .port(port)
+      .when()
+      .post(MetricController.URI + "/visit-scoi-page?userName=billy.bob.joe")
+      .then()
+      .statusCode(200);
+
+    assertEquals(1, metricVisitScoiPageRepository.findAll().size());
+    MetricVisitScoiPage metric = metricVisitScoiPageRepository.findAll().get(0);
+    assertEquals("billy.bob.joe", metric.getUserName());
   }
 }

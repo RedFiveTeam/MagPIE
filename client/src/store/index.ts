@@ -9,12 +9,15 @@ import { MetricState } from './metrics';
 import { metricsReducer } from './metrics/Reducer';
 import { ixnReducer } from './ixn/Reducer';
 import { IxnState } from './ixn';
+import { ScoiState } from './scoi/Types';
+import { scoiReducer } from './scoi/Reducer';
 
 export interface ApplicationState {
   tgtState: TgtState;
   rfiState: RfiState;
   ixnState: IxnState;
   metricState: MetricState;
+  scoiState: ScoiState;
   router: RouterState | undefined;
 }
 
@@ -24,5 +27,6 @@ export const createRootReducer = (history: History) =>
     rfiState: rfiReducer,
     ixnState: ixnReducer,
     metricState: metricsReducer,
+    scoiState: scoiReducer,
     router: connectRouter(history),
   });

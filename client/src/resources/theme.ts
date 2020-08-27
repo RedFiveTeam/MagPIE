@@ -73,6 +73,8 @@ const theme = {
     downloadButtonBackground: crayonBox.reallyDarkBlue,//
     fontErrorAlternate: crayonBox.lessLessBrightRed,//
     fontMgrsModal: crayonBox.skyBlueGreener,//
+    toggleActive: crayonBox.redlessBlue,//
+    bullet: crayonBox.mediumGreenBlue,//
   },
 
   font: {

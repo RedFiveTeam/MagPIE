@@ -20,4 +20,7 @@ public interface IxnRepository extends JpaRepository<Ixn, Long> {
 
   @Query("SELECT ixn FROM Ixn ixn WHERE ixn.targetId = ?1 AND ixn.approvalStatus = 'REJECTED'")
   List<Ixn> findAllRejectedByTargetId(long targetId);
+
+  @Query("SELECT ixn from Ixn ixn WHERE ixn.rfiId = ?1 AND ixn.trackNarrative LIKE %?2%")
+  List<Ixn> findAllByRfiIdContainingScoiName(long id, String name);
 }

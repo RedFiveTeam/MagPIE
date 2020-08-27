@@ -81,6 +81,8 @@ import dgs1sdt.magpie.metrics.uploadProduct.MetricUploadProduct;
 import dgs1sdt.magpie.metrics.uploadProduct.MetricUploadProductRepository;
 import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPage;
 import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPageRepository;
+import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPage;
+import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPageRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
 import dgs1sdt.magpie.tgts.Target;
@@ -142,6 +144,7 @@ public class MetricsService {
   private MetricClickScoreboardRepository metricClickScoreboardRepository;
   private MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
   private MetricCreateScoiRepository metricCreateScoiRepository;
+  private MetricVisitScoiPageRepository metricVisitScoiPageRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -346,6 +349,11 @@ public class MetricsService {
   public void setMetricCreateScoiRepository(
     MetricCreateScoiRepository metricCreateScoiRepository) {
     this.metricCreateScoiRepository = metricCreateScoiRepository;
+  }
+
+  @Autowired
+  public void setMetricVisitScoiPageRepository(MetricVisitScoiPageRepository metricVisitScoiPageRepository) {
+    this.metricVisitScoiPageRepository = metricVisitScoiPageRepository;
   }
 
   public long getSiteVisitCount() {
@@ -565,6 +573,22 @@ public class MetricsService {
     metricCreateScoiRepository.save(new MetricCreateScoi(scoiId, userName));
   }
 
+  public MetricClickRollup createClickRollup(MetricClickRollupJson metricClickRollupJson) {
+    return metricClickRollupRepository.save(new MetricClickRollup(metricClickRollupJson));
+  }
+
+  public MetricClickImport createClickImport(MetricClickImportJson metricClickImportJson) {
+    return metricClickImportRepository.save(new MetricClickImport(metricClickImportJson));
+  }
+
+  public MetricVisitScoiPage addVisitScoiPage(String userName) {
+    return metricVisitScoiPageRepository.save(new MetricVisitScoiPage(userName));
+  }
+
+  public MetricClickCollapse createClickCollapse(String userName) {
+    return metricClickCollapseRepository.save(new MetricClickCollapse(userName));
+  }
+
   public long[] getAverageWorkflowTime() {
     int totalTimePending = 0;
     int totalTimeOpen = 0;
@@ -769,14 +793,6 @@ public class MetricsService {
     return metricClickTrackNarrativeRepository.save(new MetricClickTrackNarrative(metricClickTrackNarrativeJson));
   }
 
-  public MetricClickRollup createClickRollup(MetricClickRollupJson metricClickRollupJson) {
-    return metricClickRollupRepository.save(new MetricClickRollup(metricClickRollupJson));
-  }
-
-  public MetricClickImport createClickImport(MetricClickImportJson metricClickImportJson) {
-    return metricClickImportRepository.save(new MetricClickImport(metricClickImportJson));
-  }
-
   public int getLtiovMetPercentage() {
     List<Rfi> closedRfis = rfiRepository.findAllClosed();
     int totalRfis = 0;
@@ -801,10 +817,6 @@ public class MetricsService {
     } else {
       return Math.round(((float) completedBeforeLtiov / (float) totalRfis) * 100);
     }
-  }
-
-  public MetricClickCollapse createClickCollapse(String userName) {
-    return metricClickCollapseRepository.save(new MetricClickCollapse(userName));
   }
 
   public Date getRfiStartDate(String rfiNum) {

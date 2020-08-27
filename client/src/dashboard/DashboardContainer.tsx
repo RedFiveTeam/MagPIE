@@ -18,6 +18,7 @@ import { TargetModel } from '../store/tgt/TargetModel';
 import { ExploitDateModel } from '../store/tgt/ExploitDateModel';
 import { loadSuccess } from '../store/rfi';
 import { StyledUserMetricsDashboard } from './userMetrics/UserMetricsDashboard';
+import { StyledScoiDashboard } from './scoi/ScoiDashboard';
 
 interface Props {
   fetchRfis: () => void;
@@ -26,6 +27,7 @@ interface Props {
   loadTgtPage: (rfi: RfiModel, firstLoad: boolean) => void;
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
   viewUserMetricsPage: boolean;
+  viewScoiPage: boolean;
   loadSuccess: () => void;
   rfi: RfiModel|undefined;
   rfis: RfiModel[];
@@ -117,6 +119,10 @@ export class DashboardContainer extends React.Component<Props, any> {
       return <StyledUserMetricsDashboard/>;
     }
 
+    if (this.props.viewScoiPage) {
+      return <StyledScoiDashboard/>;
+    }
+
     return (
       <div className={classNames('rm-dashboard', this.props.className)}>
         <StyledRfiDashboard/>
@@ -125,7 +131,7 @@ export class DashboardContainer extends React.Component<Props, any> {
   }
 }
 
-const mapStateToProps = ({rfiState, tgtState, ixnState}: ApplicationState) => ({
+const mapStateToProps = ({rfiState, tgtState, ixnState, scoiState}: ApplicationState) => ({
   loading: rfiState.loading,
   viewTgtPage: tgtState.viewTgtPage,
   viewIxnPage: ixnState.viewIxnPage,
@@ -133,7 +139,8 @@ const mapStateToProps = ({rfiState, tgtState, ixnState}: ApplicationState) => ({
   rfis: rfiState.rfis,
   tgts: tgtState.targets,
   exploitDates: tgtState.exploitDates,
-  viewUserMetricsPage: rfiState.viewUserMetricsPage
+  viewUserMetricsPage: rfiState.viewUserMetricsPage,
+  viewScoiPage: scoiState.viewScoiPage,
 });
 
 const mapDispatchToProps = {

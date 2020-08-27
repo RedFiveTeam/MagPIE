@@ -1,4 +1,4 @@
- import * as React from 'react';
+import * as React from 'react';
 import { useState } from 'react';
 import { StyledRfiTable } from './RfiTable';
 import styled from 'styled-components';
@@ -26,6 +26,8 @@ import { useCookies } from 'react-cookie';
 import MetricsButtonIcon from '../../resources/icons/MetricsButtonIcon';
 import { ConfirmationModal } from '../components/ConfirmationModal';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
+import { loadScoiPage } from '../../store/scoi/Actions';
+import { ScoiPageButton } from '../../resources/icons/ScoiPageButton';
 
 interface MyProps {
   className?: string;
@@ -104,7 +106,7 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
         setDisplayOpenRfiConfirmationModal(true);
         setRfiToOpen(rfiNum);
         setOpenRfiList(newOpenRfis);
-        setNewIndex(newIndex)
+        setNewIndex(newIndex);
       } else {
         console.log(`RFI ${rfiNum} not found`);
       }
@@ -162,6 +164,11 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
     dispatch(loadUserMetricsPage());
   };
 
+  const handleLoadScoiPage = () => {
+    fetch(`api/metrics/visit-scoi-page?userName=${cookie.userName}`, {method: 'post'});
+    dispatch(loadScoiPage());
+  };
+
   const handleRefreshClick = () => {
     setRefreshing(true);
     fetch('/api/rfi/refresh', {method: 'get'});
@@ -172,7 +179,7 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
 
   const handlePostProductUpload = (data: FormData, rfiId: number, userName: string) => {
     dispatch(postProductUploadRfiPage(data, rfiId, userName));
-  }
+  };
 
   const handleDeleteProduct = (rfiId: number, productName: string) => {
     enqueueSnackbar(`${productName} Deleted`, {
@@ -229,6 +236,9 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
           <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
         </div>
         <div className={'button-container'}>
+          <div className={'scoi-page-button'} onClick={handleLoadScoiPage}>
+            <ScoiPageButton/>
+          </div>
           <TextTooltip title={'Metrics'}>
             <div className={'metrics-button'} onClick={handleLoadUserMetricsPage}>
               <MetricsButtonIcon/>
@@ -310,17 +320,17 @@ export const StyledRfiDashboard = styled(RfiDashboard)`
     margin-bottom: 17px;
     padding: 0 43px;
   }
-  
+    
   .refresh-spacer {
     width: 21px;
   }
   
   .button-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 75px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 138px;
   }
   
   .refreshing {

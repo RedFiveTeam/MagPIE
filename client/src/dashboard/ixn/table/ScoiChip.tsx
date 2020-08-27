@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import theme from '../../../resources/theme';
 import classNames from 'classnames';
-import { ScoiModel } from '../../../store/ScoiModel';
+import { ScoiModel } from '../../../store/scoi/ScoiModel';
 import { MgrsTooltip } from '../../components/TextTooltip';
 
 interface MyProps {
