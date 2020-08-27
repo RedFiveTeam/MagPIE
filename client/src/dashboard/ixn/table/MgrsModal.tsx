@@ -158,7 +158,7 @@ export const StyledMgrsModal = styled(MgrsModal)`
     }
   }
   
-  .cancel {
+  .cancel-mgrs-input {
     margin-right: 4px;
     margin-bottom: -12px;
     align-self: flex-end;
