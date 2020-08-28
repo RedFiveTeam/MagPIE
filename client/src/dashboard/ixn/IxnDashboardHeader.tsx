@@ -66,7 +66,7 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
           }
           <TextTooltip title={'Add Segment'}>
             <div
-              className={classNames('ixn-dash--header--button add-segment-button',
+              className={classNames('header-button', 'add-segment-button',
                                     props.disableButtons || props.disableAddSegment ? 'disabled' : null)}
               onClick={props.setAddSegment}
             >
@@ -83,7 +83,7 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
           >
             <TextTooltip title={props.displayEeiNotes ? '' : 'EEI Notes'}>
               <div
-                className={classNames('ixn-dash--header--button eei-notes-button',
+                className={classNames('header-button', 'eei-notes-button',
                                       props.disableButtons || props.disableEeiButton ? 'disabled' : null)}
                 onClick={props.toggleDisplayEeiNotes}
               >
@@ -92,7 +92,7 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
             </TextTooltip>
           </EeiTooltip>
           <TextTooltip title={props.hasProduct ? 'Download Product' : 'Upload Product'}>
-            <div className={classNames('upload-file-button ixn-dash--header--button')}
+            <div className={classNames('header-button', 'upload-file-button', props.disableButtons ? 'disabled' : null)}
                  onClick={props.handleShowProductModal}
             >
               <UploadFileIcon hasProduct={props.hasProduct}/>
@@ -100,7 +100,7 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
           </TextTooltip>
           <TextTooltip title={'Export Rollups'}>
             <div
-              className={classNames('ixn-dash--header--button', 'rollup-button',
+              className={classNames('header-button', 'rollup-button',
                                     props.disableButtons || props.disableRollupButton ? 'disabled' : null)}
               onClick={handleRollupClick}
             >
@@ -174,36 +174,23 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   }
   
   .ixn-dash--header--buttons {
+    width: 192px;
     display: flex;
     flex-direction: row;
-    flex: 0 0 192px;
     justify-content: space-between;
     align-items: center;
-    overflow-y: auto;
-    height: 59px;
-    padding: 5px;
-    font-size: 18px;
-    margin-right: 29px;
-    margin-left: 283px;
+    margin-right: 34px;
   }
   
-  .ixn-dash--header--button {
-    height: 34.5px;
+  .header-button {
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
   }
   
   .ixn-dash--header--filler {
     width: 60px;
-  }
-  
-  .rollup-button {
-    cursor: pointer;
-  }
-  
-  .rollup-box {
-    :hover {
-      box-shadow: 0 0 6px #FFFFFF;
-    }
   }
   
   .header-helper-text {

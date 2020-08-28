@@ -22,7 +22,8 @@ interface MyProps {
 const MetricsButtonIcon: React.FC<MyProps> = (props) => {
   return (
     <Wrapper className={props.className}>
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg className="icon" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15" cy="15" r="15" fill="#112C37"/>
         <path
           d={pathD}
           fill={theme.color.primaryButton}
@@ -37,12 +38,12 @@ const MetricsButtonIcon: React.FC<MyProps> = (props) => {
 export default MetricsButtonIcon;
 
 const Wrapper = styled('div')`
-  svg {
-    border-radius: 15px;
-    box-shadow: 0 2px 4px #000000;
+  filter: drop-shadow(0 2px 4px #000);
   
-    :hover {
-      box-shadow: 0 0 6px #FFFFFF;
+  :hover {
+    .icon {
+      border-radius: 15px;
+      box-shadow: 0 0 6px #FFF;
     }
- }
+  }
 `;

@@ -16,7 +16,7 @@ const UploadFileIcon: React.FC<MyProps> = (props) => {
   return (
     <Wrapper className={props.className}>
       <svg className={'file-icon'} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="15" cy="15" r="15" fill="none"/>
+        <circle cx="15" cy="15" r="15" fill="#112C37"/>
         <path
           d={pathD1}
           fill={theme.color.primaryButton}
@@ -45,22 +45,14 @@ const UploadFileIcon: React.FC<MyProps> = (props) => {
 export default UploadFileIcon;
 
 const Wrapper = styled('div')`
-  filter: drop-shadow(0 2px 4px #000000);
+  filter: drop-shadow(0 2px 4px #000);
+  
   :hover {
     .file-icon {
       border-radius: 15px;
-      box-shadow: 0 0 6px #FFFFFF;
+      box-shadow: 0 0 6px #FFF;
     }
   }
-
-  //svg {
-  //  border-radius: 15px;
-  //  box-shadow: 0 2px 4px #000000;
-  //
-  //  :hover {
-  //    box-shadow: 0 0 6px #FFFFFF;
-  //  }
-  //}
  
   .blue-circle {
     margin-top: -47px;

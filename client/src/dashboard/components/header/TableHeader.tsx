@@ -16,7 +16,7 @@ export const TableHeader: React.FC<Props> = props => {
       {props.headers.map(value =>
         <StyledTableHeaderCell
           text={value}
-          className={'header-cell--' + value.split(' ')[value.split(' ').length - 1].toLowerCase()}
+          className={classNames('header-cell--' + value.split(' ')[value.split(' ').length - 1].toLowerCase())}
           key={value}
         />
       )}

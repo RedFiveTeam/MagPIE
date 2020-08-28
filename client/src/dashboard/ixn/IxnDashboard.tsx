@@ -506,7 +506,6 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   
   .header-cell--id {
     text-align: center;
-    padding-left: 5px;
     width: 95px;
   }
   
@@ -534,13 +533,12 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
   }
   
   .ixn-row-box {
-    margin-top: 8px;
+    margin: 4px 0;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
     font-weight: normal;
-    margin-bottom: 9px;
     align-self: flex-start;
   }
   
@@ -560,12 +558,13 @@ export const StyledIxnDashboard = styled(IxnDashboard)`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 17px;
     margin-left: 27px;
   }
   
   .segment-divider-empty {
     margin-top: 46px;
+    margin-left: -17px
   }
   
   .ixn-box-right {

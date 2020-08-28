@@ -186,7 +186,8 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
  
   .button-section {
     display: flex;
-    width: 815px;
+    width: 100%;
+    min-width: 815px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;

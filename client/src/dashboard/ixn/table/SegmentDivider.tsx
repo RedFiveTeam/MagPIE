@@ -417,7 +417,7 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightRow};
     line-height: 19px;
-    margin-top: -10px;
+    margin-top: -17px;
     margin-bottom: -9px;
     z-index: 3;
   }

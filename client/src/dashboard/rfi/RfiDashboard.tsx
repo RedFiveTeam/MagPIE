@@ -338,6 +338,6 @@ export const StyledRfiDashboard = styled(RfiDashboard)`
     margin: 0 25px;
   }
   .metrics-button {
-  cursor: pointer;
+    cursor: pointer;
   }
 `;

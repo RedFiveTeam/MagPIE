@@ -178,13 +178,13 @@ export const TgtRow: React.FC<MyProps> = (props) => {
             <StyledExploitationLogButtonVector/>
           </div>
         </div>
+        {showDelete && props.rfi.status !== RfiStatus.CLOSED ?
+          <div className={'delete-container'}>
+            <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-tgt-button'} tooltip={'Delete Target'}/>
+          </div>
+          :
+          <div className={'delete-container'}>&nbsp;</div>}
       </Box>
-      {showDelete && props.rfi.status !== RfiStatus.CLOSED ?
-        <div className={'delete-container'}>
-          <MiniTrashcanButton onClick={handleDeleteClick} className={'delete-tgt-button'} tooltip={'Delete Target'}/>
-        </div>
-        :
-        <div className={'delete-container'}>&nbsp;</div>}
       <DeleteConfirmationModal
         deletingItem={props.target.name}
         display={displayModal}
@@ -283,7 +283,6 @@ export const StyledTgtRow = styled(TgtRow)`
     flex-direction: row;
     align-items: center;
     font-weight: normal;
-    padding-right: 7px;
   }
   
   .tgt-row-left {
@@ -306,11 +305,12 @@ export const StyledTgtRow = styled(TgtRow)`
     align-items: center;
     font-weight: normal;
     justify-content: center;
-    min-height: 62px;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     margin-left: 9px;
     width: 108px;
+    min-height: 63px;
+    height: 100%;
   }
   
   .tgt-form {
@@ -348,8 +348,9 @@ export const StyledTgtRow = styled(TgtRow)`
   }
   
   .delete-container {
+    align-self: flex-start;
+    margin-top: -13px;
     height: 20px;
     width: 20px;
-    margin: -75px 0 55px 1212px
   }
 `;

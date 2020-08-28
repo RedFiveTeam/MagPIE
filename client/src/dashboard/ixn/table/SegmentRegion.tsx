@@ -154,10 +154,11 @@ export const StyledSegmentRegion = styled(SegmentRegion)`
   flex-direction: column;
   align-items: flex-start;
   padding-bottom: 20px;
+  width: 1455px;
   
   .expand-collapse {
     width: 1410px;
-    margin-top: -28px;
+    margin-top: -35px;
     height: 28px;
     z-index: 1;
     display: flex;

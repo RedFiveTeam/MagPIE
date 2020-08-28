@@ -293,7 +293,7 @@ export const FeedbackDashboard: React.FC<Props> = (props) => {
               null
             }
           </div>
-          <div className={'rfi-description'}>
+          <div className={classNames('rfi-description', allSpecificFeedbackSubmitted ? 'lighter' : null)}>
             <div className={'description-title'}>
               RFI Description
             </div>
@@ -388,8 +388,7 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     justify-content: flex-start;
     align-items: flex-start;
     word-wrap: normal;
-    overflow-y: scroll;
-    overflow-x: auto;
+    overflow: auto;
     font-size: ${theme.font.sizeHeaderSmall};
     padding-right: 8px;
   }
@@ -484,5 +483,9 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     align-items: center;
     text-align: center;
     color: #D8F4FF;
+  }
+  
+  .lighter {
+    background-color: #374B52;
   }
 `;

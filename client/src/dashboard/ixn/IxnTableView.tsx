@@ -99,7 +99,7 @@ export const IxnTableView: React.FC<MyProps> = (props) => {
           {printSegmentRegions()}
           {props.addSegment && !props.readOnly ?
             <StyledSegmentDivider
-              className={'segment-divider-placeholder segment-divider-empty'}
+              className={'segment-divider-empty'}
               target={props.target}
               segment={null}
               postSegment={props.handlePostSegment}

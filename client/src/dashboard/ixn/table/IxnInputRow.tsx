@@ -401,6 +401,7 @@ export const IxnInputRow: React.FC<MyProps> = props => {
 
 export const StyledIxnInputRow = styled(IxnInputRow)`
   margin-left: 27px;
+  padding-top: 4px;
 
   .underline {
     padding-bottom: 6px;
@@ -478,8 +479,8 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
     min-height: 58px;
     border-radius: 8px 0 8px 8px;
     background-color: ${theme.color.backgroundInput};
-    margin: -4px 0 8px 0;
-    padding: 8px;
+    margin-bottom: 8px;
+    padding: 12px;
     display:flex;
     flex-direction: column;
     justify-content: flex-end;

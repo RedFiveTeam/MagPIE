@@ -1,5 +1,6 @@
 import * as React from 'react';
 import theme from '../theme';
+import styled from 'styled-components';
 
 const pathD = 'M15 30C23.2843 30 30 23.2843 30 15C30 6.71573 23.2843 0 15 0C6.71573 0 0 6.71573 0 15C0 23.2843 6.7157' +
   '3 30 15 30ZM8.07016 22.9385H17.6205C17.6989 22.9385 17.763 22.8765 17.763 22.8007V21.8358C17.763 21.76 17.6989 21.' +
@@ -11,24 +12,42 @@ const pathD = 'M15 30C23.2843 30 30 23.2843 30 15C30 6.71573 23.2843 0 15 0C6.71
   '508C10.0355 7.50011 9.78067 7.74651 9.78067 8.05149V20.1817C9.78067 20.4866 10.0355 20.733 10.3508 20.733ZM16.0882' +
   ' 8.60286H16.0917L18.7608 11.184V11.1874H16.0882V8.60286Z';
 
-const CopyTargetsButton = () => {
+interface MyProps {
+  className?: string;
+}
+
+const CopyTargetsButton: React.FC<MyProps> = (props) => {
   return (
-    <svg
-      className="icon"
-      width="30"
-      height="30"
-      viewBox="0 0 30 30"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d={pathD}
-        fillRule="evenodd"
-        clipRule="evenodd"
-        fill={theme.color.primaryButton}
-      />
-    </svg>
+    <Wrapper className={props.className}>
+      <svg
+        className="icon"
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="15" cy="15" r="15" fill="#112C37"/>
+        <path
+          d={pathD}
+          fillRule="evenodd"
+          clipRule="evenodd"
+          fill={theme.color.primaryButton}
+        />
+      </svg>
+    </Wrapper>
   );
 };
 
 export default CopyTargetsButton;
+
+const Wrapper = styled('div')`
+  filter: drop-shadow(0 2px 4px #000);
+  
+  :hover {
+    .icon {
+      border-radius: 15px;
+      box-shadow: 0 0 6px #FFF;
+    }
+  }
+`;

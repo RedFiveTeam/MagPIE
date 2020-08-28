@@ -296,14 +296,14 @@ export const IxnRow: React.FC<MyProps> = props => {
             <CancelButtonLarge/>
           }
         </DeleteCancelButton>
+        <div className={'delete-container'}>
+          {showDelete && !props.readOnly ?
+            <MiniTrashcanButton className={'delete-ixn-button'} tooltip={'Delete Callout'} onClick={handleDeleteClick}/>
+            :
+            '\xa0'
+          }
+        </div>
       </Box>
-      <div className={'delete-container'}>
-        {showDelete && !props.readOnly ?
-          <MiniTrashcanButton className={'delete-ixn-button'} tooltip={'Delete Callout'} onClick={handleDeleteClick}/>
-          :
-          '\xa0'
-        }
-      </div>
       {displayNote ?
         <div className={'note-container'}>
           <div className={'ixn-data-cell note'}>
@@ -355,7 +355,8 @@ export const StyledIxnRow = styled(IxnRow)`
   display: flex;
   overflow: hidden;
   flex-direction: column;
-  padding-top: 3px;
+  padding-top: 12px;
+  margin-top: -6px;
   
   .reject-arrow {
     width: 27px;
@@ -481,8 +482,10 @@ export const StyledIxnRow = styled(IxnRow)`
   }
   
   .delete-container {
+    align-self: flex-start;
+    margin-top: -13px;
     height: 20px;
     width: 20px;
-    margin: -80px 0 55px 1435px
+    //margin: -80px 0 55px 1435px
   }
 `;

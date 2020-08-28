@@ -81,7 +81,7 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
                        PopperProps={{
                          className: 'header-tooltip',
                        }}>
-            <div className={classNames('upload-file-button header-button')}
+            <div className={classNames('upload-file-button header-button', props.disabled ? 'disabled' : null)}
                  onClick={() => props.handleShowProductModal()}
             >
               <UploadFileIcon hasProduct={props.rfi.productName !== null}/>
@@ -123,7 +123,6 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     height: 63px;
     padding-right: 34px;
     background: ${theme.color.backgroundHeader};
-    box-shadow: 0 2px 20px #000000;
     z-index: 10000;
   }
   
@@ -167,10 +166,5 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     width: 30px;
     height: 30px;
     cursor: pointer;
-    box-shadow: 1px 4px 5px #000;
-    
-    :hover {
-      box-shadow: 0 0 6px #FFFFFF;
-    }
   }
 `;
