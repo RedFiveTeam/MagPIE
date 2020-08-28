@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface SegmentRepository extends JpaRepository<Segment, Long> {
   List<Segment> findAllByTargetId(long targetId);
+  List<Segment> findAllByDeletedIsNotNull();
 }

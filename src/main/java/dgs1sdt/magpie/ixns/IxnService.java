@@ -239,9 +239,7 @@ public class IxnService {
   }
 
   public List<Segment> getDeletedSegments() {
-    return segmentRepository.findAll()
-      .stream().filter(segment -> segment.getDeleted() != null)
-      .collect(Collectors.toList());
+    return segmentRepository.findAllByDeletedIsNotNull();
   }
 
   public long findNumByRfiId(long rfiId) {

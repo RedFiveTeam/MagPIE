@@ -3,7 +3,7 @@ package dgs1sdt.magpie.rfis;
 import dgs1sdt.magpie.ixns.IxnService;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
-import dgs1sdt.magpie.products.ProductController;
+import dgs1sdt.magpie.products.ProductService;
 import dgs1sdt.magpie.tgts.TargetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class RfiController {
   private RfiRepository rfiRepository;
   private TargetService targetService;
   private IxnService ixnService;
-  private ProductController productController;
+  private ProductService productService;
 
   @Autowired
   public RfiController(RfiService rfiService,
@@ -34,14 +34,14 @@ public class RfiController {
                        RfiRepository rfiRepository,
                        TargetService targetService,
                        IxnService ixnService,
-                       ProductController uploadController
+                       ProductService productService
   ) {
     this.rfiService = rfiService;
     this.metricsService = metricsService;
     this.rfiRepository = rfiRepository;
     this.targetService = targetService;
     this.ixnService = ixnService;
-    this.productController = uploadController;
+    this.productService = productService;
   }
 
   @Autowired
@@ -70,8 +70,8 @@ public class RfiController {
   }
 
   @Autowired
-  public void setProductController(ProductController productController) {
-    this.productController = productController;
+  public void setProductService(ProductService productService) {
+    this.productService = productService;
   }
 
   @GetMapping
@@ -87,7 +87,7 @@ public class RfiController {
       Date startDate = metricsService.getRfiStartDate(rfi.getRfiNum());
       boolean containsRejectedTracks = ixnService.rfiContainsRejectedTracks(rfi.getId());
       boolean areAllTracksComplete = ixnService.allTracksAreComplete(rfi.getId());
-      String productName = productController.getProductName(rfi.getId());
+      String productName = productService.getProductName(rfi.getId());
 
       if (rfi.getStatus().equals("NEW")) {
         rfiGetList.add(new RfiGet(rfi, tgtCount, ixnCount, startDate, null, containsRejectedTracks, false, productName));

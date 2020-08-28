@@ -22,4 +22,5 @@ public interface TargetRepository extends JpaRepository<Target, Long> {
   @Query("SELECT tgt FROM Target tgt WHERE tgt.rfiId = ?1 AND tgt.name = ?2 AND tgt.exploitDateId > 0 AND tgt.deleted IS NULL")
   List<Target> findAllByRfiIdAndNameWithExploitDate(long rfiId, String name);
 
+  List<Target> findAllByDeletedIsNotNull();
 }

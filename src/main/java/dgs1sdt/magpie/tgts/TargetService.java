@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -345,9 +344,11 @@ public class TargetService {
   }
 
   public List<Target> getDeletedTargets() {
-    return targetRepository.findAll()
-      .stream().filter(target -> target.getDeleted() != null)
-      .collect(Collectors.toList());
+    return targetRepository.findAllByDeletedIsNotNull();
+  }
+
+  public List<ExploitDate> getDeletedExploitDates() {
+    return exploitDateRepository.findAllByDeletedIsNotNull();
   }
 
   public long findNumByRfiId(long rfiId) {
