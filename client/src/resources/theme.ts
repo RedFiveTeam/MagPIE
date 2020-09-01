@@ -75,6 +75,7 @@ const theme = {
     fontMgrsModal: crayonBox.skyBlueGreener,//
     toggleActive: crayonBox.redlessBlue,//
     bullet: crayonBox.mediumGreenBlue,//
+    toggleButtonBackground: crayonBox.yetAnotherDarkGreenBlue,//
   },
 
   font: {

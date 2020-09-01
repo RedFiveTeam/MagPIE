@@ -8,8 +8,11 @@ import { exitScoiPage } from '../../store/scoi/Actions';
 import { StyledScoiTable } from './ScoiTable';
 import { ScoiModel } from '../../store/scoi/ScoiModel';
 import { ApplicationState } from '../../store';
-import { RfiAssociationModel } from '../../store/scoi/RfiAssociationModel';
-import { StyledRfiAssociationBullet } from '../../store/scoi/RfiAssociationBullet';
+import { StyledRfiAssociationBullet } from './bullets/RfiAssociationBullet';
+import { StyledTgtAssociationBullet } from './bullets/TgtAssociationBullet';
+import { IxnAssociationModel, RfiAssociationModel, TgtAssociationModel } from '../../store/scoi/AssociationModels';
+import { StyledCalloutAssociationBullet } from './bullets/CalloutAssociationBullet';
+import { StyledTrackAssociationBullet } from './bullets/TrackAssociationBullet';
 
 interface MyProps {
   className?: string;
@@ -21,6 +24,11 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
   const [selectedScoiId, setSelectedScoiId] = useState(scois.length > 0 ? scois[0].id : -1);
   const [showRfiInfo, setShowRfiInfo] = useState(true);
   const [rfiInfo, setRfiInfo] = useState([] as RfiAssociationModel[]);
+  const [showTargetInfo, setShowTargetInfo] = useState(true);
+  const [targetInfo, setTargetInfo] = useState([] as TgtAssociationModel[]);
+  const [showCalloutInfo, setShowCalloutInfo] = useState(true);
+  const [showTrackInfo, setShowTrackInfo] = useState(true);
+  const [ixnInfo, setIxnInfo] = useState([] as IxnAssociationModel[]);
   let selectedScoi: ScoiModel|undefined = scois.find(scoi => scoi.id === selectedScoiId);
 
   document.onkeydown = checkKey;
@@ -76,12 +84,68 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
     }
   }, [showRfiInfo, selectedScoiId]);
 
+  useEffect(() => {
+    if (showTargetInfo && selectedScoi) {
+      // callApi('get', '/api/scoi/tgt?name=' + selectedScoi.name)
+      fetch('/api/scoi/tgt?name=' + selectedScoi.name, {method: 'get'})
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return;
+          }
+        })
+        .then(jsons => {
+          if (jsons) {
+            setTargetInfo(jsons);
+          } else {
+            setTargetInfo([]);
+          }
+        })
+        .catch((reason) => console.log(reason));
+    }
+  }, [showTargetInfo, selectedScoiId]);
+
+  useEffect(() => {
+    if ((showCalloutInfo || showTrackInfo) && selectedScoi) {
+      // callApi('get', '/api/scoi/tgt?name=' + selectedScoi.name)
+      fetch('/api/scoi/ixn?name=' + selectedScoi.name, {method: 'get'})
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return;
+          }
+        })
+        .then(jsons => {
+          if (jsons) {
+            setIxnInfo(jsons);
+          } else {
+            setIxnInfo([]);
+          }
+        })
+        .catch((reason) => console.log(reason));
+    }
+  }, [showCalloutInfo, showTrackInfo, selectedScoiId]);
+
   const handleSelectScoi = (scoiId: number) => {
     setSelectedScoiId(scoiId);
   };
 
   const toggleRfiInfo = () => {
     setShowRfiInfo(!showRfiInfo);
+  };
+
+  const toggleTgtInfo = () => {
+    setShowTargetInfo(!showTargetInfo);
+  };
+
+  const toggleCalloutInfo = () => {
+    setShowCalloutInfo(!showCalloutInfo);
+  };
+
+  const toggleTrackInfo = () => {
+    setShowTrackInfo(!showTrackInfo);
   };
 
   const dispatch = useDispatch();
@@ -92,8 +156,32 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
 
   const mapRfiAssociations = () => {
     return (
-      rfiInfo.map((rfiAssociation, index) =>
+      rfiInfo.map((rfiAssociation: RfiAssociationModel, index: number) =>
                     <StyledRfiAssociationBullet key={`rfi-${index}`} rfiAssociation={rfiAssociation}/>,
+      )
+    );
+  };
+
+  const mapTargetAssociations = () => {
+    return (
+      targetInfo.map((targetAssociation: TgtAssociationModel, index: number) =>
+                       <StyledTgtAssociationBullet key={`tgt-${index}`} tgtAssociation={targetAssociation}/>,
+      )
+    );
+  };
+
+  const mapCalloutAssociations = () => {
+    return (
+      ixnInfo.map((ixnAssociation: IxnAssociationModel, index: number) =>
+                    <StyledCalloutAssociationBullet key={`callout-${index}`} ixnAssociation={ixnAssociation}/>,
+      )
+    );
+  };
+
+  const mapTrackAssociations = () => {
+    return (
+      ixnInfo.map((ixnAssociation: IxnAssociationModel, index: number) =>
+                    <StyledTrackAssociationBullet key={`track-${index}`} ixnAssociation={ixnAssociation}/>,
       )
     );
   };
@@ -115,22 +203,64 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
           handleSelectScoi={handleSelectScoi}
           showRfiInfo={showRfiInfo}
           toggleRfiInfo={toggleRfiInfo}
+          showTgtInfo={showTargetInfo}
+          toggleTgtInfo={toggleTgtInfo}
+          showCalloutInfo={showCalloutInfo}
+          toggleCalloutInfo={toggleCalloutInfo}
+          showTrackInfo={showTrackInfo}
+          toggleTrackInfo={toggleTrackInfo}
         />
         <div className={'divider-bar'}/>
         <div className={'scoi-info-container'}>
           <div className={'scoi-info'}>
-          {showRfiInfo ?
-            <div className={'scoi-info-section'}>
-              <div className={'scoi-info-section--header'}>
-                Associated RFI Descriptions
+            {showRfiInfo ?
+              <div className={'scoi-info-section rfi-associations'}>
+                <div className={'scoi-info-section--header rfi-header'}>
+                  Associated RFI Descriptions
+                </div>
+                <div className={'scoi-info-section--body'}>
+                  {mapRfiAssociations()}
+                </div>
               </div>
-              <div className={'scoi-info-section--body'}>
-              {mapRfiAssociations()}
+              :
+              null
+            }
+            {showTargetInfo ?
+              <div className={'scoi-info-section tgt-associations'}>
+                <div className={'scoi-info-section--header'}>
+                  Associated Targets
+                </div>
+                <div className={'scoi-info-section--body'}>
+                  {mapTargetAssociations()}
+                </div>
               </div>
-            </div>
-            :
-            null
-          }
+              :
+              null
+            }
+            {showCalloutInfo ?
+              <div className={'scoi-info-section callout-associations'}>
+                <div className={'scoi-info-section--header'}>
+                  Referenced Callouts
+                </div>
+                <div className={'scoi-info-section--body'}>
+                  {mapCalloutAssociations()}
+                </div>
+              </div>
+              :
+              null
+            }
+            {showTrackInfo ?
+              <div className={'scoi-info-section track-associations'}>
+                <div className={'scoi-info-section--header'}>
+                  Cited Track Narratives
+                </div>
+                <div className={'scoi-info-section--body'}>
+                  {mapTrackAssociations()}
+                </div>
+              </div>
+              :
+              null
+            }
           </div>
         </div>
       </div>
@@ -216,6 +346,10 @@ export const StyledScoiDashboard = styled(ScoiDashboard)`
     overflow-y: auto;
   }
   
+  .scoi-info-section {
+    margin-bottom: 14px;
+  }
+  
   .scoi-info-section--header {
     font-family: Roboto;
     font-style: normal;
@@ -224,9 +358,16 @@ export const StyledScoiDashboard = styled(ScoiDashboard)`
     line-height: 19px;
     color: ${theme.color.toggleActive};
     text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 8px;
+  }
+  
+  .rfi-header {
+    margin-bottom: 0 !important;
   }
   
   .scoi-info-section--body {
     padding-left: 21px;
+    display: flex;
+    flex-direction: column;
   }
 `;

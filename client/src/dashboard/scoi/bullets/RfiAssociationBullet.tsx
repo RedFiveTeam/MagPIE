@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { RfiAssociationModel } from './RfiAssociationModel';
-import { formatRfiNum } from '../../utils';
+import { formatRfiNum } from '../../../utils';
 import styled from 'styled-components';
-import theme from '../../resources/theme';
-import { Bullet } from '../../resources/icons/Bullet';
+import theme from '../../../resources/theme';
+import { Bullet } from '../../../resources/icons/Bullet';
+import { RfiAssociationModel } from '../../../store/scoi/AssociationModels';
 
 interface MyProps {
   rfiAssociation: RfiAssociationModel;

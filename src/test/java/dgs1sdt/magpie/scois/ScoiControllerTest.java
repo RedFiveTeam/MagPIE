@@ -12,11 +12,11 @@ import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.TargetRepository;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
+import org.hamcrest.collection.IsArrayContaining;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,72 +156,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
     //Arrange
     String scoiName = "OPNS20-0123";
-    scoiRepository.save(new Scoi(scoiName, "12QWE1231231231"));
-
-    rfiRepository.save(
-      new Rfi("DGS-1-SDT-2020-00001", "", "CLOSED", new Date(), "", new Date(), "",
-        "This is the description of an associated RFI", "This is a justifiction", "", "", "",
-        "", "", "", "", "", ""));
-    rfiRepository.save(
-      new Rfi("DGS-1-SDT-2020-00002", "", "OPEN", new Date(), "", new Date(), "",
-        "This is the description of an RFI that does not mention the SCOI", "This is a justifiction", "", "", "",
-        "", "", "", "", "", ""));
-    rfiRepository.save(
-      new Rfi("DGS-1-SDT-2020-00003", "", "CLOSED", new Date(), "", new Date(), "",
-        "This is the description of another associated RFI", "This is a justifiction", "", "", "",
-        "", "", "", "", "", ""));
-    long rfi1Id = rfiRepository.findAll().get(0).getId();
-    long rfi2Id = rfiRepository.findAll().get(1).getId();
-    long rfi3Id = rfiRepository.findAll().get(2).getId();
-
-    exploitDateRepository.save(new ExploitDate(new Date(), rfi1Id));
-    exploitDateRepository.save(new ExploitDate(new Date(), rfi2Id));
-    exploitDateRepository.save(new ExploitDate(new Date(), rfi3Id));
-    long exploitDate1Id = exploitDateRepository.findAll().get(0).getId();
-    long exploitDate2Id = exploitDateRepository.findAll().get(1).getId();
-    long exploitDate3Id = exploitDateRepository.findAll().get(2).getId();
-
-    targetRepository.save(new Target(new TargetJson(rfi1Id, exploitDate1Id, "12IOP1231231231", "", ""), "20-0001"));
-    targetRepository.save(new Target(new TargetJson(rfi2Id, exploitDate2Id, "12IOP1231231232", "", ""), "20-0002"));
-    targetRepository.save(new Target(new TargetJson(rfi3Id, exploitDate3Id, "12IOP1231231233", "", ""), "20-0003"));
-    long target1Id = targetRepository.findAll().get(0).getId();
-    long target2Id = targetRepository.findAll().get(1).getId();
-    long target3Id = targetRepository.findAll().get(2).getId();
-
-    segmentRepository
-      .save(new Segment(new SegmentJson(rfi1Id, exploitDate1Id, target1Id, new Timestamp(2345), new Timestamp(3456))));
-    segmentRepository
-      .save(new Segment(new SegmentJson(rfi2Id, exploitDate2Id, target2Id, new Timestamp(2345), new Timestamp(3456))));
-    segmentRepository
-      .save(new Segment(new SegmentJson(rfi3Id, exploitDate3Id, target3Id, new Timestamp(2345), new Timestamp(3456))));
-    long segment1Id = segmentRepository.findAll().get(0).getId();
-    long segment2Id = segmentRepository.findAll().get(1).getId();
-    long segment3Id = segmentRepository.findAll().get(2).getId();
-
-    Ixn rfi1ixn1 = new Ixn(rfi1Id, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(2345), "", "0001-001", "",
-      IxnStatus.COMPLETED, "",
-      IxnApprovalStatus.APPROVED);
-    rfi1ixn1.setTrackNarrative("This is a track narrative that includes the SCOI " + scoiName);
-    Ixn rfi1ixn2 = new Ixn(rfi1Id, exploitDate1Id, target1Id, segment1Id, "", new Timestamp(2345), "", "0001-001", "",
-      IxnStatus.COMPLETED, "",
-      IxnApprovalStatus.APPROVED);
-    rfi1ixn2.setTrackNarrative("This one doesn't");
-
-    Ixn rfi2ixn1 = new Ixn(rfi2Id, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(2345), "", "0001-001", "",
-      IxnStatus.COMPLETED, "",
-      IxnApprovalStatus.APPROVED);
-    rfi2ixn1.setTrackNarrative("This is a track narrative that includes a different SCOI OPNS20-0002");
-    Ixn rfi2ixn2 = new Ixn(rfi2Id, exploitDate2Id, target2Id, segment2Id, "", new Timestamp(2345), "", "0001-001", "",
-      IxnStatus.COMPLETED, "",
-      IxnApprovalStatus.APPROVED);
-    rfi2ixn2.setTrackNarrative("This is a track narrative that includes a different SCOI OPNS20-0003");
-
-    Ixn rfi3ixn1 = new Ixn(rfi3Id, exploitDate3Id, target3Id, segment3Id, "", new Timestamp(2345), "", "0001-001", "",
-      IxnStatus.COMPLETED, "",
-      IxnApprovalStatus.APPROVED);
-    rfi3ixn1.setTrackNarrative("This is a track narrative that includes the SCOI " + scoiName);
-
-    ixnRepository.saveAll(Arrays.asList(rfi1ixn1, rfi1ixn2, rfi2ixn1, rfi2ixn2, rfi3ixn1));
+    setupAssociations(scoiName);
 
     //Act
     given()
@@ -247,5 +182,216 @@ public class ScoiControllerTest extends BaseIntegrationTest {
       //Assert
       .then()
       .statusCode(404);
+  }
+
+  @Test
+  public void returnsTargetAssociationsForScoiName() {
+    //Arrange
+    String scoiName = "OPNS20-0123";
+    setupAssociations(scoiName);
+
+    //Act
+    given()
+      .port(port)
+      .when()
+      .get(ScoiController.URI + "/tgt?name=" + scoiName)
+
+      //Assert
+      .then()
+      .statusCode(200)
+      .body("[0].name", equalTo("20-0001"))
+      .body("[0].mgrs", equalTo("12IOP1231231231"))
+      .body("[0].emails", hasItem("billy.bob.joe"))
+      .body("[0].emails", hasItem("another.name"))
+      .body("[0].emails", hasItem("william.robet.joseph"))
+      .body("[0].emails", hasItem("boonty.thomas"))
+      .body("[0].emails[4]", equalTo(null)) //there should only be 4 items
+      .body("[1].name", equalTo("20-0003"))
+      .body("[1].mgrs", equalTo("12IOP1231231233"))
+      .body("[1].emails", hasItem("billy.bob.joe"))
+      .body("[1].emails[1]", equalTo(null)) //THERE CAN BE ONLY ONE
+      .body("[2]", equalTo(null));
+
+    //Act
+    given()
+      .port(port)
+      .when()
+      .get(ScoiController.URI + "/tgt?name=" + "Bad name")
+
+      //Assert
+      .then()
+      .statusCode(404);
+  }
+
+  @Test
+  public void returnsIxnsAssociatedWithScoiName() {
+    String scoiName = "OPNS20-0123";
+    setupAssociations(scoiName);
+
+    //Act
+    given()
+      .port(port)
+      .when()
+      .get(ScoiController.URI + "/ixn?name=" + scoiName)
+
+      //Assert
+      .then()
+      .statusCode(200)
+      .body("[0].activity", equalTo("Activity 1"))
+      .body("[0].trackNarrative", equalTo("This is a track narrative that includes the SCOI " + scoiName))
+      .body("[1].activity", equalTo("Activity 2"))
+      .body("[2].activity", equalTo("Activity 3"))
+      .body("[3].activity", equalTo("Activity 4"))
+      .body("[3].trackNarrative", equalTo(
+        "This is a track narrative that includes the SCOI under the same target as RFI 1 but with a different analyst" +
+          scoiName))
+      .body("[4].activity", equalTo("Activity 5"))
+      .body("[5]", equalTo(null));
+
+    //Act
+    given()
+      .port(port)
+      .when()
+      .get(ScoiController.URI + "/ixn?name=" + "Bad name")
+
+      //Assert
+      .then()
+      .statusCode(404);
+  }
+
+  private void setupAssociations(String scoiName) {
+    scoiRepository.save(new Scoi(scoiName, "12QWE1231231231"));
+
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00001", "", "CLOSED", new Date(), "", new Date(), "",
+        "This is the description of an associated RFI", "This is a justifiction", "", "", "",
+        "william.robert.joseph@us.af.mil", "", "", "", "", ""));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00002", "", "OPEN", new Date(), "", new Date(), "",
+        "This is the description of an RFI that does not mention the SCOI", "This is a justifiction", "", "", "",
+        "", "", "", "", "", ""));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00003", "", "CLOSED", new Date(), "", new Date(), "",
+        "This is the description of another associated RFI", "This is a justifiction", "", "", "",
+        "boonty.thomas@coastguard.com", "", "", "", "", ""));
+    rfiRepository.save(
+      new Rfi("DGS-1-SDT-2020-00004", "", "CLOSED", new Date(), "", new Date(), "",
+        "This is the description of yet another associated RFI", "This is a justifiction", "", "", "",
+        "william.robert.joseph@us.af.mil", "", "", "", "", ""));
+    long rfi1Id = rfiRepository.findAll().get(0).getId();
+    long rfi2Id = rfiRepository.findAll().get(1).getId();
+    long rfi3Id = rfiRepository.findAll().get(2).getId();
+    long rfi4Id = rfiRepository.findAll().get(2).getId();
+
+    exploitDateRepository.save(new ExploitDate(new Date(), rfi1Id));
+    exploitDateRepository.save(new ExploitDate(new Date(), rfi2Id));
+    exploitDateRepository.save(new ExploitDate(new Date(), rfi3Id));
+    exploitDateRepository.save(new ExploitDate(new Date(), rfi3Id));
+    exploitDateRepository.save(new ExploitDate(new Date(), rfi4Id));
+    long rfi1exploitDateId = exploitDateRepository.findAll().get(0).getId();
+    long rfi2exploitDateId = exploitDateRepository.findAll().get(1).getId();
+    long rfi3exploitDateId1 = exploitDateRepository.findAll().get(2).getId();
+    long rfi3exploitDateId2 = exploitDateRepository.findAll().get(3).getId();
+    long rfi4exploitDateId = exploitDateRepository.findAll().get(4).getId();
+
+    targetRepository.save(new Target(new TargetJson(rfi1Id, rfi1exploitDateId, "12IOP1231231231", "", ""), "20-0001"));
+    targetRepository.save(new Target(new TargetJson(rfi2Id, rfi2exploitDateId, "12IOP1231231232", "", ""), "20-0002"));
+    targetRepository.save(new Target(new TargetJson(rfi3Id, rfi3exploitDateId1, "12IOP1231231233", "", ""), "20-0003"));
+    targetRepository.save(new Target(new TargetJson(rfi3Id, rfi3exploitDateId2, "12IOP1231231233", "", ""), "20-0003"));
+    targetRepository.save(new Target(new TargetJson(rfi3Id, rfi3exploitDateId2, "12IOP1231231231", "", ""), "20-0001"));
+    targetRepository.save(new Target(new TargetJson(rfi4Id, rfi4exploitDateId, "12IOP1231231231", "", ""), "20-0001"));
+    long rfi1targetId = targetRepository.findAll().get(0).getId();
+    long rfi2targetId = targetRepository.findAll().get(1).getId();
+    long rfi3targetId1 = targetRepository.findAll().get(2).getId();
+    long rfi3targetId2 = targetRepository.findAll().get(3).getId();
+    long rfi3targetId3 = targetRepository.findAll().get(4).getId();
+    long rfi4targetId = targetRepository.findAll().get(5).getId();
+
+    segmentRepository
+      .save(new Segment(
+        new SegmentJson(rfi1Id, rfi1exploitDateId, rfi1targetId, new Timestamp(2345), new Timestamp(3456))));
+    segmentRepository
+      .save(new Segment(
+        new SegmentJson(rfi2Id, rfi2exploitDateId, rfi2targetId, new Timestamp(2345), new Timestamp(3456))));
+    segmentRepository
+      .save(new Segment(
+        new SegmentJson(rfi3Id, rfi3exploitDateId1, rfi3targetId1, new Timestamp(2345), new Timestamp(3456))));
+    segmentRepository
+      .save(new Segment(
+        new SegmentJson(rfi3Id, rfi3exploitDateId2, rfi3targetId2, new Timestamp(2345), new Timestamp(3456))));
+    segmentRepository
+      .save(new Segment(
+        new SegmentJson(rfi3Id, rfi3exploitDateId2, rfi3targetId3, new Timestamp(2345), new Timestamp(3456))));
+    segmentRepository
+      .save(new Segment(
+        new SegmentJson(rfi4Id, rfi4exploitDateId, rfi4targetId, new Timestamp(2345), new Timestamp(3456))));
+    long rfi1segmentId = segmentRepository.findAll().get(0).getId();
+    long rfi2segmentId = segmentRepository.findAll().get(1).getId();
+    long rfi3segmentId1 = segmentRepository.findAll().get(2).getId();
+    long rfi3segmentId2 = segmentRepository.findAll().get(3).getId();
+    long rfi3segmentId3 = segmentRepository.findAll().get(4).getId();
+    long rfi4segmentId = segmentRepository.findAll().get(5).getId();
+
+    //Inclides SCOI
+    Ixn rfi1ixn1 =
+      new Ixn(rfi1Id, rfi1exploitDateId, rfi1targetId, rfi1segmentId, "billy.bob.joe", new Timestamp(2345),
+        "Activity 1", "0001-001", "billy.bob.joe",
+        IxnStatus.COMPLETED, "",
+        IxnApprovalStatus.APPROVED);
+    rfi1ixn1.setTrackNarrative("This is a track narrative that includes the SCOI " + scoiName);
+    Ixn rfi1ixn2 =
+      new Ixn(rfi1Id, rfi1exploitDateId, rfi1targetId, rfi1segmentId, "", new Timestamp(2345), "", "0001-001", "",
+        IxnStatus.COMPLETED, "",
+        IxnApprovalStatus.APPROVED);
+    rfi1ixn2.setTrackNarrative("This one doesn't");
+
+    Ixn rfi2ixn1 =
+      new Ixn(rfi2Id, rfi2exploitDateId, rfi2targetId, rfi2segmentId, "", new Timestamp(2345), "", "0002-001", "",
+        IxnStatus.COMPLETED, "",
+        IxnApprovalStatus.APPROVED);
+    rfi2ixn1.setTrackNarrative("This is a track narrative that includes a different SCOI OPNS20-0002");
+    Ixn rfi2ixn2 =
+      new Ixn(rfi2Id, rfi2exploitDateId, rfi2targetId, rfi2segmentId, "billy.bob.joe", new Timestamp(2345), "",
+        "0002-002", "billy.bob.joe",
+        IxnStatus.COMPLETED, "",
+        IxnApprovalStatus.APPROVED);
+    rfi2ixn2.setTrackNarrative("This is a track narrative that includes a different SCOI OPNS20-0003");
+
+    //Includes SCOI
+    Ixn rfi3ixn1 =
+      new Ixn(rfi3Id, rfi3exploitDateId1, rfi3targetId1, rfi3segmentId1, "billy.bob.joe", new Timestamp(2345),
+        "Activity 2", "0003-001", "billy.bob.joe",
+        IxnStatus.COMPLETED, "",
+        IxnApprovalStatus.APPROVED);
+    rfi3ixn1.setTrackNarrative("This is a track narrative that includes the SCOI " + scoiName);
+    //Includes SCOI
+    Ixn rfi3ixn2 =
+      new Ixn(rfi3Id, rfi3exploitDateId2, rfi3targetId2, rfi3segmentId2, "billy.bob.joe", new Timestamp(2345),
+        "Activity 3", "0003-002", "billy.bob.joe",
+        IxnStatus.COMPLETED, "",
+        IxnApprovalStatus.APPROVED);
+    rfi3ixn2.setTrackNarrative(
+      "This is a track narrative that includes the SCOI under the same target name but on a different date and with " +
+        "another analyst" +
+        scoiName);
+    //Includes SCOI
+    Ixn rfi3ixn3 =
+      new Ixn(rfi3Id, rfi3exploitDateId2, rfi3targetId3, rfi3segmentId3, "billy.bob.joe", new Timestamp(2345),
+        "Activity 4", "0001-001", "another.name",
+        IxnStatus.COMPLETED, "",
+        IxnApprovalStatus.APPROVED);
+    rfi3ixn3.setTrackNarrative(
+      "This is a track narrative that includes the SCOI under the same target as RFI 1 but with a different analyst" +
+        scoiName);
+    //Includes SCOI
+    Ixn rfi4ixn =
+      new Ixn(rfi4Id, rfi4exploitDateId, rfi4targetId, rfi4segmentId, "william.robet.joseph", new Timestamp(2345),
+        "Activity 5", "0001-001", "boonty.thomas",
+        IxnStatus.COMPLETED, "",
+        IxnApprovalStatus.APPROVED);
+    rfi4ixn.setTrackNarrative("This is a track narrative that includes the SCOI " + scoiName +
+      " with the more POCs");
+
+    ixnRepository.saveAll(Arrays.asList(rfi1ixn1, rfi1ixn2, rfi2ixn1, rfi2ixn2, rfi3ixn1, rfi3ixn2, rfi3ixn3, rfi4ixn));
   }
 }

@@ -12,6 +12,12 @@ interface MyProps {
   handleSelectScoi: (scoiId: number) => void;
   showRfiInfo: boolean;
   toggleRfiInfo: () => void;
+  showTgtInfo: boolean;
+  toggleTgtInfo: () => void;
+  showCalloutInfo: boolean;
+  toggleCalloutInfo: () => void;
+  showTrackInfo: boolean;
+  toggleTrackInfo: () => void;
   className?: string;
 }
 
@@ -26,6 +32,13 @@ const ScoiTable: React.FC<MyProps> = (props) => {
           select={() => props.handleSelectScoi(scoi.id!)}
           showRfiInfo={props.showRfiInfo}
           toggleRfiInfo={props.toggleRfiInfo}
+          showTgtInfo={props.showTgtInfo}
+          toggleTgtInfo={props.toggleTgtInfo}
+          showCalloutInfo={props.showCalloutInfo}
+          toggleCalloutInfo={props.toggleCalloutInfo}
+          showTrackInfo={props.showTrackInfo}
+          toggleTrackInfo={props.toggleTrackInfo}
+
         />,
     );
   };

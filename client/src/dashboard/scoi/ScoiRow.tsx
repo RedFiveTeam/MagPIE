@@ -3,7 +3,7 @@ import { ScoiModel } from '../../store/scoi/ScoiModel';
 import styled from 'styled-components';
 import theme from '../../resources/theme';
 import classNames from 'classnames';
-import RfiInfoButton from '../../resources/icons/RfiInfoButton';
+import { IxnInfoButton, RfiInfoButton, TgtInfoButton, TrackInfoButton } from '../../resources/icons/RfiInfoButton';
 
 interface MyProps {
   scoi: ScoiModel;
@@ -11,6 +11,12 @@ interface MyProps {
   select: () => void;
   showRfiInfo: boolean;
   toggleRfiInfo: () => void;
+  showTgtInfo: boolean;
+  toggleTgtInfo: () => void;
+  showCalloutInfo: boolean;
+  toggleCalloutInfo: () => void;
+  showTrackInfo: boolean;
+  toggleTrackInfo: () => void;
   className?: string;
 }
 
@@ -31,6 +37,21 @@ const ScoiRow: React.FC<MyProps> = (props) => {
              onClick={() => {if (props.selected) props.toggleRfiInfo();}}
         >
           <RfiInfoButton active={props.selected && props.showRfiInfo}/>
+        </div>
+        <div className={'tgt-associations-button'}
+             onClick={() => {if (props.selected) props.toggleTgtInfo();}}
+        >
+          <TgtInfoButton active={props.selected && props.showTgtInfo}/>
+        </div>
+        <div className={'callout-associations-button'}
+             onClick={() => {if (props.selected) props.toggleCalloutInfo();}}
+        >
+          <IxnInfoButton active={props.selected && props.showCalloutInfo}/>
+        </div>
+        <div className={'track-associations-button'}
+             onClick={() => {if (props.selected) props.toggleTrackInfo();}}
+        >
+          <TrackInfoButton active={props.selected && props.showTrackInfo}/>
         </div>
       </div>
     </div>
@@ -73,7 +94,15 @@ export const StyledScoiRow = styled(ScoiRow)`
     width: 154px;
   }
   
-  .rfi-associations-button {
-    cursor: pointer;
+  .scoi-associations {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 162px;
+    height: 30px;
+    
+    div {
+      cursor: pointer;
+    }
   }
 `;

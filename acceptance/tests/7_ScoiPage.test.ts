@@ -15,9 +15,9 @@ Scenario('Should be able to navigate to and exit the SCOI page', (I) => {
   I.see('Associations');
   I.click('.back-button');
   I.waitForText('Upload Product');
-  I.dontSee('SCOI')
+  I.dontSee('SCOI');
   I.dontSee('Associations');
-})
+});
 
 Scenario('Should be able see and toggle info', (I) => {
   //  Add an association
@@ -48,8 +48,11 @@ Scenario('Should be able see and toggle info', (I) => {
   I.pressKey('Enter');
   //add ixn
   I.waitForElement('.exploit-analyst');
+  I.fillField('.exploit-analyst', 'Sdt.Test');
   I.pressKey('Tab');
   I.fillField('.time', '121');
+  I.pressKey('Tab');
+  I.fillField('.activity', 'Person entered SCOI');
   I.pressKey('Enter');
   I.waitForText('12:10:00Z', 3);
   //add track w/ scoi name
@@ -61,7 +64,7 @@ Scenario('Should be able see and toggle info', (I) => {
   I.click('.track-narrative-button');
   I.waitForText('Copy to Clipboard');
   I.fillField('.track-narrative-input',
-              'OPNS20-0009');
+              'This is the track narrative that references OPNS20-0099');
   I.waitForElement('.mgrs-input');
   I.fillField('.mgrs-input', '99ASD1234567890');
   I.click('.submit-button');
@@ -78,17 +81,48 @@ Scenario('Should be able see and toggle info', (I) => {
   I.waitForText('Justification', 10);
 
   I.click('.scoi-page-button');
-  I.waitForText('OPNS20-0009');
+  I.waitForText('OPNS20-0099');
   I.see('99ASD1234567890');
-  // pause()
-  I.pressKey("ArrowDown");
+  I.pressKey('ArrowDown');
 
   I.waitForText('RFI: 20-335', 10);
   I.see('sunt in culpa qui officia deserunt mollit anim id es laborum');
 
-  I.click('.rfi-associations-button');
+  //RFI associations toggle
+  I.click(locate('.rfi-associations-button').last());
   I.wait(1);
   I.dontSee('RFI: 20-335');
   I.dontSee(
     'sunt in culpa qui officia deserunt mollit anim id es laborum');
-})
+
+  //TGT associations toggle
+  I.waitForText('20-000');
+  I.see('12QWE1231231231');
+  I.see('POC: Sdt.Test@mail.smil.mil');
+
+  I.click(locate('.tgt-associations-button').last());
+  I.wait(1);
+  I.dontSee('20-000');
+  I.dontSee('12QWE1231231231');
+  I.dontSee('POC');
+
+  //IXN associations toggle
+  within('.callout-associations', () => {
+    I.waitForText('Person entered SCOI');
+  });
+
+  I.click(locate('.callout-associations-button').last());
+  I.wait(1);
+  I.dontSeeElement('.callout-associations');
+
+  //Track associations toggle
+  I.waitForText('Person entered SCOI');
+  I.dontSee('This is the track narrative that references OPNS20-0099');
+  I.click('.callout');
+  I.waitForText('This is the track narrative that references OPNS20-0099');
+
+  I.click(locate('.track-associations-button').last());
+  I.wait(1);
+  I.dontSee('Person entered SCOI');
+  I.dontSee('This is the track narrative that references OPNS20-0099');
+});

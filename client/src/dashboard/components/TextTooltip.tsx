@@ -18,6 +18,21 @@ const TextTooltip = withStyles((localTheme: Theme) => ({
 }))(Tooltip);
 
 // @ts-ignore
+export const PocTooltip = withStyles((localTheme: Theme) => ({
+  tooltip: {
+    backgroundColor: theme.color.backgroundToolTip,
+    color: theme.color.fontPrimary,
+    maxWidth: '600px',
+    height: 'inherit',
+    minHeight: 22,
+    borderRadius: 11,
+    fontSize: '12px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+}))(Tooltip);
+
+// @ts-ignore
 export const MgrsTooltip = withStyles((localTheme: Theme) => ({
   tooltip: {
     backgroundColor: theme.color.backgroundToolTip,

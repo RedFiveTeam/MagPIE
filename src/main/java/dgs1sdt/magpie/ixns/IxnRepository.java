@@ -3,6 +3,7 @@ package dgs1sdt.magpie.ixns;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface IxnRepository extends JpaRepository<Ixn, Long> {
@@ -23,4 +24,11 @@ public interface IxnRepository extends JpaRepository<Ixn, Long> {
 
   @Query("SELECT ixn from Ixn ixn WHERE ixn.rfiId = ?1 AND ixn.trackNarrative LIKE %?2%")
   List<Ixn> findAllByRfiIdContainingScoiName(long id, String name);
+
+  @Query("SELECT ixn from Ixn ixn WHERE ixn.targetId = ?1 AND ixn.trackNarrative LIKE %?2%")
+  List<Ixn> findAllByTgtIdContainingScoiName(long id, String name);
+
+//  @Query("SELECT ixn from Ixn ixn WHERE ixn.trackNarrative LIKE %?1%")
+//  List<Ixn> findAllContainingScoiName(String name);
+  List<Ixn> findAllByTrackNarrativeContains(String scoiName);
 }

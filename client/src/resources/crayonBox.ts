@@ -40,6 +40,7 @@ export const crayonBox = {
   darkRedBlue: '#1B2326',//
   darkGreenBlue: '#02252E',//
   anotherDarkGreenBlue:'#162428',//
+  yetAnotherDarkGreenBlue: '#112C37',
   steelBlue: '#243237',//
   mediumBlue: '#1C455C',//
   darkMediumBlueGray: '#374B52',//

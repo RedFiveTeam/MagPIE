@@ -1,9 +1,12 @@
 package dgs1sdt.magpie.scois;
 
+import dgs1sdt.magpie.ixns.Ixn;
 import dgs1sdt.magpie.ixns.IxnRepository;
 import dgs1sdt.magpie.metrics.MetricsService;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
+import dgs1sdt.magpie.tgts.Target;
+import dgs1sdt.magpie.tgts.TargetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,7 @@ public class ScoiController {
   private ScoiRepository scoiRepository;
   private MetricsService metricsService;
   private RfiRepository rfiRepository;
+  private TargetRepository targetRepository;
   private IxnRepository ixnRepository;
 
   @Autowired
@@ -35,6 +39,11 @@ public class ScoiController {
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
     this.rfiRepository = rfiRepository;
+  }
+
+  @Autowired
+  public void setTargetRepository(TargetRepository targetRepository) {
+    this.targetRepository = targetRepository;
   }
 
   @Autowired
@@ -86,4 +95,57 @@ public class ScoiController {
     }
     return ResponseEntity.ok().body(rfiAssociations);
   }
+
+  @GetMapping(path = "/tgt")
+  public ResponseEntity<List<TgtAssociation>> getTgtAssociations(
+    @RequestParam(name = "name", defaultValue = "") String name) {
+    List<TgtAssociation> tgtAssociations = new ArrayList<>();
+
+    for (Target tgt : targetRepository.findAll()) {
+      List<Ixn> associatedIxns = ixnRepository.findAllByTgtIdContainingScoiName(tgt.getId(), name);
+
+      if (!associatedIxns.isEmpty()) {
+        //Find tgtAssociation in list, or add new one
+        TgtAssociation tgtAssociation = new TgtAssociation(tgt.getName(), tgt.getMgrs());
+        if (tgtAssociations.contains(tgtAssociation)) {
+          tgtAssociation = tgtAssociations.get(tgtAssociations.indexOf(tgtAssociation));
+        } else {
+          tgtAssociations.add(tgtAssociation);
+        }
+
+        //iterate through all IXN and add analysts to association POC list
+        for (Ixn ixn : associatedIxns) {
+          if (ixn.getExploitAnalyst() != null && !ixn.getExploitAnalyst().equals("")) {
+            tgtAssociation.getEmails().add(ixn.getExploitAnalyst());
+          }
+          if (ixn.getTrackAnalyst() != null && !ixn.getTrackAnalyst().equals("")) {
+            tgtAssociation.getEmails().add(ixn.getTrackAnalyst());
+          }
+        }
+      }
+    }
+
+    if (tgtAssociations.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok().body(tgtAssociations);
+  }
+
+  @GetMapping(path = "/ixn")
+  public ResponseEntity<List<IxnAssociation>> getIxnAssociations(
+    @RequestParam(name = "name", defaultValue = "") String name) {
+    List<IxnAssociation> ixnAssociations = new ArrayList<>();
+
+    //iterate through ixns that reference SCOI and create associations
+    for (Ixn ixn : ixnRepository.findAllByTrackNarrativeContains(name)) {
+      ixnAssociations.add(new IxnAssociation(ixn.getActivity(), ixn.getTrackNarrative()));
+    }
+
+    if (ixnAssociations.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok().body(ixnAssociations);
+  }
+
+
 }
