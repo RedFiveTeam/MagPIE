@@ -153,7 +153,7 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
   };
 
   const handlePostScoi = (mgrs: string) => {
-    let scoi = new ScoiModel(undefined, newName, mgrs);
+    let scoi = new ScoiModel(undefined, newName, mgrs, '');
     fetch('/api/scoi',
           {
             method: 'post',

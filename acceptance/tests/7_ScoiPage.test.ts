@@ -126,3 +126,19 @@ Scenario('Should be able see and toggle info', (I) => {
   I.dontSee('Person entered SCOI');
   I.dontSee('This is the track narrative that references OPNS20-0099');
 });
+
+Scenario('Should be able to add notes', (I) => {
+  I.click('.scoi-page-button');
+  I.waitForText('SCOI');
+  I.waitForElement('.scoi-row-right');
+  I.click('.scoi-row-right');
+  I.waitForElement('.note-input');
+  I.fillField('.note-input', 'These are some notes');
+  I.pressKey('Enter');
+  I.wait(1);
+  I.dontSeeElement('.note-input');
+  I.dontSee('These are some notes');
+  I.click('.scoi-row-right');
+  I.waitForElement('.note-input');
+  I.seeInField('.note-input', 'These are some notes');
+});

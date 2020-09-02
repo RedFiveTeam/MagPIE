@@ -14,6 +14,8 @@ import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfi;
 import dgs1sdt.magpie.metrics.changeRfi.MetricChangeRfiRepository;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriority;
 import dgs1sdt.magpie.metrics.changeRfiPriority.MetricChangeRfiPriorityRepository;
+import dgs1sdt.magpie.metrics.changeScoi.MetricChangeScoi;
+import dgs1sdt.magpie.metrics.changeScoi.MetricChangeScoiRepository;
 import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegment;
 import dgs1sdt.magpie.metrics.changeSegment.MetricChangeSegmentRepository;
 import dgs1sdt.magpie.metrics.changeTarget.MetricChangeTarget;
@@ -85,6 +87,7 @@ import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPage;
 import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPageRepository;
 import dgs1sdt.magpie.rfis.Rfi;
 import dgs1sdt.magpie.rfis.RfiRepository;
+import dgs1sdt.magpie.scois.Scoi;
 import dgs1sdt.magpie.tgts.Target;
 import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.TargetRepository;
@@ -144,6 +147,7 @@ public class MetricsService {
   private MetricClickScoreboardRepository metricClickScoreboardRepository;
   private MetricVisitFeedbackPageRepository metricVisitFeedbackPageRepository;
   private MetricCreateScoiRepository metricCreateScoiRepository;
+  private MetricChangeScoiRepository metricChangeScoiRepository;
   private MetricVisitScoiPageRepository metricVisitScoiPageRepository;
 
   @Autowired
@@ -349,6 +353,12 @@ public class MetricsService {
   public void setMetricCreateScoiRepository(
     MetricCreateScoiRepository metricCreateScoiRepository) {
     this.metricCreateScoiRepository = metricCreateScoiRepository;
+  }
+
+  @Autowired
+  public void setMetricChangeScoiRepository(
+    MetricChangeScoiRepository metricChangeScoiRepository) {
+    this.metricChangeScoiRepository = metricChangeScoiRepository;
   }
 
   @Autowired
@@ -571,6 +581,17 @@ public class MetricsService {
 
   public void addCreateScoi(long scoiId, String userName) {
     metricCreateScoiRepository.save(new MetricCreateScoi(scoiId, userName));
+  }
+
+  public void addChangeScoiMetrics(Scoi oldScoi, Scoi newScoi, String userName) {
+    Timestamp now = new Timestamp(new Date().getTime());
+    for (String field : oldScoi.compare(newScoi)) {
+      try {
+        metricChangeScoiRepository.save(new MetricChangeScoi(field, newScoi, now, userName));
+      } catch (Exception e) {
+        log.error("Failed to save MetricChangeScoi with field " + field);
+      }
+    }
   }
 
   public MetricClickRollup createClickRollup(MetricClickRollupJson metricClickRollupJson) {

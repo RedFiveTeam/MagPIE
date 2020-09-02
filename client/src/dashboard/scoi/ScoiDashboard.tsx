@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import theme from '../../resources/theme';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import { useDispatch, useSelector } from 'react-redux';
-import { exitScoiPage } from '../../store/scoi/Actions';
+import { editScoi, exitScoiPage, postScoi } from '../../store/scoi/Actions';
 import { StyledScoiTable } from './ScoiTable';
 import { ScoiModel } from '../../store/scoi/ScoiModel';
 import { ApplicationState } from '../../store';
@@ -20,6 +20,7 @@ interface MyProps {
 
 export const ScoiDashboard: React.FC<MyProps> = (props) => {
   const scois: ScoiModel[] = useSelector(({scoiState}: ApplicationState) => scoiState.scois);
+  const editingScoiId = useSelector(({scoiState}: ApplicationState) => scoiState.editingScoiId);
 
   const [selectedScoiId, setSelectedScoiId] = useState(scois.length > 0 ? scois[0].id : -1);
   const [showRfiInfo, setShowRfiInfo] = useState(true);
@@ -154,6 +155,16 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
     dispatch(exitScoiPage());
   };
 
+  const handleEditScoi = (scoiId: number) => {
+    if (selectedScoiId === scoiId) {
+      dispatch(editScoi(scoiId));
+    }
+  };
+
+  const handlePostScoi = (scoi: ScoiModel) => {
+    dispatch(postScoi(scoi));
+  };
+
   const mapRfiAssociations = () => {
     return (
       rfiInfo.map((rfiAssociation: RfiAssociationModel, index: number) =>
@@ -209,6 +220,9 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
           toggleCalloutInfo={toggleCalloutInfo}
           showTrackInfo={showTrackInfo}
           toggleTrackInfo={toggleTrackInfo}
+          editingScoiId={editingScoiId}
+          handleEdit={handleEditScoi}
+          handlePostScoi={handlePostScoi}
         />
         <div className={'divider-bar'}/>
         <div className={'scoi-info-container'}>

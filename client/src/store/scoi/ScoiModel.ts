@@ -3,6 +3,7 @@ export class ScoiModel {
     public id: number|undefined,
     public name: string,
     public mgrs: string,
+    public note: string,
   ) {
   }
 }

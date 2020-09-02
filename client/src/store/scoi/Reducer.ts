@@ -4,6 +4,7 @@ import { Reducer } from 'redux';
 const initState: ScoiState = {
   viewScoiPage: false,
   scois: [],
+  editingScoiId: -1,
 };
 
 const reducer: Reducer<ScoiState> = (state = initState, action: any) => {
@@ -13,11 +14,18 @@ const reducer: Reducer<ScoiState> = (state = initState, action: any) => {
         ...state,
         scois: action.scois,
         viewScoiPage: true,
+        editingScoiId: -1,
       };
     case ScoiActionTypes.EXIT_SCOI_PAGE:
       return {
         ...state,
         viewScoiPage: false,
+        editingScoiId: -1,
+      };
+    case ScoiActionTypes.EDIT_SCOI:
+      return {
+        ...state,
+        editingScoiId: action.scoiId,
       };
     default:
       return {...state};

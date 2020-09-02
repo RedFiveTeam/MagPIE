@@ -52,15 +52,20 @@ public class ScoiController {
   }
 
   @PostMapping
-  public Scoi addScoi(@Valid @RequestBody ScoiJson scoiJson,
+  public Scoi addScoi(@Valid @RequestBody Scoi scoiPost,
                       @RequestParam(name = "userName", defaultValue = "") String userName) {
-    if (scoiRepository.findByName(scoiJson.getName()) == null) {
-      Scoi scoi = scoiRepository.save(new Scoi(scoiJson.getName(), scoiJson.getMgrs()));
+    if (scoiRepository.findByName(scoiPost.getName()) == null) {
+      Scoi scoi = scoiRepository.save(scoiPost);
       //Save a metric to our metric repository
       metricsService.addCreateScoi(scoi.getId(), userName);
       return scoi;
+    } else {
+      Scoi oldScoi = scoiRepository.findByName(scoiPost.getName());
+      scoiPost.setId(oldScoi.getId());
+      metricsService.addChangeScoiMetrics(oldScoi, scoiPost, userName);
+      scoiRepository.save(scoiPost);
     }
-    return scoiRepository.findByName(scoiJson.getName());
+    return scoiRepository.findByName(scoiPost.getName());
   }
 
   @GetMapping(path = "/all")

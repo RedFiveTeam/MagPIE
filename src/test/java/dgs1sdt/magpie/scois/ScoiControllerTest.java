@@ -3,6 +3,8 @@ package dgs1sdt.magpie.scois;
 import dgs1sdt.magpie.BaseIntegrationTest;
 import dgs1sdt.magpie.ixns.*;
 import dgs1sdt.magpie.metrics.IxnApprovalStatus;
+import dgs1sdt.magpie.metrics.changeScoi.MetricChangeScoi;
+import dgs1sdt.magpie.metrics.changeScoi.MetricChangeScoiRepository;
 import dgs1sdt.magpie.metrics.createScoi.MetricCreateScoi;
 import dgs1sdt.magpie.metrics.createScoi.MetricCreateScoiRepository;
 import dgs1sdt.magpie.rfis.Rfi;
@@ -12,7 +14,6 @@ import dgs1sdt.magpie.tgts.TargetJson;
 import dgs1sdt.magpie.tgts.TargetRepository;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDate;
 import dgs1sdt.magpie.tgts.exploitDates.ExploitDateRepository;
-import org.hamcrest.collection.IsArrayContaining;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,6 +49,8 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
   @Autowired
   MetricCreateScoiRepository metricCreateScoiRepository;
+  @Autowired
+  MetricChangeScoiRepository metricChangeScoiRepository;
 
   @Before
   public void clean() {
@@ -102,7 +105,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void returnsMgrsFromScoiNameIfExistsOr404IfNot() {
-    Scoi scoi = new Scoi("OPNS20-0001", "12ASD1231231231");
+    Scoi scoi = new Scoi("OPNS20-0001", "12ASD1231231231", "");
     scoiRepository.save(scoi);
 
     given()
@@ -127,9 +130,9 @@ public class ScoiControllerTest extends BaseIntegrationTest {
   @Test
   public void returnsAllScois() {
     //Arrange
-    Scoi scoi1 = new Scoi("OPNS20-0001", "12ASD1231231231");
-    Scoi scoi2 = new Scoi("OPNS20-0002", "12ASD1231231232");
-    Scoi scoi3 = new Scoi("OPNS20-0003", "12ASD1231231233");
+    Scoi scoi1 = new Scoi("OPNS20-0001", "12ASD1231231231", "");
+    Scoi scoi2 = new Scoi("OPNS20-0002", "12ASD1231231232", "");
+    Scoi scoi3 = new Scoi("OPNS20-0003", "12ASD1231231233", "");
     scoiRepository.saveAll(Arrays.asList(scoi1, scoi2, scoi3));
 
     //Act
@@ -259,8 +262,38 @@ public class ScoiControllerTest extends BaseIntegrationTest {
       .statusCode(404);
   }
 
+  @Test
+  public void postUpdatesScoiNote() throws Exception {
+    scoiRepository.save(new Scoi("OPNS20-0001", "12ASD1231231231", ""));
+
+    String scoiUpdateJson = objectMapper.writeValueAsString(
+      new Scoi("OPNS20-0001", "12ASD1231231231", "This is a note.")
+    );
+
+    given()
+      .port(port)
+      .contentType("application/json")
+      .body(scoiUpdateJson)
+      .when()
+      .post(ScoiController.URI + "?userName=billy.bob.joe")
+      .then()
+      .statusCode(200);
+
+    assertEquals(1, scoiRepository.findAll().size());
+    Scoi updatedScoi = scoiRepository.findAll().get(0);
+    assertEquals("OPNS20-0001", updatedScoi.getName());
+    assertEquals("This is a note.", updatedScoi.getNote());
+
+    assertEquals(1, metricChangeScoiRepository.findAll().size());
+    MetricChangeScoi metric = metricChangeScoiRepository.findAll().get(0);
+    assertEquals(updatedScoi.getId(), metric.getScoiId());
+    assertEquals("note", metric.getField());
+    assertEquals("This is a note.", metric.getNewData());
+
+  }
+
   private void setupAssociations(String scoiName) {
-    scoiRepository.save(new Scoi(scoiName, "12QWE1231231231"));
+    scoiRepository.save(new Scoi(scoiName, "12QWE1231231231", ""));
 
     rfiRepository.save(
       new Rfi("DGS-1-SDT-2020-00001", "", "CLOSED", new Date(), "", new Date(), "",
