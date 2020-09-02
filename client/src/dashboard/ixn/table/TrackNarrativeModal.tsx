@@ -369,6 +369,7 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     border-left: 2px solid ${theme.color.backgroundFocus};
     border-right: 2px solid ${theme.color.backgroundFocus};
     margin: 0 -2px;
+    overflow-y: auto;
   }
   
   .scoi-queue-header {
@@ -377,6 +378,10 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    background: ${theme.color.backgroundScoiContainer};
+    padding: 0 25px 2px 0;
   }
   
   .scoi-queue {
@@ -386,7 +391,7 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     align-items: center;
     flex-wrap: wrap;
     max-height: 56px;
-    overflow-y: auto; 
+    //overflow-y: auto; 
   }
   
   .track-narrative {
