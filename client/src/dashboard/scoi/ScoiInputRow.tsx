@@ -69,7 +69,7 @@ const ScoiInputRow: React.FC<MyProps> = (props) => {
                 submit();
               }
             }}
-            // onBlur={submit}
+            onBlur={submit}
           />
       </div>
     </div>
