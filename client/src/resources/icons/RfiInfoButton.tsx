@@ -30,7 +30,7 @@ const trackPathD5 = 'M15 30C23.2843 30 30 23.2843 30 15C30 6.71573 23.2843 0 15 
 
 
 interface MyProps {
-  active: boolean;
+  active?: boolean;
 }
 
 export const RfiInfoButton: React.FC<MyProps> = ({active}) => {

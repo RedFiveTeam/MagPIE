@@ -111,6 +111,22 @@ public class RfiController {
     return rfiGetList;
   }
 
+  @GetMapping(path = "/closed")
+  public List<HistoricalRfi> getAllClosedRfisWithFeedback() {
+    List<Rfi> rfis = this.rfiService.fetchAllClosedFromRepo();
+    List<HistoricalRfi> historicalRfis = new ArrayList<>();
+
+    for (Rfi rfi : rfis) {
+      historicalRfis.add(new HistoricalRfi(
+        rfi,
+        metricsService.getRfiCloseDate(rfi.getRfiNum()),
+        productService.getProductName(rfi.getId()),
+        rfiService.getFeedback(rfi.getRfiNum())
+      ));
+    }
+    return historicalRfis;
+  }
+
   //  Return value: whether the passed priority change results in a valid priority list
   @PostMapping(path = "/update-priority")
   public boolean updatePriority(@Valid @RequestBody RfiPriorityJson[] rfiPriorityJsons,

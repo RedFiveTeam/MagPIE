@@ -19,6 +19,7 @@ import { ExploitDateModel } from '../store/tgt/ExploitDateModel';
 import { loadSuccess } from '../store/rfi';
 import { StyledUserMetricsDashboard } from './userMetrics/UserMetricsDashboard';
 import { StyledScoiDashboard } from './scoi/ScoiDashboard';
+import { StyledRfiHistoryDashboard } from './rfiHistory/RfiHistoryDashboard';
 
 interface Props {
   fetchRfis: () => void;
@@ -27,6 +28,7 @@ interface Props {
   loadTgtPage: (rfi: RfiModel, firstLoad: boolean) => void;
   navigateToIxnPage: (target: TargetModel, dateString: string) => void;
   viewUserMetricsPage: boolean;
+  viewRfiHistoryPage: boolean;
   viewScoiPage: boolean;
   loadSuccess: () => void;
   rfi: RfiModel|undefined;
@@ -83,6 +85,8 @@ export class DashboardContainer extends React.Component<Props, any> {
         (rfi) => rfi.id === this.props.cookie!.viewState.rfiId);
       if (tgtRfi) {
         this.props.loadTgtPage(tgtRfi, true);
+      } else {
+        this.props.loadSuccess()
       }
     }
     //navigate to ixn page by tgt id
@@ -97,7 +101,11 @@ export class DashboardContainer extends React.Component<Props, any> {
           (date) => date.id === ixnTgt!.exploitDateId);
         if (ixnDate) {
           this.props.navigateToIxnPage(ixnTgt, ixnDate.exploitDate.format('MM/DD/YYYY'));
+        } else {
+          this.props.loadSuccess()
         }
+      } else {
+        this.props.loadSuccess()
       }
     } else if (this.props.loading) {
       this.props.loadSuccess();
@@ -119,6 +127,10 @@ export class DashboardContainer extends React.Component<Props, any> {
       return <StyledUserMetricsDashboard/>;
     }
 
+    if (this.props.viewRfiHistoryPage) {
+      return <StyledRfiHistoryDashboard/>;
+    }
+
     if (this.props.viewScoiPage) {
       return <StyledScoiDashboard/>;
     }
@@ -131,7 +143,7 @@ export class DashboardContainer extends React.Component<Props, any> {
   }
 }
 
-const mapStateToProps = ({rfiState, tgtState, ixnState, scoiState}: ApplicationState) => ({
+const mapStateToProps = ({rfiState, tgtState, ixnState, scoiState, historicalRfiState}: ApplicationState) => ({
   loading: rfiState.loading,
   viewTgtPage: tgtState.viewTgtPage,
   viewIxnPage: ixnState.viewIxnPage,
@@ -140,6 +152,7 @@ const mapStateToProps = ({rfiState, tgtState, ixnState, scoiState}: ApplicationS
   tgts: tgtState.targets,
   exploitDates: tgtState.exploitDates,
   viewUserMetricsPage: rfiState.viewUserMetricsPage,
+  viewRfiHistoryPage: historicalRfiState.viewRfiHistoryPage,
   viewScoiPage: scoiState.viewScoiPage,
 });
 

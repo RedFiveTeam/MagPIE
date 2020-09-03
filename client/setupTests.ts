@@ -9,6 +9,7 @@ import { tgtInitState } from './src/store/tgt';
 import { metricsInitState } from './src/store/metrics';
 import { RouterState } from 'connected-react-router';
 import { scoiInitState } from './src/store/scoi/Reducer';
+import { historicalRfiInitState } from './src/store/rfiHistory/Reducer';
 
 Enzyme.configure({adapter: new EnzymeAdapter()});
 
@@ -29,5 +30,6 @@ export const initStore: ApplicationState = {
   ixnState: ixnInitState,
   scoiState: scoiInitState,
   metricState: metricsInitState,
+  historicalRfiState: historicalRfiInitState,
   router: initRouter,
 };

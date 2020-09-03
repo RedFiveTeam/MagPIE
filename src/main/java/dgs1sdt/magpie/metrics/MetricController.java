@@ -13,6 +13,7 @@ import dgs1sdt.magpie.metrics.clickSort.MetricClickSort;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrative;
 import dgs1sdt.magpie.metrics.clickTrackNarrative.MetricClickTrackNarrativeJson;
+import dgs1sdt.magpie.metrics.visitRfiHistoryPage.MetricVisitRfiHistoryPage;
 import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -215,5 +216,11 @@ public class MetricController {
   public MetricVisitScoiPage createVisitScoiPage(
     @Valid @RequestParam(name = "userName", defaultValue = "") String userName) {
     return metricsService.addVisitScoiPage(userName);
+  }
+
+  @PostMapping(path = "/visit-rfi-history-page")
+  public MetricVisitRfiHistoryPage createVisitRfiHistoryPage(
+    @Valid @RequestParam(name = "userName", defaultValue = "") String userName) {
+    return metricsService.addVisitRfiHistoryPage(userName);
   }
 }

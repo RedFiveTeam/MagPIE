@@ -804,6 +804,72 @@ public class RfiControllerTest extends BaseIntegrationTest {
     assertEquals(1, metricVisitFeedbackPageRepository.findAll().size());
   }
 
+  @Test
+  public void returnsAllClosedRfisWithFeedback() {
+    String rfiNum1 = "DGS-1-SDT-2020-00321";
+    String rfiNum2 = "DGS-1-SDT-2020-00322";
+    String rfiNum3 = "DGS-1-SDT-2020-00323";
+    String rfiNum4 = "DGS-1-SDT-2020-00324";
+
+    rfiRepository.save(
+      new Rfi(rfiNum1, "", "CLOSED", new Date(), "", new Date(), "", "", "This is a justifiction", "", "",
+        "", "", "", "", "", "", ""));
+    rfiRepository.save(
+      new Rfi(rfiNum2, "", "CLOSED", new Date(), "", new Date(), "", "", "This is a justifiction", "", "",
+        "", "", "", "", "", "", ""));
+    rfiRepository.save(
+      new Rfi(rfiNum3, "", "CLOSED", new Date(), "", new Date(), "", "", "This is a justifiction", "", "",
+        "", "", "", "", "", "", ""));
+    rfiRepository.save(
+      new Rfi(rfiNum4, "", "CLOSED", new Date(), "", new Date(), "", "", "This is a justifiction", "", "",
+        "", "", "", "", "", "", ""));
+    rfiRepository.save(
+      new Rfi("SHOULD_NOT_GET", "", "OPEN", new Date(), "", new Date(), "", "", "This is a justifiction", "", "",
+        "", "", "", "", "", "", ""));
+    long rfiId1 = rfiRepository.findAll().get(0).getId();
+    long rfiId3 = rfiRepository.findAll().get(2).getId();
+
+    rfiFeedbackRepository.save(new RfiFeedback(rfiNum1, 4, "Delivered On Time", "High Quality", "High Impact", ""));
+    rfiFeedbackRepository.save(new RfiFeedback(rfiNum2, 2, "Delivered Late", "", "", ""));
+    rfiFeedbackRepository.save(new RfiFeedback(rfiNum3, 3, "Delivered Late", "High Quality", "Low Impact",
+      "It was a fine product, not too great, not too terrible I suppose."));
+
+    productRepository.save(new Product(rfiId1, "Rfi-1-prod.kmz", "kmz", "file data".getBytes()));
+    productRepository.save(new Product(rfiId3, "Rfi-3-prod.kml", "kml", "other file data".getBytes()));
+
+    given()
+      .port(port)
+      .when()
+      .get(RfiController.URI + "/closed")
+
+      .then()
+      .statusCode(200)
+      .body("[0].rfi.rfiNum", equalTo(rfiNum1))
+      .body("[0].rfi.justification", equalTo("This is a justifiction"))
+      .body("[1].rfi.rfiNum", equalTo(rfiNum2))
+      .body("[1].rfi.description", equalTo(""))
+      .body("[2].rfi.rfiNum", equalTo(rfiNum3))
+      .body("[2].rfi.status", equalTo("CLOSED"))
+      .body("[3].rfi.rfiNum", equalTo(rfiNum4))
+      .body("[3].rfi.customerEmail", equalTo(""))
+      .body("[4]", equalTo(null))
+
+      .body("[0].productName", equalTo("Rfi-1-prod.kmz"))
+      .body("[1].productName", equalTo(null))
+      .body("[2].productName", equalTo("Rfi-3-prod.kml"))
+      .body("[3].productName", equalTo(null))
+
+      .body("[0].feedback.stars", equalTo(4))
+      .body("[0].feedback.timeliness", equalTo("Delivered On Time"))
+      .body("[0].feedback.comments", equalTo(""))
+      .body("[1].feedback.stars", equalTo(2))
+      .body("[1].feedback.quality", equalTo(""))
+      .body("[2].feedback.stars", equalTo(3))
+      .body("[2].feedback.missionImpact", equalTo("Low Impact"))
+      .body("[2].feedback.comments", equalTo("It was a fine product, not too great, not too terrible I suppose."))
+      .body("[3].feedback", equalTo(null));
+  }
+
   private void setupRfis() throws Exception {
     //Setup and RFI with 2 targets and 10 interactions
     rfiRepository.save(

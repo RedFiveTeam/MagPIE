@@ -43,6 +43,7 @@ export const crayonBox = {
   yetAnotherDarkGreenBlue: '#112C37',
   steelBlue: '#243237',//
   mediumBlue: '#1C455C',//
+  anotherBluishGray: '#314349',//
   darkMediumBlueGray: '#374B52',//
   mediumBlueGray: '#3C535B',//
   aquaGreen: '#42686A',//
@@ -54,6 +55,7 @@ export const crayonBox = {
   skyBlueGreener: '#5A9EB8',//
   skyBlueGreen: '#6FB6CF',//
   skyBlue: '#82BFF9',
+  brightRedlessBlue: '#00C2FF',
   redlessBlue: '#00E0FF',//
   lightBlueGray: '#8199A2',//
   anotherGray: '#91989B',//

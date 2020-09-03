@@ -83,6 +83,8 @@ import dgs1sdt.magpie.metrics.uploadProduct.MetricUploadProduct;
 import dgs1sdt.magpie.metrics.uploadProduct.MetricUploadProductRepository;
 import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPage;
 import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPageRepository;
+import dgs1sdt.magpie.metrics.visitRfiHistoryPage.MetricVisitRfiHistoryPage;
+import dgs1sdt.magpie.metrics.visitRfiHistoryPage.MetricVisitRfiHistoryPageRepository;
 import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPage;
 import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPageRepository;
 import dgs1sdt.magpie.rfis.Rfi;
@@ -149,6 +151,7 @@ public class MetricsService {
   private MetricCreateScoiRepository metricCreateScoiRepository;
   private MetricChangeScoiRepository metricChangeScoiRepository;
   private MetricVisitScoiPageRepository metricVisitScoiPageRepository;
+  private MetricVisitRfiHistoryPageRepository metricVisitRfiHistoryPageRepository;
 
   @Autowired
   public void setRfiRepository(RfiRepository rfiRepository) {
@@ -364,6 +367,12 @@ public class MetricsService {
   @Autowired
   public void setMetricVisitScoiPageRepository(MetricVisitScoiPageRepository metricVisitScoiPageRepository) {
     this.metricVisitScoiPageRepository = metricVisitScoiPageRepository;
+  }
+
+  @Autowired
+  public void setMetricVisitRfiHistoryPageRepository(
+    MetricVisitRfiHistoryPageRepository metricVisitRfiHistoryPageRepository) {
+    this.metricVisitRfiHistoryPageRepository = metricVisitRfiHistoryPageRepository;
   }
 
   public long getSiteVisitCount() {
@@ -608,6 +617,10 @@ public class MetricsService {
 
   public MetricClickCollapse createClickCollapse(String userName) {
     return metricClickCollapseRepository.save(new MetricClickCollapse(userName));
+  }
+
+  public MetricVisitRfiHistoryPage addVisitRfiHistoryPage(String userName) {
+    return metricVisitRfiHistoryPageRepository.save(new MetricVisitRfiHistoryPage(userName));
   }
 
   public long[] getAverageWorkflowTime() {

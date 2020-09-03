@@ -328,18 +328,6 @@ export const StyledScoiDashboard = styled(ScoiDashboard)`
     padding: 0 43px;
   }
   
-  .refresh-spacer {
-    width: 21px;
-  }
-  
-  .button-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 75px;
-  }
-  
   .divider-bar {
     background: ${theme.color.backgroundHeader};
     box-shadow: 2px 2px 4px #000000;
@@ -347,6 +335,7 @@ export const StyledScoiDashboard = styled(ScoiDashboard)`
     width: 4px;
     height: 100%;
     margin: 0 25px;
+    flex-shrink: 0;
   }
   
   .scoi-info-container {

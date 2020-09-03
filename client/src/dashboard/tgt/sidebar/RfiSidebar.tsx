@@ -45,7 +45,7 @@ export const RfiSidebar: React.FC<MyProps> = (props) => {
 
   return (
     <div className={props.className}>
-      <div className={classNames('sidebar-container', collapsed ? 'collapsed' : null)}>
+      <div className={classNames('sidebar-container', 'no-select', collapsed ? 'collapsed' : null)}>
         <ScrollShadow
           bottomShadowColors={{
             active: 'linear-gradient(to top, #000000 0%, #00000000 100%);',
@@ -81,13 +81,17 @@ export const RfiSidebar: React.FC<MyProps> = (props) => {
             leaveDelay={100}
           >
             <div className={collapsed ? 'mini-rfi-table-collapsed' : 'mini-rfi-table'}>
-              <StyledMiniRfiRegion
-                title={collapsed ? 'pri' : 'prioritized'}
-                collapsed={collapsed}
-                emptyMessage={''}
-              >
-                {printRows(openRfis, props.rfi.id, props.selectRfi, collapsed)}
-              </StyledMiniRfiRegion>
+              {openRfis.length > 0 ?
+                <StyledMiniRfiRegion
+                  title={collapsed ? 'pri' : 'prioritized'}
+                  collapsed={collapsed}
+                  emptyMessage={''}
+                >
+                  {printRows(openRfis, props.rfi.id, props.selectRfi, collapsed)}
+                </StyledMiniRfiRegion>
+                :
+                null
+              }
               <StyledMiniRfiRegion
                 title={collapsed ? 'cld' : 'closed'}
                 collapsed={collapsed}

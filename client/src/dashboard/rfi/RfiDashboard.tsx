@@ -28,6 +28,8 @@ import { ConfirmationModal } from '../components/ConfirmationModal';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { loadScoiPage } from '../../store/scoi/Actions';
 import { ScoiPageButton } from '../../resources/icons/ScoiPageButton';
+import { RfiHistoryIcon } from '../../resources/icons/RfiHistoryIcon';
+import { loadRfiHistoryPage } from '../../store/rfiHistory/Actions';
 
 interface MyProps {
   className?: string;
@@ -169,6 +171,11 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
     dispatch(loadScoiPage());
   };
 
+  const handleLoadRfiHistoryPage = () => {
+    fetch(`api/metrics/visit-rfi-history-page?userName=${cookie.userName}`, {method: 'post'});
+    dispatch(loadRfiHistoryPage());
+  };
+
   const handleRefreshClick = () => {
     setRefreshing(true);
     fetch('/api/rfi/refresh', {method: 'get'});
@@ -236,9 +243,16 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
           <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
         </div>
         <div className={'button-container'}>
-          <div className={'scoi-page-button'} onClick={handleLoadScoiPage}>
-            <ScoiPageButton/>
-          </div>
+          <TextTooltip title={'RFI History'}>
+            <div className={'rfi-history-page-button'} onClick={handleLoadRfiHistoryPage}>
+              <RfiHistoryIcon/>
+            </div>
+          </TextTooltip>
+          <TextTooltip title={'View SCOI Tracker'}>
+            <div className={'scoi-page-button'} onClick={handleLoadScoiPage}>
+              <ScoiPageButton/>
+            </div>
+          </TextTooltip>
           <TextTooltip title={'Metrics'}>
             <div className={'metrics-button'} onClick={handleLoadUserMetricsPage}>
               <MetricsButtonIcon/>
@@ -271,7 +285,6 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
           postGetsClick={handlePostGetsClick}
           handlePostProductUpload={handlePostProductUpload}
           handleDeleteProduct={handleDeleteProduct}
-          handleUndoDeleteProduct={handleUndoDeleteProduct}
         />
       </div>
       <ConfirmationModal
@@ -330,7 +343,7 @@ export const StyledRfiDashboard = styled(RfiDashboard)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 138px;
+    width: 192px;
   }
   
   .refreshing {

@@ -28,6 +28,8 @@ import dgs1sdt.magpie.metrics.siteVisit.MetricSiteVisitRepository;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortJson;
 import dgs1sdt.magpie.metrics.clickSort.MetricClickSortRepository;
 import dgs1sdt.magpie.metrics.visitFeedbackPage.MetricVisitFeedbackPageRepository;
+import dgs1sdt.magpie.metrics.visitRfiHistoryPage.MetricVisitRfiHistoryPage;
+import dgs1sdt.magpie.metrics.visitRfiHistoryPage.MetricVisitRfiHistoryPageRepository;
 import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPage;
 import dgs1sdt.magpie.metrics.visitScoiPage.MetricVisitScoiPageRepository;
 import org.junit.Before;
@@ -92,6 +94,9 @@ public class MetricControllerTest extends BaseIntegrationTest {
   @Autowired
   private MetricVisitScoiPageRepository metricVisitScoiPageRepository;
 
+ @Autowired
+  private MetricVisitRfiHistoryPageRepository metricVisitRfiHistoryPageRepository;
+
 
   @Before
   public void setup() {
@@ -109,6 +114,7 @@ public class MetricControllerTest extends BaseIntegrationTest {
     metricClickImportRepository.deleteAll();
     metricClickCollapseRepository.deleteAll();
     metricVisitScoiPageRepository.deleteAll();
+    metricVisitRfiHistoryPageRepository.deleteAll();
   }
 
   @Test
@@ -311,6 +317,20 @@ public class MetricControllerTest extends BaseIntegrationTest {
 
     assertEquals(1, metricVisitScoiPageRepository.findAll().size());
     MetricVisitScoiPage metric = metricVisitScoiPageRepository.findAll().get(0);
+    assertEquals("billy.bob.joe", metric.getUserName());
+  }
+
+  @Test
+  public void postCreatesNewVisitRfiHistoryPageMetric() {
+    given()
+      .port(port)
+      .when()
+      .post(MetricController.URI + "/visit-rfi-history-page?userName=billy.bob.joe")
+      .then()
+      .statusCode(200);
+
+    assertEquals(1, metricVisitRfiHistoryPageRepository.findAll().size());
+    MetricVisitRfiHistoryPage metric = metricVisitRfiHistoryPageRepository.findAll().get(0);
     assertEquals("billy.bob.joe", metric.getUserName());
   }
 }

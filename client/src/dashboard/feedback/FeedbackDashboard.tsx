@@ -286,6 +286,9 @@ export const FeedbackDashboard: React.FC<Props> = (props) => {
                   InputProps={{
                     disableUnderline: true,
                   }}
+                  inputProps={{
+                    className: 'comments-input-field',
+                  }}
                   placeholder={'Feel free to leave any additional feedback here'}
                 />
               </div>

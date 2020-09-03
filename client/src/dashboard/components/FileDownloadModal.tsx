@@ -16,6 +16,7 @@ interface MyProps {
   userName: string;
   hideModal: () => void;
   handleDeleteProduct: () => void;
+  disableDelete?: boolean;
   className?: string;
 }
 
@@ -60,7 +61,13 @@ export const FileDownloadModal: React.FC<MyProps> = (props) => {
                     </div>
                   </a>
                   <div>
-                    <div className={'delete-button button no-select'} onClick={() => setShowDeletePrompt(true)}>
+                    <div className={classNames('delete-button', 'button', 'no-select',
+                                               props.disableDelete ? 'disabled' : null)}
+                         onClick={() => {
+                           if (!props.disableDelete) {
+                             setShowDeletePrompt(true);
+                           }
+                         }}>
                       <MiniTrashcanButton/>
                       <span>Delete</span>
                     </div>

@@ -17,6 +17,7 @@ import { StyledProductLinkButton } from '../../resources/icons/ProductLinkButton
 import { FinishedProductIcon } from '../../resources/icons/FinishedProductIcon';
 import { StyledFileDownloadModal } from '../components/FileDownloadModal';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { FeedbackIcon } from '../../resources/icons/FeedbackIcon';
 
 interface MyProps {
   rfi: RfiModel|undefined;
@@ -24,12 +25,13 @@ interface MyProps {
   postGetsClick: (rfi: RfiModel) => void;
   handlePostProductUpload: (data: FormData, rfiId: number, userName: string) => void;
   handleDeleteProduct: (rfiId: number, productName: string) => void;
-  handleUndoDeleteProduct: (rfiId: number) => void;
+  rfiIsHistorical?: boolean
+  viewFeedback?: () => void;
   className?: string
 }
 
 export const RfiDescriptionContainer: React.FC<MyProps> = (
-  {rfi, loadTgtPage, postGetsClick, className, handlePostProductUpload, handleDeleteProduct, handleUndoDeleteProduct}) => {
+  {rfi, loadTgtPage, postGetsClick, className, handlePostProductUpload, handleDeleteProduct, rfiIsHistorical, viewFeedback}) => {
   const [showUploadFileModal, setShowUploadFileModal] = useState(false);
   const [showDownloadFileModal, setShowDownloadFileModal] = useState(false);
 
@@ -69,59 +71,84 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
 
   return (
     <div className={className}>
-      <div className={'button-section'}>
-        <div className={'spacer'}>&nbsp;</div>
-        <div className={'button-wrapper'}>
-          <div className={classNames('navigate-to-tgt-button', 'button', 'no-select',
-                                     rfi && rfi.status === RfiStatus.PENDING ? 'disabled' : null)}
-               onClick={handleTgtClick}
-          >
-            <span> TGTs</span>
-            <TgtPageButtonVector/>
-          </div>
-          <div className={classNames('gets-button', 'button', 'no-select')}
-               onClick={handleGetsClick}
-          >
-            <span>GETS</span>
-            <ExternalLinkVector/>
-          </div>
-        </div>
-        <div className={'product-container'}>
-          {rfi && rfi.productName === null ?
-            <div
-              className={classNames('upload-button product-button button',
-                                    rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
-              onClick={() => setShowUploadFileModal(true)}
+      {rfiIsHistorical ?
+        <div className={'button-section'}>
+          <div className={'view-feedback-button no-select'} onClick={viewFeedback}><FeedbackIcon/><span>View Customer Feedback</span></div>
+          <div className={'button-wrapper'}>
+            <div className={classNames('navigate-to-tgt-button', 'button', 'no-select',
+                                       rfi && rfi.status === RfiStatus.PENDING ? 'disabled' : null)}
+                 onClick={handleTgtClick}
             >
-              {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
-              <UploadFileButtonVector/>
+              <span> TGTs</span>
+              <TgtPageButtonVector/>
             </div>
-            :
-            <div
-              className={classNames('download-button product-button button',
-                                    rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
-              onClick={() => setShowDownloadFileModal(true)}
-            >
-              {rfi && rfi.status !== RfiStatus.PENDING ? <span>Finished Product</span> : null}
-              <FinishedProductIcon/>
-            </div>
-          }
-          <CopyToClipboard
-            onCopy={() => {
-              enqueueSnackbar('Feedback Link Copied to Clipboard', {
-                action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
-                variant: 'info',
-              });
-            }}
-            text={`${window.location.href}feedback/${rfi ? rfi.rfiNum : 'error'}`}>
-            <TextTooltip title={'Copy Link'}>
-              <div className={classNames('copy-link', rfi && rfi.productName === null ? 'disabled' : null)}>
-                <StyledProductLinkButton/>
+            <div className={'product-container'}>
+              <div
+                className={classNames('download-button product-button button',
+                                      !rfi || !rfi.productName || rfi.productName.length < 1 ? 'disabled' : null)}
+                onClick={() => setShowDownloadFileModal(true)}
+              >
+                <span>Finished Product</span>
+                <FinishedProductIcon/>
               </div>
-            </TextTooltip>
-          </CopyToClipboard>
+            </div>
+          </div>
         </div>
-      </div>
+        :
+        <div className={'button-section'}>
+          <div className={'spacer'}>&nbsp;</div>
+          <div className={'button-wrapper'}>
+            <div className={classNames('navigate-to-tgt-button', 'button', 'no-select',
+                                       rfi && rfi.status === RfiStatus.PENDING ? 'disabled' : null)}
+                 onClick={handleTgtClick}
+            >
+              <span> TGTs</span>
+              <TgtPageButtonVector/>
+            </div>
+            <div className={classNames('gets-button', 'button', 'no-select')}
+                 onClick={handleGetsClick}
+            >
+              <span>GETS</span>
+              <ExternalLinkVector/>
+            </div>
+          </div>
+          <div className={'product-container'}>
+            {rfi && rfi.productName === null ?
+              <div
+                className={classNames('upload-button product-button button',
+                                      rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+                onClick={() => setShowUploadFileModal(true)}
+              >
+                {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
+                <UploadFileButtonVector/>
+              </div>
+              :
+              <div
+                className={classNames('download-button product-button button',
+                                      rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+                onClick={() => setShowDownloadFileModal(true)}
+              >
+                {rfi && rfi.status !== RfiStatus.PENDING ? <span>Finished Product</span> : null}
+                <FinishedProductIcon/>
+              </div>
+            }
+            <CopyToClipboard
+              onCopy={() => {
+                enqueueSnackbar('Feedback Link Copied to Clipboard', {
+                  action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
+                  variant: 'info',
+                });
+              }}
+              text={`${window.location.href}feedback/${rfi ? rfi.rfiNum : 'error'}`}>
+              <TextTooltip title={'Copy Link'}>
+                <div className={classNames('copy-link', rfi && rfi.productName === null ? 'disabled' : null)}>
+                  <StyledProductLinkButton/>
+                </div>
+              </TextTooltip>
+            </CopyToClipboard>
+          </div>
+        </div>
+      }
       <div className={'body'}>
         {rfi && rfi.completionDate ?
           <>
@@ -138,17 +165,17 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
         <span className={'text-body'}>{rfi ? rfi.justification : null}</span>
         <span className={'header'}>Customer Information</span>
         <span className={'text-body'}>
-          <span>{rfi ? `${rfi.customerTitle} ${rfi.customerSurname}, ${rfi.customerGivenName}` : null}</span>
-          <span>{rfi ?
-            `COMM: ${rfi.customerCommPhone}` +
-            (rfi.customerDsnPhone === '' ? '' : ` / DSN: ${rfi.customerDsnPhone}`) +
-            (rfi.customerSvoip === '' ? '' : ` / SVoIP: ${rfi.customerSvoip}`) +
-            (rfi.customerTsvoip === '' ? '' : ` / TSVoIP: ${rfi.customerTsvoip}`)
-            :
-            null
-          }</span>
-          <span>{rfi ? rfi.customerEmail : null}</span>
-        </span>
+              <span>{rfi ? `${rfi.customerTitle} ${rfi.customerSurname}, ${rfi.customerGivenName}` : null}</span>
+              <span>{rfi ?
+                `COMM: ${rfi.customerCommPhone}` +
+                (rfi.customerDsnPhone === '' ? '' : ` / DSN: ${rfi.customerDsnPhone}`) +
+                (rfi.customerSvoip === '' ? '' : ` / SVoIP: ${rfi.customerSvoip}`) +
+                (rfi.customerTsvoip === '' ? '' : ` / TSVoIP: ${rfi.customerTsvoip}`)
+                :
+                null
+              }</span>
+              <span>{rfi ? rfi.customerEmail : null}</span>
+            </span>
       </div>
       {showUploadFileModal ?
         <StyledFileUploadModal hideModal={() => setShowUploadFileModal(false)} handleFileUpload={handleFileUpload}/>
@@ -159,9 +186,11 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
         <StyledFileDownloadModal
           hideModal={() => setShowDownloadFileModal(false)}
           handleDeleteProduct={() => handleDeleteProduct(rfi!.id,
-                                                         typeof rfi.productName === 'string' ? rfi.productName : '')}
+                                                         typeof rfi.productName === 'string' ? rfi.productName :
+                                                           '')}
           rfi={rfi}
           userName={cookie.userName}
+          disableDelete={rfiIsHistorical}
         />
         :
         null
@@ -183,7 +212,7 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
   font-weight: ${theme.font.weightBold};
   font-size: ${theme.font.sizeRow};
   line-height: 19px;
- 
+
   .button-section {
     display: flex;
     width: 100%;
@@ -249,7 +278,7 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
       margin-right: 4px;
     }
   }
-    
+  
   .gets-button {
     margin-left: 8px;
     
@@ -287,12 +316,38 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
   .projected-completion {
     font-weight: ${theme.font.weightBolder};
   }
-
+  
   .product-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     width: 225px;
+  }
+  
+  .view-feedback-button {
+    width: 244px;
+    height: 39px;
+    border-radius: 19.5px;
+    background: #243237;
+    text-shadow: 0 2px 4px #000000;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 14px 0 5px;
+    cursor: pointer;
+    
+    svg {
+      filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
+    }
+    
+    div {
+      margin-top: 4px;
+    }
+    
+    :hover {
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.75);
+    }
   }
 `;

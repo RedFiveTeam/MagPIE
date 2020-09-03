@@ -76,6 +76,8 @@ const theme = {
     toggleActive: crayonBox.redlessBlue,//
     bullet: crayonBox.mediumGreenBlue,//
     toggleButtonBackground: crayonBox.yetAnotherDarkGreenBlue,//
+    starInactive: crayonBox.anotherBluishGray,//
+    starActive: crayonBox.brightRedlessBlue,//
   },
 
   font: {

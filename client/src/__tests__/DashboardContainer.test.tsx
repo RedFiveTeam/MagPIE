@@ -41,6 +41,7 @@ describe('WorkflowContainer', () => {
         tgts={[]}
         exploitDates={[]}
         rfis={[]}
+        viewRfiHistoryPage={false}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeTruthy();
@@ -72,6 +73,7 @@ describe('WorkflowContainer', () => {
         tgts={[]}
         exploitDates={[]}
         rfis={[]}
+        viewRfiHistoryPage={false}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeTruthy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
@@ -103,6 +105,7 @@ describe('WorkflowContainer', () => {
         tgts={[]}
         exploitDates={[]}
         rfis={[rfi]}
+        viewRfiHistoryPage={false}
       />);
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
@@ -135,6 +138,7 @@ describe('WorkflowContainer', () => {
         tgts={[tgt]}
         exploitDates={[exploitDate]}
         rfis={[rfi]}
+        viewRfiHistoryPage={false}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
@@ -166,6 +170,7 @@ describe('WorkflowContainer', () => {
         tgts={[tgt]}
         exploitDates={[exploitDate]}
         rfis={[rfi]}
+        viewRfiHistoryPage={false}
       />);
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();
     expect(subject.find(StyledLoginDashboard).exists()).toBeFalsy();
@@ -197,6 +202,7 @@ describe('WorkflowContainer', () => {
         tgts={[]}
         exploitDates={[]}
         rfis={[]}
+        viewRfiHistoryPage={false}
       />);
 
     expect(subject.find(StyledLoadingScreen).exists()).toBeFalsy();

@@ -126,7 +126,6 @@ export const postProductUndoDelete = (rfiId: number, userName: string) => {
   );
 };
 
-
 export const fetchRfiPending = () => {
   return {
     type: RfiActionTypes.FETCH_RFI_PENDING,

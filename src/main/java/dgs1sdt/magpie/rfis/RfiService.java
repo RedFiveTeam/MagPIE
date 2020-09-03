@@ -98,6 +98,10 @@ public class RfiService {
     return pendingOpenAndLastThreeClosedRfis();
   }
 
+  public List<Rfi> fetchAllClosedFromRepo() {
+    return rfiRepository.findAllClosed();
+  }
+
   private List<Rfi> pendingOpenAndLastThreeClosedRfis() {
     List<Rfi> allRfis = this.rfiRepository.findAll();
     List<Rfi> lastThreeClosed = this.filterLastThreeClosed(allRfis);
@@ -215,5 +219,9 @@ public class RfiService {
     }
 
     rfiFeedbackRepository.save(feedback);
+  }
+
+  public RfiFeedback getFeedback(String rfiNum) {
+    return rfiFeedbackRepository.findByRfiNum(rfiNum);
   }
 }
