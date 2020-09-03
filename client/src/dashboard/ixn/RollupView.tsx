@@ -223,11 +223,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
                   onChange={handleInput}
                   autoFocus
                   multiline
-                  rows={rollupMode === RollupMode.ALL_CALLOUTS ?
-                    allCallouts.split('\n').length
-                    :
-                    hourlyRollup.split('\n').length
-                  }
+                  rows={24}
                   InputProps={{
                     disableUnderline: true,
                   }}
@@ -392,6 +388,6 @@ export const StyledRollupView = styled(RollupView)`
     flex-direction: column;
     flex-grow: 1;
     margin-top: -6px;
-    overflow: hidden;
+    padding-right: 24px;
   }
 `;
