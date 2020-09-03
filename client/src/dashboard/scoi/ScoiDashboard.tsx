@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import theme from '../../resources/theme';
+import theme, { rowStyles } from '../../resources/theme';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import { useDispatch, useSelector } from 'react-redux';
 import { editScoi, exitScoiPage, postScoi } from '../../store/scoi/Actions';
@@ -13,6 +13,8 @@ import { StyledTgtAssociationBullet } from './bullets/TgtAssociationBullet';
 import { IxnAssociationModel, RfiAssociationModel, TgtAssociationModel } from '../../store/scoi/AssociationModels';
 import { StyledCalloutAssociationBullet } from './bullets/CalloutAssociationBullet';
 import { StyledTrackAssociationBullet } from './bullets/TrackAssociationBullet';
+import { useSnackbar } from 'notistack';
+import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 
 interface MyProps {
   className?: string;
@@ -31,6 +33,16 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
   const [showTrackInfo, setShowTrackInfo] = useState(true);
   const [ixnInfo, setIxnInfo] = useState([] as IxnAssociationModel[]);
   let selectedScoi: ScoiModel|undefined = scois.find(scoi => scoi.id === selectedScoiId);
+
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+  const rowClasses = rowStyles();
+
+  const displaySnackbar = (message: string) => {
+    enqueueSnackbar(message, {
+      action: (key) => DismissSnackbarAction(key, closeSnackbar, rowClasses.snackbarButton),
+      variant: 'info',
+    });
+  };
 
   document.onkeydown = checkKey;
 
@@ -161,8 +173,12 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
     }
   };
 
-  const handlePostScoi = (scoi: ScoiModel) => {
-    dispatch(postScoi(scoi));
+  const handlePostScoi = (newScoi: ScoiModel) => {
+    dispatch(postScoi(newScoi));
+    let oldScoi = scois.find((scoi) => scoi.id === newScoi.id);
+    if (oldScoi && oldScoi.note !== newScoi.note) {
+      displaySnackbar(`${newScoi.name} Note Saved`);
+    }
   };
 
   const mapRfiAssociations = () => {
@@ -285,6 +301,7 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
 export const StyledScoiDashboard = styled(ScoiDashboard)`
   height: 100vh;
   width: 100%;
+  word-break: break-word;
   
   .back-button {
     cursor: pointer;
