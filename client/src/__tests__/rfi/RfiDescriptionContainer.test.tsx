@@ -19,7 +19,6 @@ describe('RFI description container', () => {
   let loadTgtPageSpy: jest.Mock;
   let handleFileUploadSpy: jest.Mock;
   let handleDeleteProductSpy: jest.Mock;
-  let handleUndoDeleteProductSpy: jest.Mock;
 
   window.open = jest.fn();
 
@@ -28,7 +27,6 @@ describe('RFI description container', () => {
     loadTgtPageSpy = jest.fn();
     handleFileUploadSpy = jest.fn();
     handleDeleteProductSpy = jest.fn();
-    handleUndoDeleteProductSpy = jest.fn();
 
     subject = mount(
       <SnackbarProvider>
@@ -38,7 +36,6 @@ describe('RFI description container', () => {
           postGetsClick={postGetsClickSpy}
           handlePostProductUpload={handleFileUploadSpy}
           handleDeleteProduct={handleDeleteProductSpy}
-          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );
@@ -65,7 +62,6 @@ describe('RFI description container', () => {
           loadTgtPage={loadTgtPageSpy}
           handlePostProductUpload={handleFileUploadSpy}
           handleDeleteProduct={handleDeleteProductSpy}
-          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );
@@ -86,7 +82,6 @@ describe('RFI description container', () => {
           loadTgtPage={loadTgtPageSpy}
           handlePostProductUpload={handleFileUploadSpy}
           handleDeleteProduct={handleDeleteProductSpy}
-          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );
@@ -119,7 +114,6 @@ describe('RFI description container', () => {
         postGetsClick={postGetsClickSpy}
         handlePostProductUpload={handleFileUploadSpy}
         handleDeleteProduct={handleDeleteProductSpy}
-        handleUndoDeleteProduct={handleUndoDeleteProductSpy}
       />
       </SnackbarProvider>,
     );
@@ -152,8 +146,7 @@ describe('RFI description container', () => {
           postGetsClick={postGetsClickSpy}
           handlePostProductUpload={handleFileUploadSpy}
           handleDeleteProduct={handleDeleteProductSpy}
-          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
-        />
+        />  
       </SnackbarProvider>,
     );
 
@@ -170,7 +163,6 @@ describe('RFI description container', () => {
           postGetsClick={postGetsClickSpy}
           handlePostProductUpload={handleFileUploadSpy}
           handleDeleteProduct={handleDeleteProductSpy}
-          handleUndoDeleteProduct={handleUndoDeleteProductSpy}
         />
       </SnackbarProvider>,
     );
