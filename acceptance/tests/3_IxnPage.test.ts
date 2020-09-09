@@ -313,19 +313,19 @@ Scenario('Should indicate SCOIs entered in the track narrative', (I) => {
   //Enter new SCOI with MGRS
   I.clearField('.track-narrative-input');
   I.fillField('.track-narrative-input',
-              'OPNS20-0123');
+              'OPN20S-0123');
   I.waitForElement('.mgrs-modal');
   I.waitForText('Type MGRS coordinates below');
 
   //cancel
   I.click('.cancel-mgrs-input');
   I.wait(1);
-  I.dontSee('OPNS20-0123');
+  I.dontSee('OPN20S-0123');
 
   //Add MGRS
   I.clearField('.track-narrative-input');
   I.fillField('.track-narrative-input',
-              'OPNS20-0123');
+              'OPN20S-0123');
   I.waitForElement('.mgrs-modal');
   I.waitForText('Type MGRS coordinates below');
   I.fillField('.mgrs-input', '12QWE123123123123');
@@ -336,7 +336,7 @@ Scenario('Should indicate SCOIs entered in the track narrative', (I) => {
 
   I.waitForElement('.scoi-queue');
   within('.scoi-queue', () => {
-    I.see('OPNS20-0123');
+    I.see('OPN20S-0123');
   });
 
   I.moveCursorTo('.scoi-chip', 5, 5);
@@ -346,7 +346,7 @@ Scenario('Should indicate SCOIs entered in the track narrative', (I) => {
   I.wait(1);
   within('.scoi-container', () => {
     I.dontSeeElement('.scoi-queue');
-    I.dontSee('OPNS20-0123');
+    I.dontSee('OPN20S-0123');
   });
   I.click('.expand-collapse-scois');
   I.waitForElement('.scoi-chip');
@@ -366,10 +366,10 @@ Scenario('Should indicate SCOIs entered in the track narrative', (I) => {
 
   I.clearField('.track-narrative-input');
   I.fillField('.track-narrative-input',
-              'OPNS20-0123');
+              'OPN20S-0123');
   I.waitForElement('.scoi-chip');
   within('.scoi-queue', () => {
-    I.see('OPNS20-0123');
+    I.see('OPN20S-0123');
   });
 
   I.moveCursorTo('.scoi-chip', 5, 5);

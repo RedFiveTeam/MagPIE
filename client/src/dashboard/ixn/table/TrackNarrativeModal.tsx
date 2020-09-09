@@ -50,9 +50,9 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
 
   //Overlay spans with backgrounds on the MGRSes for highlight
   let trackNarrativeDisplay = () => {
-    const parts = trackNarrative.split(/([A-Z]{3}S[0-9]{2}-[0-9]{0,4})/g);
+    const parts = trackNarrative.split(/([A-Z]{3}[0-9]{2}S-[0-9]{0,4})/g);
     return <span>{parts.map((part, i) =>
-                              <span key={i} style={part.match(/[A-Z]{3}S[0-9]{2}-[0-9]{0,4}/g) !== null ?
+                              <span key={i} style={part.match(/[A-Z]{3}[0-9]{2}S-[0-9]{0,4}/g) !== null ?
                                 {backgroundColor: '#42686A', borderRadius: '4px'} : {}}>
             {part}
         </span>)
@@ -90,7 +90,7 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
   };
 
   const checkForScois = (trackNarrative: string) => {
-    let matches: RegExpMatchArray|null = trackNarrative.match(/[A-Z]{3}S[0-9]{2}-[0-9]{4}/g);
+    let matches: RegExpMatchArray|null = trackNarrative.match(/[A-Z]{3}[0-9]{2}S-[0-9]{4}/g);
     let newScoiNameList: string[] = [];
     if (matches) {
       matches.forEach((match: string) => {
