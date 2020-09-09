@@ -3,11 +3,12 @@ import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import {
   exitTgtPage,
   fetchDatesAndTargetsSuccess,
-  setDatePlaceholder, TgtActionTypes, truncateAndConvertDateToUtc,
+  setDatePlaceholder, TgtActionTypes,
   updateExploitDateSuccess,
   updateTgtSuccess,
 } from '../../store/tgt';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { truncateAndConvertDateToUtc } from '../../utils';
 
 
 describe('Tgt actions tests', () => {

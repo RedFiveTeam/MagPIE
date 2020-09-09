@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledTgtTable } from './table/TgtTable';
@@ -14,26 +14,13 @@ import { ExploitDateModel } from '../../store/tgt/ExploitDateModel';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import {
-  deleteExploitDate,
-  deleteTargets,
-  deleteTgt,
-  loadTgtPage,
-  postExploitDate,
-  submitPostTargets,
+  deleteExploitDate, deleteTargets, deleteTgt, loadTgtPage, postExploitDate, submitPostTargets,
 } from '../../store/tgt/Thunks';
-import {
-  addTgt,
-  editTgt,
-  exitTgtPage,
-  resetAddEditTgt,
-  setDatePlaceholder,
-  truncateAndConvertDateToUtc,
-  updateTgtsLocal,
-} from '../../store/tgt';
+import { addTgt, editTgt, exitTgtPage, resetAddEditTgt } from '../../store/tgt';
 import { convertToPostModel, TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 import { useCookies } from 'react-cookie';
-import { Cookie } from '../../utils';
+import { Cookie, truncateAndConvertDateToUtc } from '../../utils';
 import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { navigateToIxnPage } from '../../store/ixn';
 import { useSnackbar } from 'notistack';
@@ -43,21 +30,12 @@ import { StyledTgtCopyModal } from './TgtCopyModal';
 import { StyledTgtInputRow } from './table/TgtInputRow';
 import { StyledTgtRow } from './table/TgtRow';
 import { Modal } from '@material-ui/core';
-import { fetchLocalUpdate, fetchRfis } from '../../store/rfi/Thunks';
-import { postProductDelete, postProductUndoDelete, postProductUpload } from '../../store/rfi';
+import { deleteProduct, fetchLocalUpdate, postProductUpload, undoDeleteProduct } from '../../store/rfi';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { StyledFileUploadModal } from '../components/FileUploadModal';
 import { StyledFileDownloadModal } from '../components/FileDownloadModal';
 
 interface MyProps {
-  rfi: RfiModel;
-  exploitDates: ExploitDateModel[];
-  showDatePlaceholder: boolean;
-  setDatePlaceholder: (show: boolean) => void;
-  targets: TargetModel[];
-  addTgt: number;
-  editTgt: number;
-  highlight: boolean;
   className?: string;
 }
 
@@ -74,6 +52,14 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   let cookie: Cookie = cookies.magpie;
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
+  const rfi = useSelector(({tgtState}: ApplicationState ) => tgtState.rfi);
+  const exploitDates = useSelector(({tgtState}: ApplicationState ) => tgtState.exploitDates);
+  const showDatePlaceholder = useSelector(({tgtState}: ApplicationState ) => tgtState.showDatePlaceholder);
+  const targets = useSelector(({tgtState}: ApplicationState ) => tgtState.targets);
+  const addTgtId = useSelector(({tgtState}: ApplicationState ) => tgtState.addTgt);
+  const editTgtId = useSelector(({tgtState}: ApplicationState ) => tgtState.editTgt);
+  const highlight = useSelector(({tgtState}: ApplicationState ) => tgtState.highlight);
+
   const [addDate, setAddDate] = useState(false);
   const [navigating, setNavigating] = useState(false);
   const [navigate, setNavigate] = useState(null as RfiModel|null);
@@ -84,7 +70,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   const [showUploadFileModal, setShowUploadFileModal] = useState(false);
   const [showDownloadFileModal, setShowDownloadFileModal] = useState(false);
 
-  const isDisabled = props.addTgt > 0 || addDate || props.editTgt > 0 || props.rfi.status === RfiStatus.CLOSED
+  const isDisabled = addTgtId > 0 || addDate || editTgtId > 0 || rfi.status === RfiStatus.CLOSED
     || displayCopyAllTargets || displayCopyTargets;
 
   let newExploitDate = useSelector(({tgtState}: ApplicationState) => tgtState.newExploitDate);
@@ -98,14 +84,14 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
       });
 
       let newTgts: TargetPostModel[] = [];
-      if (props.targets.length > 0 && props.targets[0].exploitDateId === -1) {
-        for (let tgt of props.targets) {
+      if (targets.length > 0 && targets[0].exploitDateId === -1) {
+        for (let tgt of targets) {
           let newTgt = {...convertToPostModel(tgt), exploitDateId: newExploitDate!.id};
           newTgts.push(newTgt);
         }
         handlePostTargets(newTgts, false);
-      } else if (props.targets.length > 0 && props.targets[0].exploitDateId > 0) {
-        for (let tgt of props.targets) {
+      } else if (targets.length > 0 && targets[0].exploitDateId > 0) {
+        for (let tgt of targets) {
           let newTgt = {...convertToPostModel(tgt), targetId: null, exploitDateId: newExploitDate!.id};
           newTgts.push(newTgt);
         }
@@ -115,29 +101,31 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
     }
   }, [newExploitDate]);
 
+  const dispatch = useDispatch();
+
   const handleUndoPostExploitDate = (exploitDateId: number) => {
     dispatch(deleteExploitDate(exploitDateId));
   };
 
   const handleUndoPostTargets = (targets: TargetPostModel[]) => {
     dispatch(deleteTargets(targets, cookie.userName));
+
   };
 
-  const dispatch = useDispatch();
-
   const handleExitTgtPage = () => {
-    if (props.addTgt > 0 || props.editTgt > 0) {
+    if (addTgtId > 0 || editTgtId > 0) {
       setNavigating(true);
       setNavigate(null);
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: undefined, tgtId: undefined}});
+      dispatch(exitTgtPage());
       dispatch(fetchLocalUpdate());
     }
   };
 
   const handlePostTargets = (targets: TargetPostModel[], isCopy: boolean) => {
     if (!navigating) {
-      if (props.rfi.status !== RfiStatus.CLOSED) {
+      if (rfi.status !== RfiStatus.CLOSED) {
         let tgts: TargetModel[] = [];
         for (let target of targets) {
           let tgt = new TargetModel(target.targetId ? target.targetId : -1, target.rfiId, target.exploitDateId,
@@ -157,8 +145,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
             variant: 'info',
           });
         }
-        dispatch(updateTgtsLocal(tgts, isCopy));
-        dispatch(submitPostTargets(targets, props.rfi, cookie.userName, isCopy));
+        dispatch(submitPostTargets(targets, rfi, cookie.userName, isCopy));
       }
     }
   };
@@ -168,21 +155,21 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   };
 
   async function handlePostExploitDate(date: ExploitDatePostModel) {
-    if (props.rfi.status !== RfiStatus.CLOSED) {
-      dispatch(postExploitDate(props.rfi, date));
+    if (rfi.status !== RfiStatus.CLOSED) {
+      dispatch(postExploitDate(rfi, date));
     }
   }
 
   const handleAddEdit = (status: Status, id?: number) => {
-    if (props.rfi.status !== RfiStatus.CLOSED) {
+    if (rfi.status !== RfiStatus.CLOSED) {
       switch (status) {
         case Status.ADD:
-          if (id && props.addTgt === -1 && props.editTgt === -1) {
+          if (id && addTgtId === -1 && editTgtId === -1) {
             dispatch(addTgt(id));
           }
           break;
         case Status.EDIT:
-          if (id && props.addTgt === -1 && props.editTgt === -1) {
+          if (id && addTgtId === -1 && editTgtId === -1) {
             dispatch(editTgt(id));
           }
           break;
@@ -193,7 +180,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handleDeleteTarget = (target: TargetModel) => {
-    if (props.rfi.status !== RfiStatus.CLOSED) {
+    if (rfi.status !== RfiStatus.CLOSED) {
       enqueueSnackbar('You deleted ' + target.name, {
         action: (key) => UndoSnackbarAction(key, {...target, targetId: target.id} as TargetPostModel,
                                             handlePostTarget, closeSnackbar, classes.snackbarButton),
@@ -204,7 +191,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handleDeleteExploitDate = (exploitDate: ExploitDateModel) => {
-    if (props.rfi.status !== RfiStatus.CLOSED) {
+    if (rfi.status !== RfiStatus.CLOSED) {
       let exploitDatePost: ExploitDatePostModel = new ExploitDatePostModel(
         exploitDate.id,
         exploitDate.rfiId,
@@ -220,14 +207,14 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handleNavigateToIxnPage = (target: TargetModel, dateString: string) => {
-    if (!isDisabled || props.rfi.status === RfiStatus.CLOSED) {
+    if (!isDisabled || rfi.status === RfiStatus.CLOSED) {
       setCookies('magpie', {...cookie, viewState: {rfiId: target.rfiId, tgtId: target.id}});
       dispatch(navigateToIxnPage(target, dateString));
     }
   };
 
   const handleSelectRfi = (rfi: RfiModel) => {
-    if (props.addTgt > 0 || props.editTgt > 0) {
+    if (addTgtId > 0 || editTgtId > 0) {
       setNavigating(true);
       setNavigate(rfi);
     } else {
@@ -240,6 +227,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   const handleNavigate = () => {
     if (navigate === null) {
       setCookies('magpie', {...cookie, viewState: {rfiId: undefined, tgtId: undefined}});
+      dispatch(exitTgtPage());
       dispatch(fetchLocalUpdate());
     } else {
       setCookies('magpie', {...cookie, viewState: {rfiId: navigate.id}});
@@ -252,7 +240,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handleShowProductModal = () => {
-    if (props.rfi.productName) {
+    if (rfi.productName) {
       setShowDownloadFileModal(true);
     } else {
       setShowUploadFileModal(true);
@@ -263,14 +251,14 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
     return dates.map(
       (exploitDateModel: ExploitDateModel, index: number) =>
         <StyledTgtDateRegion
-          rfi={props.rfi}
+          rfi={rfi}
           addDate={addDate}
           setAddDate={setAddDate}
           exploitDate={exploitDateModel}
           exploitDateDisplay={exploitDateModel.exploitDate.utc().format('D MMM YY')}
-          targets={props.targets.filter(target => target.exploitDateId === exploitDateModel.id)}
-          editTarget={props.editTgt}
-          addTgt={props.addTgt}
+          targets={targets.filter(target => target.exploitDateId === exploitDateModel.id)}
+          editTarget={editTgtId}
+          addTgt={addTgtId}
           setAddEditTarget={handleAddEdit}
           index={index}
           className={'date-divider--' + moment(exploitDateModel.exploitDate).format('D-MMM-YY')}
@@ -282,20 +270,20 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
           navigateToIxnPage={handleNavigateToIxnPage}
           deleteExploitDate={handleDeleteExploitDate}
           disabled={isDisabled}
-          highlight={props.highlight}
+          highlight={highlight}
           setEditingElement={setEditingElement}
         />,
     );
   }
 
   function printGetsTargets() {
-    return props.targets.map(
+    return targets.map(
       (target: TargetModel, index: number) =>
-        props.editTgt === target.id ?
+        editTgtId === target.id ?
           <StyledTgtInputRow
             target={target}
             key={index}
-            rfi={props.rfi}
+            rfi={rfi}
             exploitDate={null}
             setAddEditTarget={handleAddEdit}
             addingOrEditing={isDisabled}
@@ -306,14 +294,14 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
           <StyledTgtRow
             target={target}
             key={index}
-            rfi={props.rfi}
+            rfi={rfi}
             exploitDate={null}
             setAddEditTarget={handleAddEdit}
             addingOrEditing={isDisabled}
             postTarget={handlePostTarget}
             deleteTgt={handleDeleteTarget}
             navigateToIxnPage={handleNavigateToIxnPage}
-            highlight={props.highlight}
+            highlight={highlight}
           />,
     );
   }
@@ -354,12 +342,12 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   ;
 
   const handleFileUpload = (file: File) => {
-    if (props.rfi && file) {
+    if (rfi && file) {
       let data = new FormData();
       data.append('file', file);
       data.append('name', file.name);
 
-      dispatch(postProductUpload(data, props.rfi.id, cookie.userName));
+      dispatch(postProductUpload(data, rfi.id, cookie.userName));
       setShowUploadFileModal(false);
       enqueueSnackbar('Product Submitted', {
         action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
@@ -374,39 +362,37 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
                                           closeSnackbar, classes.snackbarButton),
       variant: 'info',
     });
-    postProductDelete(rfiId, cookie.userName);
-    dispatch(fetchRfis());
+    dispatch(deleteProduct(rfiId, cookie.userName));
   };
 
   const handleUndoDeleteProduct = (rfiId: number) => {
-    postProductUndoDelete(rfiId, cookie.userName);
-    dispatch(fetchRfis());
+    dispatch(undoDeleteProduct(rfiId, cookie.userName));
   };
 
   const headers = ['TGT ID', 'MGRS', 'EEI Notes', 'TGT Description', 'Status'];
 
   return (
-    <div className={classNames(props.className)}>
+    <div className={props.className}>
       <StyledTgtDashboardHeader
         exitTgtPage={handleExitTgtPage}
-        rfi={props.rfi}
-        editing={props.addTgt > 0 || props.editTgt > 0 || addDate}
+        rfi={rfi}
+        editing={addTgtId > 0 || editTgtId > 0 || addDate}
         addDate={handleAddDate}
         disabled={isDisabled}
-        displayHelperText={props.exploitDates.length < 2 && props.rfi.status === RfiStatus.OPEN}
-        displayExploitDateHelper={props.targets.length > 0 && props.exploitDates.length === 0}
+        displayHelperText={exploitDates.length < 2 && rfi.status === RfiStatus.OPEN}
+        displayExploitDateHelper={targets.length > 0 && exploitDates.length === 0}
         displayCopyTargets={() => setDisplayCopyTargets(true)}
         handleShowProductModal={handleShowProductModal}
       />
       <div className={'tgt-dash-container'}>
         <div className={'rfi-sidebar'}>
           <StyledRfiSidebar
-            rfi={props.rfi}
+            rfi={rfi}
             selectRfi={handleSelectRfi}
           />
         </div>
         <div className={'tgt-dash'}>
-          {props.targets.length > 0 && props.targets[0].exploitDateId === -1 ?
+          {targets.length > 0 && targets[0].exploitDateId === -1 ?
             <div className={'tgt-dash-body'}>
               <StyledTableHeader
                 className={'tgt-table-header'}
@@ -415,11 +401,11 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
               <StyledTgtTable displayHelperText={false}>
                 {addDate ?
                   <StyledExploitDateDivider
-                    rfiId={props.rfi.id}
+                    rfiId={rfi.id}
                     setAddDate={setAddDate}
                     className={classNames('date-divider--placeholder', 'date-divider--no-top-margin',
-                                          props.exploitDates.length === 0 ? 'date-divider--new' : null)}
-                    uKey={props.rfi.id}
+                                          exploitDates.length === 0 ? 'date-divider--new' : null)}
+                    uKey={rfi.id}
                     hasTgts={false}
                     postExploitDate={handlePostExploitDate}
                     deleteExploitDate={() => {
@@ -431,11 +417,11 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
                   null
                 }
                 {printGetsTargets()}
-                {props.addTgt === 1 ?
+                {addTgtId === 1 ?
                   <StyledTgtInputRow
                     target={null}
                     key={99999}
-                    rfi={props.rfi}
+                    rfi={rfi}
                     exploitDate={null}
                     setAddEditTarget={handleAddEdit}
                     addingOrEditing={isDisabled}
@@ -455,7 +441,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
             </div>
             :
             <div className={'tgt-dash-body'}>
-              {props.exploitDates.length > 0 || props.showDatePlaceholder ?
+              {exploitDates.length > 0 || showDatePlaceholder ?
                 <StyledTableHeader
                   className={'tgt-table-header'}
                   headers={headers}
@@ -464,15 +450,15 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
                 null
               }
               <StyledTgtTable
-                displayHelperText={props.exploitDates.length === 0 && props.rfi.status !== RfiStatus.CLOSED}>
-                {printDates(props.exploitDates)}
+                displayHelperText={exploitDates.length === 0 && rfi.status !== RfiStatus.CLOSED}>
+                {printDates(exploitDates)}
                 {addDate ?
                   <StyledExploitDateDivider
-                    rfiId={props.rfi.id}
+                    rfiId={rfi.id}
                     setAddDate={setAddDate}
                     className={classNames('date-divider--placeholder',
-                                          props.exploitDates.length === 0 ? 'date-divider--new' : null)}
-                    uKey={props.rfi.id}
+                                          exploitDates.length === 0 ? 'date-divider--new' : null)}
+                    uKey={rfi.id}
                     hasTgts={false}
                     postExploitDate={handlePostExploitDate}
                     deleteExploitDate={() => {
@@ -488,7 +474,7 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
           }
           <div className={'tgt-dash--rfi-description-container'}>
             <div className={'tgt-dash--rfi-description-box'}>&nbsp;</div>
-            <div className={'tgt-dash--rfi-description'}>RFI DESCRIPTION: {props.rfi.description}</div>
+            <div className={'tgt-dash--rfi-description'}>RFI DESCRIPTION: {rfi.description}</div>
             <input className={'hidden-input'}/>
           </div>
           {navigating ?
@@ -508,8 +494,8 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
           display={true}
           hide={() => setDisplayCopyTargets(false)}
           postTargets={handlePostTargets}
-          exploitDates={props.exploitDates}
-          targets={props.targets}
+          exploitDates={exploitDates}
+          targets={targets}
         />
         :
         null}
@@ -522,13 +508,13 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
         :
         null
       }
-      {showDownloadFileModal && props.rfi ?
+      {showDownloadFileModal && rfi ?
         <StyledFileDownloadModal
           hideModal={() => setShowDownloadFileModal(false)}
-          handleDeleteProduct={() => handleDeleteProduct(props.rfi!.id,
-                                                         typeof props.rfi.productName === 'string' ?
-                                                           props.rfi.productName : '')}
-          rfi={props.rfi}
+          handleDeleteProduct={() => handleDeleteProduct(rfi!.id,
+                                                         typeof rfi.productName === 'string' ?
+                                                           rfi.productName : '')}
+          rfi={rfi}
           userName={cookie.userName}
         />
         :
@@ -538,26 +524,8 @@ export const TgtDashboard: React.FC<MyProps> = (props) => {
   );
 };
 
-const mapStateToProps = ({tgtState}: ApplicationState) => ({
-  rfi: tgtState.rfi,
-  exploitDates: tgtState.exploitDates,
-  showDatePlaceholder: tgtState.showDatePlaceholder,
-  targets: tgtState.targets,
-  addTgt: tgtState.addTgt,
-  editTgt: tgtState.editTgt,
-  highlight: tgtState.highlight,
-});
-
-const mapDispatchToProps = {
-  exitTgtPage: exitTgtPage,
-  setDatePlaceholder: setDatePlaceholder,
-};
-
-export const StyledTgtDashboard = styled(
-  connect(mapStateToProps, mapDispatchToProps)(TgtDashboard))`
+export const StyledTgtDashboard = styled(TgtDashboard)`
   font-size: ${theme.font.sizeRow};
-  font-family: ${theme.font.familyRow};
-  color: ${theme.color.fontPrimary};
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -688,10 +656,6 @@ export const StyledTgtDashboard = styled(
     pointer-events: none;
   }
   
-  AddDateVector {
-    pointer-events: none;
-  }
-  
   .tgt-table-header {
     flex: 0 0 27px;
     padding-left: 17px;
@@ -729,7 +693,8 @@ export const StyledTgtDashboard = styled(
   .delete-edit-button-container {
     border-left: 9px solid ${theme.color.backgroundBase};
     display: flex;
-    flex: 0 0 85px;
+    flex: 0 0 93px;
+    width: 100%;
     flex-direction: row;
     justify-content: center;
     align-items: center;

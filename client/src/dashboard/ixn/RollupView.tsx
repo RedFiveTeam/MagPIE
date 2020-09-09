@@ -7,7 +7,7 @@ import { StyledIxnTable } from './table/IxnTable';
 import styled from 'styled-components';
 import theme, { longInputStyles } from '../../resources/theme';
 import { TargetModel } from '../../store/tgt/TargetModel';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledMiniSegmentRegion } from './rollup/MiniSegmentRegion';
 import { StyledImportRollupsButton } from '../../resources/icons/ImportRollupsButton';
@@ -173,7 +173,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
                 border={2}
                 borderRadius={11}
                 borderColor={theme.color.primaryButton}
-                bgcolor={theme.color.backgroundModal}
+                bgcolor={theme.color.backgroundInformation}
                 display="flex"
                 flexDirection="row"
                 alignItems="center"
@@ -194,7 +194,7 @@ export const RollupView: React.FC<MyProps> = (props) => {
                 border={2}
                 borderRadius={11}
                 borderColor={theme.color.primaryButton}
-                bgcolor={theme.color.backgroundModal}
+                bgcolor={theme.color.backgroundInformation}
                 display="flex"
                 flexDirection="row"
                 alignItems="center"

@@ -3,7 +3,7 @@ import ScrollShadow from 'react-scroll-shadow';
 import theme from '../../../resources/theme';
 import styled from 'styled-components';
 import { TargetModel } from '../../../store/tgt/TargetModel';
-import { StyledMiniIxnRow } from './MiniIxnRow';
+import { StyledMiniTgtRow } from './MiniTgtRow';
 import { StyledMiniDateRegion } from './MiniDateRegion';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../../../store';
@@ -27,7 +27,7 @@ export const IxnSidebar: React.FC<MyProps> = (props) => {
   const printRows = (exploitDateId: number) => {
     return targets.filter(tgt => tgt.exploitDateId === exploitDateId)
       .map((tgt: TargetModel, index: number) =>
-             <StyledMiniIxnRow
+             <StyledMiniTgtRow
                tgt={tgt}
                key={index}
                index={index}

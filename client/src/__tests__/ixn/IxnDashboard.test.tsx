@@ -5,7 +5,7 @@ import { StyledIxnDashboardHeader } from '../../dashboard/ixn/IxnDashboardHeader
 import { StyledIxnTable } from '../../dashboard/ixn/table/IxnTable';
 import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import configureStore from '../../configureStore';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import { Provider } from 'react-redux';
 import { StyledTableHeader } from '../../dashboard/components/header/TableHeader';
 import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';

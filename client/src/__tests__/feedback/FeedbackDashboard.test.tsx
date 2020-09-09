@@ -14,11 +14,6 @@ describe('FeedbackDashboard', () => {
     );
   });
 
-  /*
-  TODO: Figure out how to test this with a valid parameter sent through react router, it seems to fail due to not
-  reaching the API, but tests successfully in Acceptance Tests, so maybe it is okay?
-  */
-
   it('should display the rfi star feedback information', () => {
     expect(subject.find('.rfi-title').text()).toContain('Error: Bad Link');
     expect(subject.find('.star-container').exists()).toBeTruthy();

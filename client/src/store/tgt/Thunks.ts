@@ -4,10 +4,8 @@ import { ExploitDateDeserializer } from './ExploitDateDeserializer';
 import { ExploitDatePostModel } from './ExploitDatePostModel';
 
 import { TargetPostModel } from './TargetPostModel';
-import {
-  fetchDatesAndTargetsSuccess, postExploitDateDelete, postExploitDatesUpdate, postTarget, postTargetDelete,
-  postTargetsDelete, updateExploitDateSuccess, updateTgtSuccess,
-} from './Actions';
+import { fetchDatesAndTargetsSuccess, updateExploitDateSuccess, updateTgtSuccess } from './Actions';
+import { postExploitDateDelete, postExploitDatesUpdate, postTarget, postTargetDelete, postTargetsDelete } from './Api';
 
 export const fetchRfiTargets = (rfi: RfiModel, dates: ExploitDateModel[], firstLoad: boolean,
                                 newExploitDateId: number) => {
@@ -66,7 +64,7 @@ export const postExploitDate = (rfi: RfiModel, exploitDate: ExploitDatePostModel
 export const submitPostTargets = (targets: TargetPostModel[], rfi: RfiModel, userName: string, isCopy: boolean) => {
   return (dispatch: any) => {
     postTarget(targets, userName, isCopy)
-      .then(response => dispatch(loadTgtPage(rfi, false)))
+      .then(response => dispatch(loadTgtPage(rfi, true)))
       .catch((reason) => {
         console.log(reason);
       });

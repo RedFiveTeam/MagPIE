@@ -43,12 +43,10 @@ export const TgtAssociationBullet: React.FC<MyProps> = (props) => {
 };
 
 export const StyledTgtAssociationBullet = styled(TgtAssociationBullet)`
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
-  color: ${theme.color.fontPrimary};
   //margin-top: 4px;
   display: flex;
   flex-direction: row;

@@ -7,7 +7,7 @@ import { Box, MuiThemeProvider, TextField } from '@material-ui/core';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
 import styled from 'styled-components';
 import RfiModel from '../../../store/rfi/RfiModel';
-import { RowAction } from '../../../utils';
+import { RowAction, strongMatchMgrsError, weakMatchMgrsError } from '../../../utils';
 import { Status } from '../TgtDashboard';
 import classNames from 'classnames';
 import NotStartedButton from '../../components/statusButtons/NotStartedButton';
@@ -56,19 +56,9 @@ export const TgtInputRow: React.FC<MyProps> = props => {
     [action],
   );
 
-  function weakMatchMgrsError(mgrs: string): boolean {
-    return mgrs.length > 15 || (mgrs.length === 15 && mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null);
-  }
-
-  function strongMatchMgrsError(mgrs: string): boolean {
-    return mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null;
-  }
-
   const inputMgrs = (event: any) => {
-    let newMgrs = event.target.value;
-    if (newMgrs.charAt(newMgrs.length - 1) !== '\n') {
-      setMgrs(newMgrs);
-    }
+    let newMgrs: string = event.target.value.replace(/\n/g, '');
+    setMgrs(newMgrs);
     if (strongValidateMgrs) {
       setMgrsError(strongMatchMgrsError(newMgrs));
     } else {
@@ -78,17 +68,13 @@ export const TgtInputRow: React.FC<MyProps> = props => {
   };
 
   const inputNotes = (event: any) => {
-    let newNotes = event.target.value;
-    if (newNotes.charAt(newNotes.length - 1) !== '\n') {
-      setNotes(newNotes);
-    }
+    let newNotes: string = event.target.value.replace(/\n/g, '');
+    setNotes(newNotes);
   };
 
   const inputDescription = (event: any) => {
-    let newDescription = event.target.value;
-    if (newDescription.charAt(newDescription.length - 1) !== '\n') {
-      setDescription(newDescription);
-    }
+    let newDescription: string = event.target.value.replace(/\n/g, '');
+    setDescription(newDescription);
   };
 
   const validateAllAndSubmit = () => {
@@ -100,7 +86,10 @@ export const TgtInputRow: React.FC<MyProps> = props => {
       }
       if (!mgrsErrorLocal) {
         if (props.target) {
-          props.postTarget({...convertToPostModel(props.target), mgrs: mgrs, notes: notes, description: description});
+          props.postTarget({
+                             ...convertToPostModel(props.target), mgrs: mgrs.trim(), notes: notes? notes.trim() : '',
+                             description: description? description.trim() : '',
+                           });
         } else {
           props.postTarget(
             new TargetPostModel(null, props.rfi.id, props.exploitDate ? props.exploitDate.id : -1, mgrs, notes,
@@ -152,6 +141,9 @@ export const TgtInputRow: React.FC<MyProps> = props => {
                   if (key.which === enterKey) {
                     validateAllAndSubmit();
                   }
+                }}
+                onSubmit={(event) => {
+                  event.preventDefault();
                 }}
           >
             <div className={classNames(classes.margin, 'tgt-name', 'data-cell', 'bottom-space')}>
@@ -240,6 +232,7 @@ export const StyledTgtInputRow = styled(TgtInputRow)`
   align-items: flex-start;
   margin-top: -4px;
   width: 1212px;
+  margin-bottom: -1px;
   
   .tgt-name {
     width: 67px;
@@ -270,8 +263,7 @@ export const StyledTgtInputRow = styled(TgtInputRow)`
     margin: 10px 8px 0 8px;
     overflow-wrap: break-word;
     font-size: ${theme.font.sizeRow};
-    font-weight: ${theme.font.weightRow};
-    font-family: ${theme.font.familyRow};
+    font-weight: ${theme.font.weightNormal};
     position: relative;
     
   }
@@ -323,7 +315,7 @@ export const StyledTgtInputRow = styled(TgtInputRow)`
   .input-error-msg {
     color: ${theme.color.fontError};
     font-size: ${theme.font.sizeRow};
-    font-weight: ${theme.font.weightRow};
+    font-weight: ${theme.font.weightNormal};
     line-height: 19px;
   }
   

@@ -3,7 +3,7 @@ import { StyledTableHeader } from '../components/header/TableHeader';
 import { StyledIxnTable } from './table/IxnTable';
 import { StyledSegmentDivider } from './table/SegmentDivider';
 import classNames from 'classnames';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import { StyledSegmentRegion } from './table/SegmentRegion';
 import { TargetModel } from '../../store/tgt/TargetModel';
 import IxnModel from '../../store/ixn/IxnModel';

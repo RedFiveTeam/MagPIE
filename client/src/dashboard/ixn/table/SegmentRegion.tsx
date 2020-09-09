@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { StyledSegmentDivider } from './SegmentDivider';
 import styled from 'styled-components';
 import { TargetModel } from '../../../store/tgt/TargetModel';
-import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../../store/ixn/SegmentModel';
 import IxnModel from '../../../store/ixn/IxnModel';
 import { StyledIxnRow } from './IxnRow';
 import { StyledIxnInputRow } from './IxnInputRow';

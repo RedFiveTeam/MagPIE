@@ -22,6 +22,19 @@ export const editScoi = (scoiId: number) => {
   };
 };
 
+export const postScoi = (scoi: ScoiModel, userName: string) => {
+  return fetch('/api/scoi?userName=' + userName,
+               {
+                 method: 'post',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(scoi),
+               },
+  );
+};
+
 export const loadScoiPage = () => {
   return (dispatch: any) =>
     fetch('/api/scoi/all', {method: 'get'})
@@ -30,16 +43,8 @@ export const loadScoiPage = () => {
       .catch(error => console.log('Error loading Scoi page: ' + error));
 };
 
-export const postScoi = (scoi: ScoiModel) => {
+export const postScoiUpdate = (scoi: ScoiModel, userName: string) => {
   return (dispatch: any) =>
-    fetch('/api/scoi',
-          {
-            method: 'post',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(scoi),
-          },
-    ).then(response => dispatch(loadScoiPage()));
+    postScoi(scoi, userName)
+      .then(response => dispatch(loadScoiPage()));
 };

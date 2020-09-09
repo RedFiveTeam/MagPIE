@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import theme, { rowStyles } from '../../resources/theme';
 import { StyledBackButtonVector } from '../../resources/icons/BackButtonVector';
 import { useDispatch, useSelector } from 'react-redux';
-import { editScoi, exitScoiPage, postScoi } from '../../store/scoi/Actions';
+import { editScoi, exitScoiPage, postScoiUpdate } from '../../store/scoi/Actions';
 import { StyledScoiTable } from './ScoiTable';
 import { ScoiModel } from '../../store/scoi/ScoiModel';
 import { ApplicationState } from '../../store';
@@ -15,6 +15,8 @@ import { StyledCalloutAssociationBullet } from './bullets/CalloutAssociationBull
 import { StyledTrackAssociationBullet } from './bullets/TrackAssociationBullet';
 import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
+import { useCookies } from 'react-cookie';
+import { Cookie } from '../../utils';
 
 interface MyProps {
   className?: string;
@@ -33,6 +35,8 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
   const [showTrackInfo, setShowTrackInfo] = useState(true);
   const [ixnInfo, setIxnInfo] = useState([] as IxnAssociationModel[]);
   let selectedScoi: ScoiModel|undefined = scois.find(scoi => scoi.id === selectedScoiId);
+
+  const cookie: Cookie = useCookies(['magpie'])[0].magpie;
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const rowClasses = rowStyles();
@@ -174,7 +178,7 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handlePostScoi = (newScoi: ScoiModel) => {
-    dispatch(postScoi(newScoi));
+    dispatch(postScoiUpdate(newScoi, cookie.userName));
     let oldScoi = scois.find((scoi) => scoi.id === newScoi.id);
     if (oldScoi && oldScoi.note !== newScoi.note) {
       displaySnackbar(`${newScoi.name} Note Saved`);
@@ -323,13 +327,13 @@ export const StyledScoiDashboard = styled(ScoiDashboard)`
     justify-content: space-between;
     align-items: center;
     height: 63px;
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
     margin-bottom: 17px;
     padding: 0 43px;
   }
   
   .divider-bar {
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
     box-shadow: 2px 2px 4px #000000;
     border-radius: 8px;
     width: 4px;
@@ -371,7 +375,6 @@ export const StyledScoiDashboard = styled(ScoiDashboard)`
   }
   
   .scoi-info-section--header {
-    font-family: Roboto;
     font-style: normal;
     font-weight: bold;
     font-size: 16px;

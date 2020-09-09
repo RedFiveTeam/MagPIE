@@ -14,6 +14,7 @@ import { StyledScoiChip } from './ScoiChip';
 import { StyledExpandCollapseArrow } from '../../../resources/icons/ExpandCollapse';
 import { ScoiModel } from '../../../store/scoi/ScoiModel';
 import { StyledMgrsModal } from './MgrsModal';
+import { postScoi } from '../../../store/scoi/Actions';
 
 interface MyProps {
   setDisplay: (display: boolean) => void;
@@ -21,6 +22,7 @@ interface MyProps {
   submitTrackNarrative: (trackNarrative: string) => void;
   dateString: string;
   readOnly: boolean;
+  userName: string;
   className?: string;
 }
 
@@ -154,16 +156,8 @@ export const TrackNarrativeModal: React.FC<MyProps> = props => {
 
   const handlePostScoi = (mgrs: string) => {
     let scoi = new ScoiModel(undefined, newName, mgrs, '');
-    fetch('/api/scoi',
-          {
-            method: 'post',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(scoi),
-          },
-    ).then(response => response.json())
+    postScoi(scoi, props.userName)
+      .then(response => response.json())
       .then(scoi => {
         setScoiList(scoiList => scoiList.concat(scoi));
         displaySnackbar(`${scoi.name} created`);
@@ -320,7 +314,7 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     margin-top: -2px;
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
-    background: ${theme.color.backgroundHighlighted};
+    background: ${theme.color.backgroundFocus};
   }
 
   .narrative-text {
@@ -391,7 +385,6 @@ export const StyledTrackNarrativeModal = styled(TrackNarrativeModal)`
     align-items: center;
     flex-wrap: wrap;
     max-height: 56px;
-    //overflow-y: auto; 
   }
   
   .track-narrative {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import { SegmentDivider } from '../../dashboard/ixn/table/SegmentDivider';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import { SnackbarProvider } from 'notistack';
 
 describe('Segment Divider', () => {

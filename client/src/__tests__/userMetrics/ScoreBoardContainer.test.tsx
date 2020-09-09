@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { ScoreBoardContainer } from '../../dashboard/userMetrics/view/ScoreBoardContainer';
+import { ScoreBoardContainer } from '../../dashboard/userMetrics/ScoreBoardContainer';
 
 describe('UserMetricsDashboard', () => {
   console.log = jest.fn();

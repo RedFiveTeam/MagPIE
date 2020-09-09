@@ -2,7 +2,7 @@ import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { IxnRow } from '../../dashboard/ixn/table/IxnRow';
 import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import { SnackbarProvider } from 'notistack';
 import { Cookies } from 'react-cookie';
 

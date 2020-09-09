@@ -2,7 +2,7 @@ import IxnModel from '../../store/ixn/IxnModel';
 import { Button, IconButton } from '@material-ui/core';
 import SnackbarDismissIcon from '../../resources/icons/SnackbarDismissIcon';
 import * as React from 'react';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import { TargetPostModel } from '../../store/tgt/TargetPostModel';
 import { ExploitDatePostModel } from '../../store/tgt/ExploitDatePostModel';
 import RfiModel from '../../store/rfi/RfiModel';

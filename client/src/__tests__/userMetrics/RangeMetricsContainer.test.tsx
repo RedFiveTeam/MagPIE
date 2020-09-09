@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { Provider } from 'react-redux';
-import { RangeMetricsContainer } from '../../dashboard/userMetrics/view/RangeMetricsContainer';
+import { RangeMetricsContainer } from '../../dashboard/userMetrics/RangeMetricsContainer';
 import { initStore } from '../../../setupTests';
 import configureStore from '../../configureStore';
 

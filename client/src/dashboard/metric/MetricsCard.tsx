@@ -31,7 +31,7 @@ export const MetricCard: React.FC<MyProps> = (props) => {
         :
       props.data.metrics.map((metric: Metric, index: number) =>
         typeof props.data.metrics !== 'number' && props.data.metrics.length < 3 ?
-          <div className={'card-row'}>
+          <div className={'card-row'} key={`card-row-${props.data.title}-${index}`}>
             <span>{metric.label}</span>
             <span><b>{metric.data}</b></span>
           </div>

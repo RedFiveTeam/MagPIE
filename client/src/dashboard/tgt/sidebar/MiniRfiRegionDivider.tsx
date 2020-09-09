@@ -20,10 +20,8 @@ export const MiniRfiRegionDivider: React.FC<MyProps> = props => {
 
 export const StyledMiniRfiRegionDivider = styled(MiniRfiRegionDivider)`
   height: 32px;
-  font-family: ${theme.font.familyRegion};
-  font-weight: ${theme.font.weightRegion};
+  font-weight: ${theme.font.weightMedium};
   font-size: ${theme.font.sizeRow};
-  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: column;
   justify-content: center;

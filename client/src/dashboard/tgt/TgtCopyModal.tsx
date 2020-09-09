@@ -27,7 +27,7 @@ const menuStyles = makeStyles((localTheme: Theme) => createStyles(
       background: '#02252E',
       border: '2px solid #8199A1',
       borderRadius: '4px',
-      fontFamily: 'Roboto',
+      fontFamily: theme.font.family,
       fontStyle: 'normal',
       fontWeight: 'bold',
       fontSize: '24px',
@@ -45,7 +45,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
   const [selectedTgtIds, setSelectedTgtIds] = useState([] as number[]);
   const [copyToDateId, setCopyToDateId] = useState(0);
   const [copyToDates, setCopyToDates] = useState(props.exploitDates);
-  const [copiedTgts, setCopiedTgts] = useState([] as TargetPostModel[]);
+  const [copiedTgts, setCopiedTgts] = useState([] as TargetModel[]);
 
   const [displayConfirmationModal, setDisplayConfirmationModal] = useState(false);
 
@@ -191,7 +191,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
             className={'tgt-copy--row tgt-copy--row-new'}
             id={'tgt-' + index}
           >
-            {/*<div className={'target-name'}>{target.name}</div>*/}
+            <div className={'target-name'}>{target.name}</div>
             <div className={'target-mgrs'}>{target.mgrs}</div>
             <div className={'checkbox-spacer'}>&nbsp;</div>
           </div>,
@@ -206,7 +206,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
       });
     allTargets = allTargets.concat(copiedTgts.filter(
       (target) => {
-        return target.exploitDateId === copyToDateId; // fix this to be more specific for the target identified
+        return target.exploitDateId === copyToDateId;
       },
     ));
     return allTargets.length > 0;
@@ -214,16 +214,12 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
 
   const handleCopyClick = () => {
     if (copyToDateId > 0) {
-      let newCopiedTargets: TargetPostModel[] = [];
+      let newCopiedTargets: TargetModel[] = [];
       for (let target of props.targets.filter((tgt) => selectedTgtIds.includes(tgt.id))) {
-        let newTarget: TargetPostModel =
+        let newTarget: TargetModel =
           {
             ...target,
-            targetId: null,
             exploitDateId: copyToDateId,
-            status: TargetStatus.NOT_STARTED,
-            hourlyRollup: '',
-            allCallouts: '',
           };
         newCopiedTargets.push(newTarget);
       }
@@ -242,7 +238,20 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
 
   const handleSubmit = () => {
     if (copiedTgts.length > 0) {
-      props.postTargets(copiedTgts, true);
+      let copiedTgtPosts: TargetPostModel[] = [];
+      for (let tgt of copiedTgts) {
+        copiedTgtPosts.push(
+          {
+            ...tgt,
+            targetId: null,
+            exploitDateId: copyToDateId,
+            status: TargetStatus.NOT_STARTED,
+            hourlyRollup: '',
+            allCallouts: '',
+          }
+        );
+      }
+      props.postTargets(copiedTgtPosts, true);
       handleGoBack();
       props.hide();
     }
@@ -300,7 +309,8 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
 
             <div className={classNames('copy-button-container')}>
               <div
-                className={classNames('copy-button', copyToDateId === 0 || selectedTgtIds.length === 0 ? 'disabled' : null)}
+                className={classNames('copy-button',
+                                      copyToDateId === 0 || selectedTgtIds.length === 0 ? 'disabled' : null)}
                 onClick={handleCopyClick}
               >
                 <StyledCopyTargetsButton/>
@@ -399,15 +409,13 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
 
 export const StyledTgtCopyModal = styled(TgtCopyModal)`
   font-size: ${theme.font.sizeHeader};
-  color: ${theme.color.fontPrimary};
-  font-family: ${theme.font.familyRow};
   
   .tgt-copy--select-date-menu {
     width: 757px;
     height: 480px;
     margin-left: -353.5px;
     margin-top: -240px;
-    background: ${theme.color.backgroundModal};
+    background: ${theme.color.backgroundInformation};
     outline: none;
   }
   
@@ -454,7 +462,7 @@ export const StyledTgtCopyModal = styled(TgtCopyModal)`
     padding: 0 21px;
     font-size: ${theme.font.sizeMetricsHeader};
     color: ${theme.color.fontSubHeader};
-    font-weight: ${theme.font.weightSubHeader};
+    font-weight: ${theme.font.weightLight};
   }
   
   .tgt-copy--body {
@@ -510,7 +518,7 @@ export const StyledTgtCopyModal = styled(TgtCopyModal)`
   }
   
   .tgt-copy--copy-tgt-menu {
-    background: ${theme.color.backgroundModal};
+    background: ${theme.color.backgroundInformation};
     flex-grow: 0;
     width: 611px;
     height: 490px;
@@ -592,7 +600,6 @@ export const StyledTgtCopyModal = styled(TgtCopyModal)`
   
   .menu-item {
     background: #02252E !important;
-    font-family: Roboto !important;
     font-style: normal !important;
     font-weight: bold !important;
     font-size: 24px !important;

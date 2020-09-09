@@ -8,9 +8,21 @@ import { Provider } from 'react-redux';
 import configureStore from '../../configureStore';
 import { StyledExploitDateDivider } from '../../dashboard/tgt/table/ExploitDateDivider';
 import { initStore } from '../../../setupTests';
+import { ApplicationState } from '../../store';
 
-const initState = {
+
+const moment = require('moment');
+const rfiTest =
+  new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', undefined, RfiStatus.OPEN, '', '', '', 'space forse', '',
+               '', '', '', '', moment('2019-11-20').utc(), 'USLT', 'Good morning starshine, the earth says hello',
+               'Just a fiction', 42, 0, 0, undefined, false, false, null);
+
+const initState: ApplicationState = {
   ...initStore,
+  tgtState: {
+    ...initStore.tgtState,
+    rfi: rfiTest,
+  },
 };
 
 //@ts-ignore
@@ -18,18 +30,8 @@ const mockStore = configureStore(history, initState);
 
 describe('TgtDashboardContainer', () => {
   let subject: ReactWrapper;
-  const moment = require('moment');
-  let rfiTest: RfiModel;
-  let setPlaceholderSpy: jest.Mock;
 
   beforeEach(() => {
-    setPlaceholderSpy = jest.fn();
-    rfiTest =
-      new RfiModel(1, 'DGS-SPC-2035-02335', 'www.spacejam.com', undefined, RfiStatus.OPEN, '', '', '', 'space forse',
-                   '', '', '', '', '', moment(
-          '2019-11-20')
-                     .utc(), 'USLT', 'Good morning starshine, the earth says hello', 'Just a fiction', 42, 0, 0, undefined, false, false,
-                   null);
     subject = mount(
       <Provider store={mockStore}>
         <SnackbarProvider
@@ -37,16 +39,7 @@ describe('TgtDashboardContainer', () => {
           autoHideDuration={15000}
           hideIconVariant
         >
-          <TgtDashboard
-            rfi={rfiTest}
-            exploitDates={[]}
-            setDatePlaceholder={setPlaceholderSpy}
-            showDatePlaceholder={false}
-            targets={[]}
-            addTgt={-1}
-            editTgt={-1}
-            highlight={false}
-          />
+          <TgtDashboard/>
         </SnackbarProvider>
       </Provider>,
     );
@@ -62,11 +55,23 @@ describe('TgtDashboardContainer', () => {
   });
 
   it('should display the date dividers or not properly', () => {
+
     let dates: ExploitDateModel[] = [
       new ExploitDateModel(2, 1, moment('2019-11-20').utc()),
       new ExploitDateModel(3, 1, moment('2019-11-21').utc()),
       new ExploitDateModel(4, 1, moment('2019-11-21').utc()),
     ];
+
+    let newState: ApplicationState = {
+      ...initState,
+      tgtState: {
+        ...initState.tgtState,
+        exploitDates: dates,
+      },
+    };
+
+    // @ts-ignore
+    const mockStore = configureStore(history, newState);
 
     subject = mount(
       <Provider store={mockStore}>
@@ -75,16 +80,7 @@ describe('TgtDashboardContainer', () => {
           autoHideDuration={15000}
           hideIconVariant
         >
-          <TgtDashboard
-            rfi={rfiTest}
-            exploitDates={dates}
-            setDatePlaceholder={setPlaceholderSpy}
-            showDatePlaceholder={false}
-            targets={[]}
-            addTgt={-1}
-            editTgt={-1}
-            highlight={false}
-          />
+          <TgtDashboard/>
         </SnackbarProvider>
       </Provider>,
     );

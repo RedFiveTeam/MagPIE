@@ -95,21 +95,20 @@ export const StyledScoiInputRow = styled(ScoiInputRow)`
     border-top-right-radius: 8px;
     border-bottom-right-radius: 0 !important;
     margin-right: -8px;
-    background-color: ${theme.color.backgroundInput};
     margin-bottom: -8px;
     padding-right: 7px;
     padding-bottom: 8px;
     z-index: 1;
     flex-grow: 0 !important;
     align-self: stretch !important;
-    background-color: ${theme.color.backgroundInput} !important;
+    background-color: ${theme.color.backgroundFocus} !important;
   }
   
   .note-container {
     width: 548px;
     min-height: 58px;
     border-radius: 8px 0 8px 8px;
-    background-color: ${theme.color.backgroundInput};
+    background-color: ${theme.color.backgroundFocus};
     margin-bottom: 8px;
     padding: 12px;
     display:flex;

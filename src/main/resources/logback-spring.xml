@@ -39,7 +39,7 @@
   </root>
 
   <!-- LOG MagPIE at TRACE level -->
-  <logger name="dgs1sdt.magpie" level="trace" additivity="false">
+  <logger name="redv.magpie" level="trace" additivity="false">
     <appender-ref ref="RollingFile"/>
     <appender-ref ref="Console"/>
   </logger>

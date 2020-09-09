@@ -36,9 +36,7 @@ export const StyledRfiRegion = styled(RfiRegion)`
   padding-right: 20px;
   
   .empty-message {
-    color: ${theme.color.fontPrimary};
-    font-family: ${theme.font.familyRegion};
-    font-weight: ${theme.font.weightRegion};
+    font-weight: ${theme.font.weightMedium};
     font-size: ${theme.font.sizeRegion};
     margin-top: 16px;
     text-align: center;

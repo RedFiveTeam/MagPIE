@@ -30,7 +30,7 @@ export const DeleteConfirmationModal: React.FC<MyProps> = props => {
         {props.productDelete ?
           <>
             <div className={classes.modalIcon}>
-              <img src={'fileDeleteIcon.png'}/>
+              <img src={'fileDeleteIcon.png'} alt={'delete icon'}/>
             </div>
             <div className={classNames('modal-text', classes.modalText)}>
               Delete this file?

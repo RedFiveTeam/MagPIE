@@ -27,7 +27,6 @@ export const StyledScoiChip = styled(ScoiChip)`
   margin-top: 8px;
   height: 19px;
   width: 135px;
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 18px;

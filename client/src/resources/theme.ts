@@ -8,106 +8,73 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const theme = {
   color: {
-    backgroundBase: crayonBox.coolBlack,//
     fontPrimary: crayonBox.eggWhite,
-    fontAction: crayonBox.tarBlack,
-    backgroundInformation: crayonBox.steelBlue,//
-    backgroundInactive: crayonBox.blueGrayLight,
-    backgroundAction: crayonBox.safetyOrange,
-    backgroundHighlighted: crayonBox.mediumBlueGray,//
-    backgroundAssigned: crayonBox.notEggWhite,
-    backgroundModal: crayonBox.steelBlue,
-    backgroundStatus: crayonBox.darkGray,
-    backgroundSnackbar: crayonBox.mediumBlue,
     fontLoading: crayonBox.lightGray,
-    fontInactive: crayonBox.mediumMediumLightGray,
+    fontInactive: crayonBox.mediumLightGray,
     fontBackgroundInactive: crayonBox.mediumGray,
-    buttonInactive: crayonBox.mediumBlueGray,//
-    buttonActive: crayonBox.softMetal,
-    buttonBackgroundActive: crayonBox.pitchBlack,
-    showLessBackground: crayonBox.subtleGray,
-    addButtonBackground: crayonBox.forestGreen,
-    addButtonBorder: crayonBox.darkGreen,
-    fontAddDate: crayonBox.eggGray,
     fontError: crayonBox.bloodRed,
     fontInputFocus: crayonBox.skyBlue,
-    deleteButton: crayonBox.straightWhite,
-    borderModal: crayonBox.darkRed,
-    deleteButtonFocus: crayonBox.brightRed,
-    backgroundHeader: crayonBox.steelBlue,//
-    buttonOnBlack: crayonBox.straightWhite,
-    regionDividerPrimary: crayonBox.mediumMediumBrightBlue,//
-    regionDividerSecondary: crayonBox.blueBlueGray,//
+    fontUsernameSuffix: crayonBox.lighterGray,
+    fontMetricsHeader: crayonBox.brightBlue,
+    fontHeader: crayonBox.skyBlueGreen,
+    fontSubHeader: crayonBox.lightBlueGray,
+    fontErrorAlternate: crayonBox.lessLessBrightRed,
+    fontMgrsModal: crayonBox.skyBlueGreener,
+    backgroundBase: crayonBox.coolBlack,
+    backgroundInformation: crayonBox.steelBlue,
+    backgroundInactive: crayonBox.blueGrayLight,
+    backgroundFocus: crayonBox.mediumBlueGray,
+    backgroundSnackbar: crayonBox.mediumBlue,
     backgroundToolTip: crayonBox.mediumBlue,
-    inProgress: crayonBox.stoplightYellow,
-    complete: crayonBox.stoplightGreen,
-    primaryButton: crayonBox.brightBlue,//
+    backgroundUsernameSuffix: crayonBox.warmGray,
+    backgroundIxnSidebar: crayonBox.darkRedBlue,
+    backgroundMetricsCard: crayonBox.darkBlue,
+    backgroundPillButton: crayonBox.darkGreenBlue,
+    backgroundSnackbarError: crayonBox.darkTomatoRed,
+    backgroundScoiTag: crayonBox.aquaGreen,
+    backgroundScoiContainer: crayonBox.anotherDarkGreenBlue,
+    backgroundDownloadButton: crayonBox.reallyDarkBlue,
+    backgroundToggleButton: crayonBox.yetAnotherDarkGreenBlue,
+    buttonInactive: crayonBox.mediumBlueGray,
+    primaryButton: crayonBox.brightBlue,
     buttonRowDisabled: crayonBox.subtleGray,
     buttonDoesNotMeetEei: crayonBox.tomatoRed,
-    fontActive: crayonBox.notEggWhite,
-    backgroundLoading: crayonBox.coolBlack,
-    backgroundUsernameSuffix: crayonBox.warmGray,
-    backgroundInput: crayonBox.mediumBlueGray,
-    fontUsernameSuffix: crayonBox.lighterGray,
-    loginIcon: crayonBox.mediumBrightBlue,//
-    backgroundSidebar: crayonBox.steelBlue,
-    backgroundIxnSidebar: crayonBox.darkRedBlue,//
-    backgroundMetricsCard: crayonBox.darkBlue,
-    fontMetricsHeader: crayonBox.brightBlue,
+    borderAddButton: crayonBox.mediumGreenBlue,
+    downloadButtonBorder: crayonBox.darkMediumBlueGray,
+    regionDividerPrimary: crayonBox.mediumMediumBrightBlue,
+    regionDividerSecondary: crayonBox.blueBlueGray,
+    inProgress: crayonBox.stoplightYellow,
+    complete: crayonBox.stoplightGreen,
+    loginIcon: crayonBox.mediumBrightBlue,
     modalInputBorder: crayonBox.subtlerGray,
-    fontHeader: crayonBox.skyBlueGreen,//
-    backgroundFocus: crayonBox.mediumBlueGray,//
-    borderAddButton: crayonBox.mediumGreenBlue,//
-    dateDividerHighlight: crayonBox.mediumGreenBlue,//
-    backgroundPillButton: crayonBox.darkGreenBlue,//
-    fontSubHeader: crayonBox.lightBlueGray,//
-    copyTgtBorder: crayonBox.lightCoolBlack,//
-    dateDividerBox: crayonBox.mediumBrightBrightBlue,//
-    subduedOutline: crayonBox.anotherGray,//
-    rejectIcon: crayonBox.subduedTomatoRed,//
-    backgroundSnackbarError: crayonBox.darkTomatoRed,//
-    rejectArrow: crayonBox.lessBrightRed,//
-    backgroundScoiTag: crayonBox.aquaGreen,//
-    backgroundScoiContainer: crayonBox.anotherDarkGreenBlue,//
-    downloadButtonBorder: crayonBox.darkMediumBlueGray,//
-    downloadButtonBackground: crayonBox.reallyDarkBlue,//
-    fontErrorAlternate: crayonBox.lessLessBrightRed,//
-    fontMgrsModal: crayonBox.skyBlueGreener,//
-    toggleActive: crayonBox.redlessBlue,//
-    bullet: crayonBox.mediumGreenBlue,//
-    toggleButtonBackground: crayonBox.yetAnotherDarkGreenBlue,//
-    starInactive: crayonBox.anotherBluishGray,//
-    starActive: crayonBox.brightRedlessBlue,//
+    dateDividerHighlight: crayonBox.mediumGreenBlue,
+    copyTgtBorder: crayonBox.lightCoolBlack,
+    dateDividerBox: crayonBox.mediumBrightBrightBlue,
+    subduedOutline: crayonBox.anotherGray,
+    rejectIcon: crayonBox.subduedTomatoRed,
+    rejectArrow: crayonBox.lessBrightRed,
+    toggleActive: crayonBox.redlessBlue,
+    bullet: crayonBox.mediumGreenBlue,
+    starInactive: crayonBox.anotherBluishGray,
+    starActive: crayonBox.brightRedlessBlue,
   },
 
   font: {
-    familyRow: 'Roboto',
-    weightRow: 400,
+    family: 'Roboto,sans-serif',
+    weightLight: 300,
+    weightNormal: 400,
     weightMedium: 500,
     weightBold: 700,
     weightBolder: 900,
-    weightSubHeader: 300,
-    sizeRow: '16px',
-    familyHeader: 'Roboto',
-    weightHeader: 400,
-    sizeHeader: '24px',
-    sizeHeaderSmall: '16px',
-    familyRegion: 'Roboto',
-    weightRegion: 500,
-    sizeRegion: '18px',
     sizeRowSmall: '12px',
     sizeRowMedium: '14px',
+    sizeRow: '16px',
+    sizeRegion: '18px',
     sizeMetricsHeader: '20px',
+    sizeHeader: '24px',
     sizeHelperText: '28px',
     sizeModalHeader: '30px',
     sizeBigMetric: '40px',
-  },
-
-  table: {
-    rowHeight: '64px',
-    tableWidth: '607px',
-    rowWidth: '576px',
-    leftWidth: '408px',
   },
 };
 
@@ -129,6 +96,9 @@ export const muiTheme = createMuiTheme(
       },
     },
     palette: muiPalette,
+    typography: {
+      fontFamily: theme.font.family,
+    },
   });
 
 const rowPalette = createPalette(
@@ -147,10 +117,11 @@ export const rowTheme = createMuiTheme(
     overrides: {
       MuiInput: {
         input: {
+          letterSpacing: 'normal',
           '&::placeholder': {
             color: theme.color.fontBackgroundInactive,
           },
-          color: 'white', // if you also want to change the color of the input, this is the prop you'd use
+          color: theme.color.fontPrimary,
         },
         underline: {
           '&:before': {
@@ -212,7 +183,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       marginTop: -301,
       width: 942,
       height: 602,
-      fontFamily: theme.font.familyHeader,
+      fontFamily: theme.font.family,
       fontWeight: theme.font.weightMedium,
       fontSize: theme.font.sizeRegion,
       lineHeight: '21px',
@@ -229,7 +200,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       marginTop: -94,
       width: 542,
       height: 188,
-      fontFamily: theme.font.familyHeader,
+      fontFamily: theme.font.family,
       fontWeight: theme.font.weightBold,
       fontSize: theme.font.sizeHeader,
     },
@@ -238,7 +209,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       marginTop: -114,
       width: 316,
       height: 228,
-      fontFamily: theme.font.familyHeader,
+      fontFamily: theme.font.family,
       fontWeight: theme.font.weightBold,
       fontSize: theme.font.sizeHeader,
     },
@@ -250,7 +221,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       marginTop: -156,
       width: 462,
       height: 312,
-      fontFamily: theme.font.familyHeader,
+      fontFamily: theme.font.family,
       fontWeight: theme.font.weightBold,
       fontSize: theme.font.sizeHeader,
     },
@@ -259,7 +230,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       marginTop: -204,
       width: 662,
       height: 408,
-      fontFamily: theme.font.familyHeader,
+      fontFamily: theme.font.family,
       fontWeight: theme.font.weightMedium,
       fontSize: theme.font.sizeRegion,
     },
@@ -270,10 +241,10 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       flexDirection: 'column',
       justifyContent: 'space-between',
       alignItems: 'center',
-      color: theme.color.deleteButton,
+      color: theme.color.fontPrimary,
       textAlign: 'center',
       outline: 'none',
-      backgroundColor: theme.color.backgroundModal,
+      backgroundColor: theme.color.backgroundInformation,
       borderRadius: 8,
       borderColor: theme.color.backgroundFocus,
       borderWidth: 2,
@@ -290,10 +261,10 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       flexDirection: 'column',
       justifyContent: 'space-between',
       alignItems: 'center',
-      color: theme.color.deleteButton,
+      color: theme.color.fontPrimary,
       textAlign: 'center',
       outline: 'none',
-      backgroundColor: theme.color.backgroundHighlighted,
+      backgroundColor: theme.color.backgroundFocus,
       borderRadius: 8,
     },
     rollupModalBody: {
@@ -302,10 +273,10 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       flexDirection: 'column',
       justifyContent: 'space-between',
       alignItems: 'center',
-      color: theme.color.deleteButton,
+      color: theme.color.fontPrimary,
       textAlign: 'center',
       outline: 'none',
-      backgroundColor: theme.color.backgroundHighlighted,
+      backgroundColor: theme.color.backgroundFocus,
       borderRadius: 8,
       padding: '0 2px',
     },
@@ -366,7 +337,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       borderRadius: '13px',
       backgroundColor: theme.color.primaryButton,
       cursor: 'pointer',
-      fontSize: theme.font.sizeHeaderSmall,
+      fontSize: theme.font.sizeRow,
       '&:hover': {
         textShadow: '0px 0px 4px #FFFFFF',
       },
@@ -376,21 +347,21 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       color: theme.color.fontHeader,
       fontWeight: theme.font.weightBold,
       marginTop: '-25px',
-},
+    },
     uploadDropArea: {
       width: '140px',
       height: '177px',
       border: '2px dotted' + theme.color.fontHeader,
     },
     modalTextfield: {
-      backgroundColor: theme.color.backgroundModal,
+      backgroundColor: theme.color.backgroundInformation,
       borderTopLeftRadius: '8px',
       borderTopRightRadius: '8px',
       padding: '0 4px !important',
       width: '100%',
     },
     rejectTextfield: {
-      backgroundColor: theme.color.backgroundModal,
+      backgroundColor: theme.color.backgroundInformation,
       borderTopLeftRadius: '8px',
       borderTopRightRadius: '8px',
       padding: '0 4px',
@@ -421,7 +392,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
       height: 534,
       overflow: 'auto',
       padding: '6px 2px',
-      background: theme.color.backgroundModal,
+      background: theme.color.backgroundInformation,
       borderTopRightRadius: 8,
       borderTopLeftRadius: 8,
     },
@@ -474,7 +445,7 @@ export const longInputStyles = makeStyles((localTheme: Theme) => createStyles(
         boxShadow: '0 0 6px #FFF',
       },
     },
-
-  }));
+  },
+));
 
 export default theme;

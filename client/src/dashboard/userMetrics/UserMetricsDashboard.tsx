@@ -7,8 +7,8 @@ import theme from '../../resources/theme';
 import { useDispatch } from 'react-redux';
 import { exitUserMetricsPage } from '../../store/rfi';
 import TrophyIcon from '../../resources/icons/TrophyIcon';
-import { ScoreBoardContainer } from './view/ScoreBoardContainer';
-import { StyledRangeMetricsContainer } from './view/RangeMetricsContainer';
+import { ScoreBoardContainer } from './ScoreBoardContainer';
+import { StyledRangeMetricsContainer } from './RangeMetricsContainer';
 import { useCookies } from 'react-cookie/cjs';
 import { Cookie } from '../../utils';
 
@@ -63,14 +63,12 @@ export const UserMetricsDashboard: React.FC<MyProps> = (props) => {
 };
 
 export const StyledUserMetricsDashboard = styled(UserMetricsDashboard)`
-display: block;
-height: 100%;
-width: 100%;
-background-color: ${theme.color.backgroundLoading};
-font-family: ${theme.font.familyRow};
-font-size: ${theme.font.sizeHeader};
-font-weight: ${theme.font.weightHeader};
-color: ${theme.color.fontActive};
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: ${theme.color.backgroundBase};
+  font-size: ${theme.font.sizeHeader};
+  font-weight: ${theme.font.weightNormal};
   
   .metrics-header { 
    width: 100%;
@@ -80,9 +78,9 @@ color: ${theme.color.fontActive};
    align-items: center;
    flex-shrink: 1;
    flex-grow: 0;
-   background: ${theme.color.backgroundHeader};
+   background: ${theme.color.backgroundInformation};
    height: 63px;
-   box-shadow: 0px 2px 20px #000000;
+   box-shadow: 0 2px 20px #000000;
    z-index: 101;
   }
   
@@ -104,7 +102,6 @@ color: ${theme.color.fontActive};
    flex-direction: column;
    justify-content: space-around;
    align-items: center;
-   color: ${theme.color.backgroundAction};
   }
   
   .container {
@@ -118,10 +115,8 @@ color: ${theme.color.fontActive};
   }
   
    h4 {
-    font-family: ${theme.font.familyHeader};
     font-size: 18px;
     margin: 0;
-    color: ${theme.color.fontActive};
     padding-bottom: 10px;
    }
   .scoreboard-header {
@@ -135,9 +130,7 @@ color: ${theme.color.fontActive};
   }
    
   .rating-column-title {
-   font-family: ${theme.font.familyHeader};
    font-size: 18px;
-   color: ${theme.color.fontActive};
    width: 85px;
    display: flex;
    flex-shrink: 1;
@@ -172,8 +165,6 @@ color: ${theme.color.fontActive};
    width: 517px;
    height: 44px;
    display: flex;
-   //set for on hover
-   //background: linear-gradient(90deg, #143F51 0%, #1C404D 100%);
    justify-content: space-between;
    flex-shrink: 1;
    flex-grow: 0;
@@ -193,9 +184,7 @@ color: ${theme.color.fontActive};
   .rank-column-title {
    height: 90px;
    width: 90px;
-   font-family: ${theme.font.weightBold};
    font-size: 18px;
-   color: ${theme.color.fontActive};
    display: flex;
    flex-shrink: 1;
    flex-grow: 0;

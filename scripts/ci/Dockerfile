@@ -2,9 +2,9 @@ FROM cloudfoundry/cflinuxfs3
 
 USER root
 # setup_env
-ENV PIE_DB_URL=jdbc:mysql://localhost:3306/piedev?useSSL=false
-ENV PIE_DB_USERNAME=pie
-ENV PIE_CI=true
+ENV PIE_DB_URL="jdbc:mysql://localhost:3306/piedev?useSSL=false"
+ENV PIE_DB_USERNAME="pie"
+ENV PIE_CI="true"
 
 # create man directory
 RUN mkdir -p /usr/share/man/man1
@@ -83,7 +83,7 @@ RUN apt-get -qqy update &&\
         /var/cache/apt/*
 
 # setup java version 8
-RUN rm /etc/alternatives/java &&\†
+RUN rm /etc/alternatives/java &&\
     ln -s /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java /etc/alternatives/java
 
 # setup mysql

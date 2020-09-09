@@ -15,7 +15,7 @@ const SnackbarDismissIcon = () => {
     >
       <path
         d={pathD}
-        fill={theme.color.fontActive}
+        fill={theme.color.fontPrimary}
       />
     </svg>
   );

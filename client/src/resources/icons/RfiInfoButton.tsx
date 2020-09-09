@@ -37,7 +37,7 @@ export const RfiInfoButton: React.FC<MyProps> = ({active}) => {
   return (
     <div>
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="15" cy="15" r="15" fill={theme.color.toggleButtonBackground}/>
+        <circle cx="15" cy="15" r="15" fill={theme.color.backgroundToggleButton}/>
         <path d={rfiPathD1}
               fill={active ? theme.color.toggleActive : theme.color.primaryButton}/>
         <path fillRule={'evenodd'} clipRule={'evenodd'} d={rfiPathD2}
@@ -51,7 +51,7 @@ export const TgtInfoButton: React.FC<MyProps> = ({active}) => {
   return (
     <div>
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="15" cy="15" r="15" fill={theme.color.toggleButtonBackground}/>
+        <circle cx="15" cy="15" r="15" fill={theme.color.backgroundToggleButton}/>
         <path d={tgtPathD}
               fill={active ? theme.color.toggleActive : theme.color.primaryButton}/>
       </svg>
@@ -63,7 +63,7 @@ export const IxnInfoButton: React.FC<MyProps> = ({active}) => {
   return (
     <div>
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="15" cy="15" r="15" fill={theme.color.toggleButtonBackground}/>
+        <circle cx="15" cy="15" r="15" fill={theme.color.backgroundToggleButton}/>
         <path d={ixnPathD}
               fillRule="evenodd" clipRule="evenodd"
               fill={active ? theme.color.toggleActive : theme.color.primaryButton}/>
@@ -77,7 +77,7 @@ export const TrackInfoButton: React.FC<MyProps> = ({active}) => {
   return (
     <div>
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="15" cy="15" r="15" fill={theme.color.toggleButtonBackground}/>
+        <circle cx="15" cy="15" r="15" fill={theme.color.backgroundToggleButton}/>
         <path d={trackPathD1}
               fill={active ? theme.color.toggleActive : theme.color.primaryButton}/>
         <path d={trackPathD2}

@@ -108,8 +108,6 @@ export const TgtDashboardHeader: React.FC<OwnProps> = (props) => {
 
 export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
   font-size: ${theme.font.sizeRow};
-  font-family: ${theme.font.familyRow};
-  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -122,7 +120,7 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     align-items: center;
     height: 63px;
     padding-right: 34px;
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
     z-index: 10000;
   }
   
@@ -134,7 +132,6 @@ export const StyledTgtDashboardHeader = styled(TgtDashboardHeader)`
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    color: ${theme.color.backgroundAction};
   }
   
   .header-helper-text {

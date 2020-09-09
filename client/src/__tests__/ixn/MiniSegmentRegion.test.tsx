@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
 import { StyledIxnInputRow } from '../../dashboard/ixn/table/IxnInputRow';
 import { StyledMiniSegmentDivider } from '../../dashboard/ixn/rollup/MiniSegmentDivider';

@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import globalTheme from '../../../resources/theme';
 import theme from '../../../resources/theme';
 import { TargetModel } from '../../../store/tgt/TargetModel';
-import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../../store/ixn/SegmentModel';
 import IxnModel from '../../../store/ixn/IxnModel';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
 import EditButton from '../../../resources/icons/EditButton';
@@ -97,6 +97,7 @@ export const SegmentDivider: React.FC<Props> = props => {
           } else {
             props.cancelAddSegment();
             postCancelAddSegment(props.target.id)
+              .catch(reason => console.log('Failed to post cancel add segment metric: ' + reason));
           }
         } else {
           handleDelete();
@@ -415,7 +416,7 @@ export const StyledSegmentDivider = styled(SegmentDivider)`
   .segment-error {
     color: ${theme.color.fontError};
     font-size: ${theme.font.sizeRow};
-    font-weight: ${theme.font.weightRow};
+    font-weight: ${theme.font.weightNormal};
     line-height: 19px;
     margin-top: -17px;
     margin-bottom: -9px;

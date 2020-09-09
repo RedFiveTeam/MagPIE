@@ -1,4 +1,4 @@
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 
 export const formatRfiNum = (id: string): string => {
   let year: string = id.substr(id.length - 8, 2);
@@ -24,7 +24,6 @@ export const convertTimeStringToMoment = (time: string): Moment => {
 };
 
 export const getLastName = (userName: string): string => {
-  //billy.b.josephs123.mil
   let sections: string[] = userName.split('.');
   if (sections.length === 1) {
     return sections[0];
@@ -40,6 +39,20 @@ export const getLastName = (userName: string): string => {
     return lastPart;
   }
 };
+
+export const truncateAndConvertDateToUtc = (date: Date): Date => {
+  let newDate = new Date(moment(date).utc(true).unix() * 1000); //convert date to UTC
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+};
+
+export const weakMatchMgrsError = (mgrs: string): boolean => {
+  return mgrs.length > 15 || (mgrs.length === 15 && mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null);
+}
+
+export const strongMatchMgrsError = (mgrs: string): boolean => {
+  return mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null;
+}
 
 export enum RowAction {
   NONE,

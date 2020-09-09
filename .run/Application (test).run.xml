@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Application (test)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="pie" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="dgs1sdt.magpie.Application" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="redv.magpie.Application" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
     <envs>

@@ -5,8 +5,6 @@ import { History } from 'history';
 import { connectRouter, RouterState } from 'connected-react-router';
 import { RfiState } from './rfi';
 import { rfiReducer } from './rfi/Reducer';
-import { MetricState } from './metrics';
-import { metricsReducer } from './metrics/Reducer';
 import { ixnReducer } from './ixn/Reducer';
 import { IxnState } from './ixn';
 import { ScoiState } from './scoi/Types';
@@ -18,7 +16,6 @@ export interface ApplicationState {
   tgtState: TgtState;
   rfiState: RfiState;
   ixnState: IxnState;
-  metricState: MetricState;
   historicalRfiState: HistoricalRfiState;
   scoiState: ScoiState;
   router: RouterState | undefined;
@@ -29,7 +26,6 @@ export const createRootReducer = (history: History) =>
     tgtState: tgtReducer,
     rfiState: rfiReducer,
     ixnState: ixnReducer,
-    metricState: metricsReducer,
     scoiState: scoiReducer,
     historicalRfiState: historicalRfiReducer,
     router: connectRouter(history),

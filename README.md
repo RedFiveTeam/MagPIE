@@ -2,7 +2,7 @@
 ![MagPIE Logo](./client/public/smallbord.png)
 ![MagPie Webpage](./client/public/magpieWebsite.png)
 ## Overview
-Marion Berry... or choose your own flavor! A project to provide for the Post-Ingest Exploitation (PIE) cell a unified workflow empowered through metrics, web design, and customer feedback.
+A project to provide a unified workflow for the Post-Ingest Exploitation (PIE) cell empowered through metrics, web design, and customer feedback.
 
 ## Setup
 ### Dependencies

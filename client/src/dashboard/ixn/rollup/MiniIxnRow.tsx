@@ -17,7 +17,7 @@ interface MyProps {
 
 export const MiniIxnRow: React.FC<MyProps> = props => {
 
-  const handleClickCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleClickCheckbox = () => {
     props.select(props.ixn.id!);
   };
 

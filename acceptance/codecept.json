@@ -14,7 +14,7 @@
       "switches": {
         "ignore-certificate-errors": true
       },
-      "waitForTimeout": "3000"
+      "waitForTimeout": "4000"
     }
   },
   "include": {

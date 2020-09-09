@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import theme from '../../../resources/theme';
-import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../../store/ixn/SegmentModel';
 
 interface Props {
   segment: SegmentModel|null;

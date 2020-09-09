@@ -1,4 +1,4 @@
-import { SegmentModel } from '../tgtSegment/SegmentModel';
+import { SegmentModel } from './SegmentModel';
 
 const moment = require('moment');
 

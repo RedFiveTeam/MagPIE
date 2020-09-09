@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import { MiniSegmentDivider } from '../../dashboard/ixn/rollup/MiniSegmentDivider';
 
 describe('Mini Segment Divider', () => {

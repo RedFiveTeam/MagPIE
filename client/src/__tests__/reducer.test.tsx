@@ -7,7 +7,7 @@ import { RfiActionTypes, rfiReducer } from '../store/rfi';
 import { TgtActionTypes, tgtReducer } from '../store/tgt';
 import { ixnReducer } from '../store/ixn/Reducer';
 import { IxnActionTypes } from '../store/ixn';
-import { SegmentModel } from '../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../store/ixn/SegmentModel';
 import IxnModel, { IxnApprovalStatus, IxnStatus } from '../store/ixn/IxnModel';
 
 const moment = require('moment');
@@ -76,7 +76,6 @@ describe('reducer', () => {
       setTimeout(check, 2000); // check again in a second
     };
     check();
-
   });
 
   it('should handle FETCH_PENDING', () => {
@@ -330,7 +329,7 @@ describe('reducer', () => {
                    'MEX', 'hi', 'Just a fiction', 1, 0, 0, undefined, false, false, null),
     ];
 
-    //Sort bt LTIOV; should stay sorted after update
+    //Sort by LTIOV; should stay sorted after update
     let sortAction = {type: RfiActionTypes.SORT_RFIS, field: Field.LTIOV};
     state = rfiReducer(state, sortAction);
 

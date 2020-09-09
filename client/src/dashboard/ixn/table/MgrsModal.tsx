@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import theme from '../../../resources/theme';
 import { useState } from 'react';
 import DeleteButtonX from '../../../resources/icons/DeleteButtonX';
+import { strongMatchMgrsError, weakMatchMgrsError } from '../../../utils';
 
 interface MyProps {
   hideModal: () => void;
@@ -19,14 +20,6 @@ const MgrsModal: React.FC<MyProps> = (props) => {
   const [mgrs, setMgrs] = useState('');
 
   let isMgrsInput: boolean = mgrs.length === 15 && !mgrsError;
-
-  function weakMatchMgrsError(mgrs: string): boolean {
-    return mgrs.length > 15 || (mgrs.length === 15 && mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null);
-  }
-
-  function strongMatchMgrsError(mgrs: string): boolean {
-    return mgrs.length !== 15 || mgrs.match(/[0-9]{2}[A-Z]{3}[0-9]{10}/) === null;
-  }
 
   const inputMgrs = (event: any) => {
     let newMgrs = event.target.value;
@@ -118,7 +111,7 @@ export const StyledMgrsModal = styled(MgrsModal)`
   align-items: center;
 
   .modal-container {
-    background: ${theme.color.backgroundHighlighted};
+    background: ${theme.color.backgroundFocus};
     border-radius: 10px;
     padding: 4px;
     width: 333px;
@@ -130,7 +123,7 @@ export const StyledMgrsModal = styled(MgrsModal)`
   }  
   
   .modal-body {
-    background: ${theme.color.backgroundModal};
+    background: ${theme.color.backgroundInformation};
     width: 325px;
     height: 114px;
     border-top-left-radius: 6px;
@@ -141,7 +134,6 @@ export const StyledMgrsModal = styled(MgrsModal)`
     align-items: center;
     
     span {
-      font-family: Roboto;
       font-style: normal;
       font-weight: bold;
       font-size: 18px;
@@ -150,7 +142,6 @@ export const StyledMgrsModal = styled(MgrsModal)`
     
     input {
       text-align: center;
-      font-family: Roboto;
       font-style: normal;
       font-weight: 500;
       font-size: 24px;
@@ -165,7 +156,7 @@ export const StyledMgrsModal = styled(MgrsModal)`
   }
 
   .error-message {
-    background: ${theme.color.backgroundModal};
+    background: ${theme.color.backgroundInformation};
     width: 424px;
     height: 24px;
     border-radius: 12px;
@@ -174,7 +165,6 @@ export const StyledMgrsModal = styled(MgrsModal)`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    font-family: Roboto;
     font-style: normal;
     font-weight: bold;
     font-size: 16px;
@@ -198,11 +188,9 @@ export const StyledMgrsModal = styled(MgrsModal)`
     }
     
     span {
-      font-family: Roboto;
       font-style: normal;
       font-weight: bold;
       font-size: 16px;
-      color: ${theme.color.fontPrimary};
     }
   }
 `;

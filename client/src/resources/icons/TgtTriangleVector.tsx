@@ -18,7 +18,7 @@ const TgtTriangleVector = () => {
         fillRule="evenodd"
         clipRule="evenodd"
         d={pathD}
-        fill={theme.color.fontActive}
+        fill={theme.color.fontPrimary}
       />
     </svg>
   );

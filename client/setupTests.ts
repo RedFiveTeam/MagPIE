@@ -6,7 +6,6 @@ import { ApplicationState } from './src/store';
 import { ixnInitState } from './src/store/ixn/Reducer';
 import { rfiInitState } from './src/store/rfi';
 import { tgtInitState } from './src/store/tgt';
-import { metricsInitState } from './src/store/metrics';
 import { RouterState } from 'connected-react-router';
 import { scoiInitState } from './src/store/scoi/Reducer';
 import { historicalRfiInitState } from './src/store/rfiHistory/Reducer';
@@ -29,7 +28,6 @@ export const initStore: ApplicationState = {
   tgtState: tgtInitState,
   ixnState: ixnInitState,
   scoiState: scoiInitState,
-  metricState: metricsInitState,
   historicalRfiState: historicalRfiInitState,
   router: initRouter,
 };

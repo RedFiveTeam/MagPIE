@@ -1,11 +1,10 @@
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import * as moment from 'moment';
-import { reorderRfis } from '../../store/rfi/Thunks';
+import { exitUserMetricsPage, loadUserMetricsPage, reorderRfis, RfiActionTypes } from '../../store/rfi';
 import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
 import { RfiSorter } from '../../store/rfi/RfiSorter';
-import { exitUserMetricsPage, loadUserMetricsPage, RfiActionTypes } from '../../store/rfi';
 
 const fetch = require('jest-fetch-mock');
 const middlewares = [thunk];

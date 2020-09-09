@@ -112,7 +112,6 @@ export const StyledRfiRow = styled(RfiRow)`
     width: 574px;
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightBold};
-    color: ${theme.color.fontActive};
     border-radius: 8px;
     margin-bottom: 8px;
     height: 62px;
@@ -128,6 +127,10 @@ export const StyledRfiRow = styled(RfiRow)`
   
   .selected {
     background-color: ${theme.color.backgroundFocus};
+    cursor: default !important;
+    :hover {
+      box-shadow: none !important;
+    }
   }
   
   .cell--pri {
@@ -194,34 +197,22 @@ export const PendingRfiRow = styled(StyledRfiRow)`
   .section--information {
     max-width: 1440px;
   }
-
-  .border {
-    background: ${theme.color.backgroundAction};
-  }
 `;
 
 export const OpenRfiRow = styled(StyledRfiRow)` 
   .section--information, .section--button {
-    font-weight: ${theme.font.weightRow};
+    font-weight: ${theme.font.weightNormal};
     background: ${theme.color.backgroundInformation};
-  }
-
-  .border {
-    background: ${theme.color.backgroundAssigned};
   }
 `;
 
 export const ClosedRfiRow = styled(StyledRfiRow)` 
   .section--information, .section-button {
-    font-weight: ${theme.font.weightRow};
+    font-weight: ${theme.font.weightNormal};
     background: ${theme.color.backgroundInactive};
   }
     
   .section--information {
     max-width: 1440px;
-  }
-
-  .border {
-    background: ${theme.color.backgroundInactive};
   }
 `;

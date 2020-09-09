@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from '../../store';
 import { StyledIxnDashboardHeader } from './IxnDashboardHeader';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import {
   deleteIxn, deleteSegment, exitIxnPage, navigateToIxnPage, saveRollup, setAddNote, setAddSegment, setEditIxn,
   setEditSegment, updateIxn, updateSegment,
@@ -22,14 +22,13 @@ import { RollupClickModel } from '../../store/metrics/RollupClickModel';
 import { RollupMode, StyledRollupView } from './RollupView';
 import { IxnTableView } from './IxnTableView';
 import { Cookie } from '../../utils';
-import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
+import { RfiStatus } from '../../store/rfi/RfiModel';
 import { UndoSnackbarAction } from '../components/UndoSnackbarAction';
 import { ConfirmationModal } from '../components/ConfirmationModal';
 import { loadTgtPage } from '../../store/tgt/Thunks';
 import { StyledFileUploadModal } from '../components/FileUploadModal';
-import { postProductDelete, postProductUndoDelete, postProductUpload } from '../../store/rfi';
+import { deleteProduct, postProductUpload, undoDeleteProduct } from '../../store/rfi';
 import { StyledFileDownloadModal } from '../components/FileDownloadModal';
-import { fetchRfis } from '../../store/rfi/Thunks';
 
 interface MyProps {
   className?: string
@@ -38,12 +37,12 @@ interface MyProps {
 export const IxnDashboard: React.FC<MyProps> = (props) => {
   const moment = require('moment');
 
-  const rfi: RfiModel = useSelector(({tgtState}: ApplicationState) => tgtState.rfi);
-  const target: TargetModel = useSelector(({ixnState}: ApplicationState) => ixnState.target);
-  const dateString: string = useSelector(({ixnState}: ApplicationState) => ixnState.dateString);
-  const segments: SegmentModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
-  const ixns: IxnModel[] = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
-  const autofocus: boolean = useSelector(({ixnState}: ApplicationState) => ixnState.autofocus);
+  const rfi = useSelector(({tgtState}: ApplicationState) => tgtState.rfi);
+  const target = useSelector(({ixnState}: ApplicationState) => ixnState.target);
+  const dateString = useSelector(({ixnState}: ApplicationState) => ixnState.dateString);
+  const segments = useSelector(({ixnState}: ApplicationState) => ixnState.segments);
+  const ixns = useSelector(({ixnState}: ApplicationState) => ixnState.ixns);
+  const autofocus = useSelector(({ixnState}: ApplicationState) => ixnState.autofocus);
   const readOnly = useSelector(({tgtState}: ApplicationState) => tgtState.rfi).status === RfiStatus.CLOSED;
   const addSegment = useSelector(({ixnState}: ApplicationState) => ixnState.addSegment);
   const editSegment = useSelector(({ixnState}: ApplicationState) => ixnState.editSegment);
@@ -319,13 +318,11 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
                                           closeSnackbar, classes.snackbarButton),
       variant: 'info',
     });
-    postProductDelete(rfiId, cookie.userName);
-    dispatch(fetchRfis());
+    dispatch(deleteProduct(rfiId, cookie.userName));
   };
 
   const handleUndoDeleteProduct = (rfiId: number) => {
-    postProductUndoDelete(rfiId, cookie.userName);
-    dispatch(fetchRfis());
+    dispatch(undoDeleteProduct(rfiId, cookie.userName));
   };
 
   const isAddSegmentDisabled = segments.length < 1 || addingOrEditing || rollupMode;
@@ -432,16 +429,10 @@ export const IxnDashboard: React.FC<MyProps> = (props) => {
 
 export const StyledIxnDashboard = styled(IxnDashboard)`
   font-size: ${theme.font.sizeRow};
-  font-family: ${theme.font.familyRow};
-  color: ${theme.color.fontPrimary};
   display: flex;
   height: 100vh;
   flex-direction: column;
   align-items: center;
-  
-  AddDateVector {
-    pointer-events: none;
-  }
   
   .ixn-dash {
     display: flex;

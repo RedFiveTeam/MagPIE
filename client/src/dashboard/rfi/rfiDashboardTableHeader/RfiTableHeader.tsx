@@ -75,9 +75,7 @@ export const RfiTableHeader: React.FC<Props> = (props) => {
 };
 
 export const StyledRfiTableHeader = styled(RfiTableHeader)`
-  font-family: ${theme.font.familyHeader};
-  color: ${theme.color.fontPrimary};
-  font-weight: ${theme.font.weightHeader};
+  font-weight: ${theme.font.weightNormal};
   font-size: ${theme.font.sizeRow};
   margin-top: 17px;
   margin-right: 20px;

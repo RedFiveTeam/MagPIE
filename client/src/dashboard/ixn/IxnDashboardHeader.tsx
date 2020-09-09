@@ -73,7 +73,7 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
               <AddSegmentIcon/>
             </div>
           </TextTooltip>
-          <EeiTooltip //Why is this a tooltip w/in a tooltip? What's the functionality?
+          <EeiTooltip
             arrow
             title={props.target.notes}
             placement={'bottom-end'}
@@ -115,8 +115,6 @@ export const IxnDashboardHeader: React.FC<MyProps> = (props) => {
 
 export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
   font-size: ${theme.font.sizeRow};
-  font-family: ${theme.font.familyRow};
-  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -134,7 +132,7 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
     justify-content: space-between;
     align-items: center;
     height: 63px;
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
   }
   
   .ixn-dash--header--back-button {
@@ -145,7 +143,6 @@ export const StyledIxnDashboardHeader = styled(IxnDashboardHeader)`
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    color: ${theme.color.backgroundAction};
   }
   
   .ixn-dash--header--mgrs-date-container {

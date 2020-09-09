@@ -1,7 +1,7 @@
 import { IxnActionTypes } from '../../store/ixn';
 import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
 import { exitIxnPage, loadIxnPage } from '../../store/ixn';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';
 
 describe('IXN Actions', () => {

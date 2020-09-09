@@ -12,8 +12,8 @@ import HtmlTooltip from '../../components/HtmlToolTip';
 import classNames from 'classnames';
 import { useCookies } from 'react-cookie';
 import { Cookie } from '../../../utils';
-import { postCollapseClick } from '../../../store/tgt';
 import { CollapseButton, ExpandButton } from '../../../resources/icons/ExpandCollapseButton';
+import { postCollapseClick } from '../../../store/metrics';
 
 
 interface MyProps {
@@ -38,7 +38,8 @@ export const RfiSidebar: React.FC<MyProps> = (props) => {
 
   const handleCollapseClick = () => {
     setCollapsed(!collapsed);
-    postCollapseClick(cookie.userName);
+    postCollapseClick(cookie.userName)
+      .catch(reason => console.log('Failed to post click collapse metric: ' + reason));
   };
 
   let bgWidth = collapsed ? '82px' : '210px';

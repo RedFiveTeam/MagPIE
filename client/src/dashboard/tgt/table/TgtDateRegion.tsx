@@ -112,10 +112,8 @@ export const TgtDateRegion: React.FC<MyProps> = (props) => {
 };
 
 export const StyledTgtDateRegion = styled(TgtDateRegion)`
-  font-family: ${theme.font.familyRegion};
   font-weight: ${theme.font.weightBold};
   font-size: ${theme.font.sizeRegion};
-  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: column;
   justify-content: space-between;

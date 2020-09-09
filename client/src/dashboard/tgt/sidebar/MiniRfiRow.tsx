@@ -47,7 +47,6 @@ export const StyledMiniRfiRow = styled(MiniRfiRow)`
     width: ${(props) => props.collapsed ? '65px' : '192px'};
     font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightBold};
-    color: ${theme.color.fontActive};
     border-radius: 8px;
     margin-bottom: 8px;
     height: 62px;
@@ -63,6 +62,10 @@ export const StyledMiniRfiRow = styled(MiniRfiRow)`
   
   .selected {
     background-color: ${theme.color.backgroundFocus};
+    cursor: default !important;
+    :hover {
+      box-shadow: none !important;
+    }
   }
   
   .cell--rfi-num {

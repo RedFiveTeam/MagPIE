@@ -273,11 +273,9 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
   align-items: stretch;
   height: 100vh;
   width: 100%;
-  background-color: ${theme.color.backgroundLoading};
-  font-family: ${theme.font.familyRow};
+  background-color: ${theme.color.backgroundBase};
   font-size: ${theme.font.sizeHeader};
-  font-weight: ${theme.font.weightHeader};
-  color: ${theme.color.fontActive};
+  font-weight: ${theme.font.weightNormal};
   
   .metrics-header { 
     width: 100%;
@@ -285,14 +283,14 @@ export const StyledMetricsDashboard = styled(MetricsDashboard)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
     margin-bottom: 17px;
     flex: 0 0 63px;
   }
   
   .metrics-sidebar {
     flex: 0 0 134px;
-    background-color: ${theme.color.backgroundSidebar};
+    background-color: ${theme.color.backgroundInformation};
     padding-top: 10px;
     display: flex;
     flex-direction: column;

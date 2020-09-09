@@ -92,11 +92,9 @@ const ScoiRow: React.FC<MyProps> = (props) => {
 };
 
 export const StyledScoiRow = styled(ScoiRow)`
-  font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
-  color: ${theme.color.fontPrimary};
   margin-bottom: 8px;
   display: flex;
   flex-direction: row;

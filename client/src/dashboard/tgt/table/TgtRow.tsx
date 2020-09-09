@@ -108,9 +108,10 @@ export const TgtRow: React.FC<MyProps> = (props) => {
     <div className={props.className} onMouseEnter={() => setShowDelete(true)} onMouseLeave={() => setShowDelete(false)}>
       <Box
         borderRadius={8}
-        className={classNames('tgt-form-box', highlighted && props.highlight ? 'highlighted' : null)}
+        className={'tgt-form-box'}
       >
-        <div className={classNames('tgt-row-left', props.target.containsRejectedTracks ? 'red-border' : null)}>
+        <div className={classNames('tgt-row-left', props.target.containsRejectedTracks ? 'red-border' : null,
+                                   highlighted && props.highlight ? 'highlighted' : null)}>
           {props.target.containsRejectedTracks ?
             <RejectArrow message={'This TGT contains\nrejected callouts.'}/>
             :
@@ -123,7 +124,7 @@ export const TgtRow: React.FC<MyProps> = (props) => {
               <div className={classNames('data-cell', 'tgt-name')}>
                 {props.target.name === '' ? '\xa0' : props.target.name}
               </div>
-              <div className={'data-bottom-no-underline'}>&nbsp;</div>
+              <div className={'data-bottom-no-underline no-select'}>&nbsp;</div>
             </div>
             <div className={'data-cell-container'}>
               <div className={classNames('data-cell', 'mgrs')}>
@@ -172,7 +173,8 @@ export const TgtRow: React.FC<MyProps> = (props) => {
               }</div>
           </HtmlTooltip>
         </div>
-        <div className={classNames('tgt-row-right', props.target.containsRejectedTracks ? 'red-border' : null)}>
+        <div className={classNames('tgt-row-right', props.target.containsRejectedTracks ? 'red-border' : null,
+                                   highlighted && props.highlight ? 'highlighted' : null)}>
           <div className={classNames('exploitation', (props.addingOrEditing && !(props.rfi.status === RfiStatus.CLOSED))
           || props.exploitDate === null ? 'delete-disabled' : null)} onClick={handleIxnClick}>
             <StyledExploitationLogButtonVector/>
@@ -240,8 +242,7 @@ export const StyledTgtRow = styled(TgtRow)`
     margin: 10px 8px 0 8px;
     overflow-wrap: break-word;
     font-size: ${theme.font.sizeRow};
-    font-weight: ${theme.font.weightRow};
-    font-family: ${theme.font.familyRow};
+    font-weight: ${theme.font.weightNormal};
     position: relative;
     
   }
@@ -263,8 +264,6 @@ export const StyledTgtRow = styled(TgtRow)`
   .data-bottom-no-underline {
     height: 7px;
     margin-bottom: 4px;
-    width: calc(100% - 16px);
-    border-bottom: 1px solid ${theme.color.backgroundInformation};
   }
   
   .exploitation {
@@ -309,8 +308,7 @@ export const StyledTgtRow = styled(TgtRow)`
     border-bottom-right-radius: 8px;
     margin-left: 9px;
     width: 108px;
-    min-height: 63px;
-    height: 100%;
+    align-self: stretch;
   }
   
   .tgt-form {
@@ -327,7 +325,7 @@ export const StyledTgtRow = styled(TgtRow)`
   .input-error-msg {
     color: ${theme.color.fontError};
     font-size: ${theme.font.sizeRow};
-    font-weight: ${theme.font.weightRow};
+    font-weight: ${theme.font.weightNormal};
     line-height: 19px;
   }
   
@@ -344,12 +342,13 @@ export const StyledTgtRow = styled(TgtRow)`
   }
   
   .highlighted {
-    background: ${theme.color.backgroundHighlighted} !important;
+    background: ${theme.color.backgroundFocus} !important;
   }
   
   .delete-container {
     align-self: flex-start;
     margin-top: -13px;
+    margin-right: -16px;
     height: 20px;
     width: 20px;
   }

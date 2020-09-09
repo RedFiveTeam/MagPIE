@@ -5,7 +5,7 @@ import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../../store/ixn/IxnMo
 import { Box, TextField, ThemeProvider } from '@material-ui/core';
 import MaskedInput from 'react-text-mask';
 import Input from '@material-ui/core/Input';
-import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../../store/ixn/SegmentModel';
 import classNames from 'classnames';
 import theme, { rowStyles, rowTheme } from '../../../resources/theme';
 import { convertTimeStringToMoment, getLastName, RowAction } from '../../../utils';
@@ -163,25 +163,17 @@ export const IxnInputRow: React.FC<MyProps> = props => {
   };
 
   const inputActivity = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let newActivity = event.target.value;
-    if (newActivity.charAt(newActivity.length - 1) !== '\n') //Ignore new lines
-    {
-      setActivity(event.target.value);
-    }
+    setActivity(event.target.value.replace(/\n/g, ''));
     props.setAdding(!isBlank);
   };
 
   const inputTrackAnalyst = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTrackAnalyst(event.target.value);
+    setTrackAnalyst(event.target.value.replace(/\n/g, ''));
     props.setAdding(!isBlank);
   };
 
   const inputNote = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let newNote = event.target.value;
-    if (newNote.charAt(newNote.length - 1) !== '\n') //Ignore new lines
-    {
-      setNote(event.target.value);
-    }
+    setNote(event.target.value.replace(/\n/g, ''));
   };
 
   const timeBlur = () => {
@@ -218,11 +210,14 @@ export const IxnInputRow: React.FC<MyProps> = props => {
       props.setAdding(false);
       if (props.segment.id) {
         props.postIxn(new IxnModel(props.ixn ? props.ixn.id :
-                                     null, props.segment.rfiId, props.segment.exploitDateId, props.segment.targetId, props.segment.id,
+                                     null, props.segment.rfiId, props.segment.exploitDateId, props.segment.targetId,
+                                   props.segment.id,
                                    exploitAnalyst.trim(), convertTimeStringToMoment(
             time), activity.trim(), '', trackAnalyst.trim(), props.ixn ? props.ixn.status :
-                                     IxnStatus.NOT_STARTED, props.ixn ? props.ixn.checker : '', props.ixn ? props.ixn.trackNarrative :
-                                     '', note.trim(), props.ixn ? props.ixn.approvalStatus : IxnApprovalStatus.NOT_REVIEWED));
+                                     IxnStatus.NOT_STARTED, props.ixn ? props.ixn.checker : '',
+                                   props.ixn ? props.ixn.trackNarrative :
+                                     '', note.trim(),
+                                   props.ixn ? props.ixn.approvalStatus : IxnApprovalStatus.NOT_REVIEWED));
         if (props.ixn === null) {
           bringElementIntoView(('ixn-row-' + props.segment.id + '-input'));
         }
@@ -330,15 +325,16 @@ export const IxnInputRow: React.FC<MyProps> = props => {
                 }
               </div>
               <div className={classNames('ixn-data-cell', 'checker', props.ixn &&
-                                         props.ixn.approvalStatus !== IxnApprovalStatus.NOT_REVIEWED ?
-                                           'underline'
-                                           :
-                                           null)}>
-                {props.ixn && props.ixn.approvalStatus !== IxnApprovalStatus.NOT_REVIEWED ? getLastName(props.ixn.checker) : null}
+              props.ixn.approvalStatus !== IxnApprovalStatus.NOT_REVIEWED ?
+                'underline'
+                :
+                null)}>
+                {props.ixn && props.ixn.approvalStatus !== IxnApprovalStatus.NOT_REVIEWED ?
+                  getLastName(props.ixn.checker) : null}
 
                 {props.ixn && props.ixn.approvalStatus === IxnApprovalStatus.APPROVED ?
-                    <ApprovedIcon/>
-                    : props.ixn && props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ?
+                  <ApprovedIcon/>
+                  : props.ixn && props.ixn.approvalStatus === IxnApprovalStatus.REJECTED ?
                     <RejectedIcon/>
                     :
                     '\xa0'
@@ -417,7 +413,7 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
   .input-error-msg {
     color: ${theme.color.fontError};
     font-size: ${theme.font.sizeRow};
-    font-weight: ${theme.font.weightRow};
+    font-weight: ${theme.font.weightNormal};
     line-height: 19px;
   }
   
@@ -460,14 +456,13 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
     border-top-right-radius: 8px;
     border-bottom-right-radius: 0 !important;
     margin-right: -8px;
-    background-color: ${theme.color.backgroundInput};
     margin-bottom: -8px;
     padding-right: 7px;
     padding-bottom: 8px;
     z-index: 1;
     flex-grow: 0 !important;
     align-self: stretch !important;
-    background-color: ${theme.color.backgroundInput} !important;
+    background-color: ${theme.color.backgroundFocus} !important;
   }
   
   .cancel-edit-ixn-button {
@@ -478,7 +473,7 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
     width: 1410px;
     min-height: 58px;
     border-radius: 8px 0 8px 8px;
-    background-color: ${theme.color.backgroundInput};
+    background-color: ${theme.color.backgroundFocus};
     margin-bottom: 8px;
     padding: 12px;
     display:flex;
@@ -489,7 +484,7 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
   }
     
   .dark-bg {
-    background-color: ${theme.color.backgroundInput} !important;
+    background-color: ${theme.color.backgroundFocus} !important;
   }
   
   .input-container {
@@ -497,7 +492,7 @@ export const StyledIxnInputRow = styled(IxnInputRow)`
   }
   
   .highlighted {
-    background: ${theme.color.backgroundHighlighted} !important;
-    border: 2px solid ${theme.color.backgroundHighlighted} !important;
+    background: ${theme.color.backgroundFocus} !important;
+    border: 2px solid ${theme.color.backgroundFocus} !important;
   }
 `;

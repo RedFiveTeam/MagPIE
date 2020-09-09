@@ -7,33 +7,11 @@ import { StyledStarRating } from '../../resources/icons/StarRating';
 import { useParams } from 'react-router';
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import RfiFeedbackModel from '../../store/rfi/RfiFeedbackModel';
+import RfiFeedbackModel, { MissionImpact, Quality, Timeliness } from '../../store/rfi/RfiFeedbackModel';
 import { postRfiFeedback } from '../../store/rfi';
 
-interface Props {
+interface MyProps {
   className?: string;
-}
-
-enum Timeliness {
-  DEFAULT = '',
-  EARLY = 'Delivered Early',
-  ON_TIME = 'Delivered On Time',
-  LATE = 'Delivered Late',
-  NEVER = 'Never Delivered'
-}
-
-enum Quality {
-  DEFAULT = '',
-  HIGH = 'High Quality',
-  LOW = 'Low Quality',
-  BAD = 'Bad Quality'
-}
-
-enum MissionImpact {
-  DEFAULT = '',
-  HIGH = 'High Impact',
-  LOW = 'Low Impact',
-  NO = 'No Impact'
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const FeedbackDashboard: React.FC<Props> = (props) => {
+export const FeedbackDashboard: React.FC<MyProps> = (props) => {
   const [stars, setStars] = useState(-1);
   const [selected, setSelected] = useState(-1);
   const [lastSelected, setLastSelected] = useState(-1);
@@ -65,6 +43,7 @@ export const FeedbackDashboard: React.FC<Props> = (props) => {
     missionImpact !== MissionImpact.DEFAULT;
 
   const {rfiNum} = useParams();
+  const [disabled, setDisabled] = useState(!rfiNum);
 
   const classes = useStyles();
 
@@ -74,8 +53,14 @@ export const FeedbackDashboard: React.FC<Props> = (props) => {
             {
               method: 'get',
             })
-        .then(response => response.text())
-        .then(responseText => assignDescription(responseText))
+        .then(response => {
+          if (response.ok)
+            return response.text()
+          else // Disable if response not found
+            setDisabled(true)
+            return '';
+        })
+        .then(responseText => setDescription(responseText))
         .catch(reason => console.log(`Fetch failed: ${reason}`));
     }
   }, [rfiNum]);
@@ -88,15 +73,6 @@ export const FeedbackDashboard: React.FC<Props> = (props) => {
       }
     }
   }, [allSpecificFeedbackSubmitted]);
-
-  const assignDescription = (responseText: string) => {
-    try {
-      JSON.parse(responseText); //If we can parse it as a JSON, something went wrong
-      setDescription('Description Not Found');
-    } catch (e) {
-      setDescription(responseText);
-    }
-  };
 
   useEffect(() => {
     if (rfiNum && starFeedbackSubmitted) {
@@ -190,13 +166,13 @@ export const FeedbackDashboard: React.FC<Props> = (props) => {
             null
             :
             <>
-              <div className={'rfi-title'}>{rfiNum ? `RFI: ${rfiNum}` : 'Error: Bad Link'}</div>
+              <div className={'rfi-title'}>{!disabled ? `RFI: ${rfiNum}` : 'Error: Bad Link'}</div>
               <div className={'feedback-dialogue'}>{starFeedbackSubmitted ? 'Thank You!' : 'How did we do?'}</div>
             </>
           }
           <div className={classNames('feedback-form', allSpecificFeedbackSubmitted ? 'feedback-form-extended' : null)}
                id={'feedback-form'}>
-            <div className={classNames('star-container', rfiNum ? null : 'disabled')}
+            <div className={classNames('star-container', disabled ? 'disabled' : null)}
                  onMouseOut={() => handleSetNoGlow(lastSelected)}>
               {[1, 2, 3, 4, 5].map(index => {
                 return (
@@ -268,7 +244,7 @@ export const FeedbackDashboard: React.FC<Props> = (props) => {
                     </Select>
                   </FormControl>
                 </div>
-                <span>&nbsp;</span>
+                <span className={'no-select'}>&nbsp;</span>
               </>
               :
               null
@@ -301,7 +277,7 @@ export const FeedbackDashboard: React.FC<Props> = (props) => {
               RFI Description
             </div>
             <div className={'description'}>
-              {rfiNum ? description : 'You have navigated to an invalid link.'}
+              {!disabled ? description : 'You have navigated to an invalid link.'}
             </div>
           </div>
           {allSpecificFeedbackSubmitted ?
@@ -329,9 +305,8 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
   justify-content: center;
   align-items: center;
   background-color: ${theme.color.backgroundBase};
-  font-family: ${theme.font.familyRow};
+  font-family: ${theme.font.family};
   font-size: ${theme.font.sizeHeader};
-  color: ${theme.color.fontActive};
   
   .feedback-dashboard {
     display: flex;
@@ -363,7 +338,7 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     align-items: center;
     justify-content: flex-start;
     font-weight: ${theme.font.weightMedium};
-    background: ${theme.color.backgroundModal};
+    background: ${theme.color.backgroundInformation};
     border-radius: 20px;
     line-height: 19px;
     width: 733px;
@@ -376,7 +351,7 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
   
   .description-title {
     color: ${theme.color.fontHeader};
-    font-size: ${theme.font.sizeHeaderSmall};
+    font-size: ${theme.font.sizeRow};
     font-weight: ${theme.font.weightBold};
     line-height: 19px;
     text-align: center;
@@ -392,7 +367,7 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     align-items: flex-start;
     word-wrap: normal;
     overflow: auto;
-    font-size: ${theme.font.sizeHeaderSmall};
+    font-size: ${theme.font.sizeRow};
     padding-right: 8px;
   }
   
@@ -437,7 +412,7 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
   }
   
   .comments-container {
-    background: ${theme.color.backgroundModal};
+    background: ${theme.color.backgroundInformation};
     width: 733px;
     height: 300px;
     flex-shrink: 0;
@@ -454,12 +429,10 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
     cursor: pointer;
     background: ${theme.color.primaryButton};
     border-radius: 4px;
-    font-family: Roboto;
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
     line-height: 21px;
-    color: ${theme.color.fontPrimary};
     width: 112px;
     height: 38px;
     margin-top: -15px;
@@ -477,7 +450,6 @@ export const StyledFeedbackDashboard = styled(FeedbackDashboard)`
   
   .end-message {
     margin-top: 50px;
-    font-family: Roboto;
     font-style: normal;
     font-weight: bold;
     font-size: 45px;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../../store/ixn/SegmentModel';
 import IxnModel from '../../../store/ixn/IxnModel';
 import { StyledMiniSegmentDivider } from './MiniSegmentDivider';
 import { StyledMiniIxnRow } from './MiniIxnRow';

@@ -18,7 +18,7 @@ const NotStartedButton: React.FC<StatusButtonProps> = props => {
         width={110}
         border={2}
         borderRadius={16}
-        borderColor={theme.color.backgroundAssigned}
+        borderColor={theme.color.fontPrimary}
         bgcolor={theme.color.backgroundPillButton}
         display="flex"
         flexDirection="row"

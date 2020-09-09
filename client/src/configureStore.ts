@@ -1,4 +1,4 @@
-import { Store, createStore, applyMiddleware } from 'redux';
+import { applyMiddleware, createStore, Store } from 'redux';
 // `react-router-redux` is deprecated, so we use `connected-react-router`.
 // This provides a Redux middleware which connects to our `react-router` instance.
 import { routerMiddleware } from 'connected-react-router';
@@ -21,13 +21,11 @@ export default function configureStore(history: History, initialState: Applicati
 
   // We'll create our store with the combined reducers/sagas, and the initial Redux state that
   // we'll be passing from our entry point.
-  const store = createStore(
+  // Don't forget to run the root saga, and return the store object.
+
+  return createStore(
     createRootReducer(history),
     initialState,
     composeEnhancers,
   );
-
-  // Don't forget to run the root saga, and return the store object.
-
-  return store;
 }

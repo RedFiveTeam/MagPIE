@@ -246,11 +246,9 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
   align-items: center;
   height: 100vh;
   width: 100%;
-  background: ${theme.color.backgroundLoading};
-  font-family: ${theme.font.familyRow};
+  background: ${theme.color.backgroundBase};
   font-weight: ${theme.font.weightMedium};
   font-size: ${theme.font.sizeRegion};
-  color: ${theme.color.fontActive};
   
   .login-container {
     display: flex;
@@ -264,7 +262,7 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
   }
   
   .username-row {
-    background: ${theme.color.backgroundInput};
+    background: ${theme.color.backgroundFocus};
     height: 48px;
     width: 384px;
     display: flex;
@@ -303,7 +301,7 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
   }
   
   .submit-button {
-    background: ${theme.color.backgroundInput};
+    background: ${theme.color.backgroundFocus};
     height: 48px;
     width: 384px;
     margin-bottom: 28px;
@@ -338,7 +336,7 @@ export const StyledLoginDashboard = styled(LoginDashboard)`
     justify-content: flex-start;
     padding-left: 14px;
     font-size: ${theme.font.sizeRow};
-    font-weight: ${theme.font.weightRow};
+    font-weight: ${theme.font.weightNormal};
     color: ${theme.color.fontError};
   }
 `;

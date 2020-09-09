@@ -19,10 +19,8 @@ export const MiniDateDivider: React.FC<MyProps> = props => {
 export const StyledMiniDateDivider = styled(MiniDateDivider)`
   width: 42px;
   height: 30px;
-  font-family: ${theme.font.familyRegion};
-  font-weight: ${theme.font.weightRegion};
+  font-weight: ${theme.font.weightMedium};
   font-size: ${theme.font.sizeRowSmall};
-  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: column;
   justify-content: center;

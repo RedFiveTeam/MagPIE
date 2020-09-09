@@ -23,6 +23,11 @@ interface MyProps {
 export const FileDownloadModal: React.FC<MyProps> = (props) => {
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
 
+  const handleDeleteProduct = () => {
+    props.handleDeleteProduct();
+    props.hideModal();
+  }
+
   return (
     <Modal
       aria-labelledby="simple-modal-title"
@@ -88,7 +93,7 @@ export const FileDownloadModal: React.FC<MyProps> = (props) => {
           <div className={'spacer no-select'}>&nbsp;</div>
           {showDeletePrompt ?
             <DeleteConfirmationModal display={true} setDisplay={setShowDeletePrompt}
-                                     deletingItem={props.rfi.productName!} handleYes={props.handleDeleteProduct}
+                                     deletingItem={props.rfi.productName!} handleYes={handleDeleteProduct}
                                      productDelete={true}/>
             :
             null}
@@ -104,7 +109,7 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
     height: 228px;
     margin-top: -114px;
     margin-left: -158px;
-    background: ${theme.color.backgroundModal};
+    background: ${theme.color.backgroundInformation};
     border: 4px solid ${theme.color.backgroundFocus};
     border-radius: 10px;
     display: flex;
@@ -154,12 +159,12 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: ${theme.font.sizeHeaderSmall};
-    color: ${theme.color.buttonOnBlack};
+    font-size: ${theme.font.sizeRow};
     font-weight: bold;
   }
   
   a {
+    color: ${theme.color.fontPrimary};
     text-decoration: none;
     outline: none;
   }
@@ -192,10 +197,9 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
     width: 126px;
     height: 38px;
     border: 2px solid ${theme.color.downloadButtonBorder};
-    background: ${theme.color.downloadButtonBackground};
+    background: ${theme.color.backgroundDownloadButton};
     border-radius: 19px;
     padding-left: 2px;
-    color: ${theme.color.fontActive};
     text-decoration:none;
     cursor: pointer;
     box-shadow: 0 2px 4px #000000;
@@ -205,7 +209,6 @@ export const StyledFileDownloadModal = styled(FileDownloadModal)`
     }
     
     span {
-      font-family: Roboto;
       font-style: normal;
       font-weight: bold;
       font-size: 16px;

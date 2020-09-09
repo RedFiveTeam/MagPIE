@@ -207,8 +207,6 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
   height: 100%;
   width: 100%;
   margin-right: 26px;
-  color: ${theme.color.fontActive};
-  font-family: ${theme.font.familyHeader};
   font-weight: ${theme.font.weightBold};
   font-size: ${theme.font.sizeRow};
   line-height: 19px;

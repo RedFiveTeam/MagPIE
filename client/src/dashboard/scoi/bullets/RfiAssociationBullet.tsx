@@ -23,12 +23,10 @@ const RfiAssociationBullet: React.FC<MyProps> = (props) => {
 }
 
 export const StyledRfiAssociationBullet = styled(RfiAssociationBullet)`
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
-  color: ${theme.color.fontPrimary};
   margin-top: 8px;
 
   span {

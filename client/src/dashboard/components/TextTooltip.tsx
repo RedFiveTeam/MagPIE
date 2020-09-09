@@ -7,7 +7,6 @@ const TextTooltip = withStyles((localTheme: Theme) => ({
     backgroundColor: theme.color.backgroundToolTip,
     color: theme.color.fontPrimary,
     width: 'inherit',
-    // maxWidth: 180,
     height: 'inherit',
     minHeight: 22,
     borderRadius: 11,

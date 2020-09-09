@@ -1,5 +1,5 @@
 import { TargetModel } from '../tgt/TargetModel';
-import { SegmentModel } from '../tgtSegment/SegmentModel';
+import { SegmentModel } from './SegmentModel';
 import IxnModel from './IxnModel';
 
 export enum IxnActionTypes {

@@ -1,18 +1,16 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyledRfiTable } from './RfiTable';
 import styled from 'styled-components';
 import theme, { rowStyles } from '../../resources/theme';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from '../../store';
 import RfiModel, { RfiStatus } from '../../store/rfi/RfiModel';
-import { fetchLocalUpdate, fetchRfis, reorderRfis } from '../../store/rfi/Thunks';
-import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
 import {
-  loadUserMetricsPage, postProductDelete, postProductUndoDelete, postProductUploadRfiPage, postRfiPriorityUpdate,
-  reprioritizeRfis,
-  sortRfis,
+  deleteProduct, fetchLocalUpdate, loadUserMetricsPage, postProductUploadRfiPage, postRfiPriorityUpdate, reorderRfis,
+  reprioritizeRfis, sortRfis, undoDeleteProduct,
 } from '../../store/rfi';
+import { Field, SortKeyModel } from '../../store/sort/SortKeyModel';
 import { StyledRfiDescriptionContainer } from './RfiDescriptionContainer';
 import { loadTgtPage } from '../../store/tgt/Thunks';
 import GetsClickRequestModel from '../../store/metrics/GetsClickRequestModel';
@@ -36,30 +34,38 @@ interface MyProps {
 }
 
 export const RfiDashboard: React.FC<MyProps> = (props) => {
-  let pendingRfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.pendingRfis);
-  let openRfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.openRfis);
-  let closedRfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.closedRfis);
-  let rfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.rfis);
-  let sortKey: SortKeyModel = useSelector(({rfiState}: ApplicationState) => rfiState.sortKey);
+  const pendingRfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.pendingRfis);
+  const openRfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.openRfis);
+  const closedRfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.closedRfis);
+  const rfis: RfiModel[] = useSelector(({rfiState}: ApplicationState) => rfiState.rfis);
+  const sortKey: SortKeyModel = useSelector(({rfiState}: ApplicationState) => rfiState.sortKey);
 
   const dispatch = useDispatch();
 
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const classes = rowStyles();
   const [cookies] = useCookies(['magpie']);
-  let cookie: Cookie = cookies.magpie;
+  const cookie: Cookie = cookies.magpie;
 
-  let [refreshing, setRefreshing] = useState(false);
-  let [displayOpenRfiConfirmationModal, setDisplayOpenRfiConfirmationModal] = useState(false);
-  let [rfiToOpen, setRfiToOpen] = useState('');
-  let [openRfiList, setOpenRfiList] = useState([] as RfiModel[]);
-  let [newIndex, setNewIndex] = useState(-1);
+  const [refreshing, setRefreshing] = useState(false);
+  const [displayOpenRfiConfirmationModal, setDisplayOpenRfiConfirmationModal] = useState(false);
+  const [rfiToOpen, setRfiToOpen] = useState('');
+  const [openRfiList, setOpenRfiList] = useState([] as RfiModel[]);
+  const [newIndex, setNewIndex] = useState(-1);
 
   const [selectedRfiId, setSelectedRfiId] = useState(
     openRfis.length > 0 ? openRfis[0].id :
       pendingRfis.length > 0 ? pendingRfis[0].id :
         closedRfis.length > 0 ? closedRfis[0].id : -1,
   );
+
+  useEffect(() => {
+    if (selectedRfiId < 0) {
+      setSelectedRfiId(openRfis.length > 0 ? openRfis[0].id :
+                         pendingRfis.length > 0 ? pendingRfis[0].id :
+                           closedRfis.length > 0 ? closedRfis[0].id : -1);
+    }
+  }, [rfis]);
 
   let selectedRfi = rfis.find((rfi) => rfi.id === selectedRfiId);
 
@@ -167,18 +173,21 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
   };
 
   const handleLoadScoiPage = () => {
-    fetch(`api/metrics/visit-scoi-page?userName=${cookie.userName}`, {method: 'post'});
+    fetch(`api/metrics/visit-scoi-page?userName=${cookie.userName}`, {method: 'post'})
+      .catch(reason => console.log('Failed to post visit scoi page metric: ' + reason));
     dispatch(loadScoiPage());
   };
 
   const handleLoadRfiHistoryPage = () => {
-    fetch(`api/metrics/visit-rfi-history-page?userName=${cookie.userName}`, {method: 'post'});
+    fetch(`api/metrics/visit-rfi-history-page?userName=${cookie.userName}`, {method: 'post'})
+      .catch(reason => console.log('Failed to post visit rfi history page metric: ' + reason));
     dispatch(loadRfiHistoryPage());
   };
 
   const handleRefreshClick = () => {
     setRefreshing(true);
-    fetch('/api/rfi/refresh', {method: 'get'});
+    fetch('/api/rfi/refresh', {method: 'get'})
+      .catch(reason => console.log('Failed to refresh RFIs: ' + reason));
     setTimeout(() => {
       setRefreshing(false);
     }, 5050);
@@ -194,13 +203,11 @@ export const RfiDashboard: React.FC<MyProps> = (props) => {
                                           closeSnackbar, classes.snackbarButton),
       variant: 'info',
     });
-    postProductDelete(rfiId, cookie.userName);
-    dispatch(fetchRfis());
+    dispatch(deleteProduct(rfiId, cookie.userName));
   };
 
   const handleUndoDeleteProduct = (rfiId: number) => {
-    postProductUndoDelete(rfiId, cookie.userName);
-    dispatch(fetchRfis());
+    dispatch(undoDeleteProduct(rfiId, cookie.userName));
   };
 
   document.onkeydown = checkKey;
@@ -329,7 +336,7 @@ export const StyledRfiDashboard = styled(RfiDashboard)`
     justify-content: space-between;
     align-items: center;
     height: 63px;
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
     margin-bottom: 17px;
     padding: 0 43px;
   }
@@ -353,7 +360,7 @@ export const StyledRfiDashboard = styled(RfiDashboard)`
   }
   
   .divider-bar {
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
     box-shadow: 2px 2px 4px #000000;
     border-radius: 8px;
     width: 4px;

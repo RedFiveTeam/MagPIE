@@ -2,7 +2,10 @@ import RfiModel from './RfiModel';
 import RfiPriorityPostModel from './RfiPriorityPostModel';
 import { RfiSorter } from './RfiSorter';
 import { Field, SortKeyModel } from '../sort/SortKeyModel';
-import { fetchRfiPending, fetchRfiSuccess, fetchRfiUpdating, postRfiPriorityUpdate, reprioritizeRfis } from './Actions';
+import {
+  fetchRfiPending, fetchRfiSuccess, fetchRfiUpdating, reprioritizeRfis, updateTgtRfiSuccess,
+} from './Actions';
+import { postProductDelete, postProductUndoDelete, postRfiPriorityUpdate } from './Api';
 
 export const fetchRfis = () => {
   return (dispatch: any) => {
@@ -10,9 +13,7 @@ export const fetchRfis = () => {
       .then(dispatch(fetchRfiPending()))
       .then(response => response.json())
       .then(rfis => dispatch(fetchRfiSuccess(rfis)))
-      .catch((reason => {
-        console.log('Failed to fetch RFIs: ' + reason);
-      }));
+      .catch((reason => console.log('Failed to fetch RFIs: ' + reason)));
   };
 };
 
@@ -21,9 +22,7 @@ export const fetchLocalUpdate = () => {
     return fetch('/api/rfi')
       .then(response => response.json())
       .then(rfis => dispatch(fetchRfiUpdating(rfis)))
-      .catch((reason => {
-        console.log('Failed to fetch RFIs: ' + reason);
-      }));
+      .catch((reason => console.log('Failed to fetch RFIs: ' + reason)));
   };
 };
 
@@ -71,5 +70,56 @@ export const reorderRfis = (rfiList: RfiModel[], rfiId: string, newIndex: number
           dispatch(fetchLocalUpdate());
         }
       });
+  };
+};
+
+export const postProductUploadRfiPage = (data: FormData, rfiId: number, userName: string) => {
+  return (dispatch: any) => {
+    fetch(`api/product?rfiId=${rfiId}&userName=${userName}`,
+          {
+            method: 'post',
+            body: data,
+          })
+      .then(response => dispatch(fetchLocalUpdate()))
+      .catch(reason => console.log(`Upload failed: ${reason}`));
+  };
+};
+
+export const postProductUpload = (data: FormData, rfiId: number, userName: string) => {
+  return (dispatch: any) => {
+    fetch(`api/product?rfiId=${rfiId}&userName=${userName}`,
+          {
+            method: 'post',
+            body: data,
+          })
+      .then(response => dispatch(updateTgtRfi(rfiId)))
+      .catch(reason => console.log(`Upload failed: ${reason}`));
+  };
+};
+
+
+export const updateTgtRfi = (rfiId: number) => {
+  return (dispatch: any) => {
+    return fetch('/api/rfi')
+      .then(response => response.json())
+      .then(rfis => dispatch(updateTgtRfiSuccess(rfis, rfiId)))
+      .catch((reason => console.log('Failed to fetch RFIs: ' + reason)))
+      ;
+  };
+};
+
+export const deleteProduct = (rfiId: number, userName: string) => {
+  return (dispatch: any) => {
+    return postProductDelete(rfiId, userName)
+      .then(dispatch(fetchLocalUpdate()))
+      .catch(reason => console.log('failed to delete product: ' + reason));
+  };
+};
+
+export const undoDeleteProduct = (rfiId: number, userName: string) => {
+  return (dispatch: any) => {
+    return postProductUndoDelete(rfiId, userName)
+      .then(dispatch(fetchLocalUpdate()))
+      .catch(reason => console.log('failed to undo delete product: ' + reason));
   };
 };

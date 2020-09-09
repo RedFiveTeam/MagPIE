@@ -26,10 +26,7 @@ Scenario('Should be able to navigate to and exit the interactions page', (I) => 
   I.fillField('.mgrs', '12QWE1231231231');
   I.pressKey('Enter');
 
-  I.click('.tgt-dash--header--back-button');
-  I.click(locate('.rfi-row').at(2));
-  I.click('.navigate-to-tgt-button');
-
+  I.waitForElement('.exploitation');
   I.click('.exploitation');
   I.waitForText('MGRS: 12QWE1231231231', 3);
   I.waitForText('Date: 02/01/2020', 3);

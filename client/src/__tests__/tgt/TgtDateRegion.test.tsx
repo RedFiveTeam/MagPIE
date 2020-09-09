@@ -58,7 +58,6 @@ describe('Target Date Region', () => {
   });
 
   it('should render an add target row appropriately', () => {
-    // let childrenCount = subject.children.length;
     subject = shallow(
       <TgtDateRegion
         rfi={rfi}

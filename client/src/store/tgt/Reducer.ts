@@ -24,6 +24,10 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
   switch (action.type) {
     case TgtActionTypes.NAVIGATE_TO_TGT_PAGE:
       sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
+      let highlight: boolean = false;
+      if (state.targets.length > 0) {
+        highlight = state.targets.length < action.targets.length;
+      }
       return {
         ...state,
         viewTgtPage: true,
@@ -33,7 +37,7 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
         targets: action.targets,
         addTgt: -1,
         editTgt: -1,
-        highlight: false,
+        highlight: highlight,
       };
     case TgtActionTypes.RELOAD_TGT_PAGE:
       sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
@@ -66,25 +70,6 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
       return {
         ...state,
         targets: action.targets,
-      };
-    case TgtActionTypes.UPDATE_TGT_LOCAL:
-      let newTargets = Array.from(state.targets);
-      if (action.targets[0].id > 0) {
-        for (let tgt in newTargets) {
-          if (newTargets[tgt].id === action.targets[0].id) {
-            newTargets[tgt] = action.targets[0];
-            break;
-          }
-        }
-      } else {
-        newTargets = newTargets.concat(action.targets);
-      }
-      return {
-        ...state,
-        targets: newTargets,
-        addTgt: -1,
-        editTgt: -1,
-        highlight: action.isCopy,
       };
     case TgtActionTypes.ADD_TGT:
       return {

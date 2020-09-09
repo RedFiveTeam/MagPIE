@@ -19,10 +19,8 @@ export const RfiRegionDivider: React.FC<Props> = props => {
 
 export const StyledRfiRegionDivider = styled(RfiRegionDivider)`
   height: 32px;
-  font-family: ${theme.font.familyRegion};
-  font-weight: ${theme.font.weightRegion};
+  font-weight: ${theme.font.weightMedium};
   font-size: ${theme.font.sizeRegion};
-  color: ${theme.color.fontPrimary};
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { TargetModel, TargetStatus } from '../../store/tgt/TargetModel';
-import { SegmentModel } from '../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../store/ixn/SegmentModel';
 import { SegmentRegion } from '../../dashboard/ixn/table/SegmentRegion';
 import { StyledSegmentDivider } from '../../dashboard/ixn/table/SegmentDivider';
 import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../store/ixn/IxnModel';

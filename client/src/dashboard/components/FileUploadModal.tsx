@@ -29,14 +29,6 @@ export const FileUploadModal: React.FC<MyProps> = (props) => {
     const handleDrop = (event: any) => {
       event.preventDefault();
       setFile(event.dataTransfer.files[0]);
-
-      // This is the logic to prevent files from being uploaded that aren't KML/KMZ
-      // if (event.dataTransfer.files[0].name.toLowerCase().endsWith('kml') ||
-      //   event.dataTransfer.files[0].name.toLowerCase().endsWith('kmz')) {
-      //   setFile(event.dataTransfer.files[0]);
-      // } else {
-      //   console.log('invalid file type');
-      // }
     };
 
     const handleClickBrowse = () => {
@@ -162,7 +154,7 @@ export const StyledFileUploadModal = styled(FileUploadModal)`
     display: flex;
     flex-direction: column;
     font-size: ${(props) => props.theme.font.sizeHeaderSmall};
-    color: ${(props) => props.theme.color.buttonOnBlack};
+    color: ${(props) => props.theme.color.fontPrimary};
   }
   
   .text-container > span {

@@ -38,12 +38,10 @@ export const TrackAssociationBullet: React.FC<MyProps> = (props) => {
 };
 
 export const StyledTrackAssociationBullet = styled(TrackAssociationBullet)`
-  font-family: Roboto;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
-  color: ${theme.color.fontPrimary};
   margin-top: 4px;
   width: 100%;
   
@@ -72,7 +70,7 @@ export const StyledTrackAssociationBullet = styled(TrackAssociationBullet)`
     float: left;
 
     :hover {
-      background: ${theme.color.backgroundHighlighted};
+      background: ${theme.color.backgroundFocus};
     }
   }
   

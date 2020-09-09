@@ -101,12 +101,10 @@ export const StyledRfiHistoryDashboard = styled(RfiHistoryDashboard)`
   height: 100vh;
   width: 100%;
   word-break: break-word;
-  font-family: Roboto;
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
   line-height: 19px;
-  color: ${theme.color.fontPrimary};
   
   .back-button {
     cursor: pointer;
@@ -119,7 +117,7 @@ export const StyledRfiHistoryDashboard = styled(RfiHistoryDashboard)`
     justify-content: space-between;
     align-items: center;
     height: 63px;
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
     margin-bottom: 17px;
     padding: 0 18px;
   }
@@ -135,7 +133,7 @@ export const StyledRfiHistoryDashboard = styled(RfiHistoryDashboard)`
   }
   
   .divider-bar {
-    background: ${theme.color.backgroundHeader};
+    background: ${theme.color.backgroundInformation};
     box-shadow: 2px 2px 4px #000000;
     border-radius: 8px;
     width: 4px;

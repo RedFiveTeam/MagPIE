@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import IxnModel, { IxnApprovalStatus, IxnStatus } from '../../../store/ixn/IxnModel';
 import { Box, Theme, Tooltip, withStyles } from '@material-ui/core';
-import { SegmentModel } from '../../../store/tgtSegment/SegmentModel';
+import { SegmentModel } from '../../../store/ixn/SegmentModel';
 import classNames from 'classnames';
 import InProgressButton from '../../components/statusButtons/InProgressButton';
 import CompletedButton from '../../components/statusButtons/CompletedButton';
@@ -320,6 +320,7 @@ export const IxnRow: React.FC<MyProps> = props => {
           submitTrackNarrative={handleSubmitTrackNarrative}
           dateString={props.dateString}
           readOnly={props.readOnly}
+          userName={props.userName}
         />
         :
         null
@@ -478,7 +479,7 @@ export const StyledIxnRow = styled(IxnRow)`
   }
   
   .highlighted {
-    background: ${theme.color.backgroundHighlighted} !important;
+    background: ${theme.color.backgroundFocus} !important;
   }
   
   .delete-container {
@@ -486,6 +487,5 @@ export const StyledIxnRow = styled(IxnRow)`
     margin-top: -13px;
     height: 20px;
     width: 20px;
-    //margin: -80px 0 55px 1435px
   }
 `;
