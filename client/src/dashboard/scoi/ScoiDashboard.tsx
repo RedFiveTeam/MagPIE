@@ -17,6 +17,7 @@ import { useSnackbar } from 'notistack';
 import { DismissSnackbarAction } from '../components/InformationalSnackbar';
 import { useCookies } from 'react-cookie';
 import { Cookie } from '../../utils';
+import { IxnInfoButton, RfiInfoButton, TgtInfoButton, TrackInfoButton } from '../../resources/icons/RfiInfoButton';
 
 interface MyProps {
   className?: string;
@@ -226,6 +227,28 @@ export const ScoiDashboard: React.FC<MyProps> = (props) => {
         <div className={'smallbord-container'}>
           <img src={'smallbord.png'} alt={'logo'} height={'63px'}/>
         </div>
+        <div className={'scoi-row-cell scoi-associations'}>
+          <div className={'rfi-associations-button'}
+               onClick={toggleRfiInfo}
+          >
+            <RfiInfoButton active={showRfiInfo}/>
+          </div>
+          <div className={'tgt-associations-button'}
+               onClick={toggleTgtInfo}
+          >
+            <TgtInfoButton active={showTargetInfo}/>
+          </div>
+          <div className={'callout-associations-button'}
+               onClick={toggleCalloutInfo}
+          >
+            <IxnInfoButton active={showCalloutInfo}/>
+          </div>
+          <div className={'track-associations-button'}
+               onClick={toggleTrackInfo}
+          >
+            <TrackInfoButton active={showTrackInfo}/>
+          </div>
+        </div>
       </div>
       <div className={'scoi-dash--body'}>
         <StyledScoiTable
@@ -329,21 +352,21 @@ export const StyledScoiDashboard = styled(ScoiDashboard)`
     height: 63px;
     background: ${theme.color.backgroundInformation};
     margin-bottom: 17px;
-    padding: 0 43px;
+    padding: 0 34px 0 18px;
   }
   
   .divider-bar {
     background: ${theme.color.backgroundInformation};
     box-shadow: 2px 2px 4px #000000;
     border-radius: 8px;
-    width: 4px;
+    width: 8px;
     height: 100%;
-    margin: 0 25px;
+    margin: 0 55px 0 23px;
     flex-shrink: 0;
   }
   
   .scoi-info-container {
-    width: 781px;
+    width: 962px;
     height: calc(100vh - 159px);
     margin-top: 30px;
     border-radius: 8px;
@@ -393,4 +416,23 @@ export const StyledScoiDashboard = styled(ScoiDashboard)`
     display: flex;
     flex-direction: column;
   }
+  
+  .scoi-associations {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 192px;
+    height: 30px;
+    
+    svg {
+      cursor: pointer;
+      border-radius: 15px;
+      box-shadow: 0 2px 4px #000000;
+    
+      :hover {
+        box-shadow: 0 0 6px #FFFFFF;
+      }
+    }
+  }
+  
 `;

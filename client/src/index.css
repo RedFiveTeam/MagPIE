@@ -60,10 +60,6 @@ body {
   background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-.MuiTooltip-arrow:before {
-  border-color: transparent transparent #3c535b transparent !important;
-}
-
 .dismiss-snackbar {
   background: #1C455C !important;
 }
@@ -82,4 +78,13 @@ body {
 
 .menu-item {
   font-family: Roboto,sans-serif !important;
+}
+
+.MuiTooltip-arrow {
+  left: 146px !important;
+  color: #3C535B !important;
+}
+
+.MuiPopover-root {
+  z-index: 10001 !important;
 }

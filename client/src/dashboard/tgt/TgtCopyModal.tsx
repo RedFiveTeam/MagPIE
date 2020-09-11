@@ -23,6 +23,9 @@ interface MyProps {
 
 const menuStyles = makeStyles((localTheme: Theme) => createStyles(
   {
+    root: {
+      padding: '8px 24px 0 9px',
+    },
     menu: {
       background: '#02252E',
       border: '2px solid #8199A1',
@@ -34,6 +37,7 @@ const menuStyles = makeStyles((localTheme: Theme) => createStyles(
       '&:focus': {
         background: '#02252E',
       },
+      zIndex: 10001,
     },
   },
 ));
@@ -75,7 +79,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
       for (let target of props.targets.filter((target) => {
         return target.exploitDateId === copyFromDate!.id;
       })) {
-        if (!checkDisabled(target.name)) {
+        if (!checkDisabled(target.mgrs)) {
           newSelectedTgts.push(target.id);
         }
       }
@@ -113,7 +117,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
         }).map(
         (target, index) =>
           <div
-            className={classNames('tgt-copy--row', checkDisabled(target.name) ? 'disabled' : null)}
+            className={classNames('tgt-copy--row', checkDisabled(target.mgrs) ? 'disabled' : null)}
             id={'tgt-' + index}
             key={index}
           >
@@ -199,14 +203,14 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
     );
   };
 
-  const checkDisabled = (targetName: string): boolean => {
+  const checkDisabled = (mgrs: string): boolean => {
     let allTargets: (TargetModel|TargetPostModel)[] = props.targets.filter(
       (target) => {
-        return target.exploitDateId === copyToDateId && target.name === targetName;
+        return target.exploitDateId === copyToDateId && target.mgrs === mgrs;
       });
     allTargets = allTargets.concat(copiedTgts.filter(
       (target) => {
-        return target.exploitDateId === copyToDateId;
+        return target.exploitDateId === copyToDateId && target.mgrs === mgrs;
       },
     ));
     return allTargets.length > 0;
@@ -248,7 +252,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
             status: TargetStatus.NOT_STARTED,
             hourlyRollup: '',
             allCallouts: '',
-          }
+          },
         );
       }
       props.postTargets(copiedTgtPosts, true);
@@ -259,11 +263,11 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
 
   let allSelected = copyFromDate === null ? false : selectedTgtIds.length ===
     props.targets.filter((target) => {
-      return target.exploitDateId === copyFromDate.id && !checkDisabled(target.name);
+      return target.exploitDateId === copyFromDate.id && !checkDisabled(target.mgrs);
     }).length;
 
   let disableSelectAll = copyFromDate === null || props.targets.filter((target) => {
-    return target.exploitDateId === copyFromDate.id && !checkDisabled(target.name);
+    return target.exploitDateId === copyFromDate.id && !checkDisabled(target.mgrs);
   }).length === 0;
 
   return (
@@ -327,7 +331,7 @@ export const TgtCopyModal: React.FC<MyProps> = (props) => {
                     displayEmpty
                     inputProps={{'aria-label': 'Without label'}}
                     classes={{
-                      root: classes.menu,
+                      root: classes.root,
                       select: classes.menu,
                       selectMenu: classes.menu,
                     }}
@@ -411,12 +415,13 @@ export const StyledTgtCopyModal = styled(TgtCopyModal)`
   font-size: ${theme.font.sizeHeader};
   
   .tgt-copy--select-date-menu {
-    width: 757px;
-    height: 480px;
-    margin-left: -353.5px;
+    width: 400px;
+    margin-left: -200px;
     margin-top: -240px;
     background: ${theme.color.backgroundInformation};
     outline: none;
+    border-radius: 8px;
+    border: 4px solid ${theme.color.backgroundFocus};
   }
   
   .tgt-copy--header {
@@ -466,7 +471,7 @@ export const StyledTgtCopyModal = styled(TgtCopyModal)`
   }
   
   .tgt-copy--body {
-    height: 380px;
+    max-height: 380px;
     padding-right: 21px;
     display: flex;
     flex-direction: column;
@@ -510,9 +515,9 @@ export const StyledTgtCopyModal = styled(TgtCopyModal)`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 1338px;
+    width: 1000px;
     height: 490px;
-    margin-left: -669px;
+    margin-left: -500px;
     margin-top: -245px;
     outline: none;
   }
@@ -520,8 +525,10 @@ export const StyledTgtCopyModal = styled(TgtCopyModal)`
   .tgt-copy--copy-tgt-menu {
     background: ${theme.color.backgroundInformation};
     flex-grow: 0;
-    width: 611px;
+    width: 450px;
     height: 490px;
+    border-radius: 8px;
+    border: 4px solid ${theme.color.backgroundFocus};
   }
   
   .copy-button {

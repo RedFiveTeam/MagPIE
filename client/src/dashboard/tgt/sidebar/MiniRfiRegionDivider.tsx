@@ -5,7 +5,6 @@ import theme from '../../../resources/theme';
 
 interface MyProps {
   regionTitle: string;
-  collapsed: boolean;
   className?: string;
 }
 
@@ -30,7 +29,7 @@ export const StyledMiniRfiRegionDivider = styled(MiniRfiRegionDivider)`
   
   .region-divider--bar {
     margin-bottom: -4px;
-    width: ${(props) => props.collapsed ? '65px' : '192px'};
+    width: 65px;
     height: 4px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -39,16 +38,15 @@ export const StyledMiniRfiRegionDivider = styled(MiniRfiRegionDivider)`
   }
   
   .region-divider--box {
-    width: ${(props) => props.collapsed ? '65px' : '151px'};
+    width: 65px;
     height: 30px;
-    border-bottom-left-radius: ${(props) => props.collapsed ? '25px' : '30px'};
-    border-bottom-right-radius: ${(props) => props.collapsed ? '25px' : '30px'};
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
     border: 4px solid ${theme.color.regionDividerPrimary};
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: ${(props) => props.collapsed ? '0' : '0 36px'};
     z-index: 1;
   }
 `;

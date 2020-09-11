@@ -28,20 +28,6 @@ Scenario('Should have upload file buttons that allow file upload', (I) => {
   I.waitForText('Browse');
 });
 
-Scenario ('Should be able to collapse/expand mini RFI table', (I) => {
-  I.waitForText('RFI DESCRIPTION: Lorem ipsum', 10);
-  I.moveCursorTo('.mini-rfi-table');
-  I.waitForElement('.collapse-button');
-  I.click('.collapse-button');
-
-  I.waitForElement('.mini-rfi-table-collapsed');
-  I.moveCursorTo('.mini-rfi-table-collapsed');
-  I.waitForElement('.expand-button');
-  I.click('.expand-button');
-
-  I.waitForElement('.mini-rfi-table', 3);
-});
-
 Scenario('Should prompt user to save new targets retrieved from GETS', (I) => {
   I.click(locate('.rfi-row').at(5));
 

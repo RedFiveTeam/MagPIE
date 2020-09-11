@@ -77,7 +77,6 @@ export const RfiTableHeader: React.FC<Props> = (props) => {
 export const StyledRfiTableHeader = styled(RfiTableHeader)`
   font-weight: ${theme.font.weightNormal};
   font-size: ${theme.font.sizeRow};
-  margin-top: 17px;
   margin-right: 20px;
   height: 48px;
   display: flex;
@@ -85,12 +84,20 @@ export const StyledRfiTableHeader = styled(RfiTableHeader)`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  margin-bottom: 4px;
   
   .header-cell {
     display:flex;
     flex-direction: row;
     justify-content: center;
     padding-left: 0;
+    
+    :hover {
+      text-shadow: 0 0 4px #FFF;
+      svg {
+        filter: drop-shadow(0 0 0.5px #FFF);
+      }
+    }
   }
   
   .header--tgts {

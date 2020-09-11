@@ -3,7 +3,6 @@ import { ScoiModel } from '../../store/scoi/ScoiModel';
 import styled from 'styled-components';
 import theme from '../../resources/theme';
 import classNames from 'classnames';
-import { IxnInfoButton, RfiInfoButton, TgtInfoButton, TrackInfoButton } from '../../resources/icons/RfiInfoButton';
 import CollapseNotesButton from '../../resources/icons/CollapseNoteButton';
 import { NoteButton } from '../../resources/icons/NoteButton';
 
@@ -36,44 +35,6 @@ const ScoiRow: React.FC<MyProps> = (props) => {
         </div>
         <div className={'scoi-row-cell scoi-mgrs'}>
           {props.scoi.mgrs}
-        </div>
-        <div className={'scoi-row-cell scoi-associations'}>
-          <div className={'rfi-associations-button'}
-               onClick={() => {
-                 if (props.selected) {
-                   props.toggleRfiInfo();
-                 }
-               }}
-          >
-            <RfiInfoButton active={props.selected && props.showRfiInfo}/>
-          </div>
-          <div className={'tgt-associations-button'}
-               onClick={() => {
-                 if (props.selected) {
-                   props.toggleTgtInfo();
-                 }
-               }}
-          >
-            <TgtInfoButton active={props.selected && props.showTgtInfo}/>
-          </div>
-          <div className={'callout-associations-button'}
-               onClick={() => {
-                 if (props.selected) {
-                   props.toggleCalloutInfo();
-                 }
-               }}
-          >
-            <IxnInfoButton active={props.selected && props.showCalloutInfo}/>
-          </div>
-          <div className={'track-associations-button'}
-               onClick={() => {
-                 if (props.selected) {
-                   props.toggleTrackInfo();
-                 }
-               }}
-          >
-            <TrackInfoButton active={props.selected && props.showTrackInfo}/>
-          </div>
         </div>
       </div>
       <div className={classNames('scoi-row-half', 'scoi-row-right', props.selected ? 'highlighted' : 'no-pointer', props.editing ? 'extended' : null)}
@@ -121,7 +82,7 @@ export const StyledScoiRow = styled(ScoiRow)`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    width: 480px;
+    width: 292px;
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
     padding-left: 16px;
@@ -166,18 +127,5 @@ export const StyledScoiRow = styled(ScoiRow)`
   
   .scoi-mgrs {
     width: 154px;
-  }
-  
-  .scoi-associations {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 162px;
-    height: 30px;
-    
-    div {
-      cursor: pointer;
-    }
-  }
-  
+  }  
 `;

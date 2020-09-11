@@ -69,7 +69,7 @@ const ScoiTable: React.FC<MyProps> = (props) => {
   return (
     <div className={classNames('scoi-table', props.className)}>
       <StyledTableHeader
-        headers={['SCOI', 'MGRS', 'Associations']}
+        headers={['SCOI', 'MGRS', 'Notes']}
       />
       <div className={'scoi-table-body'}>
         {mapScoiRows()}
@@ -102,7 +102,7 @@ export const StyledScoiTable = styled(ScoiTable)`
   }
   
   .table-header {
-    width: 548px;
+    width: 368px;
     justify-content: flex-start !important;
     margin: 0 !important;
     padding-left: 22px;
@@ -112,7 +112,7 @@ export const StyledScoiTable = styled(ScoiTable)`
   
   .scoi-table-body {
     padding: 6px; 
-    width: 590px;
+    width: 400px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

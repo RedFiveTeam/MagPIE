@@ -12,11 +12,10 @@ Scenario('Should be able to navigate to and exit the SCOI page', (I) => {
   I.click('.scoi-page-button');
   I.waitForText('SCOI');
   I.see('MGRS');
-  I.see('Associations');
+  I.see('Notes');
   I.click('.back-button');
   I.waitForText('Upload Product');
   I.dontSee('SCOI');
-  I.dontSee('Associations');
 });
 
 Scenario('Should be able see and toggle info', (I) => {
@@ -64,7 +63,7 @@ Scenario('Should be able see and toggle info', (I) => {
   I.click('.track-narrative-button');
   I.waitForText('Copy to Clipboard');
   I.fillField('.track-narrative-input',
-              'This is the track narrative that references OPN20S-0099');
+              'This is the track narrative that references OPN20-S0099');
   I.waitForElement('.mgrs-input');
   I.fillField('.mgrs-input', '99ASD1234567890');
   I.click('.submit-button');
@@ -81,7 +80,7 @@ Scenario('Should be able see and toggle info', (I) => {
   I.waitForText('Justification', 10);
 
   I.click('.scoi-page-button');
-  I.waitForText('OPN20S-0099');
+  I.waitForText('OPN20-S0099');
   I.see('99ASD1234567890');
   I.pressKey('ArrowDown');
 
@@ -117,14 +116,14 @@ Scenario('Should be able see and toggle info', (I) => {
 
   //Track associations toggle
   I.waitForText('Person entered SCOI');
-  I.dontSee('This is the track narrative that references OPN20S-0099');
+  I.dontSee('This is the track narrative that references OPN20-S0099');
   I.click('.callout');
-  I.waitForText('This is the track narrative that references OPN20S-0099');
+  I.waitForText('This is the track narrative that references OPN20-S0099');
 
   I.click(locate('.track-associations-button').last());
   I.wait(1);
   I.dontSee('Person entered SCOI');
-  I.dontSee('This is the track narrative that references OPN20S-0099');
+  I.dontSee('This is the track narrative that references OPN20-S0099');
 });
 
 Scenario('Should be able to add notes', (I) => {

@@ -98,6 +98,10 @@ export const StyledRfiRow = styled(RfiRow)`
 
   .red-border {
     border: 2px solid ${theme.color.buttonDoesNotMeetEei};
+    
+    :hover {
+      box-shadow: 0 0 4px #FAA !important;
+    }
   }
   
   .no-border {

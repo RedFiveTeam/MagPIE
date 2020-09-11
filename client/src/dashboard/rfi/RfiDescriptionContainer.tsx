@@ -73,7 +73,6 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
     <div className={className}>
       {rfiIsHistorical ?
         <div className={'button-section'}>
-          <div className={'view-feedback-button no-select'} onClick={viewFeedback}><FeedbackIcon/><span>View Customer Feedback</span></div>
           <div className={'button-wrapper'}>
             <div className={classNames('navigate-to-tgt-button', 'button', 'no-select',
                                        rfi && rfi.status === RfiStatus.PENDING ? 'disabled' : null)}
@@ -93,10 +92,12 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
               </div>
             </div>
           </div>
+          <div className={'view-feedback-button no-select'} onClick={viewFeedback}><FeedbackIcon/><span>View Customer Feedback</span>
+          </div>
         </div>
         :
         <div className={'button-section'}>
-          <div className={'spacer'}>&nbsp;</div>
+          {/*<div className={'spacer'}>&nbsp;</div>*/}
           <div className={'button-wrapper'}>
             <div className={classNames('navigate-to-tgt-button', 'button', 'no-select',
                                        rfi && rfi.status === RfiStatus.PENDING ? 'disabled' : null)}
@@ -112,41 +113,40 @@ export const RfiDescriptionContainer: React.FC<MyProps> = (
               <ExternalLinkVector/>
             </div>
           </div>
-          <div className={'product-container'}>
-            {rfi && rfi.productName === null ?
-              <div
-                className={classNames('upload-button product-button button',
-                                      rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
-                onClick={() => setShowUploadFileModal(true)}
-              >
-                {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
-                <UploadFileButtonVector/>
+          {rfi && rfi.productName === null ?
+            <div
+              className={classNames('upload-button product-button button',
+                                    rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+              onClick={() => setShowUploadFileModal(true)}
+            >
+              {rfi && rfi.status !== RfiStatus.PENDING ? <span>Upload Product</span> : null}
+              <UploadFileButtonVector/>
+            </div>
+            :
+            <div
+              className={classNames('download-button product-button button',
+                                    rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
+              onClick={() => setShowDownloadFileModal(true)}
+            >
+              {rfi && rfi.status !== RfiStatus.PENDING ? <span>Finished Product</span> : null}
+              <FinishedProductIcon/>
+            </div>
+          }
+          <CopyToClipboard
+            onCopy={() => {
+              enqueueSnackbar('Feedback Link Copied to Clipboard', {
+                action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
+                variant: 'info',
+              });
+            }}
+            text={`${window.location.href}feedback/${rfi ? rfi.rfiNum : 'error'}`}>
+            <TextTooltip title={'Copy Link'}>
+              <div className={classNames('copy-link', rfi && rfi.productName === null ? 'disabled' : null)}>
+                {rfi && rfi.status !== RfiStatus.PENDING && rfi.productName !== null ? <span>Feedback Survey Link</span> : null}
+                <StyledProductLinkButton/>
               </div>
-              :
-              <div
-                className={classNames('download-button product-button button',
-                                      rfi && rfi.status !== RfiStatus.PENDING ? null : 'disabled')}
-                onClick={() => setShowDownloadFileModal(true)}
-              >
-                {rfi && rfi.status !== RfiStatus.PENDING ? <span>Finished Product</span> : null}
-                <FinishedProductIcon/>
-              </div>
-            }
-            <CopyToClipboard
-              onCopy={() => {
-                enqueueSnackbar('Feedback Link Copied to Clipboard', {
-                  action: (key) => DismissSnackbarAction(key, closeSnackbar, 'dismiss-snackbar'),
-                  variant: 'info',
-                });
-              }}
-              text={`${window.location.href}feedback/${rfi ? rfi.rfiNum : 'error'}`}>
-              <TextTooltip title={'Copy Link'}>
-                <div className={classNames('copy-link', rfi && rfi.productName === null ? 'disabled' : null)}>
-                  <StyledProductLinkButton/>
-                </div>
-              </TextTooltip>
-            </CopyToClipboard>
-          </div>
+            </TextTooltip>
+          </CopyToClipboard>
         </div>
       }
       <div className={'body'}>
@@ -218,6 +218,7 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-top: 5px;
   }
   
   .spacer {
@@ -231,7 +232,8 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     justify-content: flex-end !important;
     align-items: center;
     width: 200px;
-    height: 37px;
+    height: 32px;
+    margin-bottom: 5px;
     
     span {
       margin-bottom: 0 !important;
@@ -292,6 +294,7 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     justify-content: flex-start;
     overflow-y: auto;
     padding-right: 15px;
+    padding-top: 4px;
   }
   
   .header {
@@ -313,14 +316,6 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
   
   .projected-completion {
     font-weight: ${theme.font.weightBolder};
-  }
-  
-  .product-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 225px;
   }
   
   .view-feedback-button {
@@ -346,6 +341,28 @@ export const StyledRfiDescriptionContainer = styled(RfiDescriptionContainer)`
     
     :hover {
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.75);
+    }
+  }
+  
+  .copy-link {
+    flex: 0 0 250px;
+    height: 32px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    cursor: pointer;
+    
+    span {
+      margin-right: 4px;
+    }
+    
+    :hover {
+      text-shadow: 0 0 4px #FFF;
+      svg {
+        filter: drop-shadow(0 0px 4px #FFFFFF);
+      }
     }
   }
 `;

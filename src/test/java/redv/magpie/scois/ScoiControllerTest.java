@@ -63,7 +63,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void postCreatesNewScoi() throws Exception {
-    ScoiJson scoiJson = new ScoiJson("OPN20S-0001", "12ASD1231231231");
+    ScoiJson scoiJson = new ScoiJson("OPN20-S0001", "12ASD1231231231");
 
     String scoiJsonString = objectMapper.writeValueAsString(scoiJson);
 
@@ -79,7 +79,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
     assertEquals(1, scoiRepository.findAll().size());
     Scoi scoi = scoiRepository.findAll().get(0);
 
-    assertEquals("OPN20S-0001", scoi.getName());
+    assertEquals("OPN20-S0001", scoi.getName());
     assertEquals("12ASD1231231231", scoi.getMgrs());
 
     assertEquals(1, metricCreateScoiRepository.findAll().size());
@@ -103,33 +103,33 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void returnsMgrsFromScoiNameIfExistsOr404IfNot() {
-    Scoi scoi = new Scoi("OPN20S-0001", "12ASD1231231231", "");
+    Scoi scoi = new Scoi("OPN20-S0001", "12ASD1231231231", "");
     scoiRepository.save(scoi);
 
     given()
       .port(port)
       .contentType("application/json")
       .when()
-      .get(ScoiController.URI + "?userName=billy.bob.joe&name=OPN20S-0001")
+      .get(ScoiController.URI + "?userName=billy.bob.joe&name=OPN20-S0001")
       .then()
       .statusCode(200)
-      .body("name", equalTo("OPN20S-0001"))
+      .body("name", equalTo("OPN20-S0001"))
       .body("mgrs", equalTo("12ASD1231231231"));
 
     given()
       .port(port)
       .contentType("application/json")
       .when()
-      .get(ScoiController.URI + "?userName=billy.bob.joe&name=OPN20S-0002")
+      .get(ScoiController.URI + "?userName=billy.bob.joe&name=OPN20-S0002")
       .then()
       .statusCode(404);
   }
 
   @Test
   public void returnsAllScois() {
-    Scoi scoi1 = new Scoi("OPN20S-0001", "12ASD1231231231", "");
-    Scoi scoi2 = new Scoi("OPN20S-0002", "12ASD1231231232", "");
-    Scoi scoi3 = new Scoi("OPN20S-0003", "12ASD1231231233", "");
+    Scoi scoi1 = new Scoi("OPN20-S0001", "12ASD1231231231", "");
+    Scoi scoi2 = new Scoi("OPN20-S0002", "12ASD1231231232", "");
+    Scoi scoi3 = new Scoi("OPN20-S0003", "12ASD1231231233", "");
     scoiRepository.saveAll(Arrays.asList(scoi1, scoi2, scoi3));
 
     given()
@@ -138,11 +138,11 @@ public class ScoiControllerTest extends BaseIntegrationTest {
       .get(ScoiController.URI + "/all")
       .then()
       .statusCode(200)
-      .body("[0].name", equalTo("OPN20S-0001"))
+      .body("[0].name", equalTo("OPN20-S0001"))
       .body("[0].mgrs", equalTo("12ASD1231231231"))
-      .body("[1].name", equalTo("OPN20S-0002"))
+      .body("[1].name", equalTo("OPN20-S0002"))
       .body("[1].mgrs", equalTo("12ASD1231231232"))
-      .body("[2].name", equalTo("OPN20S-0003"))
+      .body("[2].name", equalTo("OPN20-S0003"))
       .body("[2].mgrs", equalTo("12ASD1231231233"))
       .body("[3]", equalTo(null));
   }
@@ -150,7 +150,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
   @Test
   public void returnsRFIAssociationsWithScoi() {
     // 2 cases: RFI that is associated and an RFI that is not associated
-    String scoiName = "OPN20S-0123";
+    String scoiName = "OPN20-S0123";
     setupAssociations(scoiName);
 
     given()
@@ -175,7 +175,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void returnsTargetAssociationsForScoiName() {
-    String scoiName = "OPN20S-0123";
+    String scoiName = "OPN20-S0123";
     setupAssociations(scoiName);
 
     given()
@@ -207,7 +207,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void returnsIxnsAssociatedWithScoiName() {
-    String scoiName = "OPN20S-0123";
+    String scoiName = "OPN20-S0123";
     setupAssociations(scoiName);
 
     given()
@@ -237,10 +237,10 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
   @Test
   public void postUpdatesScoiNote() throws Exception {
-    scoiRepository.save(new Scoi("OPN20S-0001", "12ASD1231231231", ""));
+    scoiRepository.save(new Scoi("OPN20-S0001", "12ASD1231231231", ""));
 
     String scoiUpdateJson = objectMapper.writeValueAsString(
-      new Scoi("OPN20S-0001", "12ASD1231231231", "This is a note.")
+      new Scoi("OPN20-S0001", "12ASD1231231231", "This is a note.")
     );
 
     given()
@@ -254,7 +254,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
 
     assertEquals(1, scoiRepository.findAll().size());
     Scoi updatedScoi = scoiRepository.findAll().get(0);
-    assertEquals("OPN20S-0001", updatedScoi.getName());
+    assertEquals("OPN20-S0001", updatedScoi.getName());
     assertEquals("This is a note.", updatedScoi.getNote());
 
     assertEquals(1, metricChangeScoiRepository.findAll().size());
@@ -355,13 +355,13 @@ public class ScoiControllerTest extends BaseIntegrationTest {
       new Ixn(rfi2Id, rfi2exploitDateId, rfi2targetId, rfi2segmentId, "", new Timestamp(2345), "", "0002-001", "",
         IxnStatus.COMPLETED, "",
         IxnApprovalStatus.APPROVED);
-    rfi2ixn1.setTrackNarrative("This is a track narrative that includes a different SCOI OPN20S-0002");
+    rfi2ixn1.setTrackNarrative("This is a track narrative that includes a different SCOI OPN20-S0002");
     Ixn rfi2ixn2 =
       new Ixn(rfi2Id, rfi2exploitDateId, rfi2targetId, rfi2segmentId, "billy.bob.joe", new Timestamp(2345), "",
         "0002-002", "billy.bob.joe",
         IxnStatus.COMPLETED, "",
         IxnApprovalStatus.APPROVED);
-    rfi2ixn2.setTrackNarrative("This is a track narrative that includes a different SCOI OPN20S-0003");
+    rfi2ixn2.setTrackNarrative("This is a track narrative that includes a different SCOI OPN20-S0003");
 
     //Includes SCOI
     Ixn rfi3ixn1 =

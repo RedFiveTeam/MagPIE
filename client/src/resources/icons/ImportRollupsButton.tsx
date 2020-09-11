@@ -20,6 +20,7 @@ const ImportCopyButton = (props: Props) => {
         fill='none'
         xmlns='http://www.w3.org/2000/svg'
       >
+        <circle cx="20" cy="20" r="20" fill={theme.color.fontPrimary}/>
         <path
           d={pathD}
           fill={theme.color.primaryButton}
@@ -34,6 +35,7 @@ export const StyledImportRollupsButton = styled(ImportCopyButton)`
   svg {
     border-radius: 20px;
     box-shadow: 0 2px 4px #000000;
+    cursor: pointer;
   
     :hover {
       box-shadow: 0 0 6px #FFFFFF;
