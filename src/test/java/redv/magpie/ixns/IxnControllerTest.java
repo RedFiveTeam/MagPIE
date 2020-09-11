@@ -40,6 +40,8 @@ public class IxnControllerTest extends BaseIntegrationTest {
   @Autowired
   TargetRepository targetRepository;
   @Autowired
+  TargetNameRepository targetNameRepository;
+  @Autowired
   SegmentRepository segmentRepository;
   @Autowired
   IxnRepository ixnRepository;
@@ -69,6 +71,7 @@ public class IxnControllerTest extends BaseIntegrationTest {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
+    targetNameRepository.deleteAll();
     segmentRepository.deleteAll();
     ixnRepository.deleteAll();
     metricCreateSegmentRepository.deleteAll();

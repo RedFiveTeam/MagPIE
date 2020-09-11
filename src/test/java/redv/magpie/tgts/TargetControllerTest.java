@@ -148,6 +148,7 @@ public class TargetControllerTest extends BaseIntegrationTest {
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
     targetNameRepository.deleteAll();
+    targetNameRepository.deleteAll();
     segmentRepository.deleteAll();
     ixnRepository.deleteAll();
     metricCreateExploitDateRepository.deleteAll();

@@ -43,10 +43,7 @@ import redv.magpie.metrics.undo.targetDelete.MetricUndoTargetDelete;
 import redv.magpie.metrics.undo.targetDelete.MetricUndoTargetDeleteRepository;
 import redv.magpie.rfis.Rfi;
 import redv.magpie.rfis.RfiRepository;
-import redv.magpie.tgts.Target;
-import redv.magpie.tgts.TargetJson;
-import redv.magpie.tgts.TargetRepository;
-import redv.magpie.tgts.TargetStatus;
+import redv.magpie.tgts.*;
 import redv.magpie.tgts.exploitDates.ExploitDate;
 import redv.magpie.tgts.exploitDates.ExploitDateJson;
 import redv.magpie.tgts.exploitDates.ExploitDateRepository;
@@ -73,6 +70,8 @@ public class MetricsServiceTest extends BaseIntegrationTest {
   private ExploitDateRepository exploitDateRepository;
   @Autowired
   private TargetRepository targetRepository;
+  @Autowired
+  TargetNameRepository targetNameRepository;
   @Autowired
   private MetricClickGetsRepository metricClickGetsRepository;
   @Autowired
@@ -121,6 +120,7 @@ public class MetricsServiceTest extends BaseIntegrationTest {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
+    targetNameRepository.deleteAll();
     metricClickGetsRepository.deleteAll();
     metricVisitSiteRepository.deleteAll();
     metricClickSortRepository.deleteAll();

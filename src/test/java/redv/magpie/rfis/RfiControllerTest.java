@@ -16,10 +16,7 @@ import redv.magpie.metrics.undo.changeRfiPriority.MetricUndoChangeRfiPriorityRep
 import redv.magpie.metrics.visit.feedbackPage.MetricVisitFeedbackPageRepository;
 import redv.magpie.products.Product;
 import redv.magpie.products.ProductRepository;
-import redv.magpie.tgts.Target;
-import redv.magpie.tgts.TargetController;
-import redv.magpie.tgts.TargetJson;
-import redv.magpie.tgts.TargetRepository;
+import redv.magpie.tgts.*;
 import redv.magpie.tgts.exploitDates.ExploitDate;
 import redv.magpie.tgts.exploitDates.ExploitDateRepository;
 import org.junit.Before;
@@ -52,6 +49,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
   IxnController ixnController;
   RfiController rfiController;
   TargetController targetController;
+  TargetNameRepository targetNameRepository;
   MetricsService metricsService;
   RfiService rfiService;
   RfiRepository rfiRepository;
@@ -127,6 +125,11 @@ public class RfiControllerTest extends BaseIntegrationTest {
   }
 
   @Autowired
+  public void setTargetNameRepository(TargetNameRepository targetNameRepository) {
+    this.targetNameRepository = targetNameRepository;
+  }
+
+  @Autowired
   public void setMetricChangeExploitDateRepository(
     MetricChangeExploitDateRepository metricChangeExploitDateRepository) {
     this.metricChangeExploitDateRepository = metricChangeExploitDateRepository;
@@ -189,6 +192,7 @@ public class RfiControllerTest extends BaseIntegrationTest {
     ixnRepository.deleteAll();
     segmentRepository.deleteAll();
     targetRepository.deleteAll();
+    targetNameRepository.deleteAll();
     metricChangeExploitDateRepository.deleteAll();
     metricCreateTargetRepository.deleteAll();
     metricDeleteExploitDateRepository.deleteAll();

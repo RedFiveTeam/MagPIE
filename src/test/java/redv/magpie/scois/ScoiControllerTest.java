@@ -10,6 +10,7 @@ import redv.magpie.rfis.Rfi;
 import redv.magpie.rfis.RfiRepository;
 import redv.magpie.tgts.Target;
 import redv.magpie.tgts.TargetJson;
+import redv.magpie.tgts.TargetNameRepository;
 import redv.magpie.tgts.TargetRepository;
 import redv.magpie.tgts.exploitDates.ExploitDate;
 import redv.magpie.tgts.exploitDates.ExploitDateRepository;
@@ -41,6 +42,8 @@ public class ScoiControllerTest extends BaseIntegrationTest {
   @Autowired
   TargetRepository targetRepository;
   @Autowired
+  TargetNameRepository targetNameRepository;
+  @Autowired
   SegmentRepository segmentRepository;
   @Autowired
   IxnRepository ixnRepository;
@@ -57,6 +60,7 @@ public class ScoiControllerTest extends BaseIntegrationTest {
     rfiRepository.deleteAll();
     exploitDateRepository.deleteAll();
     targetRepository.deleteAll();
+    targetNameRepository.deleteAll();
     segmentRepository.deleteAll();
     ixnRepository.deleteAll();
   }

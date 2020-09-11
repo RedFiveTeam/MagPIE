@@ -7,6 +7,7 @@ import redv.magpie.metrics.change.rfi.MetricChangeRfiRepository;
 import redv.magpie.metrics.create.targetFromGets.MetricCreateTargetFromGets;
 import redv.magpie.metrics.create.targetFromGets.MetricCreateTargetFromGetsRepository;
 import redv.magpie.tgts.TargetGet;
+import redv.magpie.tgts.TargetNameRepository;
 import redv.magpie.tgts.TargetRepository;
 import redv.magpie.tgts.TargetService;
 import org.junit.Before;
@@ -28,25 +29,20 @@ import static org.junit.Assert.assertEquals;
 public class RfiServiceTest extends BaseIntegrationTest {
   @Autowired
   GetsClient getsClient;
-
   @Autowired
   MetricController metricController;
-
   @Autowired
   RfiService rfiService;
-
   @Autowired
   TargetService targetService;
-
   @Autowired
   RfiRepository rfiRepository;
-
   @Autowired
   TargetRepository targetRepository;
-
+  @Autowired
+  TargetNameRepository targetNameRepository;
   @Autowired
   MetricChangeRfiRepository metricChangeRfiRepository;
-
   @Autowired
   MetricCreateTargetFromGetsRepository metricCreateTargetFromGetsRepository;
 
@@ -54,6 +50,7 @@ public class RfiServiceTest extends BaseIntegrationTest {
   public void clean() {
     rfiRepository.deleteAll();
     targetRepository.deleteAll();
+    targetNameRepository.deleteAll();
     metricChangeRfiRepository.deleteAll();
     metricCreateTargetFromGetsRepository.deleteAll();
   }
