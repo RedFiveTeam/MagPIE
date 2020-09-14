@@ -800,7 +800,7 @@ public class MetricsService {
   public Date getRfiCloseDate(String rfiNum) {
     try {
       return metricChangeRfiRepository.findStatusChangeToClosedByRfiNum(rfiNum).getDatetime();
-    } catch (NullPointerException e) {
+    } catch (Exception e) {
       log.trace("Close date not found for RFI " + rfiNum);
       return null;
     }

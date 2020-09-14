@@ -22,7 +22,7 @@ export const RfiHistoryDashboard: React.FC<MyProps> = (props) => {
   const historicalRfis = useSelector(({historicalRfiState}: ApplicationState) => historicalRfiState.historicalRfis);
   const selectedHistoricalRfi = useSelector(({historicalRfiState}: ApplicationState) => historicalRfiState.selectedHistoricalRfi);
 
-  let selectedHistoricalRfiId = selectedHistoricalRfi.rfi.id;
+  let selectedHistoricalRfiId = selectedHistoricalRfi? selectedHistoricalRfi.rfi.id : -1;
 
   const [viewRfiInfo, setViewRfiInfo] = useState(false);
 
