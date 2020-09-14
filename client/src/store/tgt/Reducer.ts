@@ -25,8 +25,11 @@ const reducer: Reducer<TgtState> = (state = initState, action: any) => {
     case TgtActionTypes.NAVIGATE_TO_TGT_PAGE:
       sortedExploitDates = ExploitDateSorter.sort(action.exploitDates);
       let highlight: boolean = false;
-      if (state.targets.length > 0) {
+      if (state.targets.length > 0) { //new targets, highlight them
         highlight = state.targets.length < action.targets.length;
+      }
+      if (state.rfi.id > 0 && state.rfi.id !== action.rfi.id) { //navigating between target pages, don't highlight
+        highlight = false;
       }
       return {
         ...state,

@@ -30,6 +30,7 @@ const reducer: Reducer<IxnState> = (state = initState, action: any) => {
         segments: action.segments,
         ixns: action.ixns,
         addSegment: action.segments.length === 0,
+        newSegment: undefined,
         editSegment: -1,
         editIxn: -1,
         addNote: -1,

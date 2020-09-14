@@ -105,7 +105,7 @@ export const StyledScoiInputRow = styled(ScoiInputRow)`
   }
   
   .note-container {
-    width: 548px;
+    width: 360px;
     min-height: 58px;
     border-radius: 8px 0 8px 8px;
     background-color: ${theme.color.backgroundFocus};
